@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" shape-rendering="crispEdges">
+  <defs>
+    <mask id="youtube-cut">
+      <rect width="32" height="32" fill="#fff"/>
+      <path d="M13 10h3v3h3v3h3v3h-3v2h-3v3h-3z" fill="#000"/>
+    </mask>
+  </defs>
+  <path d="M6 5h20v2h3v4h2v10h-2v4h-3v2H6v-2H3v-4H1V11h2V7h3z" fill="#ff5555" mask="url(#youtube-cut)"/>
+</svg>
