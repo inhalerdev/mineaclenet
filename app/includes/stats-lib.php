@@ -544,6 +544,52 @@ function mineacle_stats_players_count(string $sort = 'overall', string $search =
     return max(0, (int) $statement->fetchColumn());
 }
 
+function mineacle_stats_unique_players_count(): int
+{
+    $pdo = mineacle_core_db();
+
+    if (!$pdo instanceof PDO) {
+        throw new RuntimeException('Stats database is not connected.');
+    }
+
+    $config = mineacle_config();
+    $tables = $config['tables'] ?? [];
+    $table = (string) ($tables['player_profiles'] ?? 'mineacle_web_profiles');
+    $tableSql = mineacle_stats_table_sql($table);
+
+    if ($tableSql === null) {
+        throw new RuntimeException('Player profiles table is not available.');
+    }
+
+    $columns = mineacle_stats_columns($pdo, $tableSql);
+    $uuidColumn = mineacle_stats_column_from_candidates($columns, ['uuid']);
+    $usernameColumn = mineacle_stats_column_from_candidates($columns, ['username']);
+    $uuidSql = is_string($uuidColumn) ? mineacle_stats_column_sql($uuidColumn) : null;
+    $usernameSql = is_string($usernameColumn) ? mineacle_stats_column_sql($usernameColumn) : null;
+    $identities = [];
+
+    if ($uuidSql !== null) {
+        $identities[] = "CONCAT('uuid:', NULLIF(REPLACE(LOWER(TRIM({$uuidSql})), '-', ''), ''))";
+    }
+
+    if ($usernameSql !== null) {
+        $identities[] = "CONCAT('name:', NULLIF(LOWER(TRIM({$usernameSql})), ''))";
+    }
+
+    if ($identities === []) {
+        throw new RuntimeException('Player identity columns are not available.');
+    }
+
+    $identitySql = count($identities) === 1
+        ? $identities[0]
+        : 'COALESCE(' . implode(', ', $identities) . ')';
+    $statement = $pdo->query(
+        'SELECT COUNT(DISTINCT ' . $identitySql . ') FROM ' . $tableSql
+    );
+
+    return max(0, (int) $statement->fetchColumn());
+}
+
 function mineacle_stats_players(int $limit = 25, int $offset = 0, string $sort = 'playtime', string $search = ''): array
 {
     $pdo = mineacle_core_db();

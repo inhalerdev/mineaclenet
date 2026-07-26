@@ -270,6 +270,8 @@ button {
   min-width: 0;
   max-width: 576px;
   height: 100%;
+  overflow: hidden;
+  border-radius: var(--radius);
 }
 
 .search-field {
@@ -280,7 +282,7 @@ button {
   height: 100%;
   border: 1px solid var(--container-stroke);
   border-right: 0;
-  border-radius: var(--radius) 0 0 var(--radius);
+  border-radius: 0;
   background: var(--container-bg);
 }
 
@@ -317,7 +319,7 @@ button {
   min-width: 0;
   height: 100%;
   border: 1px solid var(--button-stroke);
-  border-radius: 0 var(--radius) var(--radius) 0;
+  border-radius: 0;
   background: var(--button-bg);
   color: var(--heading);
 }
@@ -508,7 +510,6 @@ button {
 }
 
 .square-button:focus-visible,
-.search-control:focus-within,
 .top-action:focus-visible {
   outline: 2px solid #ff55ff;
   outline-offset: 2px;

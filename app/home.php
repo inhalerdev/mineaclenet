@@ -10,10 +10,25 @@ if ($directHomePath === '/home' || $directHomePath === '/home.php') {
 }
 
 require_once __DIR__ . '/includes/layout.php';
+require_once __DIR__ . '/includes/stats-lib.php';
 
 $site = mineacle_config()['site'] ?? [];
 $assetVersion = rawurlencode(mineacle_page_asset_version());
 $minecraftIp = trim((string) ($site['minecraft_ip'] ?? 'mineacle.net')) ?: 'mineacle.net';
+$uniquePlayerCount = 0;
+
+try {
+    $uniquePlayerCount = mineacle_stats_unique_players_count();
+} catch (Throwable) {
+    // Keep the homepage and search available when the stats database is offline.
+}
+
+$searchPlaceholder = $uniquePlayerCount > 0
+    ? 'SEARCH ' . number_format($uniquePlayerCount) . ' PLAYERS ACROSS 3 DIMENSIONS'
+    : 'SEARCH PLAYERS ACROSS 3 DIMENSIONS';
+$searchLabel = $uniquePlayerCount > 0
+    ? 'Search ' . number_format($uniquePlayerCount) . ' players across Mineacle\'s three dimensions'
+    : 'Search players across Mineacle\'s three dimensions';
 
 $siteUrl = static function (mixed $value, string $fallback): string {
     $resolved = mineacle_page_public_link($value);
@@ -140,12 +155,12 @@ mineacle_page_head('Home', [
                             <svg class="search-user-icon" aria-hidden="true">
                                 <use href="#icon-user"></use>
                             </svg>
-                            <label class="visually-hidden" for="site-search">Search for a player</label>
+                            <label class="visually-hidden" for="site-search"><?php echo h($searchLabel); ?></label>
                             <input
                                 id="site-search"
                                 name="username"
                                 type="search"
-                                placeholder="SEARCH PLAYER"
+                                placeholder="<?php echo h($searchPlaceholder); ?>"
                                 maxlength="64"
                                 autocomplete="off"
                                 autocapitalize="none"
