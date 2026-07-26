@@ -329,9 +329,6 @@ mineacle_page_head($pageTitle, $metaOptions);
 
                     <div class="profile-player-lockup">
                         <h1><?php echo $viewModel['ranked_name_html']; ?></h1>
-                        <?php if (strcasecmp((string) $viewModel['username'], (string) $viewModel['display_name']) !== 0): ?>
-                            <p class="profile-username">@<?php echo h((string) $viewModel['username']); ?></p>
-                        <?php endif; ?>
                         <div class="profile-state-lines">
                             <p>
                                 <strong class="<?php echo $viewModel['online'] ? 'is-online' : 'is-offline'; ?>"><?php echo h((string) $viewModel['status_label']); ?></strong>

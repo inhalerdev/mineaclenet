@@ -6,7 +6,7 @@ require_once __DIR__ . '/db.php';
 
 function mineacle_page_asset_version(): string
 {
-    return 'base115';
+    return 'base126';
 }
 
 function mineacle_page_clean_text(string $value): string
@@ -19,8 +19,8 @@ function mineacle_page_meta_title(string $title, string $siteName): string
     $cleanTitle = mineacle_page_clean_text($title) ?: 'Home';
     $normalizedTitle = strtolower($cleanTitle);
 
-    if ($normalizedTitle === 'leaderboards') {
-        $cleanTitle = 'Leaderboard';
+    if (in_array($normalizedTitle, ['leaderboard', 'leaderboards'], true)) {
+        $cleanTitle = 'Leaderboards';
     }
 
     return $cleanTitle . ' | ' . $siteName;
@@ -149,19 +149,46 @@ function mineacle_page_icon(string $name): string
 {
     $assetVersion = rawurlencode(mineacle_page_asset_version());
     $iconVersion = '?v=' . $assetVersion;
+
+    if ($name === 'discord') {
+        $square = '/assets/icons/discord-square.svg' . $iconVersion;
+        $mark = '/assets/icons/discord-mark.svg' . $iconVersion;
+
+        return '<span class="site-icon site-icon-layered discord-icon" aria-hidden="true">'
+            . '<img class="discord-icon-square" src="' . h($square) . '" alt="" draggable="false">'
+            . '<img class="discord-icon-mark" src="' . h($mark) . '" alt="" draggable="false">'
+            . '</span>';
+    }
+
+    if ($name === 'store') {
+        $mark = '/assets/icons/store.svg' . $iconVersion;
+
+        return '<span class="site-icon site-icon-layered store-icon" aria-hidden="true">'
+            . '<span class="store-icon-square"></span>'
+            . '<img class="store-icon-mark" src="' . h($mark) . '" alt="" draggable="false">'
+            . '</span>';
+    }
+
+    if ($name === 'x') {
+        $square = '/assets/icons/x-square.svg' . $iconVersion;
+        $mark = '/assets/icons/x-mark.svg' . $iconVersion;
+
+        return '<span class="site-icon site-icon-layered x-icon" aria-hidden="true">'
+            . '<img class="x-icon-square" src="' . h($square) . '" alt="" draggable="false">'
+            . '<img class="x-icon-mark" src="' . h($mark) . '" alt="" draggable="false">'
+            . '</span>';
+    }
+
     $officialIcons = [
-        'home' => '/assets/icons/rail-home-pixel.svg' . $iconVersion,
-        'stats' => '/assets/icons/rail-leaderboard-pixel.svg' . $iconVersion,
-        'vote' => '/assets/icons/rail-vote-pixel.svg' . $iconVersion,
-        'store' => '/assets/icons/rail-store-pixel.svg' . $iconVersion,
-        'bans' => '/assets/icons/rail-bans-pixel.svg' . $iconVersion,
-        'discord' => '/assets/icons/discord-pixel.svg' . $iconVersion,
-        'x' => '/assets/icons/x-twitter-pixel.svg' . $iconVersion,
+        'home' => '/assets/icons/home.svg' . $iconVersion,
+        'stats' => '/assets/icons/leaderboard.svg' . $iconVersion,
+        'vote' => '/assets/icons/vote.svg' . $iconVersion,
+        'bans' => '/assets/icons/bans.svg' . $iconVersion,
         'youtube' => '/assets/icons/youtube-pixel.svg' . $iconVersion,
     ];
 
     if (isset($officialIcons[$name])) {
-        return '<img class="site-icon" src="' . h($officialIcons[$name]) . '" alt="" aria-hidden="true">';
+        return '<img class="site-icon" src="' . h($officialIcons[$name]) . '" alt="" aria-hidden="true" draggable="false">';
     }
 
     $icons = [
@@ -188,7 +215,7 @@ function mineacle_page_search_header(array $site): void
     echo '<div class="player-search" data-player-search>';
     echo '<form class="search-box" action="/player" method="get" role="search" data-player-search-form>';
     echo '<img src="/assets/icons/search.png" alt="" aria-hidden="true" draggable="false">';
-    echo '<input id="homeSearch" name="name" type="search" placeholder="Search players.." autocomplete="off" aria-autocomplete="list" aria-expanded="false" aria-controls="playerSearchResults">';
+    echo '<input id="homeSearch" name="name" type="search" placeholder="Search for a player..." autocomplete="off" aria-autocomplete="list" aria-expanded="false" aria-controls="playerSearchResults">';
     echo '<button class="search-clear" type="button" aria-label="Clear search" hidden>';
     echo '<img src="/assets/icons/clear-search.svg" alt="" aria-hidden="true" draggable="false">';
     echo '</button>';
@@ -302,7 +329,7 @@ function mineacle_page_head(string $title = 'Home', array $options = []): void
     echo '<link rel="icon" type="image/png" href="/assets/fav-web.png?v=' . h($assetVersion) . '">';
     echo '<link rel="preconnect" href="https://fonts.googleapis.com">';
     echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>';
-    echo '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap">';
+    echo '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&display=swap">';
     echo '<link rel="stylesheet" href="/assets/home-page.css?v=' . h($assetVersion) . '">';
     echo '</head>';
     echo '<body>';

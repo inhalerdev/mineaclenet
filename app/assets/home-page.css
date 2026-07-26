@@ -10,7 +10,7 @@
   --icon: #bbbbbb;
   --icon-active: #ff88ff;
   --accent: #7b3cff;
-  --store-button: #ff55ff;
+  --store-button: #ff88ff;
   --store-button-hover: #ff55ff;
   --rail-icon-filter: brightness(0) saturate(100%) invert(78%) sepia(0%) saturate(0%) hue-rotate(188deg) brightness(96%) contrast(88%);
   --rail-icon-active-filter: brightness(0) saturate(100%) invert(76%) sepia(76%) saturate(1417%) hue-rotate(246deg) brightness(103%) contrast(103%);
@@ -25,11 +25,12 @@
   --gap: 25px;
   --rail-width: 70px;
   --rail-item-size: 46px;
-  --rail-icon-size: 28px;
+  --rail-icon-size: 32px;
+  --rail-store-button-size: 40px;
   --rail-stack-gap: 18px;
   --radius: 5px;
   --ui-font-size: 0.875rem;
-  --font-medium: 500;
+  --font-medium: 600;
   --font-semibold: 600;
   --font-bold: 700;
   --font-extrabold: 800;
@@ -51,6 +52,10 @@
 html {
   min-height: 100%;
   background: var(--canvas);
+}
+
+@view-transition {
+  navigation: auto;
 }
 
 body {
@@ -107,6 +112,20 @@ svg {
   filter: invert(78%) sepia(0%) saturate(0%) hue-rotate(188deg) brightness(96%) contrast(88%);
 }
 
+.site-icon-layered {
+  position: relative;
+}
+
+.site-icon-layered > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
 .rail-link .site-icon,
 .leaderboard-category-card img,
 .leaderboard-top-avatar img,
@@ -138,6 +157,7 @@ svg {
 }
 
 .rail {
+  view-transition-name: mineacle-rail;
   position: sticky;
   top: var(--gap);
   grid-column: 1;
@@ -197,9 +217,14 @@ svg {
 .rail-link svg,
 .rail-link .site-icon {
   width: var(--rail-icon-size);
-  height: var(--rail-icon-size);
+  height: auto;
   filter: var(--rail-icon-filter);
   transition: filter 180ms ease, opacity 180ms ease, transform 180ms ease;
+}
+
+.rail-link .discord-icon,
+.rail-link .x-icon {
+  aspect-ratio: 1;
 }
 
 .rail-link:hover,
@@ -233,31 +258,50 @@ svg {
 
 .rail-store-button {
   margin-top: 0;
-  background: var(--store-button);
+  background: transparent;
   color: var(--heading);
 }
 
-.rail-store-button svg,
-.rail-store-button .site-icon {
-  filter: var(--rail-icon-white-filter);
+.rail-store-button .store-icon,
+.rail-store-button:hover .store-icon,
+.rail-store-button:focus-visible .store-icon,
+.rail-store-button.is-active .store-icon,
+.rail-store-button[aria-current="page"] .store-icon {
+  width: var(--rail-store-button-size);
+  aspect-ratio: 1;
+  filter: none;
+  transform: none;
 }
 
 .rail-store-button:hover,
 .rail-store-button:focus-visible,
 .rail-store-button.is-active,
 .rail-store-button[aria-current="page"] {
-  background: var(--store-button-hover);
+  background: transparent;
 }
 
-.rail-store-button:hover svg,
-.rail-store-button:hover .site-icon,
-.rail-store-button:focus-visible svg,
-.rail-store-button:focus-visible .site-icon,
-.rail-store-button.is-active svg,
-.rail-store-button.is-active .site-icon,
-.rail-store-button[aria-current="page"] svg,
-.rail-store-button[aria-current="page"] .site-icon {
+.store-icon-square {
+  position: absolute;
+  inset: 0;
+  display: block;
+  background: var(--store-button);
+  -webkit-mask: url("icons/store-btn.svg") center / contain no-repeat;
+  mask: url("icons/store-btn.svg") center / contain no-repeat;
+  transition: background 180ms ease;
+}
+
+.store-icon > .store-icon-mark {
+  inset: 50% auto auto 50%;
+  z-index: 1;
+  width: var(--rail-icon-size);
+  height: auto;
   filter: var(--rail-icon-white-filter);
+  transform: translate(-50%, -50%);
+}
+
+.rail-store-button:hover .store-icon-square,
+.rail-store-button:focus-visible .store-icon-square {
+  background: var(--store-button-hover);
 }
 
 .rail-nav,
@@ -547,11 +591,12 @@ svg {
   width: 30px;
   height: 30px;
   display: block;
-  border-radius: var(--radius);
-  background: rgba(255, 255, 255, 0.06);
-  box-shadow: inset 0 0 0 1px var(--line);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
   image-rendering: pixelated;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 .player-search-copy {
@@ -610,7 +655,7 @@ svg {
 .ranked-player-name__name {
   min-width: 0;
   overflow: hidden;
-  color: var(--heading);
+  color: #bbbbbb;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -634,7 +679,7 @@ svg {
 .leaderboard-ranked-name__name {
   min-width: 0;
   overflow: hidden;
-  color: var(--heading);
+  color: #bbbbbb;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -673,18 +718,6 @@ svg {
 }
 
 .player-search-option.is-muted .player-search-name {
-  color: var(--subtext);
-}
-
-.player-search-option.is-temp-banned .ranked-player-name__name {
-  color: var(--warning);
-}
-
-.player-search-option.is-perm-banned .ranked-player-name__name {
-  color: var(--danger);
-}
-
-.player-search-option.is-muted .ranked-player-name__name {
   color: var(--subtext);
 }
 
@@ -1008,8 +1041,8 @@ svg {
   height: 34px;
   display: block;
   background: currentColor;
-  -webkit-mask: url("icons/close-window.svg") center / contain no-repeat;
-  mask: url("icons/close-window.svg") center / contain no-repeat;
+  -webkit-mask: url("icons/close.svg") center / contain no-repeat;
+  mask: url("icons/close.svg") center / contain no-repeat;
 }
 
 .join-modal-close:hover,
@@ -1790,17 +1823,37 @@ body.has-announcement-modal {
 }
 
 .footer-socials svg {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: auto;
   fill: currentColor;
   opacity: 1;
 }
 
 .footer-socials .site-icon {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: auto;
   opacity: 1;
   filter: invert(100%);
+}
+
+.footer-socials a[aria-label="YouTube"] .site-icon {
+  filter: none;
+  transition: filter 180ms ease;
+}
+
+.footer-socials a[aria-label="YouTube"]:hover .site-icon,
+.footer-socials a[aria-label="YouTube"]:focus-visible .site-icon {
+  filter: brightness(1.12);
+}
+
+.footer-socials a[aria-label="YouTube"]:hover,
+.footer-socials a[aria-label="YouTube"]:focus-visible {
+  opacity: 1;
+}
+
+.footer-socials .discord-icon,
+.footer-socials .x-icon {
+  aspect-ratio: 1;
 }
 
 .footer-socials a:hover,
@@ -1810,16 +1863,72 @@ body.has-announcement-modal {
   outline: 0;
 }
 
-.rail-social .rail-link[aria-label="Discord"]:hover,
-.rail-social .rail-link[aria-label="Discord"]:focus-visible {
-  background: rgba(88, 101, 242, 0.16);
+.rail-social .rail-link:hover,
+.rail-social .rail-link:focus-visible {
+  background: transparent;
 }
 
-a[aria-label="Discord"]:hover .site-icon,
-a[aria-label="Discord"]:focus-visible .site-icon {
+.rail-link .discord-icon,
+.rail-link:hover .discord-icon,
+.rail-link:focus-visible .discord-icon,
+.rail-link.is-active .discord-icon,
+.rail-link[aria-current="page"] .discord-icon,
+.footer-socials .discord-icon,
+.rail-link .x-icon,
+.rail-link:hover .x-icon,
+.rail-link:focus-visible .x-icon,
+.rail-link.is-active .x-icon,
+.rail-link[aria-current="page"] .x-icon,
+.footer-socials .x-icon {
+  filter: none;
+}
+
+.rail-link:hover .discord-icon,
+.rail-link:focus-visible .discord-icon,
+.rail-social .rail-link:hover .x-icon,
+.rail-social .rail-link:focus-visible .x-icon {
+  transform: none;
+}
+
+.discord-icon-square {
+  filter: invert(41%) sepia(88%) saturate(1651%) hue-rotate(214deg) brightness(98%) contrast(94%);
+}
+
+.discord-icon-mark,
+.x-icon-mark {
+  filter: var(--rail-icon-white-filter);
+}
+
+.x-icon-square {
+  filter: none;
+  transition: filter 180ms ease;
+}
+
+.rail-social .rail-link[aria-label="X"]:hover .x-icon-square,
+.rail-social .rail-link[aria-label="X"]:focus-visible .x-icon-square,
+.footer-socials a[aria-label="X/Twitter"]:hover .x-icon-square,
+.footer-socials a[aria-label="X/Twitter"]:focus-visible .x-icon-square {
+  filter: invert(8%);
+}
+
+.footer-socials a[aria-label="Discord"]:hover,
+.footer-socials a[aria-label="Discord"]:focus-visible,
+.footer-socials a[aria-label="X/Twitter"]:hover,
+.footer-socials a[aria-label="X/Twitter"]:focus-visible {
+  opacity: 1;
+}
+
+a[aria-label="Discord"]:hover .discord-icon-mark,
+a[aria-label="Discord"]:focus-visible .discord-icon-mark {
   animation: discord-spin 0.62s cubic-bezier(0.2, 0.8, 0.2, 1);
-  filter: brightness(0) saturate(100%) invert(41%) sepia(79%) saturate(2122%) hue-rotate(219deg) brightness(98%) contrast(93%);
   transform-origin: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  a[aria-label="Discord"]:hover .discord-icon-mark,
+  a[aria-label="Discord"]:focus-visible .discord-icon-mark {
+    animation: none;
+  }
 }
 
 .footer-links {
@@ -2105,13 +2214,6 @@ a[aria-label="Discord"]:focus-visible .site-icon {
   text-transform: uppercase;
 }
 
-.profile-username {
-  margin: -4px 0 0;
-  color: var(--subtext);
-  font-size: clamp(0.82rem, 0.74rem + 0.24vw, 0.96rem);
-  line-height: 1;
-}
-
 .profile-state-lines {
   display: grid;
   gap: 6px;
@@ -2390,8 +2492,10 @@ a[aria-label="Discord"]:focus-visible .site-icon {
   display: grid;
   place-items: center;
   overflow: hidden;
+  border: 0;
   border-radius: 0;
-  background: rgba(0, 0, 0, 0.16);
+  background: transparent;
+  box-shadow: none;
 }
 
 .profile-duel-head img {
@@ -2399,7 +2503,7 @@ a[aria-label="Discord"]:focus-visible .site-icon {
   height: 100%;
   display: block;
   image-rendering: pixelated;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 .profile-duel-head span {
@@ -2716,17 +2820,19 @@ a[aria-label="Discord"]:focus-visible .site-icon {
   height: 42px;
   display: grid;
   place-items: center;
-  border-radius: var(--radius);
-  background: rgba(255, 255, 255, 0.055);
-  box-shadow: inset 0 0 0 1px var(--line);
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .player-card-head img {
-  width: 34px;
-  height: 34px;
+  width: 100%;
+  height: 100%;
   display: block;
   image-rendering: pixelated;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 .player-card-main {
@@ -3016,8 +3122,10 @@ a[aria-label="Discord"]:focus-visible .site-icon {
 
 .leaderboard-category-grid {
   min-width: 0;
+  width: 100%;
   display: grid;
-  grid-template-columns: repeat(5, minmax(116px, 1fr));
+  grid-template-columns: repeat(4, minmax(116px, 1fr));
+  justify-content: center;
   gap: 12px;
 }
 
@@ -3459,9 +3567,11 @@ a[aria-label="Discord"]:focus-visible .site-icon {
 }
 
 .leaderboard-top-card {
+  height: clamp(320px, 32.5dvh, 370px);
   min-height: 0;
   display: grid;
-  align-content: stretch;
+  grid-template-rows: auto minmax(0, 1fr);
+  align-content: start;
   gap: 16px;
   border-radius: var(--radius);
   padding: clamp(18px, 2.2vw, 28px);
@@ -3497,8 +3607,8 @@ a[aria-label="Discord"]:focus-visible .site-icon {
 }
 
 .leaderboard-top-heading-icon img {
-  width: 27px;
-  height: 27px;
+  width: 30px;
+  height: 30px;
   display: block;
   object-fit: contain;
   image-rendering: pixelated;
@@ -3530,6 +3640,8 @@ a[aria-label="Discord"]:focus-visible .site-icon {
 }
 
 .leaderboard-top-list {
+  align-content: start;
+  grid-auto-rows: min-content;
   gap: 8px;
   margin-top: 0;
 }
@@ -3569,20 +3681,37 @@ a[aria-label="Discord"]:focus-visible .site-icon {
   background: #493749;
 }
 
+.leaderboard-top-avatar.has-player-head,
+.leaderboard-top-entry.is-rank-1 .leaderboard-top-avatar.has-player-head {
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.leaderboard-top-avatar.has-player-head img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .leaderboard-category-grid {
   position: relative;
   z-index: 2;
   min-width: 0;
+  width: 100%;
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  justify-content: center;
   gap: 0;
   background: #303030;
 }
 
 .leaderboard-category-card {
   min-height: var(--leaderboard-summary-height);
-  grid-template-columns: 42px minmax(0, 1fr);
-  gap: 12px;
+  grid-template-columns: 54px minmax(0, 1fr);
+  gap: 16px;
   border-radius: 0;
   padding: clamp(14px, 1.7vw, 22px);
   background: transparent;
@@ -3613,7 +3742,14 @@ a[aria-label="Discord"]:focus-visible .site-icon {
 }
 
 .leaderboard-category-icon {
+  width: 54px;
+  height: 54px;
   background: #383838;
+}
+
+.leaderboard-category-card img {
+  width: 38px;
+  height: 38px;
 }
 
 .leaderboard-category-card.is-active .leaderboard-category-icon,
@@ -3626,7 +3762,7 @@ a[aria-label="Discord"]:focus-visible .site-icon {
 }
 
 .leaderboard-category-card strong {
-  font-size: clamp(0.78rem, 0.7rem + 0.2vw, 0.92rem);
+  font-size: clamp(0.88rem, 0.78rem + 0.25vw, 1.04rem);
 }
 
 .leaderboard-category-card small {
@@ -3704,14 +3840,93 @@ a[aria-label="Discord"]:focus-visible .site-icon {
 
 .leaderboard-view-row {
   min-width: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: auto minmax(330px, 1fr) auto;
+  align-items: stretch;
+  gap: 0;
+  border-radius: var(--radius);
+  background: #242424;
+}
+
+.leaderboard-filter-context {
+  min-width: 190px;
+  min-height: 54px;
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 0 18px;
+}
+
+.leaderboard-filter-context small,
+.leaderboard-filter-context strong {
+  display: block;
+  font-weight: var(--font-bold);
+  line-height: 1;
+}
+
+.leaderboard-filter-context small {
+  color: #ff88ff;
+  font-size: 0.66rem;
+  text-transform: uppercase;
+}
+
+.leaderboard-filter-context strong {
+  color: var(--heading);
+  font-size: 0.82rem;
+}
+
+.leaderboard-view-row .leaderboard-subfilters {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(100px, 1fr));
+  gap: 0;
+}
+
+.leaderboard-view-row .leaderboard-subfilters a {
+  position: relative;
+  min-height: 54px;
+  border-radius: 0;
+  padding: 0 18px;
+  background: transparent;
+  font-weight: var(--font-bold);
+}
+
+.leaderboard-view-row .leaderboard-subfilters a + a {
+  border-left: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.leaderboard-view-row .leaderboard-subfilters a::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 3px;
+  background: transparent;
+}
+
+.leaderboard-view-row .leaderboard-subfilters a:hover,
+.leaderboard-view-row .leaderboard-subfilters a:focus-visible {
+  background: #303030;
+}
+
+.leaderboard-view-row .leaderboard-subfilters a.is-active,
+.leaderboard-view-row .leaderboard-subfilters a[aria-current="page"] {
+  background: #3a303a;
+}
+
+.leaderboard-view-row .leaderboard-subfilters a.is-active::after,
+.leaderboard-view-row .leaderboard-subfilters a[aria-current="page"]::after {
+  background: #ff55ff;
 }
 
 .leaderboard-result-count {
   flex: 0 0 auto;
+  min-height: 54px;
+  display: inline-flex;
+  align-items: center;
+  border-left: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 0 18px;
   color: var(--subtext);
   font-size: var(--ui-font-size);
   font-weight: var(--font-semibold);
@@ -3725,6 +3940,108 @@ a[aria-label="Discord"]:focus-visible .site-icon {
   font-size: var(--ui-font-size);
   font-weight: var(--font-semibold);
   line-height: 1.4;
+}
+
+.leaderboard-results {
+  display: contents;
+}
+
+.leaderboard-top-card {
+  view-transition-name: leaderboard-top-card;
+}
+
+.leaderboard-category-grid {
+  view-transition-name: leaderboard-categories;
+}
+
+.leaderboard-board {
+  view-transition-name: leaderboard-board;
+}
+
+.leaderboard-top-card,
+.leaderboard-category-grid,
+.leaderboard-board .leaderboard-view-row,
+.leaderboard-board .leaderboard-results > * {
+  transition: opacity 180ms ease;
+}
+
+.leaderboard-board.is-view-loading {
+  cursor: progress;
+}
+
+.leaderboard-page.is-view-loading .leaderboard-top-card,
+.leaderboard-page.is-view-loading .leaderboard-category-grid,
+.leaderboard-board.is-view-loading .leaderboard-view-row,
+.leaderboard-board.is-view-loading .leaderboard-results > * {
+  pointer-events: none;
+  opacity: 0.62;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  animation: mineacle-root-out 140ms ease both;
+}
+
+::view-transition-new(root) {
+  animation: mineacle-root-in 260ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+::view-transition-old(leaderboard-top-card),
+::view-transition-old(leaderboard-categories),
+::view-transition-old(leaderboard-board) {
+  animation: mineacle-view-out 150ms ease both;
+}
+
+::view-transition-new(leaderboard-top-card),
+::view-transition-new(leaderboard-categories),
+::view-transition-new(leaderboard-board) {
+  animation: mineacle-view-in 280ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.leaderboard-page.is-view-entering .leaderboard-top-card,
+.leaderboard-page.is-view-entering .leaderboard-category-grid,
+.leaderboard-page.is-view-entering .leaderboard-view-row,
+.leaderboard-page.is-view-entering .leaderboard-results > * {
+  animation: mineacle-view-in 280ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes mineacle-view-out {
+  to {
+    opacity: 0.3;
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes mineacle-root-out {
+  to {
+    opacity: 0.72;
+  }
+}
+
+@keyframes mineacle-root-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes mineacle-view-in {
+  from {
+    opacity: 0.25;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .leaderboard-table-head {
@@ -3751,13 +4068,6 @@ a[aria-label="Discord"]:focus-visible .site-icon {
     padding-inline: clamp(28px, 4vw, 58px);
   }
 
-  .leaderboard-category-card small {
-    display: none;
-  }
-
-  .leaderboard-category-copy {
-    gap: 0;
-  }
 }
 
 @media (max-width: 1120px) {
@@ -3774,19 +4084,19 @@ a[aria-label="Discord"]:focus-visible .site-icon {
   }
 
   .leaderboard-category-card {
-    grid-template-columns: 36px minmax(0, 1fr);
-    gap: 9px;
-    padding-inline: 12px;
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 12px;
+    padding-inline: 16px;
   }
 
   .leaderboard-category-icon {
-    width: 36px;
-    height: 36px;
+    width: 44px;
+    height: 44px;
   }
 
   .leaderboard-category-card img {
-    width: 24px;
-    height: 24px;
+    width: 30px;
+    height: 30px;
   }
 
   .leaderboard-board-top {
@@ -3810,10 +4120,6 @@ a[aria-label="Discord"]:focus-visible .site-icon {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .leaderboard-category-card:last-child {
-    grid-column: 1 / -1;
-  }
-
   .leaderboard-category-card + .leaderboard-category-card {
     border-left: 0;
   }
@@ -3833,8 +4139,37 @@ a[aria-label="Discord"]:focus-visible .site-icon {
   }
 
   .leaderboard-view-row {
-    align-items: stretch;
-    flex-direction: column;
+    grid-template-columns: 1fr;
+  }
+
+  .leaderboard-filter-context {
+    min-width: 0;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  .leaderboard-view-row .leaderboard-subfilters {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .leaderboard-view-row .leaderboard-subfilters a {
+    padding-inline: 10px;
+  }
+
+  .leaderboard-result-count {
+    min-height: 44px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    border-left: 0;
+  }
+
+  .leaderboard-category-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .leaderboard-category-card + .leaderboard-category-card,
+  .leaderboard-category-card:nth-child(even) {
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    border-left: 0;
   }
 
   .leaderboard-search-grid {
@@ -4354,8 +4689,8 @@ a[aria-label="Discord"]:focus-visible .site-icon {
   }
 
   .player-card-head img {
-    width: 30px;
-    height: 30px;
+    width: 100%;
+    height: 100%;
   }
 }
 
@@ -4371,4 +4706,50 @@ body :where(strong, b) {
 body :where(h1, h2, h3, h4, h5, h6),
 body :where(h1, h2, h3, h4, h5, h6) :where(span, strong, b, small) {
   font-weight: var(--font-extrabold);
+}
+
+.home-grid,
+.admin-page {
+  animation: mineacle-page-enter 300ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes mineacle-page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root),
+  ::view-transition-old(leaderboard-top-card),
+  ::view-transition-new(leaderboard-top-card),
+  ::view-transition-old(leaderboard-categories),
+  ::view-transition-new(leaderboard-categories),
+  ::view-transition-old(leaderboard-board),
+  ::view-transition-new(leaderboard-board) {
+    animation: none;
+  }
+
+  .home-grid,
+  .admin-page,
+  .leaderboard-page.is-view-entering .leaderboard-top-card,
+  .leaderboard-page.is-view-entering .leaderboard-category-grid,
+  .leaderboard-page.is-view-entering .leaderboard-view-row,
+  .leaderboard-page.is-view-entering .leaderboard-results > * {
+    animation: none;
+  }
+
+  .leaderboard-top-card,
+  .leaderboard-category-grid,
+  .leaderboard-board .leaderboard-view-row,
+  .leaderboard-board .leaderboard-results > * {
+    transition: none;
+  }
 }

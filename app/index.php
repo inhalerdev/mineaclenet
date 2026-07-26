@@ -36,28 +36,7 @@ $year = date('Y');
 
 function mineacle_icon(string $name): string
 {
-    $assetVersion = rawurlencode(mineacle_page_asset_version());
-    $iconVersion = '?v=' . $assetVersion;
-    $officialIcons = [
-        'home' => 'assets/icons/rail-home.png' . $iconVersion,
-        'stats' => 'assets/icons/rail-leaderboard.png' . $iconVersion,
-        'vote' => 'assets/icons/rail-vote.png' . $iconVersion,
-        'store' => 'assets/icons/rail-store.png' . $iconVersion,
-        'bans' => 'assets/icons/rail-bans.png' . $iconVersion,
-        'discord' => 'assets/icons/discord.svg',
-        'x' => 'assets/icons/x-twitter.svg',
-    ];
-
-    if (isset($officialIcons[$name])) {
-        return '<img class="site-icon" src="' . h($officialIcons[$name]) . '" alt="" aria-hidden="true">';
-    }
-
-    $icons = [
-        'youtube' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8.5c.3 2.3.3 4.7 0 7-.2 1.4-1.2 2.4-2.6 2.6-4.2.4-8.6.4-12.8 0-1.4-.2-2.4-1.2-2.6-2.6-.3-2.3-.3-4.7 0-7 .2-1.4 1.2-2.4 2.6-2.6 4.2-.4 8.6-.4 12.8 0 1.4.2 2.4 1.2 2.6 2.6ZM10 15l5-3-5-3v6Z"/></svg>',
-        'tiktok' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h3c.2 2 1.4 3.4 3.4 3.8v3.1c-1.3-.1-2.4-.5-3.4-1.2V15a5 5 0 1 1-5-5h.6v3.2c-.2 0-.4-.1-.6-.1a1.9 1.9 0 1 0 1.9 1.9L14 3Z"/></svg>',
-    ];
-
-    return $icons[$name] ?? '';
+    return mineacle_page_icon($name);
 }
 
 function mineacle_home_is_video_url(string $url): bool
@@ -193,8 +172,8 @@ mineacle_page_head('Home');
                     <div class="hero-actions" aria-label="Server actions">
                         <button class="hero-action hero-action-primary hero-copy-ip" type="button" data-copy-server-ip data-server-ip="<?php echo h($minecraftIp); ?>" data-default-label="Play Now" data-copied-label="IP Copied" data-failed-label="Copy Failed" aria-label="Copy Mineacle server IP">
                             <span class="hero-action-icon-stack" aria-hidden="true">
-                                <img class="hero-action-icon hero-action-icon-default" src="<?php echo h(mineacle_home_versioned_url('/assets/icons/copy-ip-play.svg', $heroAssetVersion)); ?>" alt="">
-                                <img class="hero-action-icon hero-action-icon-copied" src="<?php echo h(mineacle_home_versioned_url('/assets/icons/copy-ip-tick.svg', $heroAssetVersion)); ?>" alt="">
+                                <img class="hero-action-icon hero-action-icon-default" src="<?php echo h(mineacle_home_versioned_url('/assets/icons/play.svg', $heroAssetVersion)); ?>" alt="">
+                                <img class="hero-action-icon hero-action-icon-copied" src="<?php echo h(mineacle_home_versioned_url('/assets/icons/check.svg', $heroAssetVersion)); ?>" alt="">
                             </span>
                             <span data-copy-server-label>Play Now</span>
                         </button>
@@ -344,8 +323,8 @@ mineacle_page_head('Home');
             <p class="join-modal-ip"><span>Server IP:</span> <strong><?php echo h($minecraftIp); ?></strong></p>
             <button class="hero-action hero-action-primary hero-copy-ip join-modal-copy-ip" type="button" data-copy-server-ip data-server-ip="<?php echo h($minecraftIp); ?>" data-default-label="Copy IP" data-copied-label="IP Copied" data-failed-label="Copy Failed" aria-label="Copy Mineacle server IP">
                 <span class="hero-action-icon-stack" aria-hidden="true">
-                    <img class="hero-action-icon hero-action-icon-default" src="<?php echo h(mineacle_home_versioned_url('/assets/icons/copy-ip-play.svg', $heroAssetVersion)); ?>" alt="">
-                    <img class="hero-action-icon hero-action-icon-copied" src="<?php echo h(mineacle_home_versioned_url('/assets/icons/copy-ip-tick.svg', $heroAssetVersion)); ?>" alt="">
+                    <img class="hero-action-icon hero-action-icon-default" src="<?php echo h(mineacle_home_versioned_url('/assets/icons/play.svg', $heroAssetVersion)); ?>" alt="">
+                    <img class="hero-action-icon hero-action-icon-copied" src="<?php echo h(mineacle_home_versioned_url('/assets/icons/check.svg', $heroAssetVersion)); ?>" alt="">
                 </span>
                 <span data-copy-server-label>Copy IP</span>
             </button>

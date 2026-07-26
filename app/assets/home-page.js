@@ -38,6 +38,7 @@
   const adminImageInput = document.querySelector('[data-admin-image-input]');
   const adminUploadLabel = document.querySelector('[data-admin-upload-label]');
   const heroVideo = document.querySelector('[data-hero-video]');
+  const leaderboardPage = document.querySelector('.leaderboard-page');
   const serverIp = statusNode ? statusNode.dataset.serverIp || 'mineacle.net' : 'mineacle.net';
   const statusRefreshMs = 15000;
   const statusFetchTimeoutMs = 4200;
@@ -51,6 +52,9 @@
   let playerSearchRun = 0;
   let joinModalLastFocus = null;
   let announcementModalLastFocus = null;
+  let leaderboardViewAbort = null;
+  let leaderboardViewRun = 0;
+  let leaderboardTransitionTimer = 0;
   let externalStatusFailureCount = 0;
   let lastExternalStatusCheck = 0;
   const videoFallbackSvg = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360"%3E%3Crect width="640" height="360" fill="%23202020"/%3E%3Cpath fill="%23ff55ff" d="M282 238V122l104 58-104 58z"/%3E%3C/svg%3E';
@@ -620,6 +624,152 @@
     setPlayerSearchExpanded(false);
   };
 
+  const playerSearchIsEnabled = () => {
+    return !playerSearchForm || playerSearchForm.dataset.playerSearchEnabled !== 'false';
+  };
+
+  const loadLeaderboardView = async (url, pushHistory = true) => {
+    const board = document.getElementById('leaderboardRankings');
+
+    if (!leaderboardPage || !board) return false;
+
+    const targetUrl = new URL(url, window.location.href);
+    targetUrl.hash = '';
+
+    if (leaderboardViewAbort) {
+      leaderboardViewAbort.abort();
+    }
+
+    const run = leaderboardViewRun + 1;
+    const controller = new AbortController();
+    const scrollLeft = window.scrollX;
+    const scrollTop = window.scrollY;
+    leaderboardViewRun = run;
+    leaderboardViewAbort = controller;
+    board.classList.add('is-view-loading');
+    board.setAttribute('aria-busy', 'true');
+    leaderboardPage.classList.add('is-view-loading');
+
+    try {
+      const response = await fetch(targetUrl.href, {
+        headers: {
+          Accept: 'text/html',
+          'X-Requested-With': 'fetch'
+        },
+        cache: 'no-store',
+        signal: controller.signal
+      });
+
+      if (!response.ok) return false;
+
+      const html = await response.text();
+      if (run !== leaderboardViewRun) return null;
+
+      const nextDocument = new DOMParser().parseFromString(html, 'text/html');
+      const currentTopCard = document.querySelector('.leaderboard-top-card');
+      const nextTopCard = nextDocument.querySelector('.leaderboard-top-card');
+      const currentCategoryGrid = document.querySelector('.leaderboard-category-grid');
+      const nextCategoryGrid = nextDocument.querySelector('.leaderboard-category-grid');
+      const currentHeading = board.querySelector('.leaderboard-section-heading');
+      const nextHeading = nextDocument.querySelector('#leaderboardRankings .leaderboard-section-heading');
+      const currentViewRow = board.querySelector('.leaderboard-view-row');
+      const nextViewRow = nextDocument.querySelector('#leaderboardRankings .leaderboard-view-row');
+      const currentResults = board.querySelector('[data-leaderboard-results]');
+      const nextResults = nextDocument.querySelector('#leaderboardRankings [data-leaderboard-results]');
+      const currentCategoryInput = board.querySelector('[data-leaderboard-category-input]');
+      const nextCategoryInput = nextDocument.querySelector('#leaderboardRankings [data-leaderboard-category-input]');
+      const currentViewInput = board.querySelector('[data-leaderboard-view-input]');
+      const nextViewInput = nextDocument.querySelector('#leaderboardRankings [data-leaderboard-view-input]');
+      const nextBoard = nextDocument.getElementById('leaderboardRankings');
+      const nextSearchForm = nextDocument.querySelector('[data-player-search-form]');
+      const nextSearchInput = nextDocument.getElementById('homeSearch');
+      const currentSearchLabel = board.querySelector('label[for="homeSearch"]');
+      const nextSearchLabel = nextDocument.querySelector('#leaderboardRankings label[for="homeSearch"]');
+
+      if (!currentTopCard || !nextTopCard || !currentCategoryGrid || !nextCategoryGrid
+        || !currentHeading || !nextHeading
+        || !currentViewRow || !nextViewRow || !currentResults || !nextResults
+        || !currentCategoryInput || !nextCategoryInput || !currentViewInput || !nextViewInput
+        || !nextBoard || !playerSearchForm || !nextSearchForm || !searchInput || !nextSearchInput
+        || !currentSearchLabel || !nextSearchLabel) {
+        return false;
+      }
+
+      board.classList.remove('is-view-loading');
+      board.removeAttribute('aria-busy');
+      leaderboardPage.classList.remove('is-view-loading');
+
+      const applyView = () => {
+        currentTopCard.replaceWith(nextTopCard);
+        currentCategoryGrid.replaceWith(nextCategoryGrid);
+        currentHeading.replaceWith(nextHeading);
+        currentViewRow.replaceWith(nextViewRow);
+        currentResults.replaceWith(nextResults);
+        currentCategoryInput.value = nextCategoryInput.value;
+        currentViewInput.value = nextViewInput.value;
+        playerSearchForm.dataset.playerSearchEnabled = nextSearchForm.dataset.playerSearchEnabled || 'true';
+        searchInput.placeholder = nextSearchInput.placeholder;
+        searchInput.value = nextSearchInput.value;
+        currentSearchLabel.textContent = nextSearchLabel.textContent;
+        board.setAttribute('aria-label', nextBoard.getAttribute('aria-label') || 'Leaderboard rankings');
+        hidePlayerResults();
+        updateClearButton();
+        window.scrollTo(scrollLeft, scrollTop);
+      };
+
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (typeof document.startViewTransition === 'function' && !reduceMotion) {
+        const transition = document.startViewTransition(applyView);
+        await transition.updateCallbackDone;
+      } else {
+        applyView();
+
+        if (!reduceMotion) {
+          window.clearTimeout(leaderboardTransitionTimer);
+          leaderboardPage.classList.remove('is-view-entering');
+          window.requestAnimationFrame(() => {
+            leaderboardPage.classList.add('is-view-entering');
+            leaderboardTransitionTimer = window.setTimeout(() => {
+              leaderboardPage.classList.remove('is-view-entering');
+            }, 320);
+          });
+        }
+      }
+
+      if (nextDocument.title) {
+        document.title = nextDocument.title;
+      }
+
+      if (pushHistory) {
+        window.history.pushState(
+          { mineacleLeaderboardView: true },
+          '',
+          `${targetUrl.pathname}${targetUrl.search}`
+        );
+      }
+
+      window.requestAnimationFrame(() => {
+        window.scrollTo(scrollLeft, scrollTop);
+      });
+
+      return true;
+    } catch (error) {
+      if (error && error.name === 'AbortError') return null;
+      return false;
+    } finally {
+      if (leaderboardViewAbort === controller) {
+        leaderboardViewAbort = null;
+      }
+
+      if (run === leaderboardViewRun) {
+        board.classList.remove('is-view-loading');
+        board.removeAttribute('aria-busy');
+        leaderboardPage.classList.remove('is-view-loading');
+      }
+    }
+  };
+
   const applyPlayerStatusClass = (row, player) => {
     const status = player && player.punishment_status && typeof player.punishment_status === 'object'
       ? player.punishment_status
@@ -731,7 +881,7 @@
       if (rankLabel !== '') {
         const rankNode = document.createElement('span');
         rankNode.className = 'ranked-player-name__rank';
-        rankNode.style.setProperty('--rank-color', rankColor);
+        nameNode.style.setProperty('--rank-color', rankColor);
         rankNode.textContent = rankLabel;
         nameNode.append(rankNode);
       }
@@ -769,7 +919,10 @@
   };
 
   const loadPlayerResults = async (query) => {
-    if (!playerSearchResults || query === '') return;
+    if (!playerSearchResults || query === '' || !playerSearchIsEnabled()) {
+      hidePlayerResults();
+      return;
+    }
 
     stopPlayerSearchRequest();
 
@@ -805,6 +958,11 @@
 
   const queuePlayerSearch = () => {
     if (!searchInput) return;
+
+    if (!playerSearchIsEnabled()) {
+      hidePlayerResults();
+      return;
+    }
 
     window.clearTimeout(playerSearchTimer);
 
@@ -842,12 +1000,77 @@
 
   if (playerSearchForm) {
     playerSearchForm.addEventListener('submit', openTypedPlayerProfile);
+    playerSearchForm.addEventListener('submit', async (event) => {
+      if (!leaderboardPage || event.defaultPrevented) return;
+
+      event.preventDefault();
+      hidePlayerResults();
+
+      const actionUrl = new URL(playerSearchForm.action, window.location.href);
+      const formData = new FormData(playerSearchForm);
+      actionUrl.search = new URLSearchParams(formData).toString();
+      actionUrl.hash = '';
+
+      const filterUrl = `${actionUrl.pathname}${actionUrl.search}`;
+      const loaded = await loadLeaderboardView(filterUrl, true);
+
+      if (loaded === false) {
+        window.location.assign(filterUrl);
+      }
+    });
   }
 
   document.addEventListener('click', (event) => {
     if (!playerSearchRoot || playerSearchRoot.contains(event.target)) return;
     hidePlayerResults();
   });
+
+  document.addEventListener('click', async (event) => {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (!(event.target instanceof Element)) return;
+
+    const link = event.target.closest('[data-leaderboard-category-link], [data-leaderboard-view-link], [data-leaderboard-page-link]');
+    if (!(link instanceof HTMLAnchorElement) || link.target === '_blank') return;
+
+    if (link.getAttribute('aria-disabled') === 'true') {
+      event.preventDefault();
+      return;
+    }
+
+    if (link.getAttribute('aria-current') === 'page') {
+      event.preventDefault();
+      return;
+    }
+
+    const url = new URL(link.href, window.location.href);
+    if (url.pathname !== '/leaderboards') return;
+
+    const viewUrl = `${url.pathname}${url.search}`;
+
+    event.preventDefault();
+    hidePlayerResults();
+
+    const loaded = await loadLeaderboardView(viewUrl, true);
+    if (loaded === false) {
+      window.location.assign(viewUrl);
+    }
+  });
+
+  if (leaderboardPage) {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+
+    window.addEventListener('popstate', async () => {
+      const loaded = await loadLeaderboardView(window.location.href, false);
+
+      if (loaded === false) {
+        window.location.reload();
+      }
+    });
+  } else if ('scrollRestoration' in window.history) {
+    window.history.scrollRestoration = 'auto';
+  }
 
   const setServerStatus = (online, onlineCount) => {
     if (!statusNode || !statusCount) return;
