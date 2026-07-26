@@ -1,4 +1,13 @@
+DirectoryIndex index.php
+
 RewriteEngine On
+
+RewriteCond %{THE_REQUEST} \s/+index\.php[?\s] [NC]
+RewriteRule ^index\.php$ / [R=302,L]
+RewriteCond %{THE_REQUEST} \s/+home(?:\.php)?[/?\s] [NC]
+RewriteRule ^home(?:\.php)?/?$ / [R=302,L]
+RewriteRule ^$ index.php [END,QSA]
+
 RewriteRule ^admin\.php$ /admin [R=302,L]
 RewriteRule ^admin/?$ admin.php [L,QSA]
 RewriteCond %{THE_REQUEST} \s/+leaderboards\.php[?\s] [NC]
