@@ -82,17 +82,6 @@ mineacle_page_head('Home', [
     'theme_color' => '#00001f',
 ]);
 ?>
-<svg class="svg-symbols" aria-hidden="true">
-    <symbol id="icon-user" viewBox="0 0 24 24">
-        <circle cx="12" cy="8" r="3.5"></circle>
-        <path d="M5.5 20c.5-4 2.7-6 6.5-6s6 2 6.5 6"></path>
-    </symbol>
-    <symbol id="icon-arrow" viewBox="0 0 24 24">
-        <path d="M5 12h14"></path>
-        <path d="m13 6 6 6-6 6"></path>
-    </symbol>
-</svg>
-
 <main class="canvas" aria-labelledby="home-page-title">
     <h1 id="home-page-title" class="visually-hidden">Mineacle</h1>
 
@@ -155,9 +144,13 @@ mineacle_page_head('Home', [
                     <div class="search-shell">
                         <form class="search-control" id="player-search" role="search" action="/player" method="get">
                             <div class="search-field">
-                                <svg class="search-user-icon" aria-hidden="true">
-                                    <use href="#icon-user"></use>
-                                </svg>
+                                <img
+                                    class="search-user-icon"
+                                    src="/assets/home/search-user.png?v=<?php echo h($assetVersion); ?>"
+                                    alt=""
+                                    aria-hidden="true"
+                                    draggable="false"
+                                >
                                 <label class="visually-hidden" for="site-search"><?php echo h($searchLabel); ?></label>
                                 <input
                                     id="site-search"
@@ -175,9 +168,13 @@ mineacle_page_head('Home', [
                                 >
                             </div>
                             <button class="search-submit" type="submit" aria-label="Search player" title="Search">
-                                <svg class="search-arrow-icon" aria-hidden="true">
-                                    <use href="#icon-arrow"></use>
-                                </svg>
+                                <img
+                                    class="search-arrow-icon"
+                                    src="/assets/home/search-submit.png?v=<?php echo h($assetVersion); ?>"
+                                    alt=""
+                                    aria-hidden="true"
+                                    draggable="false"
+                                >
                             </button>
                         </form>
                         <div
@@ -200,8 +197,10 @@ mineacle_page_head('Home', [
                             title="Checking server status"
                         >
                             <span class="header-status__dot" aria-hidden="true"></span>
-                            <span class="header-status__count" id="home-server-status-count">--</span>
-                            <span class="header-status__label" id="home-server-status-label">Currently Online</span>
+                            <span class="header-status__copy">
+                                <span class="header-status__count" id="home-server-status-count">--</span>
+                                <span class="header-status__label" id="home-server-status-label">Currently Playing</span>
+                            </span>
                         </div>
 
                         <button

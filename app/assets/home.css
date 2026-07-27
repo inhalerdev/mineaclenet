@@ -111,13 +111,6 @@ button {
   cursor: pointer;
 }
 
-.svg-symbols {
-  position: absolute;
-  width: 0;
-  height: 0;
-  overflow: hidden;
-}
-
 .canvas {
   position: fixed;
   inset: 0;
@@ -223,11 +216,9 @@ button {
   display: block;
   width: var(--icon-size);
   height: var(--icon-size);
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  object-fit: contain;
+  object-position: center;
+  filter: invert(1);
 }
 
 .social-link {
@@ -254,8 +245,8 @@ button {
 .social-logo {
   position: relative;
   display: block;
-  width: 66.666667%;
-  height: 66.666667%;
+  width: 100%;
+  height: 100%;
   flex: none;
 }
 
@@ -376,7 +367,7 @@ button {
 .search-user-icon {
   flex: none;
   margin: 0 var(--half-space);
-  color: var(--text);
+  opacity: 0.72;
 }
 
 .search-control input {
@@ -504,7 +495,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(3px, 0.3125vw, 6px);
+  gap: var(--half-space);
   width: max-content;
   min-width: var(--control-size);
   max-width: none;
@@ -546,6 +537,13 @@ button {
   box-shadow:
     0 0 0 2px rgba(255, 85, 85, 0.14),
     0 0 8px rgba(255, 85, 85, 0.3);
+}
+
+.header-status__copy {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  min-width: 0;
 }
 
 .header-status__count,

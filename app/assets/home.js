@@ -502,7 +502,7 @@
     serverStatus.classList.add(online ? "is-online" : "is-offline");
     serverStatusCount.textContent = String(onlineCount);
     serverStatusLabel.textContent = online
-      ? "Currently Online"
+      ? "Currently Playing"
       : "Server Offline";
 
     const description = online
