@@ -240,6 +240,11 @@
       return;
     }
 
+    // The homepage hero must never produce audio, even if the source has a track.
+    heroVideo.defaultMuted = true;
+    heroVideo.muted = true;
+    heroVideo.volume = 0;
+
     if (reduceMotion.matches) {
       heroVideo.pause();
       heroVideo.currentTime = 0;

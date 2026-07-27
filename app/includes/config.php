@@ -73,6 +73,10 @@ return [
     ],
     'home' => [
         'database_enabled' => strtolower($mineacleEnv(['HOME_DATABASE_ENABLED', 'home_database_enabled'])) === 'true',
+        'hero_video_url' => $mineacleEnv(
+            ['HERO_VIDEO_URL', 'hero_video_url'],
+            'https://pub-a87f1944ab6f4788a1974177e59cf562.r2.dev/Video%20Project%202.mp4'
+        ),
     ],
     'creators' => [
         'youtube_api_key' => $mineacleEnv(['YOUTUBE_API_KEY', 'youtube_api_key']),

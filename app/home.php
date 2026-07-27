@@ -12,7 +12,9 @@ if ($directHomePath === '/home' || $directHomePath === '/home.php') {
 require_once __DIR__ . '/includes/layout.php';
 require_once __DIR__ . '/includes/stats-lib.php';
 
-$site = mineacle_config()['site'] ?? [];
+$config = mineacle_config();
+$site = $config['site'] ?? [];
+$homeConfig = $config['home'] ?? [];
 $assetVersion = rawurlencode(mineacle_page_asset_version());
 $minecraftIp = trim((string) ($site['minecraft_ip'] ?? 'mineacle.net')) ?: 'mineacle.net';
 $uniquePlayerCount = 0;
@@ -41,6 +43,11 @@ $bansUrl = $siteUrl($site['bans_url'] ?? '', 'https://bans.mineacle.net/');
 $storeUrl = $siteUrl($site['store_url'] ?? '', 'https://store.mineacle.net/');
 $discordUrl = $siteUrl($site['discord_url'] ?? '', 'https://discord.gg/qmpJ4xMguT');
 $xUrl = $siteUrl($site['x_url'] ?? '', 'https://x.com/mineaclenetwork');
+$heroVideoUrl = mineacle_page_public_link($homeConfig['hero_video_url'] ?? '');
+
+if ($heroVideoUrl === '#') {
+    $heroVideoUrl = 'https://pub-a87f1944ab6f4788a1974177e59cf562.r2.dev/Video%20Project%202.mp4';
+}
 
 $navLinks = [
     ['key' => 'home', 'label' => 'Home', 'url' => '/', 'external' => false],
@@ -218,7 +225,7 @@ mineacle_page_head('Home', [
                         poster="/assets/home/hero-poster.webp?v=<?php echo h($assetVersion); ?>"
                         aria-describedby="hero-description"
                     >
-                        <source src="/assets/home/hero.mp4?v=<?php echo h($assetVersion); ?>" type="video/mp4">
+                        <source src="<?php echo h($heroVideoUrl); ?>" type="video/mp4">
                     </video>
                     <figcaption id="hero-description" class="visually-hidden">
                         Mineacle Minecraft server entrance.
