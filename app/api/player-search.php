@@ -428,6 +428,7 @@ try {
         }
 
         $displaySql = $displayColumn ? mineacle_player_identifier($displayColumn) : null;
+        $uuidSql = $uuidColumn ? mineacle_player_identifier($uuidColumn) : null;
         $safeQuery = mineacle_player_like_value($query);
         $searchParts = [$nameSql . ' LIKE :prefix', $nameSql . ' LIKE :contains'];
         $params = [
@@ -445,7 +446,8 @@ try {
 
         $suggestionDisplay = $displaySql ?? $nameSql;
         $sql = 'SELECT ' . $nameSql . ' AS username, '
-            . $suggestionDisplay . ' AS display_name'
+            . $suggestionDisplay . ' AS display_name, '
+            . ($uuidSql ?? 'NULL') . ' AS uuid'
             . ' FROM ' . $tableSql
             . ' WHERE ' . implode(' OR ', $searchParts)
             . ' ORDER BY CASE WHEN ' . $nameSql . ' LIKE :prefix_order THEN 0 ELSE 1 END, '
@@ -464,10 +466,13 @@ try {
             }
 
             $displayName = trim((string) ($row['display_name'] ?? ''));
+            $uuid = $row['uuid'] !== null ? (string) $row['uuid'] : null;
+            $skin = mineacle_stats_skin_assets($uuid, $name);
             $seen[$nameKey] = true;
             $suggestions[] = [
                 'name' => $name,
                 'display_name' => $displayName !== '' ? $displayName : $name,
+                'head' => is_string($skin['head'] ?? null) ? $skin['head'] : null,
             ];
         }
 

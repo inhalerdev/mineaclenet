@@ -190,22 +190,6 @@ mineacle_page_head('Home', [
                     </div>
 
                     <nav class="top-actions" aria-label="Header actions">
-                        <?php foreach ($socialLinks as $link): ?>
-                            <a
-                                class="social-link social-link--header social-link--<?php echo h((string) $link['key']); ?>"
-                                href="<?php echo h((string) $link['url']); ?>"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                aria-label="<?php echo h((string) $link['label']); ?>"
-                                title="<?php echo h((string) $link['title']); ?>"
-                            >
-                                <span
-                                    class="social-logo social-logo--<?php echo h((string) $link['key']); ?>"
-                                    aria-hidden="true"
-                                ></span>
-                            </a>
-                        <?php endforeach; ?>
-
                         <button
                             class="top-action top-action--play"
                             id="play-button"

@@ -300,6 +300,8 @@
           ? player.display_name.trim()
           : username;
       const link = document.createElement("a");
+      const headUrl =
+        typeof player.head === "string" ? player.head.trim() : "";
       const name = document.createElement("span");
       const action = document.createElement("span");
 
@@ -308,6 +310,26 @@
       link.href = `/player/${encodeURIComponent(username)}`;
       link.setAttribute("role", "option");
       link.setAttribute("aria-selected", "false");
+
+      if (headUrl) {
+        const head = document.createElement("img");
+
+        head.className = "search-suggestion__head";
+        head.src = headUrl;
+        head.alt = "";
+        head.loading = "lazy";
+        head.decoding = "async";
+        head.draggable = false;
+        head.setAttribute("aria-hidden", "true");
+        head.addEventListener(
+          "error",
+          () => {
+            head.remove();
+          },
+          { once: true },
+        );
+        link.append(head);
+      }
 
       name.className = "search-suggestion__username";
       name.textContent = displayName;
