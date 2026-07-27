@@ -26,11 +26,11 @@ try {
 }
 
 $searchPlaceholder = $uniquePlayerCount > 0
-    ? 'Search ' . number_format($uniquePlayerCount) . ' players across 3 dimensions'
-    : 'Search players across 3 dimensions';
+    ? 'Search ' . number_format($uniquePlayerCount) . ' players across all dimensions'
+    : 'Search players across all dimensions';
 $searchLabel = $uniquePlayerCount > 0
-    ? 'Search ' . number_format($uniquePlayerCount) . ' players across Mineacle\'s three dimensions'
-    : 'Search players across Mineacle\'s three dimensions';
+    ? 'Search ' . number_format($uniquePlayerCount) . ' players across all Mineacle dimensions'
+    : 'Search players across all Mineacle dimensions';
 
 $siteUrl = static function (mixed $value, string $fallback): string {
     $resolved = mineacle_page_public_link($value);
@@ -63,14 +63,12 @@ $socialLinks = [
         'label' => 'Mineacle Discord',
         'title' => 'Discord',
         'url' => $discordUrl,
-        'icon' => '/assets/home/social-discord.png',
     ],
     [
         'key' => 'x',
         'label' => 'Mineacle on X',
         'title' => 'X',
         'url' => $xUrl,
-        'icon' => '/assets/home/social-x.png',
     ],
 ];
 
@@ -136,20 +134,17 @@ mineacle_page_head('Home', [
                 <nav class="nav-stack nav-stack--lower" aria-label="Social links">
                     <?php foreach ($socialLinks as $link): ?>
                         <a
-                            class="square-button"
+                            class="social-link social-link--rail social-link--<?php echo h((string) $link['key']); ?>"
                             href="<?php echo h((string) $link['url']); ?>"
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label="<?php echo h((string) $link['label']); ?>"
                             title="<?php echo h((string) $link['title']); ?>"
                         >
-                            <img
-                                class="social-icon<?php echo $link['key'] === 'discord' ? ' social-icon--discord' : ''; ?>"
-                                src="<?php echo h((string) $link['icon']); ?>?v=<?php echo h($assetVersion); ?>"
-                                alt=""
+                            <span
+                                class="social-logo social-logo--<?php echo h((string) $link['key']); ?>"
                                 aria-hidden="true"
-                                draggable="false"
-                            >
+                            ></span>
                         </a>
                     <?php endforeach; ?>
                 </nav>
@@ -157,47 +152,57 @@ mineacle_page_head('Home', [
 
             <div class="content">
                 <header class="topbar">
-                    <form class="search-control" id="player-search" role="search" action="/player" method="get">
-                        <div class="search-field">
-                            <svg class="search-user-icon" aria-hidden="true">
-                                <use href="#icon-user"></use>
-                            </svg>
-                            <label class="visually-hidden" for="site-search"><?php echo h($searchLabel); ?></label>
-                            <input
-                                id="site-search"
-                                name="username"
-                                type="search"
-                                placeholder="<?php echo h($searchPlaceholder); ?>"
-                                maxlength="64"
-                                autocomplete="off"
-                                autocapitalize="none"
-                                spellcheck="false"
-                            >
-                        </div>
-                        <button class="search-submit" type="submit" aria-label="Search player" title="Search">
-                            <svg class="search-arrow-icon" aria-hidden="true">
-                                <use href="#icon-arrow"></use>
-                            </svg>
-                        </button>
-                    </form>
+                    <div class="search-shell">
+                        <form class="search-control" id="player-search" role="search" action="/player" method="get">
+                            <div class="search-field">
+                                <svg class="search-user-icon" aria-hidden="true">
+                                    <use href="#icon-user"></use>
+                                </svg>
+                                <label class="visually-hidden" for="site-search"><?php echo h($searchLabel); ?></label>
+                                <input
+                                    id="site-search"
+                                    name="username"
+                                    type="search"
+                                    placeholder="<?php echo h($searchPlaceholder); ?>"
+                                    maxlength="64"
+                                    autocomplete="off"
+                                    autocapitalize="none"
+                                    spellcheck="false"
+                                    role="combobox"
+                                    aria-autocomplete="list"
+                                    aria-expanded="false"
+                                    aria-controls="home-player-suggestions"
+                                >
+                            </div>
+                            <button class="search-submit" type="submit" aria-label="Search player" title="Search">
+                                <svg class="search-arrow-icon" aria-hidden="true">
+                                    <use href="#icon-arrow"></use>
+                                </svg>
+                            </button>
+                        </form>
+                        <div
+                            class="search-suggestions"
+                            id="home-player-suggestions"
+                            role="listbox"
+                            aria-label="Player suggestions"
+                            hidden
+                        ></div>
+                    </div>
 
                     <nav class="top-actions" aria-label="Header actions">
                         <?php foreach ($socialLinks as $link): ?>
                             <a
-                                class="top-action top-action--social"
+                                class="social-link social-link--header social-link--<?php echo h((string) $link['key']); ?>"
                                 href="<?php echo h((string) $link['url']); ?>"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label="<?php echo h((string) $link['label']); ?>"
                                 title="<?php echo h((string) $link['title']); ?>"
                             >
-                                <img
-                                    class="social-icon<?php echo $link['key'] === 'discord' ? ' social-icon--discord' : ''; ?>"
-                                    src="<?php echo h((string) $link['icon']); ?>?v=<?php echo h($assetVersion); ?>"
-                                    alt=""
+                                <span
+                                    class="social-logo social-logo--<?php echo h((string) $link['key']); ?>"
                                     aria-hidden="true"
-                                    draggable="false"
-                                >
+                                ></span>
                             </a>
                         <?php endforeach; ?>
 
@@ -222,6 +227,9 @@ mineacle_page_head('Home', [
                         loop
                         playsinline
                         preload="metadata"
+                        controlslist="nodownload nofullscreen noremoteplayback"
+                        disablepictureinpicture
+                        disableremoteplayback
                         poster="/assets/home/hero-poster.webp?v=<?php echo h($assetVersion); ?>"
                         aria-describedby="hero-description"
                     >

@@ -347,7 +347,9 @@ if (!$pdo instanceof PDO) {
 $query = trim((string) ($_GET['q'] ?? ''));
 $query = preg_replace('/\s+/', ' ', $query) ?? '';
 $query = substr($query, 0, 40);
-$limit = max(1, min(25, (int) ($_GET['limit'] ?? ($query === '' ? 25 : 8))));
+$suggestionMode = (string) ($_GET['mode'] ?? '') === 'suggest';
+$limitMaximum = $suggestionMode ? 8 : 25;
+$limit = max(1, min($limitMaximum, (int) ($_GET['limit'] ?? ($query === '' ? 25 : 8))));
 
 try {
     $columns = mineacle_player_table_columns($pdo, $tableSql);
@@ -414,6 +416,64 @@ try {
         mineacle_player_response([
             'success' => true,
             'players' => [],
+        ]);
+    }
+
+    if ($suggestionMode) {
+        if ($query === '') {
+            mineacle_player_response([
+                'success' => true,
+                'players' => [],
+            ]);
+        }
+
+        $displaySql = $displayColumn ? mineacle_player_identifier($displayColumn) : null;
+        $safeQuery = mineacle_player_like_value($query);
+        $searchParts = [$nameSql . ' LIKE :prefix', $nameSql . ' LIKE :contains'];
+        $params = [
+            ':prefix' => $safeQuery . '%',
+            ':contains' => '%' . $safeQuery . '%',
+            ':prefix_order' => $safeQuery . '%',
+        ];
+
+        if ($displaySql !== null && $displaySql !== $nameSql) {
+            $searchParts[] = $displaySql . ' LIKE :display_prefix';
+            $searchParts[] = $displaySql . ' LIKE :display_contains';
+            $params[':display_prefix'] = $safeQuery . '%';
+            $params[':display_contains'] = '%' . $safeQuery . '%';
+        }
+
+        $suggestionDisplay = $displaySql ?? $nameSql;
+        $sql = 'SELECT ' . $nameSql . ' AS username, '
+            . $suggestionDisplay . ' AS display_name'
+            . ' FROM ' . $tableSql
+            . ' WHERE ' . implode(' OR ', $searchParts)
+            . ' ORDER BY CASE WHEN ' . $nameSql . ' LIKE :prefix_order THEN 0 ELSE 1 END, '
+            . $nameSql . ' ASC LIMIT ' . $limit;
+        $statement = $pdo->prepare($sql);
+        $statement->execute($params);
+        $suggestions = [];
+        $seen = [];
+
+        foreach ($statement->fetchAll() as $row) {
+            $name = trim((string) ($row['username'] ?? ''));
+            $nameKey = strtolower($name);
+
+            if ($name === '' || isset($seen[$nameKey])) {
+                continue;
+            }
+
+            $displayName = trim((string) ($row['display_name'] ?? ''));
+            $seen[$nameKey] = true;
+            $suggestions[] = [
+                'name' => $name,
+                'display_name' => $displayName !== '' ? $displayName : $name,
+            ];
+        }
+
+        mineacle_player_response([
+            'success' => true,
+            'players' => $suggestions,
         ]);
     }
 
