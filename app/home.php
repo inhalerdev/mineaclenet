@@ -24,8 +24,8 @@ try {
 }
 
 $searchPlaceholder = $uniquePlayerCount > 0
-    ? 'SEARCH ' . number_format($uniquePlayerCount) . ' PLAYERS ACROSS 3 DIMENSIONS'
-    : 'SEARCH PLAYERS ACROSS 3 DIMENSIONS';
+    ? 'Search ' . number_format($uniquePlayerCount) . ' players across 3 dimensions'
+    : 'Search players across 3 dimensions';
 $searchLabel = $uniquePlayerCount > 0
     ? 'Search ' . number_format($uniquePlayerCount) . ' players across Mineacle\'s three dimensions'
     : 'Search players across Mineacle\'s three dimensions';

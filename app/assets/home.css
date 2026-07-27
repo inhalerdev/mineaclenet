@@ -265,7 +265,7 @@ button {
 
 .search-control {
   display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 7fr) minmax(0, 1fr);
   width: 37.5%;
   min-width: 0;
   max-width: 576px;
