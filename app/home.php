@@ -73,7 +73,7 @@ $socialLinks = [
 ];
 
 mineacle_page_head('Home', [
-    'meta_title' => 'Mineacle | Minecraft Survival Server',
+    'meta_title' => 'Home | Mineacle',
     'meta_description' => 'Join Mineacle, search player profiles, view server rankings, vote, and connect with the community.',
     'canonical_url' => 'https://mineacle.net/',
     'stylesheets' => ['/assets/home.css'],
@@ -201,7 +201,7 @@ mineacle_page_head('Home', [
                         >
                             <span class="header-status__dot" aria-hidden="true"></span>
                             <span class="header-status__count" id="home-server-status-count">--</span>
-                            <span class="header-status__label">ONLINE</span>
+                            <span class="header-status__label" id="home-server-status-label">Currently Online</span>
                         </div>
 
                         <button

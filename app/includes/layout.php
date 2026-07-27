@@ -6,7 +6,7 @@ require_once __DIR__ . '/db.php';
 
 function mineacle_page_asset_version(): string
 {
-    return 'homepage-20260727-readable-controls';
+    return 'homepage-20260727-polished-rail';
 }
 
 function mineacle_page_clean_text(string $value): string

@@ -8,6 +8,9 @@
   const serverStatusCount = document.querySelector(
     "#home-server-status-count",
   );
+  const serverStatusLabel = document.querySelector(
+    "#home-server-status-label",
+  );
   const heroVideo = document.querySelector("#hero-video");
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let resetTimer = 0;
@@ -491,13 +494,16 @@
   };
 
   const renderServerStatus = ({ online, onlineCount }) => {
-    if (!serverStatus || !serverStatusCount) {
+    if (!serverStatus || !serverStatusCount || !serverStatusLabel) {
       return;
     }
 
     serverStatus.classList.remove("is-loading", "is-online", "is-offline");
     serverStatus.classList.add(online ? "is-online" : "is-offline");
     serverStatusCount.textContent = String(onlineCount);
+    serverStatusLabel.textContent = online
+      ? "Currently Online"
+      : "Server Offline";
 
     const description = online
       ? `Mineacle is online with ${onlineCount} ${
