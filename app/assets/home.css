@@ -464,11 +464,74 @@ button {
 
 .top-actions {
   display: flex;
+  align-items: stretch;
   justify-content: flex-end;
+  gap: var(--half-space);
   width: 17.708333%;
   min-width: 0;
   max-width: 272px;
   height: 100%;
+}
+
+.header-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(3px, 0.3125vw, 6px);
+  width: max-content;
+  min-width: var(--control-size);
+  max-width: calc(40% - var(--half-space));
+  height: 100%;
+  padding: 0 var(--half-space);
+  flex: 0 1 auto;
+  overflow: hidden;
+  border: 1px solid var(--container-stroke);
+  border-radius: var(--radius);
+  background: var(--container-bg);
+  color: var(--heading);
+  font-size: var(--control-font-size);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.header-status__dot {
+  width: clamp(6px, min(0.520833vw, 0.925926vh), 10px);
+  height: clamp(6px, min(0.520833vw, 0.925926vh), 10px);
+  flex: none;
+  border-radius: 50%;
+  background: #888a9d;
+  box-shadow: 0 0 0 2px rgba(136, 138, 157, 0.12);
+  transition:
+    background-color 120ms linear,
+    box-shadow 120ms linear;
+}
+
+.header-status.is-online .header-status__dot {
+  background: #45d968;
+  box-shadow:
+    0 0 0 2px rgba(69, 217, 104, 0.14),
+    0 0 8px rgba(69, 217, 104, 0.38);
+}
+
+.header-status.is-offline .header-status__dot {
+  background: #ff5555;
+  box-shadow:
+    0 0 0 2px rgba(255, 85, 85, 0.14),
+    0 0 8px rgba(255, 85, 85, 0.3);
+}
+
+.header-status__count,
+.header-status__label {
+  flex: none;
+}
+
+.header-status.is-offline .header-status__count {
+  display: none;
+}
+
+.header-status.is-offline .header-status__label {
+  color: #ff8888;
 }
 
 .top-action {
@@ -490,7 +553,8 @@ button {
 .top-action--play {
   position: relative;
   isolation: isolate;
-  width: 60%;
+  width: 100%;
+  flex: 0 0 60%;
   overflow: hidden;
   border-color: var(--play-stroke);
   background: var(--play-bg);

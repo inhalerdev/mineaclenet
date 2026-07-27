@@ -253,19 +253,35 @@ function mineacle_status_apply(array &$payload, array $status): void
     $payload['checked'] = true;
 }
 
+$homeStatusMode = (string) ($_GET['mode'] ?? '') === 'home';
+$profileCount = $homeStatusMode ? mineacle_status_web_profiles_count() : null;
 $directData = mineacle_status_direct_ping($serverIp, 0.75);
 
 if ($directData) {
     $direct = mineacle_status_normalize($directData, 'direct');
+
+    if ($profileCount !== null) {
+        $direct['players_online'] = $profileCount['players_online'];
+        $direct['source'] = 'direct+web_profiles';
+    }
+
     mineacle_status_apply($payload, $direct);
 
     echo json_encode($payload, JSON_UNESCAPED_SLASHES);
     exit;
 }
 
-$profileCount = mineacle_status_web_profiles_count();
+$profileCount ??= mineacle_status_web_profiles_count();
 
 if ($profileCount !== null) {
+    if ($homeStatusMode) {
+        $payload['players_online'] = mineacle_status_number($profileCount['players_online'] ?? 0);
+        $payload['source'] = 'web_profiles';
+
+        echo json_encode($payload, JSON_UNESCAPED_SLASHES);
+        exit;
+    }
+
     mineacle_status_apply($payload, $profileCount);
 
     echo json_encode($payload, JSON_UNESCAPED_SLASHES);

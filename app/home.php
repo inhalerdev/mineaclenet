@@ -190,6 +190,20 @@ mineacle_page_head('Home', [
                     </div>
 
                     <nav class="top-actions" aria-label="Header actions">
+                        <div
+                            class="header-status is-loading"
+                            id="home-server-status"
+                            data-server-ip="<?php echo h($minecraftIp); ?>"
+                            role="status"
+                            aria-live="polite"
+                            aria-label="Checking Mineacle server status"
+                            title="Checking server status"
+                        >
+                            <span class="header-status__dot" aria-hidden="true"></span>
+                            <span class="header-status__count" id="home-server-status-count">--</span>
+                            <span class="header-status__label">ONLINE</span>
+                        </div>
+
                         <button
                             class="top-action top-action--play"
                             id="play-button"

@@ -4,6 +4,10 @@
   const searchForm = document.querySelector("#player-search");
   const searchInput = document.querySelector("#site-search");
   const searchSuggestions = document.querySelector("#home-player-suggestions");
+  const serverStatus = document.querySelector("#home-server-status");
+  const serverStatusCount = document.querySelector(
+    "#home-server-status-count",
+  );
   const heroVideo = document.querySelector("#hero-video");
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let resetTimer = 0;
@@ -13,6 +17,7 @@
   let searchRequest = null;
   let searchRun = 0;
   let activeSuggestion = -1;
+  let statusRequestActive = false;
 
   const particlePalette = [
     "#30cf5c",
@@ -453,6 +458,193 @@
     }
 
     window.location.assign(`/player/${encodeURIComponent(username)}`);
+  });
+
+  const statusServerIp = serverStatus?.dataset.serverIp || "mineacle.net";
+  const statusCacheKey = `mineacle:home-status:${statusServerIp}`;
+  const statusCacheMaxAge = 15000;
+
+  const statusNumber = (value) => {
+    const number = Number(value);
+
+    return Number.isFinite(number) && number > 0 ? Math.floor(number) : 0;
+  };
+
+  const normalizeStatus = (payload) => {
+    if (!payload || typeof payload !== "object") {
+      return null;
+    }
+
+    const players =
+      payload.players && typeof payload.players === "object"
+        ? payload.players
+        : {};
+
+    return {
+      online: Boolean(payload.online),
+      onlineCount: statusNumber(
+        payload.players_online ?? payload.online_players ?? players.online,
+      ),
+      checked: payload.checked !== false,
+      source: typeof payload.source === "string" ? payload.source : "",
+    };
+  };
+
+  const renderServerStatus = ({ online, onlineCount }) => {
+    if (!serverStatus || !serverStatusCount) {
+      return;
+    }
+
+    serverStatus.classList.remove("is-loading", "is-online", "is-offline");
+    serverStatus.classList.add(online ? "is-online" : "is-offline");
+    serverStatusCount.textContent = String(onlineCount);
+
+    const description = online
+      ? `Mineacle is online with ${onlineCount} ${
+          onlineCount === 1 ? "player" : "players"
+        } online`
+      : "Mineacle is offline";
+
+    serverStatus.setAttribute("aria-label", description);
+    serverStatus.title = description;
+  };
+
+  const readStatusCache = () => {
+    try {
+      const cached = JSON.parse(
+        window.localStorage.getItem(statusCacheKey) || "null",
+      );
+
+      if (!cached || Date.now() - cached.updatedAt > statusCacheMaxAge) {
+        return null;
+      }
+
+      return {
+        online: Boolean(cached.online),
+        onlineCount: statusNumber(cached.onlineCount),
+      };
+    } catch {
+      return null;
+    }
+  };
+
+  const writeStatusCache = (status) => {
+    try {
+      window.localStorage.setItem(
+        statusCacheKey,
+        JSON.stringify({
+          online: status.online,
+          onlineCount: status.onlineCount,
+          updatedAt: Date.now(),
+        }),
+      );
+    } catch {
+      // Storage may be unavailable in private or restricted browsing.
+    }
+  };
+
+  const fetchStatus = async (url, timeout = 4200) => {
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), timeout);
+
+    try {
+      const response = await fetch(url, {
+        headers: { Accept: "application/json" },
+        cache: "no-store",
+        signal: controller.signal,
+      });
+
+      return response.ok ? await response.json() : null;
+    } catch {
+      return null;
+    } finally {
+      window.clearTimeout(timer);
+    }
+  };
+
+  const loadExternalStatus = async () => {
+    const encodedIp = encodeURIComponent(statusServerIp);
+    const providers = [
+      `https://api.mcsrvstat.us/3/${encodedIp}`,
+      `https://api.mcstatus.io/v2/status/java/${encodedIp}`,
+    ];
+    let confirmedOffline = null;
+
+    for (const provider of providers) {
+      const payload = await fetchStatus(
+        `${provider}?t=${Date.now()}`,
+        2600,
+      );
+      const status = normalizeStatus(payload);
+
+      if (!status) {
+        continue;
+      }
+
+      if (status.online) {
+        return status;
+      }
+
+      confirmedOffline ??= status;
+    }
+
+    return confirmedOffline;
+  };
+
+  const loadServerStatus = async () => {
+    if (!serverStatus || !serverStatusCount || statusRequestActive) {
+      return;
+    }
+
+    statusRequestActive = true;
+
+    try {
+      const localPayload = await fetchStatus(
+        `/api/server-status.php?mode=home&t=${Date.now()}`,
+      );
+      const localStatus = normalizeStatus(localPayload);
+      let status = localStatus?.checked ? localStatus : null;
+
+      if (!status) {
+        const externalStatus = await loadExternalStatus();
+
+        if (externalStatus) {
+          status = {
+            ...externalStatus,
+            onlineCount:
+              localStatus?.source === "web_profiles"
+                ? localStatus.onlineCount
+                : externalStatus.onlineCount,
+          };
+        }
+      }
+
+      if (status) {
+        renderServerStatus(status);
+        writeStatusCache(status);
+      }
+    } finally {
+      statusRequestActive = false;
+    }
+  };
+
+  const cachedStatus = readStatusCache();
+
+  if (cachedStatus) {
+    renderServerStatus(cachedStatus);
+  }
+
+  loadServerStatus();
+  window.setInterval(() => {
+    if (!document.hidden) {
+      loadServerStatus();
+    }
+  }, 15000);
+  window.addEventListener("focus", loadServerStatus);
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) {
+      loadServerStatus();
+    }
   });
 
   const syncHeroMotion = () => {
