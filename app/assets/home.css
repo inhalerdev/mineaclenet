@@ -41,7 +41,7 @@
   --rail-width: clamp(48px, min(4.166667vw, 7.407407vh), 80px);
   --brand-size: clamp(36px, min(3.333333vw, 5.925926vh), 64px);
   --icon-size: clamp(14px, min(1.25vw, 2.222222vh), 24px);
-  --control-font-size: clamp(10px, min(0.729167vw, 1.296296vh), 14px);
+  --control-font-size: clamp(11px, min(0.833333vw, 1.481481vh), 16px);
   --origin-x: 50vw;
   --origin-y: 50vh;
   --particle-size: 4px;
@@ -467,9 +467,9 @@ button {
   align-items: stretch;
   justify-content: flex-end;
   gap: var(--half-space);
-  width: 17.708333%;
+  width: 20.833333%;
   min-width: 0;
-  max-width: 272px;
+  max-width: 320px;
   height: 100%;
 }
 
@@ -480,7 +480,7 @@ button {
   gap: clamp(3px, 0.3125vw, 6px);
   width: max-content;
   min-width: var(--control-size);
-  max-width: calc(40% - var(--half-space));
+  max-width: none;
   height: 100%;
   padding: 0 var(--half-space);
   flex: 0 1 auto;
@@ -524,6 +524,7 @@ button {
 .header-status__count,
 .header-status__label {
   flex: none;
+  letter-spacing: 0.025em;
 }
 
 .header-status.is-offline .header-status__count {
@@ -554,7 +555,7 @@ button {
   position: relative;
   isolation: isolate;
   width: 100%;
-  flex: 0 0 60%;
+  flex: 0 0 55%;
   overflow: hidden;
   border-color: var(--play-stroke);
   background: var(--play-bg);
@@ -894,7 +895,7 @@ button {
     --rail-width: clamp(44px, min(12vw, 11.851852vh), 56px);
     --brand-size: clamp(32px, min(9.6vw, 9.481481vh), 44px);
     --icon-size: clamp(12px, min(4vw, 4vh), 18px);
-    --control-font-size: clamp(8px, min(2.8vw, 2.8vh), 11px);
+    --control-font-size: clamp(10px, min(3.2vw, 3.2vh), 13px);
   }
 
   .topbar {
