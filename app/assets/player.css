@@ -51,8 +51,10 @@
 }
 
 .profile-main-panel::before {
+  inset: -18px;
   background: #10141c url("brand/player-hero-bg.png") center 44% / cover no-repeat;
-  filter: saturate(0.82) brightness(0.62);
+  filter: blur(12px) saturate(0.82) brightness(0.62);
+  transform: scale(1.035);
 }
 
 .profile-main-panel::after {
@@ -63,14 +65,12 @@
 }
 
 .profile-hero-content {
-  display: grid;
-  grid-template-columns:
-    clamp(130px, min(14vw, 25vh), 230px)
-    minmax(250px, 1fr);
+  display: flex;
   align-items: center;
+  justify-content: center;
   justify-self: center;
   gap: var(--space);
-  width: min(100%, 820px);
+  width: 100%;
   min-height: 0;
   padding: var(--half-space) var(--space) 0;
 }
@@ -78,8 +78,9 @@
 .profile-bust-stage {
   display: grid;
   place-items: end center;
-  width: 100%;
+  width: clamp(130px, min(14vw, 25vh), 230px);
   height: 100%;
+  flex: 0 0 auto;
   min-height: 0;
   overflow: hidden;
 }
@@ -118,6 +119,7 @@
   justify-items: start;
   gap: var(--half-space);
   min-width: 0;
+  max-width: min(52%, 560px);
   text-align: left;
 }
 
@@ -152,7 +154,7 @@
 .profile-ranked-name__name {
   min-width: 0;
   overflow: hidden;
-  color: var(--text);
+  color: var(--heading);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -626,12 +628,16 @@
   }
 
   .profile-hero-content {
-    grid-template-columns:
-      clamp(86px, min(12vw, 20vh), 140px)
-      minmax(160px, 1fr);
     gap: var(--half-space);
-    width: min(100%, 640px);
     padding-inline: var(--half-space);
+  }
+
+  .profile-bust-stage {
+    width: clamp(86px, min(12vw, 20vh), 140px);
+  }
+
+  .profile-player-lockup {
+    max-width: 58%;
   }
 
   .profile-duels-head {
