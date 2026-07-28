@@ -275,6 +275,7 @@ $socialLinks = [
 ];
 $currentNavKey = 'stats';
 $assetVersion = mineacle_page_asset_version();
+$homeStylesheetVersion = (string) (filemtime(__DIR__ . '/assets/home.css') ?: $assetVersion);
 $playerStylesheetVersion = (string) (filemtime(__DIR__ . '/assets/player.css') ?: $assetVersion);
 $viewModel = $player ? mineacle_profile_view_model($player, $team) : null;
 $fightState = $viewModel !== null ? mineacle_stats_recent_fights((string) $viewModel['uuid'], 16) : ['available' => true, 'fights' => []];
@@ -295,7 +296,10 @@ if ($viewModel !== null) {
 }
 
 $metaOptions = array_merge($metaOptions, [
-    'stylesheets' => ['/assets/home.css', '/assets/player.css?rev=' . rawurlencode($playerStylesheetVersion)],
+    'stylesheets' => [
+        '/assets/home.css?rev=' . rawurlencode($homeStylesheetVersion),
+        '/assets/player.css?rev=' . rawurlencode($playerStylesheetVersion),
+    ],
     'body_class' => 'player-page',
     'external_fonts' => false,
     'theme_color' => '#00001f',
@@ -430,19 +434,19 @@ mineacle_page_head($pageTitle, $metaOptions);
 
                 <div class="profile-summary-bar" aria-label="Player stat summary">
                     <?php
-                    mineacle_profile_stat_item('Current Balance', (string) $viewModel['balance'], '/assets/icons/player-money.png?v=' . rawurlencode($assetVersion), 'Balance');
-                    mineacle_profile_stat_item('Global Kills', (string) $viewModel['kills'], '/assets/icons/player-sword.png?v=' . rawurlencode($assetVersion), 'Kills');
-                    mineacle_profile_stat_item('Global Deaths', (string) $viewModel['deaths'], '/assets/icons/player-heart.png?v=' . rawurlencode($assetVersion), 'Deaths');
-                    mineacle_profile_stat_item('Global Playtime', (string) $viewModel['playtime'], '/assets/icons/player-clock.png?v=' . rawurlencode($assetVersion), 'Playtime');
-                    mineacle_profile_stat_item('Player Team', (string) $viewModel['team']['name'], '/assets/icons/player-castle.png?v=' . rawurlencode($assetVersion), 'Team', (string) $viewModel['team']['role']);
-                    mineacle_profile_stat_item('Global Rank', (string) $viewModel['global_rank'], '', '');
+                    mineacle_profile_stat_item('Current Balance', (string) $viewModel['balance'], '/assets/player/balance.png?v=' . rawurlencode($assetVersion), 'Balance');
+                    mineacle_profile_stat_item('Global Kills', (string) $viewModel['kills'], '/assets/player/kills.png?v=' . rawurlencode($assetVersion), 'Kills');
+                    mineacle_profile_stat_item('Global Deaths', (string) $viewModel['deaths'], '/assets/player/deaths.png?v=' . rawurlencode($assetVersion), 'Deaths');
+                    mineacle_profile_stat_item('Global Playtime', (string) $viewModel['playtime'], '/assets/player/playtime.png?v=' . rawurlencode($assetVersion), 'Playtime');
+                    mineacle_profile_stat_item('Player Team', (string) $viewModel['team']['name'], '/assets/player/team.png?v=' . rawurlencode($assetVersion), 'Team', (string) $viewModel['team']['role']);
+                    mineacle_profile_stat_item('Global Rank', (string) $viewModel['global_rank'], '/assets/player/top-player.png?v=' . rawurlencode($assetVersion), 'Global rank');
                     ?>
                 </div>
             </section>
 
             <section class="panel profile-recent-panel" aria-label="Recent fights">
                 <header class="profile-section-heading">
-                    <span><img src="/assets/icons/player-duels.png?v=<?php echo h(rawurlencode($assetVersion)); ?>" alt="" aria-hidden="true" draggable="false"></span>
+                    <span><img src="/assets/player/duels.png?v=<?php echo h(rawurlencode($assetVersion)); ?>" alt="" aria-hidden="true" draggable="false"></span>
                     <h2>Recent Duels</h2>
                 </header>
 

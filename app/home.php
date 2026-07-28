@@ -16,6 +16,7 @@ $config = mineacle_config();
 $site = $config['site'] ?? [];
 $homeConfig = $config['home'] ?? [];
 $assetVersion = rawurlencode(mineacle_page_asset_version());
+$homeStylesheetVersion = (string) (filemtime(__DIR__ . '/assets/home.css') ?: mineacle_page_asset_version());
 $minecraftIp = trim((string) ($site['minecraft_ip'] ?? 'mineacle.net')) ?: 'mineacle.net';
 $uniquePlayerCount = 0;
 
@@ -76,7 +77,7 @@ mineacle_page_head('Home', [
     'meta_title' => 'Home | Mineacle',
     'meta_description' => 'Join Mineacle, search player profiles, view server rankings, vote, and connect with the community.',
     'canonical_url' => 'https://mineacle.net/',
-    'stylesheets' => ['/assets/home.css'],
+    'stylesheets' => ['/assets/home.css?rev=' . rawurlencode($homeStylesheetVersion)],
     'body_class' => 'home-page',
     'external_fonts' => false,
     'theme_color' => '#00001f',
