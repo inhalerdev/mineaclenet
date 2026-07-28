@@ -1,0 +1,316 @@
+.player-page {
+    overflow: hidden;
+    background: var(--main-bg);
+}
+
+.player-page .canvas {
+    overflow: hidden;
+}
+
+.player-content,
+.player-surface,
+.profile-main-panel,
+.profile-recent-panel,
+.profile-duels-table,
+.profile-duels-scroll {
+    min-width: 0;
+    min-height: 0;
+}
+
+.player-surface {
+    display: grid;
+    grid-template-rows: minmax(0, 1.08fr) minmax(0, 0.92fr);
+    gap: var(--space);
+    overflow: hidden;
+}
+
+.player-surface.profile-page {
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    align-content: stretch;
+    color: var(--text);
+    font-family: Roboto, Arial, sans-serif;
+}
+
+.player-surface .panel {
+    width: auto;
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid var(--container-stroke);
+    border-radius: var(--radius);
+    background: var(--container-bg);
+    box-shadow: none;
+}
+
+.player-surface .profile-main-panel {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) clamp(82px, 12.5vh, 120px);
+    height: auto;
+    isolation: isolate;
+}
+
+.player-surface .profile-main-panel::before {
+    inset: 0;
+    z-index: -2;
+    border-radius: 0;
+    background-position: center 42%;
+    opacity: 0.46;
+    filter: saturate(0.82) brightness(0.62);
+}
+
+.player-surface .profile-main-panel::after {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    content: "";
+    background:
+        linear-gradient(90deg, rgba(0, 0, 31, 0.52), rgba(0, 0, 31, 0.08) 48%, rgba(0, 0, 31, 0.26)),
+        linear-gradient(0deg, rgba(0, 0, 31, 0.7), transparent 58%);
+    pointer-events: none;
+}
+
+.player-surface .profile-hero-content {
+    align-items: center;
+    justify-content: center;
+    gap: clamp(20px, 3vw, 48px);
+    min-height: 0;
+    padding: clamp(20px, 3.5vh, 40px) var(--space);
+}
+
+.player-surface .profile-bust-stage {
+    width: clamp(104px, 12vw, 176px);
+    height: clamp(132px, 18vh, 224px);
+    flex: 0 0 auto;
+}
+
+.player-surface .profile-player-lockup {
+    min-width: 0;
+}
+
+.player-surface .profile-player-lockup h1 {
+    margin: 0 0 clamp(8px, 1.2vh, 14px);
+    color: var(--heading);
+    font-family: Roboto, Arial, sans-serif;
+    font-size: clamp(24px, 2.4vw, 40px);
+    font-weight: 700;
+    line-height: 1;
+}
+
+.player-surface .profile-state-lines,
+.player-surface .profile-joined-date,
+.player-surface .profile-stat-label,
+.player-surface .profile-stat-value,
+.player-surface .profile-stat-detail,
+.player-surface .profile-duels-head,
+.player-surface .profile-duel-row,
+.player-surface .profile-duels-empty,
+.player-surface .profile-message {
+    font-family: Roboto, Arial, sans-serif;
+}
+
+.player-surface .profile-state-lines p {
+    gap: var(--half-space);
+}
+
+.player-surface .profile-state-lines strong,
+.player-surface .profile-state-lines span,
+.player-surface .profile-joined-date {
+    font-size: var(--control-font-size);
+    line-height: 1.35;
+}
+
+.player-surface .profile-summary-bar {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    min-height: 0;
+    padding: var(--half-space);
+    border-top: 1px solid var(--container-stroke);
+    background: rgba(37, 39, 64, 0.96);
+}
+
+.player-surface .profile-stat-item {
+    min-width: 0;
+    padding: 0 clamp(8px, 1vw, 16px);
+    border-right-color: var(--container-stroke);
+}
+
+.player-surface .profile-stat-icon-wrap {
+    width: clamp(26px, 2.1vw, 34px);
+    height: clamp(26px, 2.1vw, 34px);
+}
+
+.player-surface .profile-stat-label,
+.player-surface .profile-stat-detail {
+    color: var(--text);
+    font-size: clamp(10px, 0.78vw, 12px);
+    font-weight: 500;
+}
+
+.player-surface .profile-stat-value {
+    overflow: hidden;
+    color: var(--heading);
+    font-size: clamp(13px, 1vw, 16px);
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.player-surface .profile-recent-panel {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    height: auto;
+    padding: var(--half-space);
+    background: rgba(37, 39, 64, 0.96);
+}
+
+.player-surface .profile-section-heading {
+    gap: var(--half-space);
+    margin: 0 0 var(--half-space);
+}
+
+.player-surface .profile-section-heading span {
+    width: var(--control-size);
+    height: var(--control-size);
+    border: 1px solid var(--button-stroke);
+    border-radius: var(--radius);
+    background: var(--button-bg);
+}
+
+.player-surface .profile-section-heading span img {
+    width: var(--icon-size);
+    height: var(--icon-size);
+}
+
+.player-surface .profile-section-heading h2 {
+    color: var(--heading);
+    font-family: Roboto, Arial, sans-serif;
+    font-size: clamp(16px, 1.3vw, 20px);
+    font-weight: 700;
+}
+
+.player-surface .profile-duels-table {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    overflow: hidden;
+    border: 1px solid var(--container-stroke);
+    border-radius: var(--radius);
+    background: rgba(48, 49, 70, 0.68);
+}
+
+.player-surface .profile-duels-head {
+    border-bottom-color: var(--container-stroke);
+    background: rgba(54, 64, 98, 0.62);
+    color: var(--text);
+    font-size: clamp(10px, 0.78vw, 12px);
+    font-weight: 600;
+}
+
+.player-surface .profile-duels-scroll {
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-color: var(--button-stroke) transparent;
+    scrollbar-width: thin;
+}
+
+.player-surface .profile-duel-row {
+    border-bottom-color: rgba(74, 76, 106, 0.58);
+    color: var(--text);
+    font-size: clamp(10px, 0.82vw, 13px);
+}
+
+.player-surface .profile-duel-row:hover {
+    background: rgba(71, 84, 127, 0.16);
+}
+
+.player-surface .profile-duels-empty,
+.player-surface .profile-message {
+    place-self: stretch;
+    display: grid;
+    place-content: center;
+    gap: var(--half-space);
+    min-height: 0;
+    padding: var(--space);
+    text-align: center;
+}
+
+.player-surface .profile-message h1 {
+    margin: 0;
+    color: var(--heading);
+    font-size: clamp(20px, 2vw, 32px);
+}
+
+.player-surface .profile-message p {
+    margin: 0;
+    color: var(--text);
+    font-size: var(--control-font-size);
+}
+
+.player-surface .profile-message-link {
+    justify-self: center;
+    padding: 10px 16px;
+    border: 1px solid var(--button-stroke);
+    border-radius: var(--radius);
+    background: var(--button-bg);
+    color: var(--heading);
+    font-size: var(--control-font-size);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+@media (max-width: 900px), (max-height: 700px) {
+    .player-surface {
+        grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .player-surface .profile-main-panel {
+        grid-template-rows: minmax(0, 1fr) clamp(100px, 17vh, 132px);
+    }
+
+    .player-surface .profile-summary-bar {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        padding: 8px;
+    }
+
+    .player-surface .profile-stat-item:nth-child(3) {
+        border-right: 0;
+    }
+
+    .player-surface .profile-stat-item:nth-child(-n + 3) {
+        border-bottom: 1px solid var(--container-stroke);
+    }
+
+    .player-surface .profile-hero-content {
+        padding: 12px var(--half-space);
+    }
+
+    .player-surface .profile-bust-stage {
+        width: clamp(76px, 11vw, 116px);
+        height: clamp(96px, 15vh, 148px);
+    }
+}
+
+@media (max-width: 620px) {
+    .player-surface .profile-hero-content {
+        gap: 12px;
+    }
+
+    .player-surface .profile-player-lockup h1 {
+        font-size: clamp(18px, 5vw, 26px);
+    }
+
+    .player-surface .profile-state-lines span {
+        display: none;
+    }
+
+    .player-surface .profile-stat-icon-wrap {
+        display: none;
+    }
+
+    .player-surface .profile-stat-item {
+        padding: 0 4px;
+    }
+}
