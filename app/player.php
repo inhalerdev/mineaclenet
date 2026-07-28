@@ -187,7 +187,7 @@ function mineacle_profile_duel_fighter_html(string $headHtml, string $name, mixe
     return '<span class="' . h($classes) . '">'
         . '<span class="profile-duel-head">' . $headHtml . '</span>'
         . '<span class="profile-duel-copy">'
-        . '<strong>' . h($name !== '' ? $name : 'Unknown Player') . '</strong>'
+        . '<span class="profile-duel-name">' . h($name !== '' ? $name : 'Unknown Player') . '</span>'
         . mineacle_stats_hearts_html($hearts, 'duel-hearts')
         . '</span>'
         . '</span>';
@@ -350,7 +350,9 @@ mineacle_page_head($pageTitle, $metaOptions);
             </aside>
 
             <div class="content player-content">
-                <header class="topbar">
+                <div class="page-scroll">
+                    <div class="page-stack">
+                <header class="topbar secondary-topbar">
                     <div class="search-shell">
                         <form class="search-control" id="player-search" role="search" action="/player" method="get">
                             <div class="search-field">
@@ -400,7 +402,6 @@ mineacle_page_head($pageTitle, $metaOptions);
                     </nav>
                 </header>
 
-                <div class="page-scroll">
                     <main class="player-surface profile-page" aria-label="Player profile">
         <?php if ($loadError): ?>
             <section class="panel profile-message">
@@ -424,6 +425,7 @@ mineacle_page_head($pageTitle, $metaOptions);
                     </div>
 
                     <div class="profile-player-lockup">
+                        <p class="profile-player-eyebrow">Mineacle Player</p>
                         <h1><?php echo $viewModel['ranked_name_html']; ?></h1>
                         <div class="profile-state-lines">
                             <p>
@@ -450,7 +452,11 @@ mineacle_page_head($pageTitle, $metaOptions);
             <section class="panel profile-recent-panel" aria-label="Recent fights">
                 <header class="profile-section-heading">
                     <span><img src="/assets/player/duels.png?v=<?php echo h(rawurlencode($assetVersion)); ?>" alt="" aria-hidden="true" draggable="false"></span>
-                    <h2>Recent Duels</h2>
+                    <div>
+                        <p>Combat History</p>
+                        <h2>Recent Duels</h2>
+                    </div>
+                    <small>Last 16 recorded fights</small>
                 </header>
 
                 <?php if (!$fightState['available']): ?>
@@ -479,6 +485,7 @@ mineacle_page_head($pageTitle, $metaOptions);
         <?php endif; ?>
                     </main>
                     <?php mineacle_page_footer($site); ?>
+                    </div>
                 </div>
             </div>
         </section>

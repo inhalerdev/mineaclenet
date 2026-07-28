@@ -443,17 +443,19 @@ button {
   background: #252740;
   color: var(--heading);
   font-size: var(--control-font-size);
-  font-weight: 600;
+  font-weight: 500;
   text-decoration: none;
   transition:
-    color 80ms linear,
-    background-color 80ms linear;
+    color 150ms ease,
+    background-color 150ms ease,
+    transform 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .search-suggestion:hover,
 .search-suggestion.is-active {
   background: #364062;
   color: #ffffff;
+  transform: translateX(2px);
 }
 
 .search-suggestion__head {
@@ -721,24 +723,29 @@ button {
 .search-submit,
 .top-action {
   transition:
-    border-color 80ms linear,
-    filter 80ms linear,
-    background-color 80ms linear;
+    border-color 150ms ease,
+    filter 150ms ease,
+    background-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .square-button:hover,
 .search-submit:hover,
 .top-action:hover {
   filter: brightness(1.08);
+  transform: translateY(-1px);
 }
 
 .square-button:active,
 .search-submit:active,
 .top-action:active {
   filter: brightness(0.94);
+  transform: translateY(0);
 }
 
 .square-button:focus-visible,
+.search-submit:focus-visible,
 .top-action:focus-visible {
   outline: 2px solid #ff55ff;
   outline-offset: 2px;
@@ -946,6 +953,40 @@ button {
   .top-action--play {
     width: 40%;
     flex-basis: 40%;
+  }
+}
+
+@media (max-width: 620px) {
+  .search-shell {
+    width: 48%;
+  }
+
+  .top-actions {
+    width: 50%;
+  }
+
+  .header-status {
+    gap: 5px;
+    padding-inline: 5px;
+  }
+
+  .header-status__count,
+  .header-status__label {
+    letter-spacing: 0;
+  }
+
+  .header-status__label {
+    font-size: 0;
+  }
+
+  .header-status__label::after {
+    font-size: var(--control-font-size);
+    content: "Playing";
+  }
+
+  .top-action--play {
+    width: 36%;
+    flex-basis: 36%;
   }
 }
 

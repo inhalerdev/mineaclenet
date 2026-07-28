@@ -415,7 +415,9 @@ mineacle_page_head('Leaderboards', [
             </aside>
 
             <div class="content">
-                <header class="topbar">
+                <div class="page-scroll">
+                    <div class="page-stack">
+                <header class="topbar secondary-topbar">
                     <div class="search-shell">
                         <form class="search-control" id="player-search" role="search" action="/player" method="get">
                             <div class="search-field">
@@ -465,8 +467,6 @@ mineacle_page_head('Leaderboards', [
                     </nav>
                 </header>
 
-                <div class="page-scroll">
-                    <div class="page-stack">
                         <main class="leaderboard-page" aria-label="Leaderboards">
         <section class="panel leaderboard-overview" aria-label="Leaderboard overview">
             <div class="leaderboard-hero-content">
@@ -474,6 +474,11 @@ mineacle_page_head('Leaderboards', [
                     <p>Survival Rankings</p>
                     <h1>Leaderboards</h1>
                     <span>Track Mineacle's top global players and teams across survival, wealth, and combat.</span>
+                    <div class="leaderboard-hero-signals" aria-label="Leaderboard coverage">
+                        <span>Live standings</span>
+                        <span>Players and teams</span>
+                        <span>All dimensions</span>
+                    </div>
                 </div>
 
                 <aside class="leaderboard-top-card" aria-label="<?php echo h($topTitle); ?>">
@@ -510,7 +515,7 @@ mineacle_page_head('Leaderboards', [
                                             <?php endif; ?>
                                         </span>
                                         <span>
-                                            <strong><?php echo mineacle_stats_ranked_name_html($entry, 'leaderboard-ranked-name'); ?></strong>
+                                            <span class="leaderboard-top-name"><?php echo mineacle_stats_ranked_name_html($entry, 'leaderboard-ranked-name'); ?></span>
                                             <small><?php echo h(mineacle_leaderboards_top_metric($entry, $tableMode, $sort)); ?></small>
                                         </span>
                                     </a>
@@ -672,7 +677,7 @@ mineacle_page_head('Leaderboards', [
                                     <?php endif; ?>
                                 </span>
                                 <span>
-                                    <strong><?php echo mineacle_stats_ranked_name_html($player, 'leaderboard-ranked-name'); ?></strong>
+                                    <span class="leaderboard-row-name"><?php echo mineacle_stats_ranked_name_html($player, 'leaderboard-ranked-name'); ?></span>
                                 </span>
                             </span>
                             <span class="player-card-stat"><?php echo h(mineacle_stats_team_name($player)); ?></span>

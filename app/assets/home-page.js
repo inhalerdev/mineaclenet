@@ -696,10 +696,12 @@
 
     const run = leaderboardViewRun + 1;
     const controller = new AbortController();
-    const scrollLeft = window.scrollX;
-    const scrollTop = window.scrollY;
+    const scrollContainer = document.querySelector('.page-scroll');
+    const scrollLeft = scrollContainer instanceof HTMLElement ? scrollContainer.scrollLeft : window.scrollX;
+    const scrollTop = scrollContainer instanceof HTMLElement ? scrollContainer.scrollTop : window.scrollY;
     leaderboardViewRun = run;
     leaderboardViewAbort = controller;
+    board.classList.remove('is-view-entering');
     board.classList.add('is-view-loading');
     board.setAttribute('aria-busy', 'true');
     setLeaderboardStatus('Updating leaderboard...');
@@ -775,7 +777,17 @@
       }
 
       window.requestAnimationFrame(() => {
-        window.scrollTo(scrollLeft, scrollTop);
+        if (scrollContainer instanceof HTMLElement) {
+          scrollContainer.scrollLeft = scrollLeft;
+          scrollContainer.scrollTop = scrollTop;
+        } else {
+          window.scrollTo(scrollLeft, scrollTop);
+        }
+
+        board.classList.add('is-view-entering');
+        window.setTimeout(() => {
+          board.classList.remove('is-view-entering');
+        }, 340);
       });
 
       return true;
