@@ -228,62 +228,89 @@ function mineacle_page_search_header(array $site): void
 function mineacle_page_footer(array $site): void
 {
     $year = date('Y');
-    $assetVersion = mineacle_page_asset_version();
-    $footerLogoUrl = '/assets/brand/mncl-studios-web.png?v=' . rawurlencode($assetVersion);
-    $supportEmail = (string) ($site['support_email'] ?? 'support@mineacle.net');
-    $supportLink = trim((string) ($site['support_url'] ?? ''));
+    $assetVersion = rawurlencode(mineacle_page_asset_version());
+    $plusUrl = mineacle_page_public_link($site['plus_url'] ?? $site['store_url'] ?? '#');
 
-    if ($supportLink === '') {
-        $supportLink = filter_var($supportEmail, FILTER_VALIDATE_EMAIL) ? 'mailto:' . $supportEmail : '#';
+    if ($plusUrl === '#') {
+        $plusUrl = mineacle_page_public_link($site['store_url'] ?? '#');
     }
-
     $quickLinks = [
-        ['label' => 'Home', 'url' => mineacle_page_home_url($site)],
-        ['label' => 'Leaderboards', 'url' => mineacle_page_leaderboards_url($site)],
+        ['label' => 'Home', 'url' => '/'],
+        ['label' => 'Leaderboards', 'url' => '/leaderboards'],
+        ['label' => 'Report a Bug', 'url' => '/contact'],
         ['label' => 'Store', 'url' => (string) ($site['store_url'] ?? '#')],
         ['label' => 'Vote', 'url' => (string) ($site['vote_url'] ?? '#')],
     ];
     $socialLinks = [
         ['key' => 'discord', 'label' => 'Discord', 'url' => (string) ($site['discord_url'] ?? '#')],
         ['key' => 'x', 'label' => 'X/Twitter', 'url' => (string) ($site['x_url'] ?? '#')],
-        ['key' => 'youtube', 'label' => 'YouTube', 'url' => (string) ($site['youtube_url'] ?? '#')],
     ];
     $legalLinks = [
         ['label' => 'Terms of Service', 'url' => (string) ($site['terms_url'] ?? '#')],
         ['label' => 'Privacy Policy', 'url' => (string) ($site['privacy_url'] ?? '#')],
         ['label' => 'Refund Policy', 'url' => (string) ($site['refund_url'] ?? '#')],
-        ['label' => 'Support', 'url' => $supportLink],
+        ['label' => 'Contact', 'url' => '/contact'],
     ];
 
-    echo '<footer class="footer-panel" aria-label="Footer">';
-    echo '<div class="footer-inner">';
-    echo '<section class="footer-about" aria-label="Mineacle Studios">';
-    echo '<div class="footer-brand"><img src="' . h($footerLogoUrl) . '" alt="Mineacle Studios" draggable="false"></div>';
-    echo '<p>Mineacle Studios is a small team of Minecraft developers building the custom systems behind Mineacle. After over a year of trial, error, and refinement, we are creating a smooth, polished, community-driven survival experience while staying true to the Minecraft everyone already loves.</p>';
-    echo '<div class="footer-socials" aria-label="Social links">';
+    echo '<footer class="site-footer" aria-label="Mineacle footer">';
+    echo '<div class="site-footer__main">';
+    echo '<section class="site-footer__brand" aria-label="Mineacle">';
+    echo '<a class="site-footer__logo" href="/" aria-label="Mineacle home"><img src="/assets/home/mineacle-mark.png?v=' . h($assetVersion) . '" alt="" width="48" height="48" draggable="false"><span><strong>Mineacle</strong><small>The original survival server</small></span></a>';
+    echo '<p>Custom survival, competitive rankings, player-built economies, and a community shaped around long-term worlds.</p>';
+    echo '<nav class="site-footer__socials" aria-label="Mineacle social links">';
     foreach ($socialLinks as $link) {
-        echo '<a href="' . h(mineacle_page_public_link($link['url'])) . '" aria-label="' . h($link['label']) . '">' . mineacle_page_icon((string) $link['key']) . '</a>';
-    }
-    echo '</div>';
-    echo '</section>';
-    echo '<nav class="footer-links" aria-label="Quick links"><h2>Quick Links:</h2>';
-    foreach ($quickLinks as $link) {
-        echo '<a href="' . h(mineacle_page_public_link($link['url'])) . '">' . h($link['label']) . '</a>';
+        $key = (string) $link['key'];
+        $url = mineacle_page_public_link($link['url']);
+
+        if ($url === '#') {
+            continue;
+        }
+
+        echo '<a class="social-link social-link--rail social-link--' . h($key) . '" href="' . h($url) . '" target="_blank" rel="noopener noreferrer" aria-label="' . h($link['label']) . '"><span class="social-logo social-logo--' . h($key) . '" aria-hidden="true"></span></a>';
     }
     echo '</nav>';
-    echo '<section class="footer-bug-panel" aria-label="Report a bug">';
-    echo '<a class="footer-bug-banner" href="' . h(mineacle_page_public_link($supportLink)) . '">';
-    echo '<span><strong>Report a Bug</strong><small>Found an issue? Send it to Mineacle Studios.</small></span>';
-    echo '<img src="/assets/brand/bug-mob-web.png" alt="" aria-hidden="true" draggable="false" loading="lazy" decoding="async">';
-    echo '</a>';
     echo '</section>';
-    echo '<p class="footer-bottom"><img src="/assets/brand/nav-logo-web.png" alt="" aria-hidden="true" draggable="false"><span>';
-    echo 'Copyright © ' . h((string) $year) . ' Mineacle Studios. All Rights Reserved. Mineacle is not affiliated with or endorsed by Mojang Studios or Microsoft.';
-    echo ' <span class="footer-policy-links">';
-    foreach ($legalLinks as $link) {
-        echo '<a href="' . h(mineacle_page_public_link($link['url'])) . '">' . h($link['label']) . '</a>';
+
+    echo '<section class="site-footer__plus" aria-label="Mineacle Plus">';
+    echo '<span class="site-footer__eyebrow">Mineacle Plus</span>';
+    echo '<h2>More freedom. Less waiting.</h2>';
+    echo '<p>Support Mineacle and unlock five homes, shorter teleports, nicknames, and exclusive Spawn perks.</p>';
+    echo '<ul><li>Five home slots</li><li>Faster teleports</li><li>Nickname access</li><li>Spawn flight</li></ul>';
+    echo '<a class="site-footer__plus-button" href="' . h($plusUrl) . '" target="_blank" rel="noopener noreferrer">Upgrade to Plus</a>';
+    echo '</section>';
+
+    echo '<nav class="site-footer__links" aria-label="Quick links"><h2>Explore</h2>';
+    foreach ($quickLinks as $link) {
+        $url = mineacle_page_public_link($link['url']);
+
+        if ($url === '#') {
+            continue;
+        }
+
+        echo '<a href="' . h($url) . '">' . h($link['label']) . '</a>';
     }
-    echo '</span></span></p>';
+    echo '</nav>';
+
+    echo '<section class="site-footer__support" aria-label="Mineacle support">';
+    echo '<span class="site-footer__eyebrow">Mineacle Studios</span>';
+    echo '<h2>Found something broken?</h2>';
+    echo '<p>Send a detailed bug report directly to the team and help us improve the network.</p>';
+    echo '<a class="site-footer__contact-button" href="/contact">Report a Bug</a>';
+    echo '</section>';
+    echo '</div>';
+
+    echo '<div class="site-footer__bottom"><p>© ' . h((string) $year) . ' Mineacle Studios. Mineacle is not affiliated with Mojang Studios or Microsoft.</p>';
+    echo '<nav aria-label="Legal links">';
+    foreach ($legalLinks as $link) {
+        $url = mineacle_page_public_link($link['url']);
+
+        if ($url === '#') {
+            continue;
+        }
+
+        echo '<a href="' . h($url) . '">' . h($link['label']) . '</a>';
+    }
+    echo '</nav>';
     echo '</div>';
     echo '</footer>';
 }
@@ -331,7 +358,7 @@ function mineacle_page_head(string $title = 'Home', array $options = []): void
     if (($options['external_fonts'] ?? true) === true) {
         echo '<link rel="preconnect" href="https://fonts.googleapis.com">';
         echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>';
-        echo '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&display=swap">';
+        echo '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;600;700&display=swap">';
     }
 
     $stylesheets = $options['stylesheets'] ?? ['/assets/home-page.css'];

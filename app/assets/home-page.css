@@ -1,3 +1,27 @@
+@font-face {
+  font-family: "Roboto";
+  src: url("home/fonts/roboto-500.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("home/fonts/roboto-600.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("home/fonts/roboto-700.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
 :root {
   --page: #202020;
   --canvas: #080808;
@@ -12,8 +36,8 @@
   --accent: #7b3cff;
   --store-button: #ff88ff;
   --store-button-hover: #ff55ff;
-  --rail-icon-filter: brightness(0) saturate(100%) invert(78%) sepia(0%) saturate(0%) hue-rotate(188deg) brightness(96%) contrast(88%);
-  --rail-icon-active-filter: brightness(0) saturate(100%) invert(76%) sepia(76%) saturate(1417%) hue-rotate(246deg) brightness(103%) contrast(103%);
+  --rail-icon-filter: brightness(0) invert(1);
+  --rail-icon-active-filter: brightness(0) invert(1);
   --rail-icon-white-filter: brightness(0) invert(1);
   --online: #4be36a;
   --offline: #ff4b4b;
@@ -21,7 +45,7 @@
   --danger: #ff5a5a;
   --rank-color: #ff55ff;
   --profile-summary-height: clamp(104px, 9vw, 138px);
-  --font-sans: "Manrope", Arial, sans-serif;
+  --font-sans: "Roboto", Arial, sans-serif;
   --gap: 25px;
   --rail-width: 70px;
   --rail-item-size: 46px;
@@ -33,7 +57,7 @@
   --font-medium: 600;
   --font-semibold: 600;
   --font-bold: 700;
-  --font-extrabold: 800;
+  --font-extrabold: 700;
   --ui-font-weight: var(--font-medium);
   --control-height: 48px;
   --control-icon-size: 20px;
@@ -60,7 +84,7 @@ body {
   margin: 0;
   background: var(--canvas);
   color: var(--subtext);
-  font-family: "Manrope", Arial, sans-serif;
+  font-family: "Roboto", Arial, sans-serif;
   font-weight: var(--ui-font-weight);
   font-optical-sizing: auto;
   text-rendering: geometricPrecision;
@@ -106,7 +130,7 @@ svg {
   display: block;
   object-fit: contain;
   opacity: 1;
-  filter: invert(78%) sepia(0%) saturate(0%) hue-rotate(188deg) brightness(96%) contrast(88%);
+  filter: brightness(0) invert(1);
 }
 
 .site-icon-layered {
@@ -281,8 +305,8 @@ svg {
   inset: 0;
   display: block;
   background: var(--store-button);
-  -webkit-mask: url("icons/store-btn.svg") center / contain no-repeat;
-  mask: url("icons/store-btn.svg") center / contain no-repeat;
+  -webkit-mask: url("home/nav-store.png") center / contain no-repeat;
+  mask: url("home/nav-store.png") center / contain no-repeat;
   transition: background 180ms ease;
 }
 
@@ -1037,8 +1061,8 @@ svg {
   height: 34px;
   display: block;
   background: currentColor;
-  -webkit-mask: url("icons/close.svg") center / contain no-repeat;
-  mask: url("icons/close.svg") center / contain no-repeat;
+  -webkit-mask: url("icons/clear-search.svg") center / contain no-repeat;
+  mask: url("icons/clear-search.svg") center / contain no-repeat;
 }
 
 .join-modal-close:hover,

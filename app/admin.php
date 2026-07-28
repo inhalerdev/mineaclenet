@@ -559,7 +559,12 @@ $editContent = (string) ($editingAnnouncement['content'] ?? '');
 $editSortOrder = (string) ($editingAnnouncement['sort_order'] ?? '10');
 $editIsEnabled = !$isEditingAnnouncement || ((int) ($editingAnnouncement['is_enabled'] ?? 0)) === 1;
 
-mineacle_page_head('Admin');
+$adminStylesheetVersion = (string) (filemtime(__DIR__ . '/assets/home-page.css') ?: mineacle_page_asset_version());
+
+mineacle_page_head('Admin', [
+    'stylesheets' => ['/assets/home-page.css?rev=' . rawurlencode($adminStylesheetVersion)],
+    'external_fonts' => false,
+]);
 ?>
 <main class="admin-page" aria-label="Mineacle admin">
     <section class="admin-panel admin-hero">

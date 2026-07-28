@@ -276,6 +276,7 @@ $socialLinks = [
 $currentNavKey = 'stats';
 $assetVersion = mineacle_page_asset_version();
 $homeStylesheetVersion = (string) (filemtime(__DIR__ . '/assets/home.css') ?: $assetVersion);
+$pagesStylesheetVersion = (string) (filemtime(__DIR__ . '/assets/pages.css') ?: $assetVersion);
 $playerStylesheetVersion = (string) (filemtime(__DIR__ . '/assets/player.css') ?: $assetVersion);
 $viewModel = $player ? mineacle_profile_view_model($player, $team) : null;
 $fightState = $viewModel !== null ? mineacle_stats_recent_fights((string) $viewModel['uuid'], 16) : ['available' => true, 'fights' => []];
@@ -298,9 +299,10 @@ if ($viewModel !== null) {
 $metaOptions = array_merge($metaOptions, [
     'stylesheets' => [
         '/assets/home.css?rev=' . rawurlencode($homeStylesheetVersion),
+        '/assets/pages.css?rev=' . rawurlencode($pagesStylesheetVersion),
         '/assets/player.css?rev=' . rawurlencode($playerStylesheetVersion),
     ],
-    'body_class' => 'player-page',
+    'body_class' => 'secondary-page player-page',
     'external_fonts' => false,
     'theme_color' => '#00001f',
 ]);
@@ -398,7 +400,8 @@ mineacle_page_head($pageTitle, $metaOptions);
                     </nav>
                 </header>
 
-                <main class="player-surface profile-page" aria-label="Player profile">
+                <div class="page-scroll">
+                    <main class="player-surface profile-page" aria-label="Player profile">
         <?php if ($loadError): ?>
             <section class="panel profile-message">
                 <h1>Unable to load player stats right now</h1>
@@ -474,7 +477,9 @@ mineacle_page_head($pageTitle, $metaOptions);
                 <?php endif; ?>
             </section>
         <?php endif; ?>
-                </main>
+                    </main>
+                    <?php mineacle_page_footer($site); ?>
+                </div>
             </div>
         </section>
     </div>

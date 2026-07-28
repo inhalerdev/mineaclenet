@@ -42,6 +42,7 @@ return [
         'terms_url' => $mineacleEnv(['TERMS_URL', 'terms_url'], '#'),
         'privacy_url' => $mineacleEnv(['PRIVACY_URL', 'privacy_url'], '#'),
         'refund_url' => $mineacleEnv(['REFUND_URL', 'refund_url'], '#'),
+        'plus_url' => $mineacleEnv(['PLUS_URL', 'plus_url'], 'https://store.mineacle.net/'),
         'support_url' => $mineacleEnv(['SUPPORT_URL', 'support_url']),
         'support_email' => $mineacleEnv(['SUPPORT_EMAIL', 'support_email'], 'support@mineacle.net'),
         'minecraft_ip' => $mineacleEnv(['MINECRAFT_IP', 'minecraft_ip'], 'mineacle.net'),
@@ -97,5 +98,9 @@ return [
     ],
     'security' => [
         'debug' => strtolower($mineacleEnv(['APP_DEBUG', 'app_debug'])) === 'true',
+    ],
+    'contact' => [
+        'recipient' => $mineacleEnv(['BUG_REPORT_EMAIL', 'bug_report_email'], 'support@mineacle.net'),
+        'from_email' => $mineacleEnv(['CONTACT_FROM_EMAIL', 'contact_from_email'], 'website@mineacle.net'),
     ],
 ];

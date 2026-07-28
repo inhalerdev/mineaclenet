@@ -277,6 +277,7 @@
   height: var(--icon-size);
   flex: none;
   object-fit: contain;
+  filter: brightness(0) invert(1);
 }
 
 .profile-summary-value {
@@ -329,6 +330,7 @@
   width: var(--icon-size);
   height: var(--icon-size);
   object-fit: contain;
+  filter: brightness(0) invert(1);
 }
 
 .profile-section-heading h2 {

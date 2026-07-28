@@ -27,6 +27,11 @@ if ($requestPath === '/leaderboards') {
     exit;
 }
 
+if ($requestPath === '/contact') {
+    require __DIR__ . '/contact.php';
+    exit;
+}
+
 if ($requestPath === '/player') {
     require __DIR__ . '/player.php';
     exit;
