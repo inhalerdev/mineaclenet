@@ -5,8 +5,8 @@ declare(strict_types=1);
 require_once __DIR__ . '/includes/layout.php';
 require_once __DIR__ . '/includes/stats-lib.php';
 
-$site = mineacle_config()['site'] ?? [];
-$homeUrl = mineacle_page_home_url($site);
+$config = mineacle_config();
+$site = $config['site'] ?? [];
 $leaderboardsUrl = mineacle_page_leaderboards_url($site);
 $directPath = parse_url((string) ($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH);
 $directUsername = trim((string) ($_GET['username'] ?? ''));
@@ -31,13 +31,6 @@ function mineacle_profile_requested_username(): string
     }
 
     return substr(trim($query), 0, 64);
-}
-
-function mineacle_profile_link(mixed $url): string
-{
-    $value = trim((string) $url);
-
-    return $value !== '' ? $value : '#';
 }
 
 function mineacle_profile_kd(array $player): string
@@ -247,8 +240,6 @@ if ($loadError) {
     http_response_code(404);
 }
 
-$config = mineacle_config();
-$site = $config['site'] ?? [];
 $minecraftIp = trim((string) ($site['minecraft_ip'] ?? 'mineacle.net')) ?: 'mineacle.net';
 $uniquePlayerCount = 0;
 
@@ -284,6 +275,7 @@ $socialLinks = [
 ];
 $currentNavKey = 'stats';
 $assetVersion = mineacle_page_asset_version();
+$playerStylesheetVersion = (string) (filemtime(__DIR__ . '/assets/player.css') ?: $assetVersion);
 $viewModel = $player ? mineacle_profile_view_model($player, $team) : null;
 $fightState = $viewModel !== null ? mineacle_stats_recent_fights((string) $viewModel['uuid'], 16) : ['available' => true, 'fights' => []];
 $pageTitle = $viewModel ? (string) $viewModel['display_name'] : 'Player';
@@ -303,7 +295,7 @@ if ($viewModel !== null) {
 }
 
 $metaOptions = array_merge($metaOptions, [
-    'stylesheets' => ['/assets/home-page.css', '/assets/home.css', '/assets/player.css'],
+    'stylesheets' => ['/assets/home.css', '/assets/player.css?rev=' . rawurlencode($playerStylesheetVersion)],
     'body_class' => 'player-page',
     'external_fonts' => false,
     'theme_color' => '#00001f',
