@@ -28,8 +28,8 @@
   --container-stroke: #4a4c6a;
   --button-bg: #364062;
   --button-stroke: #47547f;
-  --play-bg: #304630;
-  --play-stroke: #4a6a4d;
+  --play-bg: #00dd57;
+  --play-stroke: #45f68a;
   --text: #bbbbbb;
   --heading: #ffffff;
   --radius: 3px;
@@ -288,7 +288,7 @@ button {
 .social-logo--x {
   border-radius: var(--radius);
   background: transparent;
-  color: #ffffff;
+  color: inherit;
 }
 
 .social-logo--x::before {
@@ -313,14 +313,14 @@ button {
 
 .social-link--x:hover {
   background: transparent;
-  color: #000000;
+  color: #ff55ff;
   filter: none;
   transform: translateY(-1px);
 }
 
 .social-link--x:hover .social-logo--x {
   background: transparent;
-  color: #000000;
+  color: inherit;
 }
 
 .social-link:active {
@@ -658,14 +658,17 @@ button {
 }
 
 .top-action--play:hover {
+  border-color: #5cff9b;
+  background: #00bc4a;
   box-shadow:
     0 0 12px rgba(117, 255, 142, 0.2),
     inset 0 0 0 1px rgba(117, 255, 142, 0.14);
 }
 
 .top-action--play.is-copied {
+  border-color: #5cff9b;
+  background: #00bc4a;
   animation: copied-button-pulse 1100ms steps(6, end);
-  filter: brightness(1.12);
 }
 
 .top-action--play.is-copied::before {

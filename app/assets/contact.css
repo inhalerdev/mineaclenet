@@ -112,6 +112,12 @@
 }
 
 .contact-guidance {
+  --contact-check-size: clamp(
+    12px,
+    min(0.833333vw, 1.481481vh),
+    16px
+  );
+
   display: grid;
   gap: var(--half-space);
   margin: 0;
@@ -121,18 +127,20 @@
 
 .contact-guidance li {
   position: relative;
-  padding-left: 18px;
+  padding-left: calc(var(--contact-check-size) + 10px);
 }
 
 .contact-guidance li::before {
   position: absolute;
-  top: 0.55em;
+  top: 50%;
   left: 0;
-  width: 6px;
-  height: 6px;
-  border-radius: 1px;
-  background: #ff88ff;
+  width: var(--contact-check-size);
+  height: var(--contact-check-size);
+  background: #55ff55;
   content: "";
+  mask: url("contact-check.png") center / contain no-repeat;
+  transform: translateY(-50%);
+  -webkit-mask: url("contact-check.png") center / contain no-repeat;
 }
 
 .contact-form-panel {
@@ -485,7 +493,9 @@
 }
 
 .contact-submit:hover {
-  filter: brightness(1.1);
+  border-color: #5cff9b;
+  background: #00bc4a;
+  filter: none;
   box-shadow: 0 0 14px rgba(117, 255, 142, 0.18);
   transform: translateY(-1px);
 }

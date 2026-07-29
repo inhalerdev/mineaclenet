@@ -59,10 +59,10 @@
 
 .profile-hero-content {
   display: grid;
-  grid-template-columns: auto minmax(0, auto);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: stretch;
   justify-content: center;
-  gap: clamp(20px, 2.4vw, 46px);
+  gap: 0;
   width: 100%;
   min-height: 0;
   padding: 0 var(--space);
@@ -71,8 +71,9 @@
 .profile-bust-stage {
   display: grid;
   align-self: end;
+  justify-self: end;
   place-items: end center;
-  width: clamp(170px, min(17vw, 29vh), 290px);
+  width: clamp(190px, min(20vw, 35vh), 350px);
   height: 66.666%;
   overflow: visible;
   filter: drop-shadow(0 18px 26px rgba(0, 0, 20, 0.42));
@@ -107,12 +108,14 @@
 .profile-player-lockup {
   display: grid;
   align-self: center;
-  justify-items: center;
+  justify-self: start;
+  justify-items: start;
   gap: 10px;
-  width: min(46vw, 620px);
+  width: min(100%, 360px);
   min-width: 0;
   max-width: 100%;
-  text-align: center;
+  margin-left: clamp(24px, 3.2vw, 56px);
+  text-align: left;
   text-shadow: 0 2px 14px rgba(0, 0, 18, 0.76);
 }
 
@@ -160,7 +163,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: var(--half-space);
   margin: 0;
   color: var(--heading);
@@ -240,18 +243,6 @@
   border: 1px solid rgba(74, 76, 106, 0.74);
   border-radius: var(--radius);
   background: rgba(48, 49, 70, 0.46);
-  transition:
-    border-color 120ms ease,
-    background-color 150ms ease,
-    box-shadow 150ms ease,
-    transform 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.profile-summary-item:hover {
-  border-color: var(--button-stroke);
-  background: rgba(54, 64, 98, 0.58);
-  box-shadow: 0 8px 18px rgba(0, 0, 18, 0.16);
-  transform: translateY(-2px);
 }
 
 .profile-summary-item > span {
@@ -519,12 +510,9 @@
 }
 
 .profile-duels-empty {
-  position: relative;
-  isolation: isolate;
   display: grid;
   place-items: center;
   min-height: clamp(240px, 28vh, 360px);
-  overflow: hidden;
   border: 1px solid var(--container-stroke);
   border-radius: var(--radius);
   background: #202239;
@@ -533,28 +521,6 @@
   font-weight: 500;
   text-align: center;
   text-shadow: 0 2px 12px rgba(0, 0, 18, 0.86);
-}
-
-.profile-duels-empty::before,
-.profile-duels-empty::after {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  content: "";
-  pointer-events: none;
-}
-
-.profile-duels-empty::before {
-  background: linear-gradient(
-    135deg,
-    rgba(54, 64, 98, 0.42),
-    rgba(29, 31, 54, 0.92)
-  );
-}
-
-.profile-duels-empty::after {
-  z-index: -1;
-  box-shadow: inset 0 0 80px rgba(0, 0, 24, 0.26);
 }
 
 .profile-message {
@@ -686,7 +652,7 @@
 
   .profile-hero-content {
     grid-template-columns: auto minmax(0, 1fr);
-    gap: 10px;
+    gap: 0;
     min-height: 0;
     padding-inline: var(--half-space);
   }
@@ -697,8 +663,10 @@
   }
 
   .profile-player-lockup {
+    justify-self: start;
     justify-items: center;
     max-width: 100%;
+    margin-left: 10px;
     text-align: center;
   }
 
