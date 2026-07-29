@@ -653,6 +653,38 @@
     }
   });
 
+  document.querySelectorAll("[data-footer-slime]").forEach((slime) => {
+    const trigger = slime.closest("a");
+    const staticSource = slime.dataset.staticSrc;
+    const animatedSource = slime.dataset.animatedSrc;
+
+    if (!trigger || !staticSource || !animatedSource) {
+      return;
+    }
+
+    const showStaticSlime = () => {
+      if (slime.src !== new URL(staticSource, window.location.href).href) {
+        slime.src = staticSource;
+      }
+    };
+
+    const showAnimatedSlime = () => {
+      if (reduceMotion.matches) {
+        showStaticSlime();
+        return;
+      }
+
+      slime.src = staticSource;
+      void slime.offsetWidth;
+      slime.src = animatedSource;
+    };
+
+    trigger.addEventListener("pointerenter", showAnimatedSlime);
+    trigger.addEventListener("pointerleave", showStaticSlime);
+    trigger.addEventListener("focus", showAnimatedSlime);
+    trigger.addEventListener("blur", showStaticSlime);
+  });
+
   const syncHeroMotion = () => {
     if (!heroVideo) {
       return;

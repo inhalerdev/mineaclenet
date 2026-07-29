@@ -264,14 +264,14 @@ $siteUrl = static function (mixed $value, string $fallback): string {
 
 $navLinks = [
     ['key' => 'home', 'label' => 'Home', 'url' => '/', 'external' => false],
-    ['key' => 'vote', 'label' => 'Vote', 'url' => $siteUrl($site['vote_url'] ?? '', 'https://mineacle.net/vote'), 'external' => true],
+    ['key' => 'vote', 'label' => 'Vote', 'url' => '/vote', 'external' => false],
     ['key' => 'stats', 'label' => 'Leaderboards', 'url' => '/leaderboards', 'external' => false],
-    ['key' => 'bans', 'label' => 'Bans', 'url' => $siteUrl($site['bans_url'] ?? '', 'https://bans.mineacle.net/'), 'external' => true],
+    ['key' => 'bans', 'label' => 'Bans', 'url' => '/bans', 'external' => false],
     ['key' => 'store', 'label' => 'Store', 'url' => $siteUrl($site['store_url'] ?? '', 'https://store.mineacle.net/'), 'external' => true],
 ];
 $socialLinks = [
-    ['key' => 'discord', 'label' => 'Mineacle Discord', 'title' => 'Discord', 'url' => $siteUrl($site['discord_url'] ?? '', 'https://discord.gg/qmpJ4xMguT')],
     ['key' => 'x', 'label' => 'Mineacle on X', 'title' => 'X', 'url' => $siteUrl($site['x_url'] ?? '', 'https://x.com/mineaclenetwork')],
+    ['key' => 'discord', 'label' => 'Mineacle Discord', 'title' => 'Discord', 'url' => $siteUrl($site['discord_url'] ?? '', 'https://discord.gg/qmpJ4xMguT')],
 ];
 $currentNavKey = 'stats';
 $assetVersion = mineacle_page_asset_version();

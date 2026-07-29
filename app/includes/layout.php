@@ -6,7 +6,7 @@ require_once __DIR__ . '/db.php';
 
 function mineacle_page_asset_version(): string
 {
-    return 'secondary-flat-20260728';
+    return 'site-polish-20260729';
 }
 
 function mineacle_page_clean_text(string $value): string
@@ -234,15 +234,15 @@ function mineacle_page_footer(array $site): void
         $plusUrl = mineacle_page_public_link($site['store_url'] ?? '#');
     }
     $quickLinks = [
-        ['label' => 'Home', 'url' => '/'],
-        ['label' => 'Leaderboards', 'url' => '/leaderboards'],
-        ['label' => 'Store', 'url' => (string) ($site['store_url'] ?? '#')],
-        ['label' => 'Vote', 'url' => (string) ($site['vote_url'] ?? '#')],
-        ['label' => 'Bans', 'url' => (string) ($site['bans_url'] ?? '#')],
+        ['key' => 'home', 'label' => 'Home', 'url' => '/'],
+        ['key' => 'vote', 'label' => 'Vote', 'url' => '/vote'],
+        ['key' => 'bans', 'label' => 'Bans', 'url' => '/bans'],
+        ['key' => 'stats', 'label' => 'Leaderboards', 'url' => '/leaderboards'],
+        ['key' => 'store', 'label' => 'Store', 'url' => (string) ($site['store_url'] ?? '#')],
     ];
     $socialLinks = [
-        ['key' => 'discord', 'label' => 'Discord', 'url' => (string) ($site['discord_url'] ?? '#')],
         ['key' => 'x', 'label' => 'X/Twitter', 'url' => (string) ($site['x_url'] ?? '#')],
+        ['key' => 'discord', 'label' => 'Discord', 'url' => (string) ($site['discord_url'] ?? '#')],
     ];
     $legalLinks = [
         ['label' => 'Terms of Service', 'url' => (string) ($site['terms_url'] ?? '#')],
@@ -255,7 +255,29 @@ function mineacle_page_footer(array $site): void
     echo '<div class="site-footer__main">';
     echo '<section class="site-footer__studio" aria-label="Mineacle Studios">';
     echo '<a class="site-footer__studio-logo" href="/" aria-label="Mineacle Studios, creators of Mineacle"><img src="/assets/brand/mncl-studios-footer.webp?v=' . h($assetVersion) . '" alt="Mineacle Studios" draggable="false"></a>';
-    echo '<p>Created by Mineacle Studios for a better survival experience.</p>';
+    echo '<p><strong>Mineacle Studios</strong> builds the custom systems behind Mineacle—a polished, community-driven survival experience that stays true to the Minecraft everyone already loves.</p>';
+    echo '</section>';
+
+    echo '<section class="site-footer__plus" aria-label="Mineacle Plus">';
+    echo '<div class="site-footer__plus-cta"><h2>Mineacle+</h2>';
+    echo '<p>Level up your survival experience and support the network.</p>';
+    echo '<a class="site-footer__plus-button" href="' . h($plusUrl) . '" target="_blank" rel="noopener noreferrer"><span>Buy Now</span><span class="site-footer__plus-arrow" aria-hidden="true"></span></a></div>';
+    echo '<nav class="site-footer__links" aria-label="Quick links"><h3>Quick Links</h3><div>';
+    foreach ($quickLinks as $link) {
+        $url = mineacle_page_public_link($link['url']);
+
+        if ($url === '#') {
+            continue;
+        }
+
+        echo '<a href="' . h($url) . '"><img src="/assets/home/nav-' . h($link['key']) . '.png?v=' . h($assetVersion) . '" alt="" aria-hidden="true" draggable="false"><span>' . h($link['label']) . '</span></a>';
+    }
+    echo '</div></nav>';
+    echo '</section>';
+
+    echo '<section class="site-footer__community" aria-label="Mineacle community and support">';
+    echo '<div class="site-footer__connect"><h2>Stay up to date</h2>';
+    echo '<p>Follow Mineacle for updates, releases, and community news.</p>';
     echo '<nav class="site-footer__socials" aria-label="Mineacle social links">';
     foreach ($socialLinks as $link) {
         $key = (string) $link['key'];
@@ -265,33 +287,12 @@ function mineacle_page_footer(array $site): void
             continue;
         }
 
-        echo '<a class="social-link social-link--rail social-link--' . h($key) . '" href="' . h($url) . '" target="_blank" rel="noopener noreferrer" aria-label="' . h($link['label']) . '"><span class="social-logo social-logo--' . h($key) . '" aria-hidden="true"></span></a>';
+        echo '<a class="social-link social-link--footer social-link--' . h($key) . '" href="' . h($url) . '" target="_blank" rel="noopener noreferrer" aria-label="' . h($link['label']) . '"><span class="social-logo social-logo--' . h($key) . '" aria-hidden="true"></span></a>';
     }
-    echo '</nav>';
-    echo '</section>';
-
-    echo '<section class="site-footer__plus" aria-label="Mineacle Plus">';
-    echo '<h2>Mineacle Plus</h2>';
-    echo '<p>Support the network and unlock practical survival upgrades.</p>';
-    echo '<a class="site-footer__plus-button" href="' . h($plusUrl) . '" target="_blank" rel="noopener noreferrer"><span>Upgrade to Plus</span><span class="site-footer__plus-arrow" aria-hidden="true"></span></a>';
-    echo '<nav class="site-footer__links" aria-label="Quick links"><h3>Quick Links</h3><div>';
-    foreach ($quickLinks as $link) {
-        $url = mineacle_page_public_link($link['url']);
-
-        if ($url === '#') {
-            continue;
-        }
-
-        echo '<a href="' . h($url) . '">' . h($link['label']) . '</a>';
-    }
-    echo '</div></nav>';
-    echo '</section>';
-
-    echo '<section class="site-footer__support" aria-label="Mineacle support">';
-    echo '<div><h2>Support</h2>';
-    echo '<p>Found a bug? Send the details directly to Mineacle Studios.</p>';
-    echo '<a class="site-footer__contact-button" href="/contact">Report a Bug</a></div>';
-    echo '<img class="site-footer__bug" src="/assets/brand/bug-mob.webp?v=' . h($assetVersion) . '" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false">';
+    echo '</nav></div>';
+    echo '<a class="site-footer__bug-link" href="/contact" aria-label="Contact Mineacle Studios to report a bug">';
+    echo '<img class="site-footer__bug" src="/assets/brand/footer-slime-static.webp?v=' . h($assetVersion) . '" data-footer-slime data-static-src="/assets/brand/footer-slime-static.webp?v=' . h($assetVersion) . '" data-animated-src="/assets/brand/footer-slime.webp?v=' . h($assetVersion) . '" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false">';
+    echo '<span><strong>Found a Bug?</strong><span>Every report helps us keep Mineacle clean and stable.</span></span></a>';
     echo '</section>';
     echo '</div>';
 

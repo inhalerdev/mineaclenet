@@ -472,6 +472,7 @@ try {
             $suggestions[] = [
                 'name' => $name,
                 'display_name' => $displayName !== '' ? $displayName : $name,
+                'uuid' => $uuid,
                 'head' => is_string($skin['head'] ?? null) ? $skin['head'] : null,
             ];
         }
