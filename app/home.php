@@ -78,7 +78,7 @@ mineacle_page_head('Home', [
     'stylesheets' => ['/assets/home.css?rev=' . rawurlencode($homeStylesheetVersion)],
     'body_class' => 'home-page',
     'external_fonts' => false,
-    'theme_color' => '#00001f',
+    'theme_color' => '#000000',
 ]);
 ?>
 <main class="canvas" aria-labelledby="home-page-title">

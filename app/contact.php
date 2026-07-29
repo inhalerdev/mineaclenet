@@ -315,7 +315,7 @@ mineacle_page_head('Contact', [
     ],
     'body_class' => 'secondary-page contact-page',
     'external_fonts' => false,
-    'theme_color' => '#00001f',
+    'theme_color' => '#000000',
 ]);
 ?>
 <div class="canvas">

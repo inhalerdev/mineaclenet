@@ -304,7 +304,7 @@ $metaOptions = array_merge($metaOptions, [
     ],
     'body_class' => 'secondary-page player-page',
     'external_fonts' => false,
-    'theme_color' => '#00001f',
+    'theme_color' => '#000000',
 ]);
 
 mineacle_page_head($pageTitle, $metaOptions);

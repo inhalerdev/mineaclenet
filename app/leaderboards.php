@@ -363,7 +363,7 @@ mineacle_page_head('Leaderboards', [
     ],
     'body_class' => 'secondary-page leaderboards-page',
     'external_fonts' => false,
-    'theme_color' => '#00001f',
+    'theme_color' => '#000000',
 ]);
 ?>
 <div class="canvas">

@@ -215,17 +215,48 @@ body.secondary-page {
     transform 120ms ease;
 }
 
-.site-footer__links a img {
+.site-footer__link-icon {
   display: block;
   width: calc(var(--icon-size) * 0.68);
   height: calc(var(--icon-size) * 0.68);
-  object-fit: contain;
-  filter: brightness(0) invert(1);
+  flex: none;
+  background: currentColor;
   opacity: 0.94;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+}
+
+.site-footer__link-icon--home {
+  mask-image: url("home/nav-home.png");
+  -webkit-mask-image: url("home/nav-home.png");
+}
+
+.site-footer__link-icon--vote {
+  mask-image: url("home/nav-vote.png");
+  -webkit-mask-image: url("home/nav-vote.png");
+}
+
+.site-footer__link-icon--bans {
+  mask-image: url("home/nav-bans.png");
+  -webkit-mask-image: url("home/nav-bans.png");
+}
+
+.site-footer__link-icon--stats {
+  mask-image: url("home/nav-stats.png");
+  -webkit-mask-image: url("home/nav-stats.png");
+}
+
+.site-footer__link-icon--store {
+  mask-image: url("home/nav-store.png");
+  -webkit-mask-image: url("home/nav-store.png");
 }
 
 .site-footer__links a:hover {
-  color: #ff55ff;
+  color: var(--accent);
   transform: translateX(2px);
 }
 
@@ -253,12 +284,12 @@ body.secondary-page {
 
 .site-footer__socials .social-link--x:hover {
   background: transparent;
-  color: #ff55ff;
+  color: var(--accent);
 }
 
 .site-footer__socials .social-link--discord:hover {
   background: transparent;
-  color: #5865f2;
+  color: var(--accent-mid);
 }
 
 .site-footer__socials .social-link--youtube:hover {
@@ -317,7 +348,7 @@ body.secondary-page {
 }
 
 .site-footer__bug-link:hover strong {
-  color: #ff88ff;
+  color: var(--accent);
 }
 
 .site-footer__bottom {
@@ -327,7 +358,7 @@ body.secondary-page {
   flex-wrap: nowrap;
   gap: var(--half-space);
   padding: 12px var(--space);
-  border-top: 1px solid rgba(74, 76, 106, 0.42);
+  border-top: 1px solid rgba(103, 78, 167, 0.58);
   color: var(--text);
   text-align: center;
   white-space: nowrap;
@@ -357,7 +388,7 @@ body.secondary-page {
 
 .site-footer__bottom a,
 .site-footer__legal-label {
-  color: #ff88ff;
+  color: var(--accent);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -367,7 +398,7 @@ body.secondary-page {
 }
 
 .site-footer a:focus-visible {
-  outline: 2px solid #ff55ff;
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 

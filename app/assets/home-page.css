@@ -23,19 +23,21 @@
 }
 
 :root {
-  --page: #202020;
-  --canvas: #080808;
-  --rail: #303030;
-  --panel: #353535;
-  --panel-soft: #707070;
-  --line: rgba(255, 255, 255, 0.08);
+  --page: #000000;
+  --canvas: #000000;
+  --rail: #141414;
+  --panel: #141414;
+  --panel-soft: #674ea7;
+  --line: rgba(103, 78, 167, 0.58);
   --heading: #ffffff;
-  --subtext: #bbbbbb;
-  --icon: #bbbbbb;
-  --icon-active: #ff88ff;
-  --accent: #7b3cff;
-  --store-button: #ff88ff;
-  --store-button-hover: #ff55ff;
+  --subtext: #bcbcbc;
+  --icon: #bcbcbc;
+  --icon-active: #c800fa;
+  --accent: #c800fa;
+  --accent-soft: #674ea7;
+  --accent-mid: #7353ba;
+  --store-button: #7353ba;
+  --store-button-hover: #c800fa;
   --rail-icon-filter: brightness(0) invert(1);
   --rail-icon-active-filter: brightness(0) invert(1);
   --rail-icon-white-filter: brightness(0) invert(1);
@@ -43,7 +45,7 @@
   --offline: #ff4b4b;
   --warning: #ffbf45;
   --danger: #ff5a5a;
-  --rank-color: #ff55ff;
+  --rank-color: #c800fa;
   --profile-summary-height: clamp(104px, 9vw, 138px);
   --font-sans: "Roboto", Arial, sans-serif;
   --gap: 25px;
@@ -573,7 +575,7 @@ svg {
   padding: 6px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: #303030;
+  background: #141414;
 }
 
 .player-search-results[hidden] {
@@ -669,13 +671,13 @@ svg {
 
 .ranked-player-name__rank {
   flex: 0 0 auto;
-  color: var(--rank-color, #ff55ff);
+  color: var(--rank-color, #c800fa);
 }
 
 .ranked-player-name__name {
   min-width: 0;
   overflow: hidden;
-  color: #bbbbbb;
+  color: #bcbcbc;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -692,14 +694,14 @@ svg {
 .profile-ranked-name__rank,
 .leaderboard-ranked-name__rank {
   flex: 0 0 auto;
-  color: var(--rank-color, #ff55ff);
+  color: var(--rank-color, #c800fa);
 }
 
 .profile-ranked-name__name,
 .leaderboard-ranked-name__name {
   min-width: 0;
   overflow: hidden;
-  color: #bbbbbb;
+  color: #bcbcbc;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -936,14 +938,14 @@ svg {
 }
 
 .hero-action-primary {
-  border-color: #ff55ff;
-  background: #ff55ff;
+  border-color: #c800fa;
+  background: #c800fa;
 }
 
 .hero-action-primary:hover,
 .hero-action-primary:focus-visible {
-  border-color: #ff88ff;
-  background: #ff88ff;
+  border-color: #c800fa;
+  background: #c800fa;
 }
 
 .hero-action-primary.is-copied {
@@ -1134,7 +1136,7 @@ body.has-announcement-modal {
   gap: var(--gap);
   padding: var(--gap);
   border-radius: var(--radius);
-  background: #202020;
+  background: #000000;
   overflow: hidden;
 }
 
@@ -1168,7 +1170,7 @@ body.has-announcement-modal {
 }
 
 .section-heading h2 strong {
-  color: #ff55ff;
+  color: #c800fa;
   font-weight: var(--font-extrabold);
 }
 
@@ -1677,7 +1679,7 @@ body.has-announcement-modal {
   border-radius: var(--radius);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.025)),
-    #202020;
+    #000000;
   color: var(--heading);
   text-decoration: none;
   transition: border-color 160ms ease, transform 160ms ease, background 160ms ease;
@@ -1688,7 +1690,7 @@ body.has-announcement-modal {
   border-color: rgba(255, 85, 255, 0.48);
   background:
     linear-gradient(180deg, rgba(255, 85, 255, 0.12), rgba(255, 255, 255, 0.035)),
-    #202020;
+    #000000;
   outline: 0;
   transform: translateY(-2px);
 }
@@ -1980,7 +1982,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
 
 .footer-links a:hover,
 .footer-links a:focus-visible {
-  color: #ff55ff;
+  color: #c800fa;
   opacity: 1;
   outline: 0;
 }
@@ -2004,7 +2006,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
   padding: 16px 24px 16px 18px;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.035)),
-    #202020;
+    #000000;
   color: var(--heading);
   text-decoration: none;
   transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
@@ -2015,7 +2017,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
   border-color: rgba(255, 85, 255, 0.42);
   background:
     linear-gradient(180deg, rgba(255, 85, 255, 0.13), rgba(255, 255, 255, 0.045)),
-    #202020;
+    #000000;
   outline: 0;
 }
 
@@ -2090,7 +2092,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
 
 .footer-policy-links a:hover,
 .footer-policy-links a:focus-visible {
-  color: #ff55ff;
+  color: #c800fa;
   opacity: 1;
   outline: 0;
   text-decoration-color: rgba(255, 85, 255, 0.5);
@@ -2306,7 +2308,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
 }
 
 .profile-world-name.is-end {
-  color: #ff55ff;
+  color: #c800fa;
 }
 
 .profile-joined-date {
@@ -2450,7 +2452,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
 .profile-duels-head {
   min-height: 42px;
   padding: 0 clamp(14px, 1.7vw, 22px);
-  background: #303030;
+  background: #141414;
   color: var(--subtext);
   font-size: clamp(0.68rem, 0.62rem + 0.14vw, 0.78rem);
   font-weight: var(--font-bold);
@@ -2924,7 +2926,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
 
 .leaderboard-copy p {
   margin-bottom: 12px;
-  color: #ff55ff;
+  color: #c800fa;
   font-size: clamp(0.72rem, 0.66rem + 0.16vw, 0.82rem);
   font-weight: var(--font-bold);
   letter-spacing: 0;
@@ -2962,7 +2964,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
   position: absolute;
   inset: 0 auto 0 0;
   width: 4px;
-  background: #ff55ff;
+  background: #c800fa;
 }
 
 .leaderboard-top-card p,
@@ -2971,7 +2973,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
 }
 
 .leaderboard-top-card p {
-  color: #ff88ff;
+  color: #c800fa;
   font-size: clamp(0.68rem, 0.62rem + 0.14vw, 0.78rem);
   font-weight: var(--font-bold);
   line-height: 1;
@@ -3000,7 +3002,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
   align-items: center;
   border-radius: var(--radius);
   padding: 9px 11px;
-  background: #303030;
+  background: #141414;
   box-shadow: none;
   transition: background 140ms ease;
 }
@@ -3021,11 +3023,11 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
 }
 
 .leaderboard-top-entry.is-rank-3 {
-  background: #303030;
+  background: #141414;
 }
 
 .leaderboard-top-rank {
-  color: #ff55ff;
+  color: #c800fa;
   font-size: 1.05rem;
   font-weight: var(--font-extrabold);
   line-height: 1;
@@ -3098,7 +3100,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
   gap: 11px;
   border-radius: var(--radius);
   padding: 12px;
-  background: #303030;
+  background: #141414;
   box-shadow: none;
   color: var(--subtext);
   transition: background 160ms ease, color 160ms ease, transform 160ms ease;
@@ -3128,7 +3130,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
 
 .leaderboard-category-card.is-active::before,
 .leaderboard-category-card[aria-current="page"]::before {
-  background: #ff55ff;
+  background: #c800fa;
 }
 
 .leaderboard-category-icon {
@@ -3192,7 +3194,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
 }
 
 .leaderboard-search .search-box {
-  background: #303030;
+  background: #141414;
   transition: background 160ms ease;
 }
 
@@ -3204,7 +3206,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
   height: var(--control-height);
   border: 0;
   border-radius: var(--radius);
-  background: #ff55ff;
+  background: #c800fa;
   color: #fff;
   font: inherit;
   font-size: var(--ui-font-size);
@@ -3215,7 +3217,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
 
 .leaderboard-search-submit:hover,
 .leaderboard-search-submit:focus-visible {
-  background: #ff88ff;
+  background: #c800fa;
   outline: 0;
 }
 
@@ -3237,7 +3239,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
   justify-content: center;
   border-radius: var(--radius);
   padding: 0 15px;
-  background: #303030;
+  background: #141414;
   box-shadow: none;
   color: var(--subtext);
   font-size: var(--ui-font-size);
@@ -3312,7 +3314,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
 .leaderboard-board .player-card {
   min-height: 68px;
   padding: 11px 16px;
-  background: #303030;
+  background: #141414;
   box-shadow: none;
   transition: background 140ms ease, color 140ms ease;
 }
@@ -3333,7 +3335,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
 }
 
 .leaderboard-team-rank {
-  color: #ff55ff;
+  color: #c800fa;
   font-size: var(--ui-font-size);
   font-weight: var(--font-extrabold);
   line-height: 1;
@@ -3369,7 +3371,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
   justify-content: center;
   border-radius: var(--radius);
   padding: 0 14px;
-  background: #303030;
+  background: #141414;
   box-shadow: none;
   color: var(--heading);
   font-size: var(--ui-font-size);
@@ -3380,7 +3382,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
 .leaderboard-pagination a:focus-visible,
 .profile-message-link:hover,
 .profile-message-link:focus-visible {
-  color: #ff55ff;
+  color: #c800fa;
   outline: 0;
 }
 
@@ -3454,7 +3456,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
 
 .leaderboard-copy p {
   margin-bottom: 14px;
-  color: #ff88ff;
+  color: #c800fa;
 }
 
 .leaderboard-copy h1 {
@@ -3477,7 +3479,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
   gap: 16px;
   border-radius: var(--radius);
   padding: clamp(18px, 2.2vw, 28px);
-  background: #202020;
+  background: #000000;
   box-shadow: none;
   contain: layout paint;
 }
@@ -3528,7 +3530,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
 }
 
 .leaderboard-top-heading small {
-  color: #ff88ff;
+  color: #c800fa;
   font-size: 0.72rem;
   font-weight: var(--font-bold);
   line-height: 1;
@@ -3554,7 +3556,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
   grid-template-columns: 40px 42px minmax(0, 1fr);
   gap: 11px;
   padding: 8px 10px;
-  background: #303030;
+  background: #141414;
 }
 
 .leaderboard-top-entry.is-rank-1 {
@@ -3566,7 +3568,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
 }
 
 .leaderboard-top-entry.is-rank-3 {
-  background: #303030;
+  background: #141414;
 }
 
 .leaderboard-top-entry:hover,
@@ -3608,7 +3610,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   justify-content: center;
   gap: 0;
-  background: #303030;
+  background: #141414;
 }
 
 .leaderboard-category-card {
@@ -3718,7 +3720,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
 }
 
 .leaderboard-section-heading p {
-  color: #ff88ff;
+  color: #c800fa;
   font-size: 0.7rem;
   font-weight: var(--font-bold);
   line-height: 1;
@@ -3735,7 +3737,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
 
 .leaderboard-search .search-box {
   border: 0;
-  background: #303030;
+  background: #141414;
   box-shadow: none;
 }
 
@@ -3773,7 +3775,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
 }
 
 .leaderboard-filter-context small {
-  color: #ff88ff;
+  color: #c800fa;
   font-size: 0.66rem;
   text-transform: uppercase;
 }
@@ -3813,7 +3815,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
 
 .leaderboard-view-row .leaderboard-subfilters a:hover,
 .leaderboard-view-row .leaderboard-subfilters a:focus-visible {
-  background: #303030;
+  background: #141414;
 }
 
 .leaderboard-view-row .leaderboard-subfilters a.is-active,
@@ -3823,7 +3825,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
 
 .leaderboard-view-row .leaderboard-subfilters a.is-active::after,
 .leaderboard-view-row .leaderboard-subfilters a[aria-current="page"]::after {
-  background: #ff55ff;
+  background: #c800fa;
 }
 
 .leaderboard-result-count {
@@ -3864,7 +3866,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
   width: 35%;
   height: 3px;
   visibility: hidden;
-  background: #ff55ff;
+  background: #c800fa;
   transform: translate3d(-110%, 0, 0);
   pointer-events: none;
 }
@@ -3885,7 +3887,7 @@ a[aria-label="Discord"]:focus-visible .discord-icon-mark {
 }
 
 .leaderboard-board .player-card {
-  background: #303030;
+  background: #141414;
 }
 
 .leaderboard-board .player-card.is-top-rank {

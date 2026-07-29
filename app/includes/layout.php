@@ -6,7 +6,7 @@ require_once __DIR__ . '/db.php';
 
 function mineacle_page_asset_version(): string
 {
-    return 'figma-corrections-20260729-v3';
+    return 'palette-refresh-20260729-v4';
 }
 
 function mineacle_page_clean_text(string $value): string
@@ -214,7 +214,7 @@ function mineacle_page_footer(array $site): void
             continue;
         }
 
-        echo '<a href="' . h($url) . '"><img src="/assets/home/nav-' . h($link['key']) . '.png?v=' . h($assetVersion) . '" alt="" aria-hidden="true" draggable="false"><span>' . h($link['label']) . '</span></a>';
+        echo '<a href="' . h($url) . '"><span class="site-footer__link-icon site-footer__link-icon--' . h($link['key']) . '" aria-hidden="true"></span><span>' . h($link['label']) . '</span></a>';
     }
     echo '</div></nav>';
     echo '<div class="site-footer__connect"><h2>How do I stay up to date?</h2>';
@@ -272,7 +272,7 @@ function mineacle_page_head(string $title = 'Home', array $options = []): void
     echo '<head>';
     echo '<meta charset="utf-8">';
     echo '<meta name="viewport" content="width=device-width, initial-scale=1">';
-    echo '<meta name="theme-color" content="' . h((string) ($options['theme_color'] ?? '#080808')) . '">';
+    echo '<meta name="theme-color" content="' . h((string) ($options['theme_color'] ?? '#000000')) . '">';
     echo '<title>' . h($metaTitle) . '</title>';
     echo '<meta name="description" content="' . h($metaDescription) . '">';
     echo '<link rel="canonical" href="' . h($canonicalUrl) . '">';
