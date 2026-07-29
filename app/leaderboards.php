@@ -329,7 +329,6 @@ $rows = $tableMode === 'teams' ? $teams : $players;
 $hasResults = $rows !== [];
 $shownStart = $hasResults ? $offset + 1 : 0;
 $shownEnd = $hasResults ? min($offset + count($rows), $resultTotal) : 0;
-$searchPlaceholder = $tableMode === 'teams' ? 'Search for a team...' : 'Search for a player...';
 $topTitle = 'Top 3 ' . ($tableMode === 'teams' ? 'Teams' : 'Players');
 $leaderboardTitle = (string) $selected['title'];
 $leaderboardDescription = (string) $selected['description'];
@@ -337,7 +336,6 @@ $assetVersion = mineacle_page_asset_version();
 $homeStylesheetVersion = (string) (filemtime(__DIR__ . '/assets/home.css') ?: $assetVersion);
 $pagesStylesheetVersion = (string) (filemtime(__DIR__ . '/assets/pages.css') ?: $assetVersion);
 $leaderboardsStylesheetVersion = (string) (filemtime(__DIR__ . '/assets/leaderboards.css') ?: $assetVersion);
-$canSuggestPlayers = $tableMode === 'players';
 $minecraftIp = trim((string) ($site['minecraft_ip'] ?? 'mineacle.net')) ?: 'mineacle.net';
 $uniquePlayerCount = 0;
 
@@ -465,7 +463,7 @@ mineacle_page_head('Leaderboards', [
             <div class="leaderboard-hero-content">
                 <div class="leaderboard-copy">
                     <h1>Leaderboards</h1>
-                    <p>Global player and team rankings.</p>
+                    <p>Follow Mineacle’s global standings across economy, combat efficiency, playtime, and team performance. Switch between players and teams, compare the strongest records, and open any player profile for the story behind their rank.</p>
                 </div>
 
                 <aside class="leaderboard-top-card" aria-label="<?php echo h($topTitle); ?>">
@@ -520,20 +518,6 @@ mineacle_page_head('Leaderboards', [
                     </div>
                 </aside>
             </div>
-
-            <nav class="leaderboard-category-grid" aria-label="Leaderboard categories">
-                <?php foreach ($categories as $key => $card): ?>
-                    <?php $isActive = $category === $key; ?>
-                    <a class="leaderboard-category-card<?php echo $isActive ? ' is-active' : ''; ?>" href="<?php echo h(mineacle_leaderboards_url((string) $key)); ?>" data-leaderboard-category-link<?php echo $isActive ? ' aria-current="page"' : ''; ?>>
-                        <span class="leaderboard-category-icon" aria-hidden="true">
-                            <img src="<?php echo h(mineacle_leaderboards_category_icon((string) $key, $assetVersion)); ?>" alt="" draggable="false">
-                        </span>
-                        <span class="leaderboard-category-copy">
-                            <strong><?php echo h((string) $card['label']); ?></strong>
-                        </span>
-                    </a>
-                <?php endforeach; ?>
-            </nav>
         </section>
 
         <section class="panel leaderboard-board" id="leaderboardRankings" aria-label="<?php echo h($leaderboardTitle); ?>">
@@ -546,19 +530,19 @@ mineacle_page_head('Leaderboards', [
                     <h2><?php echo h($leaderboardTitle); ?></h2>
                 </header>
 
-                <form class="leaderboard-search player-search" method="get" action="/leaderboards" data-player-search data-player-search-form data-player-search-submit="filter" data-player-search-enabled="<?php echo $canSuggestPlayers ? 'true' : 'false'; ?>">
-                    <input type="hidden" name="category" value="<?php echo h($category); ?>" data-leaderboard-category-input>
-                    <input type="hidden" name="view" value="<?php echo h($view); ?>" data-leaderboard-view-input>
-                    <label class="sr-only" for="homeSearch"><?php echo h($searchPlaceholder); ?></label>
-                    <div class="leaderboard-search-grid">
-                        <div class="search-box">
-                            <img src="/assets/home/search-user.png?v=<?php echo h(rawurlencode($assetVersion)); ?>" alt="" aria-hidden="true" draggable="false">
-                            <input id="homeSearch" name="search" type="search" placeholder="<?php echo h($searchPlaceholder); ?>" value="<?php echo h($search); ?>" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="leaderboardPlayerSearchResults">
-                        </div>
-                        <button class="leaderboard-search-submit" type="submit">Filter</button>
-                    </div>
-                    <div class="player-search-results leaderboard-search-results" id="leaderboardPlayerSearchResults" data-player-search-results role="listbox" hidden></div>
-                </form>
+                <nav class="leaderboard-category-grid" aria-label="Leaderboard categories">
+                    <?php foreach ($categories as $key => $card): ?>
+                        <?php $isActive = $category === $key; ?>
+                        <a class="leaderboard-category-card<?php echo $isActive ? ' is-active' : ''; ?>" href="<?php echo h(mineacle_leaderboards_url((string) $key)); ?>" data-leaderboard-category-link<?php echo $isActive ? ' aria-current="page"' : ''; ?>>
+                            <span class="leaderboard-category-icon" aria-hidden="true">
+                                <img src="<?php echo h(mineacle_leaderboards_category_icon((string) $key, $assetVersion)); ?>" alt="" draggable="false">
+                            </span>
+                            <span class="leaderboard-category-copy">
+                                <strong><?php echo h((string) $card['label']); ?></strong>
+                            </span>
+                        </a>
+                    <?php endforeach; ?>
+                </nav>
             </div>
 
             <div class="leaderboard-view-row">

@@ -6,7 +6,7 @@ require_once __DIR__ . '/db.php';
 
 function mineacle_page_asset_version(): string
 {
-    return 'site-polish-20260729';
+    return 'site-polish-20260729-v2';
 }
 
 function mineacle_page_clean_text(string $value): string
@@ -145,60 +145,6 @@ function mineacle_page_leaderboards_url(array $site = []): string
     return $safe;
 }
 
-function mineacle_page_icon(string $name): string
-{
-    $assetVersion = rawurlencode(mineacle_page_asset_version());
-    $iconVersion = '?v=' . $assetVersion;
-
-    if ($name === 'discord') {
-        $square = '/assets/icons/discord-square.svg' . $iconVersion;
-        $mark = '/assets/icons/discord-mark.svg' . $iconVersion;
-
-        return '<span class="site-icon site-icon-layered discord-icon" aria-hidden="true">'
-            . '<img class="discord-icon-square" src="' . h($square) . '" alt="" draggable="false">'
-            . '<img class="discord-icon-mark" src="' . h($mark) . '" alt="" draggable="false">'
-            . '</span>';
-    }
-
-    if ($name === 'store') {
-        $mark = '/assets/icons/store.svg' . $iconVersion;
-
-        return '<span class="site-icon site-icon-layered store-icon" aria-hidden="true">'
-            . '<span class="store-icon-square"></span>'
-            . '<img class="store-icon-mark" src="' . h($mark) . '" alt="" draggable="false">'
-            . '</span>';
-    }
-
-    if ($name === 'x') {
-        $square = '/assets/icons/x-square.svg' . $iconVersion;
-        $mark = '/assets/icons/x-mark.svg' . $iconVersion;
-
-        return '<span class="site-icon site-icon-layered x-icon" aria-hidden="true">'
-            . '<img class="x-icon-square" src="' . h($square) . '" alt="" draggable="false">'
-            . '<img class="x-icon-mark" src="' . h($mark) . '" alt="" draggable="false">'
-            . '</span>';
-    }
-
-    $officialIcons = [
-        'home' => '/assets/icons/home.svg' . $iconVersion,
-        'stats' => '/assets/icons/leaderboard.svg' . $iconVersion,
-        'vote' => '/assets/icons/vote.svg' . $iconVersion,
-        'bans' => '/assets/icons/bans.svg' . $iconVersion,
-        'youtube' => '/assets/icons/youtube-pixel.svg' . $iconVersion,
-    ];
-
-    if (isset($officialIcons[$name])) {
-        return '<img class="site-icon" src="' . h($officialIcons[$name]) . '" alt="" aria-hidden="true" draggable="false">';
-    }
-
-    $icons = [
-        'youtube' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8.5c.3 2.3.3 4.7 0 7-.2 1.4-1.2 2.4-2.6 2.6-4.2.4-8.6.4-12.8 0-1.4-.2-2.4-1.2-2.6-2.6-.3-2.3-.3-4.7 0-7 .2-1.4 1.2-2.4 2.6-2.6 4.2-.4 8.6-.4 12.8 0 1.4.2 2.4 1.2 2.6 2.6ZM10 15l5-3-5-3v6Z"/></svg>',
-        'tiktok' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h3c.2 2 1.4 3.4 3.4 3.8v3.1c-1.3-.1-2.4-.5-3.4-1.2V15a5 5 0 1 1-5-5h.6v3.2c-.2 0-.4-.1-.6-.1a1.9 1.9 0 1 0 1.9 1.9L14 3Z"/></svg>',
-    ];
-
-    return $icons[$name] ?? '';
-}
-
 function mineacle_page_search_header(array $site): void
 {
     $minecraftIp = (string) ($site['minecraft_ip'] ?? 'mineacle.net');
@@ -229,7 +175,11 @@ function mineacle_page_footer(array $site): void
 {
     $assetVersion = rawurlencode(mineacle_page_asset_version());
     $plusUrl = mineacle_page_public_link($site['plus_url'] ?? $site['store_url'] ?? '#');
+    $resolveSocialUrl = static function (mixed $value, string $fallback): string {
+        $resolved = mineacle_page_public_link($value);
 
+        return $resolved === '#' ? $fallback : $resolved;
+    };
     if ($plusUrl === '#') {
         $plusUrl = mineacle_page_public_link($site['store_url'] ?? '#');
     }
@@ -241,8 +191,9 @@ function mineacle_page_footer(array $site): void
         ['key' => 'store', 'label' => 'Store', 'url' => (string) ($site['store_url'] ?? '#')],
     ];
     $socialLinks = [
-        ['key' => 'x', 'label' => 'X/Twitter', 'url' => (string) ($site['x_url'] ?? '#')],
-        ['key' => 'discord', 'label' => 'Discord', 'url' => (string) ($site['discord_url'] ?? '#')],
+        ['key' => 'x', 'label' => 'Mineacle on X', 'url' => $resolveSocialUrl($site['x_url'] ?? '', 'https://x.com/mineaclenetwork')],
+        ['key' => 'discord', 'label' => 'Mineacle Discord', 'url' => $resolveSocialUrl($site['discord_url'] ?? '', 'https://discord.gg/qmpJ4xMguT')],
+        ['key' => 'youtube', 'label' => 'Mineacle on YouTube', 'url' => $resolveSocialUrl($site['youtube_url'] ?? '', 'https://www.youtube.com/@mineaclenetwork')],
     ];
     $legalLinks = [
         ['label' => 'Terms of Service', 'url' => (string) ($site['terms_url'] ?? '#')],
@@ -254,8 +205,8 @@ function mineacle_page_footer(array $site): void
     echo '<footer class="site-footer" aria-label="Mineacle footer">';
     echo '<div class="site-footer__main">';
     echo '<section class="site-footer__studio" aria-label="Mineacle Studios">';
-    echo '<a class="site-footer__studio-logo" href="/" aria-label="Mineacle Studios, creators of Mineacle"><img src="/assets/brand/mncl-studios-footer.webp?v=' . h($assetVersion) . '" alt="Mineacle Studios" draggable="false"></a>';
-    echo '<p><strong>Mineacle Studios</strong> builds the custom systems behind Mineacle—a polished, community-driven survival experience that stays true to the Minecraft everyone already loves.</p>';
+    echo '<div class="site-footer__studio-logo"><img src="/assets/brand/mncl-studios-footer.webp?v=' . h($assetVersion) . '" alt="Mineacle Studios" draggable="false"></div>';
+    echo '<p><strong>Mineacle Studios</strong> is a small team of Minecraft developers building the custom systems behind Mineacle. After over a year of trial, error, and refinement, we are creating a smooth, polished, community-driven survival experience while staying true to the Minecraft everyone already loves.</p>';
     echo '</section>';
 
     echo '<section class="site-footer__plus" aria-label="Mineacle Plus">';
@@ -276,23 +227,19 @@ function mineacle_page_footer(array $site): void
     echo '</section>';
 
     echo '<section class="site-footer__community" aria-label="Mineacle community and support">';
-    echo '<div class="site-footer__connect"><h2>Stay up to date</h2>';
-    echo '<p>Follow Mineacle for updates, releases, and community news.</p>';
+    echo '<div class="site-footer__connect"><h2>How do I stay up to date?</h2>';
+    echo '<p>With our “no player left behind” policy, we make sure visitors near and far are up to date.</p>';
     echo '<nav class="site-footer__socials" aria-label="Mineacle social links">';
     foreach ($socialLinks as $link) {
         $key = (string) $link['key'];
         $url = mineacle_page_public_link($link['url']);
 
-        if ($url === '#') {
-            continue;
-        }
-
         echo '<a class="social-link social-link--footer social-link--' . h($key) . '" href="' . h($url) . '" target="_blank" rel="noopener noreferrer" aria-label="' . h($link['label']) . '"><span class="social-logo social-logo--' . h($key) . '" aria-hidden="true"></span></a>';
     }
     echo '</nav></div>';
     echo '<a class="site-footer__bug-link" href="/contact" aria-label="Contact Mineacle Studios to report a bug">';
-    echo '<img class="site-footer__bug" src="/assets/brand/footer-slime-static.webp?v=' . h($assetVersion) . '" data-footer-slime data-static-src="/assets/brand/footer-slime-static.webp?v=' . h($assetVersion) . '" data-animated-src="/assets/brand/footer-slime.webp?v=' . h($assetVersion) . '" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false">';
-    echo '<span><strong>Found a Bug?</strong><span>Every report helps us keep Mineacle clean and stable.</span></span></a>';
+    echo '<img class="site-footer__bug" src="/assets/brand/footer-slime-static.png?v=' . h($assetVersion) . '" data-footer-slime data-static-src="/assets/brand/footer-slime-static.png?v=' . h($assetVersion) . '" data-animated-src="/assets/brand/footer-slime.webp?v=' . h($assetVersion) . '" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false">';
+    echo '<span><strong>Found a Bug?</strong><span>You’re playing a huge part in keeping our community safe! We encourage all reports.</span></span></a>';
     echo '</section>';
     echo '</div>';
 

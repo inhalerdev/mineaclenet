@@ -666,15 +666,10 @@
     return {
       board,
       topCard: root.querySelector('.leaderboard-top-card'),
-      categoryGrid: root.querySelector('.leaderboard-category-grid'),
+      categoryGrid: board ? board.querySelector('.leaderboard-category-grid') : null,
       heading: board ? board.querySelector('.leaderboard-section-heading') : null,
       filterRow: board ? board.querySelector('.leaderboard-view-row') : null,
-      results: board ? board.querySelector('[data-leaderboard-results]') : null,
-      categoryInput: board ? board.querySelector('[data-leaderboard-category-input]') : null,
-      viewInput: board ? board.querySelector('[data-leaderboard-view-input]') : null,
-      searchForm: root.querySelector('[data-player-search-form]'),
-      searchInput: root.querySelector('#homeSearch'),
-      searchLabel: board ? board.querySelector('label[for="homeSearch"]') : null
+      results: board ? board.querySelector('[data-leaderboard-results]') : null
     };
   };
 
@@ -742,15 +737,8 @@
       transplantChildren(currentView.filterRow, nextView.filterRow);
       transplantChildren(currentView.results, nextView.results);
       currentView.topCard.setAttribute('aria-label', nextView.topCard.getAttribute('aria-label') || 'Top leaderboard entries');
-      currentView.categoryInput.value = nextView.categoryInput.value;
-      currentView.viewInput.value = nextView.viewInput.value;
-      currentView.searchForm.dataset.playerSearchEnabled = nextView.searchForm.dataset.playerSearchEnabled || 'true';
-      currentView.searchInput.placeholder = nextView.searchInput.placeholder;
-      currentView.searchInput.value = nextView.searchInput.value;
-      currentView.searchLabel.textContent = nextView.searchLabel.textContent;
       currentView.board.setAttribute('aria-label', nextView.board.getAttribute('aria-label') || 'Leaderboard rankings');
       hidePlayerResults();
-      updateClearButton();
 
       if (nextDocument.title) {
         document.title = nextDocument.title;
@@ -781,7 +769,7 @@
         board.classList.add('is-view-entering');
         window.setTimeout(() => {
           board.classList.remove('is-view-entering');
-        }, 340);
+        }, 190);
       });
 
       return true;

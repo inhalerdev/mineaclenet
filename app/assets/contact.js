@@ -2,7 +2,7 @@
   const form = document.querySelector("[data-contact-form]");
   const picker = document.querySelector("[data-contact-player-picker]");
   const input = picker?.querySelector("[data-contact-player-input]");
-  const uuidInput = picker?.querySelector("[data-contact-player-uuid]");
+  const uuidInput = form?.querySelector("[data-contact-player-uuid]");
   const results = picker?.querySelector("[data-contact-player-results]");
   const selected = picker?.querySelector("[data-contact-player-selected]");
   const selectedHead = picker?.querySelector(
@@ -12,6 +12,7 @@
     "[data-contact-player-selected-name]",
   );
   const clearButton = picker?.querySelector("[data-contact-player-clear]");
+  const submitButton = form?.querySelector("[data-contact-submit]");
 
   if (
     !form ||
@@ -22,7 +23,8 @@
     !selected ||
     !selectedHead ||
     !selectedName ||
-    !clearButton
+    !clearButton ||
+    !submitButton
   ) {
     return;
   }
@@ -34,6 +36,17 @@
 
   const resultOptions = () =>
     Array.from(results.querySelectorAll(".contact-player-option"));
+
+  const syncSubmitState = () => {
+    const hasVerifiedPlayer =
+      uuidInput.value.trim().length === 32 && input.readOnly;
+
+    submitButton.disabled = !hasVerifiedPlayer;
+    submitButton.setAttribute(
+      "aria-disabled",
+      hasVerifiedPlayer ? "false" : "true",
+    );
+  };
 
   const hideResults = () => {
     results.hidden = true;
@@ -52,6 +65,7 @@
     selectedHead.src = "";
     selectedHead.hidden = true;
     hideResults();
+    syncSubmitState();
 
     if (focus) {
       input.value = "";
@@ -61,9 +75,11 @@
 
   const selectPlayer = (player) => {
     const name = String(player.name || "").trim();
-    const uuid = String(player.uuid || "").trim();
+    const uuid = String(player.uuid || "")
+      .replace(/[^a-f0-9]/gi, "")
+      .toLowerCase();
 
-    if (!name || !uuid) {
+    if (!name || uuid.length !== 32) {
       return;
     }
 
@@ -78,6 +94,7 @@
     selectedHead.hidden = !head;
     selectedHead.src = head;
     hideResults();
+    syncSubmitState();
   };
 
   const renderEmpty = (message) => {
@@ -216,6 +233,7 @@
     uuidInput.value = "";
     selected.hidden = true;
     input.setCustomValidity("");
+    syncSubmitState();
     const query = input.value.trim();
 
     if (query.length < 1) {
@@ -263,4 +281,6 @@
       input.reportValidity();
     }
   });
+
+  syncSubmitState();
 })();

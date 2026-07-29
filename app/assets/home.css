@@ -248,15 +248,14 @@ button {
 .social-link--rail {
   width: var(--control-size);
   height: var(--control-size);
-  border: 1px solid var(--button-stroke);
-  border-radius: var(--radius);
-  background: var(--button-bg);
+  border: 0;
+  background: transparent;
   color: #ffffff;
 }
 
 .social-link--rail .social-logo {
-  width: 56%;
-  height: 56%;
+  width: 62%;
+  height: 62%;
 }
 
 .social-logo {
@@ -297,26 +296,31 @@ button {
   -webkit-mask-image: url("home/social-x.png");
 }
 
+.social-logo--youtube::before {
+  mask-image: url("home/social-youtube.png");
+  -webkit-mask-image: url("home/social-youtube.png");
+}
+
 .social-link--discord:hover {
   color: #5865f2;
-  background: #3d4669;
+  background: transparent;
   transform: translateY(-1px);
 }
 
 .social-link--x {
-  background: var(--button-bg);
+  background: transparent;
 }
 
 .social-link--x:hover {
-  background: #414a6e;
-  color: #ffffff;
-  filter: brightness(1.18);
+  background: transparent;
+  color: #000000;
+  filter: none;
   transform: translateY(-1px);
 }
 
 .social-link--x:hover .social-logo--x {
   background: transparent;
-  color: #ffffff;
+  color: #000000;
 }
 
 .social-link:active {
@@ -327,6 +331,37 @@ button {
 .social-link:focus-visible {
   outline: 2px solid #ff55ff;
   outline-offset: 2px;
+}
+
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root) {
+  animation: mineacle-page-exit 85ms ease-in both;
+}
+
+::view-transition-new(root) {
+  animation: mineacle-page-enter 135ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes mineacle-page-exit {
+  to {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes mineacle-page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .content {
@@ -1021,6 +1056,11 @@ button {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 1ms;
+  }
+
   .top-action--play.is-copied,
   .top-action--play.is-copied::before,
   .top-action--play.is-copied .play-label {

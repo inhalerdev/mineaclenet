@@ -377,18 +377,35 @@ mineacle_page_head('Contact', [
                     <main class="contact-layout" aria-labelledby="contact-title">
                         <section class="contact-intro">
                             <div class="contact-intro__copy">
+                                <span class="contact-intro__eyebrow">Mineacle Support</span>
                                 <h1 id="contact-title">Contact Us</h1>
-                                <p>Select your Mineacle profile and tell us what went wrong.</p>
+                                <p>Connect a verified Mineacle profile, choose the right report type, and give the team the details needed to investigate quickly.</p>
                             </div>
-                            <ul class="contact-guidance">
-                                <li>Include the exact command, page, or world involved.</li>
-                                <li>Explain what happened and what you expected.</li>
-                                <li>Never include passwords, recovery codes, or payment details.</li>
-                            </ul>
-                            <img src="/assets/brand/footer-slime-static.webp?v=<?php echo h(rawurlencode($assetVersion)); ?>" alt="" aria-hidden="true" draggable="false">
+
+                            <div class="contact-reward">
+                                <div>
+                                    <strong>Verified reports earn rewards</strong>
+                                    <p>Confirmed bug reports can receive an in-game reward within 72 hours. Rewards scale with the report type, reproducibility, and player impact.</p>
+                                </div>
+                                <img src="/assets/brand/footer-slime-static.png?v=<?php echo h(rawurlencode($assetVersion)); ?>" alt="" aria-hidden="true" draggable="false">
+                            </div>
+
+                            <div class="contact-guidance-block">
+                                <h2>Send a useful report</h2>
+                                <ul class="contact-guidance">
+                                    <li>Include the exact command, page, or world involved.</li>
+                                    <li>Explain what happened and what you expected.</li>
+                                    <li>Never include passwords, recovery codes, or payment details.</li>
+                                </ul>
+                            </div>
                         </section>
 
                         <section class="contact-form-panel" aria-label="Contact form">
+                            <header class="contact-form-heading">
+                                <h2>Send a Report</h2>
+                                <p>Every report must be attached to a player who has joined Mineacle.</p>
+                            </header>
+
                             <?php if ($sent): ?>
                                 <div class="contact-notice is-success" role="status">
                                     <strong>Report sent</strong>
@@ -482,7 +499,7 @@ mineacle_page_head('Contact', [
                                     <textarea name="message" minlength="20" maxlength="4000" rows="8" placeholder="What happened, what did you expect, and how can we reproduce it?" required><?php echo h($form['message']); ?></textarea>
                                 </label>
 
-                                <button class="contact-submit" type="submit">Send Report</button>
+                                <button class="contact-submit" type="submit" data-contact-submit>Send Report</button>
                             </form>
                         </section>
                     </main>
