@@ -350,8 +350,7 @@ mineacle_page_head($pageTitle, $metaOptions);
             </aside>
 
             <div class="content player-content">
-                <div class="page-scroll">
-                    <div class="page-stack">
+                <div class="page-stack">
                 <header class="topbar secondary-topbar">
                     <div class="search-shell">
                         <form class="search-control" id="player-search" role="search" action="/player" method="get">
@@ -425,7 +424,6 @@ mineacle_page_head($pageTitle, $metaOptions);
                     </div>
 
                     <div class="profile-player-lockup">
-                        <p class="profile-player-eyebrow">Mineacle Player</p>
                         <h1><?php echo $viewModel['ranked_name_html']; ?></h1>
                         <div class="profile-state-lines">
                             <p>
@@ -452,11 +450,7 @@ mineacle_page_head($pageTitle, $metaOptions);
             <section class="panel profile-recent-panel" aria-label="Recent fights">
                 <header class="profile-section-heading">
                     <span><img src="/assets/player/duels.png?v=<?php echo h(rawurlencode($assetVersion)); ?>" alt="" aria-hidden="true" draggable="false"></span>
-                    <div>
-                        <p>Combat History</p>
-                        <h2>Recent Duels</h2>
-                    </div>
-                    <small>Last 16 recorded fights</small>
+                    <h2>Recent Duels</h2>
                 </header>
 
                 <?php if (!$fightState['available']): ?>
@@ -485,7 +479,6 @@ mineacle_page_head($pageTitle, $metaOptions);
         <?php endif; ?>
                     </main>
                     <?php mineacle_page_footer($site); ?>
-                    </div>
                 </div>
             </div>
         </section>

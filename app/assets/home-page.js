@@ -696,9 +696,8 @@
 
     const run = leaderboardViewRun + 1;
     const controller = new AbortController();
-    const scrollContainer = document.querySelector('.page-scroll');
-    const scrollLeft = scrollContainer instanceof HTMLElement ? scrollContainer.scrollLeft : window.scrollX;
-    const scrollTop = scrollContainer instanceof HTMLElement ? scrollContainer.scrollTop : window.scrollY;
+    const scrollLeft = window.scrollX;
+    const scrollTop = window.scrollY;
     leaderboardViewRun = run;
     leaderboardViewAbort = controller;
     board.classList.remove('is-view-entering');
@@ -777,12 +776,7 @@
       }
 
       window.requestAnimationFrame(() => {
-        if (scrollContainer instanceof HTMLElement) {
-          scrollContainer.scrollLeft = scrollLeft;
-          scrollContainer.scrollTop = scrollTop;
-        } else {
-          window.scrollTo(scrollLeft, scrollTop);
-        }
+        window.scrollTo(scrollLeft, scrollTop);
 
         board.classList.add('is-view-entering');
         window.setTimeout(() => {
@@ -1014,7 +1008,7 @@
     }, playerSearchDelayMs);
   };
 
-  if (searchInput && clearButton) {
+  if (searchInput) {
     searchInput.addEventListener('input', () => {
       updateClearButton();
       queuePlayerSearch();
@@ -1025,6 +1019,9 @@
     searchInput.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') hidePlayerResults();
     });
+  }
+
+  if (searchInput && clearButton) {
     clearButton.addEventListener('click', () => {
       searchInput.value = '';
       updateClearButton();

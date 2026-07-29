@@ -6,7 +6,7 @@ require_once __DIR__ . '/db.php';
 
 function mineacle_page_asset_version(): string
 {
-    return 'secondary-polish-20260728';
+    return 'secondary-flat-20260728';
 }
 
 function mineacle_page_clean_text(string $value): string
@@ -227,7 +227,6 @@ function mineacle_page_search_header(array $site): void
 
 function mineacle_page_footer(array $site): void
 {
-    $year = date('Y');
     $assetVersion = rawurlencode(mineacle_page_asset_version());
     $plusUrl = mineacle_page_public_link($site['plus_url'] ?? $site['store_url'] ?? '#');
 
@@ -249,15 +248,14 @@ function mineacle_page_footer(array $site): void
         ['label' => 'Terms of Service', 'url' => (string) ($site['terms_url'] ?? '#')],
         ['label' => 'Privacy Policy', 'url' => (string) ($site['privacy_url'] ?? '#')],
         ['label' => 'Refund Policy', 'url' => (string) ($site['refund_url'] ?? '#')],
-        ['label' => 'Contact', 'url' => '/contact'],
+        ['label' => 'Contact Us', 'url' => '/contact'],
     ];
 
     echo '<footer class="site-footer" aria-label="Mineacle footer">';
     echo '<div class="site-footer__main">';
     echo '<section class="site-footer__studio" aria-label="Mineacle Studios">';
-    echo '<span class="site-footer__eyebrow">Created by</span>';
     echo '<a class="site-footer__studio-logo" href="/" aria-label="Mineacle Studios, creators of Mineacle"><img src="/assets/brand/mncl-studios-footer.webp?v=' . h($assetVersion) . '" alt="Mineacle Studios" draggable="false"></a>';
-    echo '<p>Mineacle Studios creates and operates Mineacle—an original survival network built around lasting worlds, competitive stats, and player-driven stories.</p>';
+    echo '<p>Created by Mineacle Studios for a better survival experience.</p>';
     echo '<nav class="site-footer__socials" aria-label="Mineacle social links">';
     foreach ($socialLinks as $link) {
         $key = (string) $link['key'];
@@ -273,15 +271,10 @@ function mineacle_page_footer(array $site): void
     echo '</section>';
 
     echo '<section class="site-footer__plus" aria-label="Mineacle Plus">';
-    echo '<span class="site-footer__eyebrow">Mineacle Plus</span>';
-    echo '<h2>Play with fewer limits</h2>';
-    echo '<p>Support the network while unlocking practical upgrades that keep survival moving.</p>';
-    echo '<ul><li>Five homes</li><li>Faster teleports</li><li>Nicknames</li><li>Spawn flight</li></ul>';
-    echo '<a class="site-footer__plus-button" href="' . h($plusUrl) . '" target="_blank" rel="noopener noreferrer"><span>Explore Mineacle Plus</span><span class="site-footer__plus-arrow" aria-hidden="true"></span></a>';
-    echo '</section>';
-
-    echo '<div class="site-footer__directory">';
-    echo '<nav class="site-footer__links" aria-label="Quick links"><span class="site-footer__eyebrow">Explore</span><h2>Find your way</h2>';
+    echo '<h2>Mineacle Plus</h2>';
+    echo '<p>Support the network and unlock practical survival upgrades.</p>';
+    echo '<a class="site-footer__plus-button" href="' . h($plusUrl) . '" target="_blank" rel="noopener noreferrer"><span>Upgrade to Plus</span><span class="site-footer__plus-arrow" aria-hidden="true"></span></a>';
+    echo '<nav class="site-footer__links" aria-label="Quick links"><h3>Quick Links</h3><div>';
     foreach ($quickLinks as $link) {
         $url = mineacle_page_public_link($link['url']);
 
@@ -291,24 +284,24 @@ function mineacle_page_footer(array $site): void
 
         echo '<a href="' . h($url) . '">' . h($link['label']) . '</a>';
     }
-    echo '</nav>';
+    echo '</div></nav>';
+    echo '</section>';
 
     echo '<section class="site-footer__support" aria-label="Mineacle support">';
-    echo '<div><span class="site-footer__eyebrow">Support</span>';
-    echo '<h2>Found a bug?</h2>';
-    echo '<p>Tell Mineacle Studios what happened and help us make the network better.</p>';
+    echo '<div><h2>Support</h2>';
+    echo '<p>Found a bug? Send the details directly to Mineacle Studios.</p>';
     echo '<a class="site-footer__contact-button" href="/contact">Report a Bug</a></div>';
     echo '<img class="site-footer__bug" src="/assets/brand/bug-mob.webp?v=' . h($assetVersion) . '" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false">';
     echo '</section>';
     echo '</div>';
-    echo '</div>';
 
-    echo '<div class="site-footer__bottom"><p>© ' . h((string) $year) . ' Mineacle Studios <span aria-hidden="true">•</span> Mineacle is not affiliated with Mojang Studios or Microsoft</p>';
+    echo '<div class="site-footer__bottom"><p>© 2026 Mineacle Studios. All Rights Reserved. Mineacle is not affiliated with or endorsed by Mojang Studios or Microsoft.</p>';
     echo '<nav aria-label="Legal links">';
     foreach ($legalLinks as $link) {
         $url = mineacle_page_public_link($link['url']);
 
         if ($url === '#') {
+            echo '<span class="site-footer__legal-label">' . h($link['label']) . '</span>';
             continue;
         }
 

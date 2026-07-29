@@ -1,6 +1,4 @@
-.player-page,
-.player-page .canvas {
-  overflow: hidden;
+.player-page {
   background: var(--main-bg);
 }
 
@@ -11,40 +9,29 @@
 .profile-duels-table,
 .profile-duels-scroll {
   min-width: 0;
-  min-height: 0;
 }
 
 .player-surface {
   display: grid;
-  grid-template-rows: minmax(460px, 1.08fr) minmax(330px, 0.92fr);
   gap: var(--space);
   width: 100%;
-  min-height: max(
-    820px,
-    calc(
-      min(100vh - var(--space) - var(--space), 1016px) -
-        var(--control-size) - var(--space)
-    )
-  );
   color: var(--text);
 }
 
 .player-surface .panel {
   position: relative;
   width: 100%;
-  min-height: 0;
   margin: 0;
   overflow: hidden;
   border: 1px solid var(--container-stroke);
   border-radius: var(--radius);
   background: var(--container-bg);
-  box-shadow: 0 18px 38px rgba(0, 0, 20, 0.16);
 }
 
 .profile-main-panel {
   isolation: isolate;
   display: grid;
-  grid-template-rows: minmax(0, 1fr) clamp(96px, 12.5vh, 120px);
+  grid-template-rows: clamp(360px, min(35vw, 54vh), 520px) auto;
 }
 
 .profile-main-panel::before,
@@ -60,46 +47,40 @@
   inset: -12px;
   background: #10141c url("brand/player-hero-bg.webp") center 49% / cover
     no-repeat;
-  filter: blur(5px) saturate(0.9) brightness(0.66);
+  filter: blur(5px) saturate(0.9) brightness(0.65);
   transform: scale(1.025);
 }
 
 .profile-main-panel::after {
   z-index: -1;
-  background: rgba(0, 0, 24, 0.5);
-  box-shadow:
-    inset 0 -90px 100px rgba(0, 0, 22, 0.34),
-    inset 90px 0 120px rgba(0, 0, 22, 0.18);
+  background: rgba(0, 0, 24, 0.52);
+  box-shadow: inset 0 -90px 100px rgba(0, 0, 22, 0.34);
 }
 
 .profile-hero-content {
   display: flex;
   align-items: center;
   justify-content: center;
-  justify-self: center;
   gap: clamp(18px, 2.2vw, 42px);
   width: 100%;
   min-height: 0;
-  padding: var(--half-space) var(--space) 0;
+  padding: var(--space) var(--space) 0;
 }
 
 .profile-bust-stage {
   display: grid;
   place-items: end center;
-  width: clamp(150px, min(15vw, 27vh), 250px);
+  width: clamp(160px, min(16vw, 27vh), 260px);
   height: 100%;
-  flex: 0 0 auto;
-  min-height: 0;
+  flex: none;
   overflow: hidden;
-  filter: drop-shadow(0 18px 26px rgba(0, 0, 20, 0.4));
+  filter: drop-shadow(0 18px 26px rgba(0, 0, 20, 0.42));
 }
 
 .profile-bust-stage img {
   display: block;
   width: 100%;
   height: 100%;
-  max-width: 100%;
-  max-height: 100%;
   object-fit: contain;
   object-position: center bottom;
   image-rendering: pixelated;
@@ -116,7 +97,7 @@
   aspect-ratio: 1;
   border: 1px solid var(--button-stroke);
   border-radius: var(--radius);
-  background: rgba(54, 64, 98, 0.9);
+  background: var(--button-bg);
   color: var(--heading);
   font-size: clamp(40px, min(4vw, 7vh), 72px);
   font-weight: 500;
@@ -131,16 +112,6 @@
   max-width: min(56%, 620px);
   text-align: left;
   text-shadow: 0 2px 14px rgba(0, 0, 18, 0.76);
-}
-
-.profile-player-eyebrow {
-  margin: 0;
-  color: #ff88ff;
-  font-size: calc(var(--control-font-size) * 0.8);
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  line-height: 1;
-  text-transform: uppercase;
 }
 
 .profile-player-lockup h1 {
@@ -160,6 +131,7 @@
   align-items: baseline;
   gap: 0.3em;
   max-width: 100%;
+  color: var(--heading);
   font-weight: 500;
 }
 
@@ -182,10 +154,6 @@
   white-space: nowrap;
 }
 
-.profile-state-lines {
-  display: grid;
-}
-
 .profile-state-lines p {
   display: flex;
   flex-wrap: wrap;
@@ -202,33 +170,30 @@
   display: inline-flex;
   align-items: center;
   min-height: calc(var(--control-size) * 0.62);
-  padding: 0 var(--half-space);
+  padding-inline: var(--half-space);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: var(--radius);
   color: var(--heading);
   font-size: calc(var(--control-font-size) * 0.82);
   font-weight: 600;
   line-height: 1;
-  text-transform: uppercase;
   text-shadow: none;
+  text-transform: uppercase;
 }
 
 .profile-state-lines strong.is-online,
 .profile-state-lines strong.is-clear {
-  background: rgba(53, 163, 78, 0.92);
+  background: rgba(53, 163, 78, 0.94);
 }
 
 .profile-state-lines strong.is-offline,
-.profile-state-lines strong.is-muted {
-  background: rgba(205, 62, 69, 0.92);
+.profile-state-lines strong.is-muted,
+.profile-state-lines strong.is-danger {
+  background: rgba(205, 62, 69, 0.94);
 }
 
 .profile-state-lines strong.is-warning {
   background: rgba(188, 126, 39, 0.94);
-}
-
-.profile-state-lines strong.is-danger {
-  background: rgba(205, 62, 69, 0.94);
 }
 
 .profile-world-name {
@@ -256,21 +221,19 @@
   z-index: 1;
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  align-items: stretch;
-  min-height: 0;
+  min-height: 108px;
   padding: var(--half-space);
   border-top: 1px solid var(--container-stroke);
-  background: rgba(34, 36, 61, 0.95);
-  backdrop-filter: blur(10px);
+  background: rgba(37, 39, 63, 0.97);
 }
 
 .profile-summary-item {
   display: grid;
   align-content: center;
-  gap: clamp(4px, min(0.42vw, 0.75vh), 8px);
+  gap: 7px;
   min-width: 0;
-  padding: 0 var(--half-space);
-  border-right: 1px solid rgba(74, 76, 106, 0.62);
+  padding-inline: var(--half-space);
+  border-right: 1px solid rgba(74, 76, 106, 0.66);
   transition:
     background-color 150ms ease,
     transform 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -281,7 +244,7 @@
 }
 
 .profile-summary-item:hover {
-  background: rgba(71, 84, 127, 0.15);
+  background: rgba(71, 84, 127, 0.14);
   transform: translateY(-1px);
 }
 
@@ -298,7 +261,7 @@
 .profile-summary-item strong {
   display: flex;
   align-items: center;
-  gap: clamp(5px, min(0.42vw, 0.75vh), 8px);
+  gap: 8px;
   min-width: 0;
   overflow: hidden;
   color: var(--heading);
@@ -337,10 +300,10 @@
 
 .profile-recent-panel {
   display: grid;
-  grid-template-rows: var(--control-size) minmax(0, 1fr);
   gap: var(--half-space);
+  min-height: 320px;
   padding: var(--half-space);
-  background: rgba(39, 41, 66, 0.96);
+  background: var(--container-bg);
 }
 
 .profile-section-heading {
@@ -348,6 +311,7 @@
   align-items: center;
   gap: var(--half-space);
   min-width: 0;
+  min-height: var(--control-size);
 }
 
 .profile-section-heading > span {
@@ -369,45 +333,16 @@
   filter: brightness(0) invert(1);
 }
 
-.profile-section-heading > div {
-  display: grid;
-  gap: 4px;
-  min-width: 0;
-}
-
-.profile-section-heading p,
 .profile-section-heading h2 {
   margin: 0;
-}
-
-.profile-section-heading p {
-  color: #ff88ff;
-  font-size: calc(var(--control-font-size) * 0.72);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.profile-section-heading h2 {
   color: var(--heading);
-  font-size: var(--control-font-size);
+  font-size: clamp(17px, min(1.35vw, 2.4vh), 23px);
   font-weight: 700;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.profile-section-heading > small {
-  margin-left: auto;
-  color: var(--text);
-  font-size: calc(var(--control-font-size) * 0.76);
-  font-weight: 500;
-  white-space: nowrap;
+  line-height: 1.1;
 }
 
 .profile-duels-table {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
   overflow: hidden;
   border: 1px solid var(--container-stroke);
   border-radius: var(--radius);
@@ -431,9 +366,9 @@
 
 .profile-duels-head {
   min-height: var(--control-size);
-  padding: 0 var(--half-space);
+  padding-inline: var(--half-space);
   border-bottom: 1px solid var(--container-stroke);
-  background: rgba(54, 64, 98, 0.7);
+  background: var(--button-bg);
   color: var(--text);
   font-size: calc(var(--control-font-size) * 0.76);
   font-weight: 600;
@@ -442,11 +377,6 @@
 .profile-duels-scroll {
   display: grid;
   align-content: start;
-  overflow-x: hidden;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-color: var(--button-stroke) transparent;
-  scrollbar-width: thin;
 }
 
 .profile-duel-row {
@@ -458,7 +388,6 @@
   font-size: calc(var(--control-font-size) * 0.84);
   transition:
     background-color 150ms ease,
-    box-shadow 150ms ease,
     transform 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
@@ -471,9 +400,7 @@
 }
 
 .profile-duel-row:hover {
-  z-index: 1;
   background: rgba(62, 72, 108, 0.78);
-  box-shadow: 0 8px 18px rgba(0, 0, 20, 0.16);
   transform: translateY(-1px);
 }
 
@@ -486,7 +413,7 @@
   border-radius: var(--radius);
   color: var(--heading);
   font-size: calc(var(--control-font-size) * 0.72);
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1;
 }
 
@@ -512,7 +439,7 @@
   height: calc(var(--control-size) * 0.82);
   flex: none;
   overflow: hidden;
-  border: 1px solid rgba(74, 76, 106, 0.72);
+  border: 1px solid var(--container-stroke);
   border-radius: var(--radius);
   background: var(--button-bg);
 }
@@ -590,7 +517,7 @@
   isolation: isolate;
   display: grid;
   place-items: center;
-  min-height: 0;
+  min-height: clamp(240px, 28vh, 360px);
   overflow: hidden;
   border: 1px solid var(--container-stroke);
   border-radius: var(--radius);
@@ -613,14 +540,13 @@
 
 .profile-duels-empty::before {
   background: url("brand/duels-bg.webp") center 48% / cover no-repeat;
-  filter: saturate(0.72) brightness(0.5);
+  filter: saturate(0.72) brightness(0.48);
   transform: scale(1.02);
 }
 
 .profile-duels-empty::after {
   z-index: -1;
-  background: rgba(8, 9, 31, 0.66);
-  box-shadow: inset 0 0 90px rgba(0, 0, 18, 0.48);
+  background: rgba(8, 9, 31, 0.68);
 }
 
 .profile-message {
@@ -628,7 +554,6 @@
   place-content: center;
   justify-items: center;
   gap: var(--half-space);
-  grid-row: 1 / -1;
   min-height: 420px;
   padding: var(--space);
   text-align: center;
@@ -653,7 +578,7 @@
 
 .profile-message-link {
   min-height: var(--control-size);
-  padding: 0 var(--half-space);
+  padding-inline: var(--half-space);
   border: 1px solid var(--button-stroke);
   border-radius: var(--radius);
   background: var(--button-bg);
@@ -662,19 +587,6 @@
   font-weight: 600;
   line-height: var(--control-size);
   text-decoration: none;
-  transition:
-    filter 150ms ease,
-    transform 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.profile-message-link:hover {
-  filter: brightness(1.1);
-  transform: translateY(-1px);
-}
-
-.profile-message-link:focus-visible {
-  outline: 2px solid #ff55ff;
-  outline-offset: 2px;
 }
 
 .profile-main-panel,
@@ -731,22 +643,17 @@
   }
 }
 
-@media (max-width: 960px), (max-height: 700px) {
-  .player-surface {
-    grid-template-rows: minmax(420px, 1fr) minmax(300px, 0.92fr);
-  }
-
+@media (max-width: 1040px) {
   .profile-main-panel {
-    grid-template-rows: minmax(0, 1fr) clamp(112px, 17vh, 138px);
+    grid-template-rows: clamp(340px, 48vw, 460px) auto;
   }
 
   .profile-summary-bar {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    padding: 6px;
   }
 
   .profile-summary-item {
-    padding: 0 6px;
+    min-height: 72px;
   }
 
   .profile-summary-item:nth-child(3) {
@@ -754,20 +661,7 @@
   }
 
   .profile-summary-item:nth-child(-n + 3) {
-    border-bottom: 1px solid rgba(74, 76, 106, 0.62);
-  }
-
-  .profile-hero-content {
-    gap: var(--half-space);
-    padding-inline: var(--half-space);
-  }
-
-  .profile-bust-stage {
-    width: clamp(104px, min(13vw, 22vh), 164px);
-  }
-
-  .profile-player-lockup {
-    max-width: 62%;
+    border-bottom: 1px solid rgba(74, 76, 106, 0.66);
   }
 
   .profile-duels-head {
@@ -785,25 +679,21 @@
   }
 }
 
-@media (max-width: 620px) {
-  .player-surface {
-    grid-template-rows: auto minmax(300px, auto);
-    min-height: 0;
-  }
-
+@media (max-width: 680px) {
   .profile-main-panel {
-    grid-template-rows: minmax(310px, auto) auto;
+    grid-template-rows: auto auto;
   }
 
   .profile-hero-content {
     flex-direction: column;
     gap: 8px;
+    min-height: 360px;
     padding: var(--half-space);
   }
 
   .profile-bust-stage {
-    width: clamp(94px, 30vw, 132px);
-    height: 190px;
+    width: clamp(104px, 30vw, 144px);
+    height: 210px;
   }
 
   .profile-player-lockup {
@@ -820,8 +710,7 @@
     justify-content: center;
   }
 
-  .profile-state-lines p > span,
-  .profile-joined-date {
+  .profile-state-lines p > span {
     display: none;
   }
 
@@ -830,20 +719,22 @@
   }
 
   .profile-summary-item {
-    min-height: 66px;
-    border-bottom: 1px solid rgba(74, 76, 106, 0.62);
     text-align: center;
   }
 
   .profile-summary-item:nth-child(odd) {
-    border-right: 1px solid rgba(74, 76, 106, 0.62);
+    border-right: 1px solid rgba(74, 76, 106, 0.66);
   }
 
   .profile-summary-item:nth-child(even) {
     border-right: 0;
   }
 
-  .profile-summary-item:nth-last-child(-n + 2) {
+  .profile-summary-item:nth-child(-n + 4) {
+    border-bottom: 1px solid rgba(74, 76, 106, 0.66);
+  }
+
+  .profile-summary-item:nth-child(n + 5) {
     border-bottom: 0;
   }
 
@@ -854,17 +745,15 @@
   .profile-summary-value small {
     display: none;
   }
+}
 
-  .profile-section-heading > small {
-    display: none;
-  }
-
+@media (max-width: 480px) {
   .profile-duel-row {
     grid-template-columns: 48px minmax(0, 1fr);
   }
 
-  .profile-duel-vs,
-  .profile-duel-fighter.is-opponent {
+  .profile-duel-fighter.is-self,
+  .profile-duel-vs {
     display: none;
   }
 }
@@ -878,8 +767,7 @@
   }
 
   .profile-summary-item,
-  .profile-duel-row,
-  .profile-message-link {
+  .profile-duel-row {
     transition: none;
   }
 }

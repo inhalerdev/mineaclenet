@@ -26,13 +26,11 @@ $perPage = 25;
 
 $categories = [
     'players' => [
-        'label' => 'Top Players Global',
-        'copy' => 'Global player standings across wealth, combat, and playtime.',
-        'section_label' => 'Global Player Rankings',
+        'label' => 'Players',
         'views' => [
             'overall' => [
                 'label' => 'Overall',
-                'title' => 'Top Players Global',
+                'title' => 'Top Players',
                 'description' => 'Top players ranked by balance, kills, K/D, playtime, and username.',
                 'table' => 'players',
                 'sort' => 'overall',
@@ -40,7 +38,7 @@ $categories = [
             ],
             'richest' => [
                 'label' => 'Richest',
-                'title' => 'Global Richest Players',
+                'title' => 'Richest Players',
                 'description' => 'Players with the strongest personal economy standings.',
                 'table' => 'players',
                 'sort' => 'money',
@@ -48,7 +46,7 @@ $categories = [
             ],
             'kd' => [
                 'label' => 'Top K/D',
-                'title' => 'Top Global K/D',
+                'title' => 'Best Player K/D',
                 'description' => 'Players ranked by global K/D. Players need at least 25 kills to qualify.',
                 'table' => 'players',
                 'sort' => 'kd_qualified',
@@ -57,13 +55,11 @@ $categories = [
         ],
     ],
     'teams' => [
-        'label' => 'Top Teams Global',
-        'copy' => 'Global team standings across capital, combat, and membership.',
-        'section_label' => 'Global Team Rankings',
+        'label' => 'Teams',
         'views' => [
             'overall' => [
                 'label' => 'Overall',
-                'title' => 'Top Teams Global',
+                'title' => 'Top Teams',
                 'description' => 'Teams ranked by capital, K/D, kills, members, and name.',
                 'table' => 'teams',
                 'sort' => 'overall',
@@ -71,7 +67,7 @@ $categories = [
             ],
             'richest' => [
                 'label' => 'Richest',
-                'title' => 'Global Richest Teams',
+                'title' => 'Richest Teams',
                 'description' => 'Teams controlling the most capital on Mineacle.',
                 'table' => 'teams',
                 'sort' => 'balance',
@@ -79,7 +75,7 @@ $categories = [
             ],
             'kd' => [
                 'label' => 'Top K/D',
-                'title' => 'Global Team K/D',
+                'title' => 'Best Team K/D',
                 'description' => 'Qualified team K/D rankings. Teams need at least 25 total kills to appear here.',
                 'table' => 'teams',
                 'sort' => 'kd_qualified',
@@ -334,11 +330,9 @@ $hasResults = $rows !== [];
 $shownStart = $hasResults ? $offset + 1 : 0;
 $shownEnd = $hasResults ? min($offset + count($rows), $resultTotal) : 0;
 $searchPlaceholder = $tableMode === 'teams' ? 'Search for a team...' : 'Search for a player...';
-$topTitle = 'Top 3 ' . ($tableMode === 'teams' ? 'Global Teams' : 'Global Players');
+$topTitle = 'Top 3 ' . ($tableMode === 'teams' ? 'Teams' : 'Players');
 $leaderboardTitle = (string) $selected['title'];
 $leaderboardDescription = (string) $selected['description'];
-$leaderboardSectionLabel = (string) $categories[$category]['section_label'];
-$leaderboardFilterLabel = $category === 'teams' ? 'Team Rankings' : 'Player Rankings';
 $assetVersion = mineacle_page_asset_version();
 $homeStylesheetVersion = (string) (filemtime(__DIR__ . '/assets/home.css') ?: $assetVersion);
 $pagesStylesheetVersion = (string) (filemtime(__DIR__ . '/assets/pages.css') ?: $assetVersion);
@@ -415,8 +409,7 @@ mineacle_page_head('Leaderboards', [
             </aside>
 
             <div class="content">
-                <div class="page-scroll">
-                    <div class="page-stack">
+                <div class="page-stack">
                 <header class="topbar secondary-topbar">
                     <div class="search-shell">
                         <form class="search-control" id="player-search" role="search" action="/player" method="get">
@@ -471,14 +464,8 @@ mineacle_page_head('Leaderboards', [
         <section class="panel leaderboard-overview" aria-label="Leaderboard overview">
             <div class="leaderboard-hero-content">
                 <div class="leaderboard-copy">
-                    <p>Survival Rankings</p>
                     <h1>Leaderboards</h1>
-                    <span>Track Mineacle's top global players and teams across survival, wealth, and combat.</span>
-                    <div class="leaderboard-hero-signals" aria-label="Leaderboard coverage">
-                        <span>Live standings</span>
-                        <span>Players and teams</span>
-                        <span>All dimensions</span>
-                    </div>
+                    <p>Global player and team rankings.</p>
                 </div>
 
                 <aside class="leaderboard-top-card" aria-label="<?php echo h($topTitle); ?>">
@@ -487,7 +474,6 @@ mineacle_page_head('Leaderboards', [
                             <img src="<?php echo h(mineacle_leaderboards_category_icon($category, $assetVersion)); ?>" alt="" draggable="false">
                         </span>
                         <span>
-                            <small><?php echo h((string) $categories[$category]['label']); ?></small>
                             <strong><?php echo h($topTitle); ?></strong>
                         </span>
                     </header>
@@ -544,7 +530,6 @@ mineacle_page_head('Leaderboards', [
                         </span>
                         <span class="leaderboard-category-copy">
                             <strong><?php echo h((string) $card['label']); ?></strong>
-                            <small><?php echo h((string) $card['copy']); ?></small>
                         </span>
                     </a>
                 <?php endforeach; ?>
@@ -558,10 +543,7 @@ mineacle_page_head('Leaderboards', [
                     <span aria-hidden="true">
                         <img src="<?php echo h(mineacle_leaderboards_category_icon($category, $assetVersion)); ?>" alt="" draggable="false">
                     </span>
-                    <div>
-                        <p><?php echo h($leaderboardSectionLabel); ?></p>
-                        <h2><?php echo h($leaderboardTitle); ?></h2>
-                    </div>
+                    <h2><?php echo h($leaderboardTitle); ?></h2>
                 </header>
 
                 <form class="leaderboard-search player-search" method="get" action="/leaderboards" data-player-search data-player-search-form data-player-search-submit="filter" data-player-search-enabled="<?php echo $canSuggestPlayers ? 'true' : 'false'; ?>">
@@ -572,9 +554,6 @@ mineacle_page_head('Leaderboards', [
                         <div class="search-box">
                             <img src="/assets/home/search-user.png?v=<?php echo h(rawurlencode($assetVersion)); ?>" alt="" aria-hidden="true" draggable="false">
                             <input id="homeSearch" name="search" type="search" placeholder="<?php echo h($searchPlaceholder); ?>" value="<?php echo h($search); ?>" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="leaderboardPlayerSearchResults">
-                            <button class="search-clear" type="button" aria-label="Clear search" hidden>
-                                <img src="/assets/icons/clear-search.svg?v=<?php echo h(rawurlencode($assetVersion)); ?>" alt="" draggable="false">
-                            </button>
                         </div>
                         <button class="leaderboard-search-submit" type="submit">Filter</button>
                     </div>
@@ -583,11 +562,6 @@ mineacle_page_head('Leaderboards', [
             </div>
 
             <div class="leaderboard-view-row">
-                <span class="leaderboard-filter-context">
-                    <small>Global</small>
-                    <strong><?php echo h($leaderboardFilterLabel); ?></strong>
-                </span>
-
                 <nav class="leaderboard-subfilters" aria-label="<?php echo h((string) $categories[$category]['label']); ?> filters">
                     <?php foreach ($views as $viewKey => $viewData): ?>
                         <?php $isActiveView = $view === $viewKey; ?>
@@ -601,7 +575,7 @@ mineacle_page_head('Leaderboards', [
             </div>
 
             <div class="leaderboard-results" data-leaderboard-results>
-                <p class="leaderboard-description"><?php echo h($leaderboardDescription); ?></p>
+                <p class="sr-only"><?php echo h($leaderboardDescription); ?></p>
 
                 <?php if ($loadError): ?>
                     <section class="profile-message">
@@ -710,7 +684,6 @@ mineacle_page_head('Leaderboards', [
                         </main>
                         <?php mineacle_page_footer($site); ?>
                     </div>
-                </div>
             </div>
         </section>
     </div>
