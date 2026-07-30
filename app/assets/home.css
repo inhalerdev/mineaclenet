@@ -814,6 +814,19 @@ button {
     transform 120ms ease;
 }
 
+.home-page .interface,
+.home-page .search-control {
+  overflow: visible;
+}
+
+.home-page .search-field {
+  border-radius: var(--radius) 0 0 var(--radius);
+}
+
+.home-page .search-submit {
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
 .home-page .nav-icon,
 .home-page .search-user-icon,
 .home-page .search-arrow-icon {
@@ -856,6 +869,24 @@ button {
   );
   color: var(--heading);
   transform: translateY(-1px);
+}
+
+.home-page .nav-stack--lower {
+  grid-template-columns: var(--control-size);
+}
+
+.home-page .social-link--rail {
+  width: var(--control-size);
+  min-width: var(--control-size);
+  max-width: var(--control-size);
+  height: var(--control-size);
+  min-height: var(--control-size);
+  max-height: var(--control-size);
+}
+
+.home-page .social-link--rail .social-logo {
+  width: var(--control-size);
+  height: var(--control-size);
 }
 
 .home-page .social-logo--x::before {
