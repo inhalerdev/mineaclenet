@@ -25,6 +25,7 @@ $storeUrl = $publicUrl($site['store_url'] ?? '', 'https://store.mineacle.net/');
 $discordUrl = $publicUrl($site['discord_url'] ?? '', 'https://discord.gg/qmpJ4xMguT');
 $xUrl = $publicUrl($site['x_url'] ?? '', 'https://x.com/mineaclenetwork');
 $youtubeUrl = $publicUrl($site['youtube_url'] ?? '', 'https://www.youtube.com/@mineaclenetwork');
+$heroVideoUrl = 'https://pub-a87f1944ab6f4788a1974177e59cf562.r2.dev/Video%20Project%202.mp4';
 
 $navigation = [
     ['label' => 'Home', 'url' => '/', 'current' => true, 'external' => false],
@@ -70,16 +71,24 @@ mineacle_page_head('Home', [
     <h1 id="home-page-title" class="visually-hidden">Mineacle</h1>
 
     <section class="home-hero" aria-labelledby="merchant-title">
-        <img
+        <video
             class="home-hero__image"
-            src="/assets/homepage/images/hero.png?rev=<?php echo h($assetRevision); ?>"
-            alt=""
+            poster="/assets/homepage/images/hero.png?rev=<?php echo h($assetRevision); ?>"
             width="1792"
             height="952"
-            fetchpriority="high"
-            decoding="async"
-            draggable="false"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            disablepictureinpicture
+            disableremoteplayback
+            controlslist="nodownload nofullscreen noremoteplayback"
+            aria-hidden="true"
+            tabindex="-1"
         >
+            <source src="<?php echo h($heroVideoUrl); ?>" type="video/mp4">
+        </video>
 
         <div class="home-hero__surface">
             <header class="home-header">
