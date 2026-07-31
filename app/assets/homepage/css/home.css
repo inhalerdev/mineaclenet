@@ -239,19 +239,13 @@ body.mineacle-home img {
 
 .home-navigation__link:hover,
 .home-navigation__link:focus-visible {
-  color: #bcbcbc;
+  color: #d0afff;
   transform: translateY(-2px);
 }
 
-.home-navigation__link:hover::after,
-.home-navigation__link:focus-visible::after,
-.home-navigation__link:active::after,
 .home-navigation__link.is-current::after {
   opacity: 1;
   transform: translateX(0) scaleX(1);
-}
-
-.home-navigation__link.is-current::after {
   animation: home-navigation-indicator-in 220ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
@@ -357,7 +351,7 @@ body.mineacle-home img {
 
 .home-menu__link:hover,
 .home-menu__link:focus-visible {
-  color: #bcbcbc;
+  color: #d0afff;
   background: rgba(188, 188, 188, 0.08);
   transform: translateY(-1px);
 }
