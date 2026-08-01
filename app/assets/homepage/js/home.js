@@ -6,7 +6,34 @@
   const dialog = document.querySelector("[data-join-dialog]");
   const openHelpButton = document.querySelector("[data-open-join-help]");
   const closeHelpButton = document.querySelector("[data-close-join-help]");
+  const hero = document.querySelector("[data-home-hero]");
+  const heroVideo = document.querySelector("[data-home-hero-video]");
+  const heroSource = document.querySelector("[data-home-hero-source]");
   const resetTimers = new WeakMap();
+
+  const useHeroFallback = () => {
+    hero?.classList.add("is-video-fallback");
+
+    if (heroVideo instanceof HTMLVideoElement) {
+      heroVideo.pause();
+    }
+  };
+
+  const useHeroVideo = () => {
+    hero?.classList.remove("is-video-fallback");
+  };
+
+  if (heroVideo instanceof HTMLVideoElement) {
+    heroVideo.addEventListener("loadeddata", useHeroVideo, { once: true });
+    heroVideo.addEventListener("playing", useHeroVideo, { once: true });
+    heroVideo.addEventListener("error", useHeroFallback, { once: true });
+
+    heroSource?.addEventListener("error", useHeroFallback, { once: true });
+
+    if (heroVideo.error) {
+      useHeroFallback();
+    }
+  }
 
   const copyText = async (value) => {
     if (navigator.clipboard && window.isSecureContext) {

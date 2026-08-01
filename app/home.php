@@ -13,6 +13,7 @@ require_once __DIR__ . '/includes/layout.php';
 
 $config = mineacle_config();
 $site = is_array($config['site'] ?? null) ? $config['site'] : [];
+$home = is_array($config['home'] ?? null) ? $config['home'] : [];
 $minecraftIp = trim((string) ($site['minecraft_ip'] ?? 'mineacle.net')) ?: 'mineacle.net';
 
 $publicUrl = static function (mixed $value, string $fallback): string {
@@ -25,7 +26,14 @@ $storeUrl = $publicUrl($site['store_url'] ?? '', 'https://store.mineacle.net/');
 $discordUrl = $publicUrl($site['discord_url'] ?? '', 'https://discord.gg/qmpJ4xMguT');
 $xUrl = $publicUrl($site['x_url'] ?? '', 'https://x.com/mineaclenetwork');
 $youtubeUrl = $publicUrl($site['youtube_url'] ?? '', 'https://www.youtube.com/@mineaclenetwork');
-$heroVideoUrl = 'https://pub-a87f1944ab6f4788a1974177e59cf562.r2.dev/Video%20Project%202.mp4';
+$heroVideoUrl = trim((string) ($home['hero_video_url'] ?? ''));
+
+if (
+    filter_var($heroVideoUrl, FILTER_VALIDATE_URL) === false
+    || strtolower((string) parse_url($heroVideoUrl, PHP_URL_SCHEME)) !== 'https'
+) {
+    $heroVideoUrl = '';
+}
 
 $navigation = [
     ['label' => 'Home', 'url' => '/', 'current' => true, 'external' => false],
@@ -70,25 +78,28 @@ mineacle_page_head('Home', [
 <main class="home-page" aria-labelledby="home-page-title">
     <h1 id="home-page-title" class="visually-hidden">Mineacle</h1>
 
-    <section class="home-hero" aria-labelledby="merchant-title">
-        <video
-            class="home-hero__image"
-            poster="/assets/homepage/images/hero.png?rev=<?php echo h($assetRevision); ?>"
-            width="1792"
-            height="952"
-            autoplay
-            muted
-            loop
-            playsinline
-            preload="metadata"
-            disablepictureinpicture
-            disableremoteplayback
-            controlslist="nodownload nofullscreen noremoteplayback"
-            aria-hidden="true"
-            tabindex="-1"
-        >
-            <source src="<?php echo h($heroVideoUrl); ?>" type="video/mp4">
-        </video>
+    <section class="home-hero" aria-labelledby="merchant-title" data-home-hero>
+        <?php if ($heroVideoUrl !== ''): ?>
+            <video
+                class="home-hero__image"
+                poster="/assets/homepage/images/hero.png?rev=<?php echo h($assetRevision); ?>"
+                width="2048"
+                height="863"
+                autoplay
+                muted
+                loop
+                playsinline
+                preload="metadata"
+                disablepictureinpicture
+                disableremoteplayback
+                controlslist="nodownload nofullscreen noremoteplayback"
+                aria-hidden="true"
+                tabindex="-1"
+                data-home-hero-video
+            >
+                <source src="<?php echo h($heroVideoUrl); ?>" type="video/mp4" data-home-hero-source>
+            </video>
+        <?php endif; ?>
 
         <div class="home-hero__surface">
             <header class="home-header">
@@ -116,7 +127,6 @@ mineacle_page_head('Home', [
 
                     <details class="home-menu" data-home-menu>
                         <summary class="home-menu__button" aria-label="Open navigation menu">
-                            <span aria-hidden="true"></span>
                             <span aria-hidden="true"></span>
                             <span aria-hidden="true"></span>
                         </summary>

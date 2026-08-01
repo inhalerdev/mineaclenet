@@ -24,8 +24,8 @@
 
 :root {
   --home-background: #161616;
-  --home-white: #f8f8f8;
-  --home-icon: #d9d9d9;
+  --home-white: #ffffff;
+  --home-icon: #bcbcbc;
   --home-accent: #b078ff;
   --home-play: #389222;
   --home-play-stroke: #62c249;
@@ -43,9 +43,26 @@
   --home-space-6: 256px;
   --home-space-7: 512px;
   --home-frame: clamp(16px, 3.333333vw, 64px);
+  --home-frame-top: max(var(--home-frame), env(safe-area-inset-top, 0px));
+  --home-frame-right: max(var(--home-frame), env(safe-area-inset-right, 0px));
+  --home-frame-bottom: max(var(--home-frame), env(safe-area-inset-bottom, 0px));
+  --home-frame-left: max(var(--home-frame), env(safe-area-inset-left, 0px));
   --home-hero-padding: clamp(16px, 1.666667vw, 32px);
   --home-story-bottom: clamp(32px, 10.740741vh, 116px);
+  --home-viewport-height: 100vh;
   --home-radius: 3px;
+}
+
+@supports (height: 100svh) {
+  :root {
+    --home-viewport-height: 100svh;
+  }
+}
+
+@supports (height: 100dvh) {
+  :root {
+    --home-viewport-height: 100dvh;
+  }
 }
 
 *,
@@ -106,8 +123,8 @@ body.mineacle-home img {
 
 .home-page {
   width: 100%;
-  min-height: 100svh;
-  padding: var(--home-frame);
+  min-height: var(--home-viewport-height);
+  padding: var(--home-frame-top) var(--home-frame-right) var(--home-frame-bottom) var(--home-frame-left);
   background: var(--home-background);
 }
 
@@ -115,11 +132,23 @@ body.mineacle-home img {
   position: relative;
   isolation: isolate;
   width: 100%;
-  height: calc(100svh - (var(--home-frame) * 2));
+  height: calc(var(--home-viewport-height) - var(--home-frame-top) - var(--home-frame-bottom));
   min-height: 600px;
   overflow: hidden;
   border-radius: var(--home-radius);
-  background: var(--home-background);
+  background: var(--home-background) url("../images/hero.png") center / cover no-repeat;
+}
+
+.home-hero::before {
+  position: absolute;
+  z-index: -2;
+  inset: -16px;
+  display: none;
+  background: url("../images/hero.png") center / cover no-repeat;
+  content: "";
+  filter: blur(14px) brightness(0.72);
+  pointer-events: none;
+  transform: scale(1.04);
 }
 
 .home-hero::after {
@@ -142,6 +171,10 @@ body.mineacle-home img {
   pointer-events: none;
 }
 
+.home-hero.is-video-fallback .home-hero__image {
+  display: none;
+}
+
 .home-hero__surface {
   position: relative;
   z-index: 1;
@@ -159,22 +192,22 @@ body.mineacle-home img {
   align-items: flex-start;
   justify-content: space-between;
   width: 100%;
-  min-height: 55px;
-  gap: var(--home-space-3);
+  min-height: 42px;
+  gap: 24px;
 }
 
 .home-brand {
   display: block;
   flex: none;
-  width: 64px;
-  height: 55px;
+  width: 48px;
+  height: 42px;
   color: var(--home-accent);
   transition: transform 120ms ease-out, filter 120ms ease-out;
 }
 
 .home-brand img {
-  width: 64px;
-  height: 55px;
+  width: 48px;
+  height: 42px;
   object-fit: contain;
 }
 
@@ -204,23 +237,23 @@ body.mineacle-home img {
   align-items: flex-start;
   justify-content: flex-end;
   min-width: 0;
-  gap: var(--home-space-3);
+  gap: 24px;
 }
 
 .home-navigation__links {
   display: flex;
   align-items: flex-start;
   justify-content: flex-end;
-  gap: var(--home-space-3);
+  gap: 24px;
 }
 
 .home-navigation__link {
   position: relative;
   display: inline-flex;
   align-items: center;
-  min-height: 38px;
+  min-height: 29px;
   color: var(--home-white);
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 600;
   line-height: 1;
   text-decoration: none;
@@ -233,12 +266,12 @@ body.mineacle-home img {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 32px;
-  height: 3px;
+  width: 24px;
+  height: 2px;
   background: currentColor;
   content: "";
   opacity: 0;
-  transform: translateX(-8px) scaleX(0.35);
+  transform: translateX(-6px) scaleX(0.35);
   transform-origin: left center;
   transition: opacity 120ms ease-out, transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
@@ -262,7 +295,7 @@ body.mineacle-home img {
 @keyframes home-navigation-indicator-in {
   from {
     opacity: 0;
-    transform: translateX(-8px) scaleX(0.35);
+    transform: translateX(-6px) scaleX(0.35);
   }
 
   to {
@@ -277,14 +310,17 @@ body.mineacle-home img {
 }
 
 .home-menu__button {
-  display: grid;
-  width: 32px;
-  height: 32px;
-  padding: 4px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
   border: 0;
   background: transparent;
   color: var(--home-white);
   cursor: pointer;
+  gap: 5px;
   list-style: none;
   transition: color 120ms ease-out, transform 120ms ease-out;
 }
@@ -300,10 +336,11 @@ body.mineacle-home img {
 
 .home-menu__button span {
   display: block;
-  width: 28px;
+  width: 21px;
   height: 3px;
-  align-self: center;
-  justify-self: end;
+  flex: none;
+  align-self: flex-end;
+  border-radius: 1px;
   background: currentColor;
   transform-origin: center;
   transition: transform 140ms ease-out, opacity 100ms ease-out;
@@ -316,25 +353,21 @@ body.mineacle-home img {
   transform: translateY(-2px);
 }
 
-.home-menu[open] .home-menu__button span:nth-child(1) {
-  transform: translateY(8px) rotate(45deg);
+.home-menu[open] .home-menu__button span:first-child {
+  transform: translateY(4px) rotate(45deg);
 }
 
-.home-menu[open] .home-menu__button span:nth-child(2) {
-  opacity: 0;
-}
-
-.home-menu[open] .home-menu__button span:nth-child(3) {
-  transform: translateY(-8px) rotate(-45deg);
+.home-menu[open] .home-menu__button span:last-child {
+  transform: translateY(-4px) rotate(-45deg);
 }
 
 .home-menu__panel {
   position: absolute;
-  top: calc(100% + var(--home-space-2));
+  top: calc(100% + 12px);
   right: 0;
   display: grid;
-  width: 256px;
-  padding: var(--home-space-2);
+  width: 192px;
+  padding: 12px;
   border: 2px solid var(--home-x-stroke);
   border-radius: 2px;
   background: rgba(24, 22, 27, 0.97);
@@ -344,10 +377,10 @@ body.mineacle-home img {
 .home-menu__link {
   display: flex;
   align-items: center;
-  min-height: 48px;
-  padding: 0 var(--home-space-2);
+  min-height: 36px;
+  padding: 0 12px;
   color: var(--home-white);
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 500;
   text-decoration: none;
   text-transform: uppercase;
@@ -367,14 +400,14 @@ body.mineacle-home img {
 }
 
 .home-story {
-  width: min(800px, 100%);
+  width: min(600px, 100%);
   margin-top: auto;
 }
 
 .home-story__copy h2 {
   margin: 0;
   color: var(--home-white);
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 600;
   line-height: 1.2;
   text-transform: uppercase;
@@ -383,7 +416,7 @@ body.mineacle-home img {
 .home-story__copy p {
   margin: 0;
   color: var(--home-white);
-  font-size: 20px;
+  font-size: 15px;
   font-weight: 400;
   line-height: 1.2;
 }
@@ -393,8 +426,8 @@ body.mineacle-home img {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  margin-top: 24px;
-  gap: var(--home-space-3);
+  margin-top: 18px;
+  gap: 24px;
 }
 
 .home-actions__primary,
@@ -404,18 +437,18 @@ body.mineacle-home img {
 }
 
 .home-actions__primary {
-  gap: var(--home-space-2);
+  gap: 12px;
 }
 
 .home-socials {
-  gap: var(--home-space-2);
+  gap: 12px;
 }
 
 .home-action,
 .home-social {
   display: grid;
   place-items: center;
-  height: 64px;
+  height: 48px;
   padding: 0;
   border-style: solid;
   border-width: 2px;
@@ -433,6 +466,11 @@ body.mineacle-home img {
   transform: translateY(-2px);
 }
 
+.home-social:hover,
+.home-social:focus-visible {
+  color: var(--home-white);
+}
+
 .home-action:active,
 .home-social:active {
   filter: brightness(0.98);
@@ -440,11 +478,11 @@ body.mineacle-home img {
 }
 
 .home-action--play {
-  width: 256px;
+  width: 192px;
   border-color: var(--home-play-stroke);
   background: var(--home-play);
   color: var(--home-white);
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 600;
   line-height: 1;
   text-transform: uppercase;
@@ -455,17 +493,17 @@ body.mineacle-home img {
 }
 
 .home-action--help {
-  width: 64px;
+  width: 48px;
   border-color: var(--home-play-stroke);
   background: var(--home-play);
   color: var(--home-white);
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 600;
   line-height: 1;
 }
 
 .home-social {
-  width: 64px;
+  width: 48px;
   color: var(--home-icon);
 }
 
@@ -477,7 +515,6 @@ body.mineacle-home img {
 .home-social--x {
   border-color: var(--home-x-stroke);
   background: var(--home-x);
-  color: var(--home-white);
 }
 
 .home-social--youtube {
@@ -487,8 +524,8 @@ body.mineacle-home img {
 
 .home-social__icon {
   display: block;
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   background: currentColor;
   mask-position: center;
   mask-repeat: no-repeat;
@@ -643,24 +680,24 @@ body.mineacle-home img {
 
 @media (max-width: 1240px) {
   .home-navigation__links {
-    gap: 24px;
+    gap: 18px;
   }
 
   .home-navigation__link {
-    font-size: 20px;
+    font-size: 15px;
   }
 
   .home-story {
-    width: min(720px, 100%);
+    width: min(540px, 100%);
   }
 
   .home-story__copy h2 {
-    font-size: 30px;
+    font-size: 23px;
   }
 
   .home-story__copy p {
-    font-size: 18px;
-    line-height: 1.25;
+    font-size: 14px;
+    line-height: 1.3;
   }
 }
 
@@ -674,19 +711,19 @@ body.mineacle-home img {
   }
 
   .home-story {
-    width: min(640px, 100%);
+    width: min(480px, 100%);
   }
 
   .home-actions {
-    gap: 24px;
+    gap: 18px;
   }
 
   .home-actions__primary {
-    gap: 16px;
+    gap: 12px;
   }
 
   .home-action--play {
-    width: 224px;
+    width: 168px;
   }
 }
 
@@ -699,49 +736,49 @@ body.mineacle-home img {
 
   .home-hero {
     height: auto;
-    min-height: calc(100svh - 32px);
+    min-height: calc(var(--home-viewport-height) - var(--home-frame-top) - var(--home-frame-bottom));
   }
 
   .home-hero__image {
-    object-position: 56% center;
+    object-position: center;
   }
 
   .home-hero__surface {
-    min-height: calc(100svh - 32px);
+    min-height: calc(var(--home-viewport-height) - var(--home-frame-top) - var(--home-frame-bottom));
   }
 
   .home-header {
-    min-height: 48px;
+    min-height: 42px;
   }
 
   .home-brand,
   .home-brand img {
-    width: 56px;
+    width: 48px;
     height: auto;
   }
 
   .home-menu__panel {
-    width: min(256px, calc(100vw - 64px));
+    width: min(192px, calc(100vw - 64px));
   }
 
   .home-story {
-    padding-top: 128px;
+    padding-top: 96px;
   }
 
   .home-story__copy h2 {
-    font-size: 28px;
+    font-size: 21px;
   }
 
   .home-story__copy p {
-    font-size: 16px;
-    line-height: 1.375;
+    font-size: 14px;
+    line-height: 1.4;
   }
 
   .home-actions {
     flex-direction: column;
     align-items: stretch;
-    margin-top: 24px;
-    gap: 16px;
+    margin-top: 18px;
+    gap: 12px;
   }
 
   .home-actions__primary {
@@ -752,7 +789,7 @@ body.mineacle-home img {
     width: auto;
     min-width: 0;
     flex: 1;
-    font-size: 28px;
+    font-size: 21px;
   }
 
   .home-socials {
@@ -762,26 +799,26 @@ body.mineacle-home img {
 
 @media (max-width: 420px) {
   .home-story__copy h2 {
-    font-size: 24px;
+    font-size: 20px;
   }
 
   .home-story__copy p {
-    font-size: 15px;
+    font-size: 14px;
   }
 
   .home-action,
   .home-social {
-    height: 56px;
+    height: 48px;
   }
 
   .home-action--help,
   .home-social {
-    width: 56px;
+    width: 48px;
   }
 
   .home-social__icon {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
   }
 }
 
@@ -795,35 +832,51 @@ body.mineacle-home img {
   }
 
   .home-story {
-    width: min(720px, 100%);
+    width: min(540px, 100%);
   }
 
   .home-story__copy h2 {
-    font-size: 28px;
+    font-size: 21px;
   }
 
   .home-story__copy p {
-    font-size: 16px;
-    line-height: 1.25;
+    font-size: 14px;
+    line-height: 1.3;
   }
 
   .home-actions {
-    margin-top: 16px;
+    margin-top: 12px;
   }
 
   .home-action,
   .home-social {
-    height: 56px;
+    height: 48px;
   }
 
   .home-action--play {
-    width: 224px;
-    font-size: 28px;
+    width: 168px;
+    font-size: 21px;
   }
 
   .home-action--help,
   .home-social {
-    width: 56px;
+    width: 48px;
+  }
+}
+
+@media (max-width: 960px) and (orientation: landscape) {
+  .home-hero {
+    height: auto;
+    min-height: calc(var(--home-viewport-height) - var(--home-frame-top) - var(--home-frame-bottom));
+  }
+
+  .home-hero__image {
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .home-hero__surface {
+    min-height: calc(var(--home-viewport-height) - var(--home-frame-top) - var(--home-frame-bottom));
   }
 }
 
