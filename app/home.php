@@ -26,7 +26,18 @@ $storeUrl = $publicUrl($site['store_url'] ?? '', 'https://store.mineacle.net/');
 $discordUrl = $publicUrl($site['discord_url'] ?? '', 'https://discord.gg/qmpJ4xMguT');
 $xUrl = $publicUrl($site['x_url'] ?? '', 'https://x.com/mineaclenetwork');
 $youtubeUrl = $publicUrl($site['youtube_url'] ?? '', 'https://www.youtube.com/@mineaclenetwork');
-$heroVideoUrl = trim((string) ($home['hero_video_url'] ?? ''));
+$heroVideoBaseUrl = 'https://pub-a87f1944ab6f4788a1974177e59cf562.r2.dev';
+$defaultHeroVideoUrl = $heroVideoBaseUrl . '/hero-bg.mp4';
+$heroVideoUrl = trim((string) ($home['hero_video_url'] ?? $defaultHeroVideoUrl));
+$normalizedHeroVideoUrl = rtrim($heroVideoUrl, '/');
+
+if (
+    $normalizedHeroVideoUrl === $heroVideoBaseUrl
+    || $normalizedHeroVideoUrl === $heroVideoBaseUrl . '/Video%20Project%202.mp4'
+    || $normalizedHeroVideoUrl === $heroVideoBaseUrl . '/Video Project 2.mp4'
+) {
+    $heroVideoUrl = $defaultHeroVideoUrl;
+}
 
 if (
     filter_var($heroVideoUrl, FILTER_VALIDATE_URL) === false
@@ -72,7 +83,7 @@ mineacle_page_head('Home', [
     'stylesheets' => ['/assets/homepage/css/home.css?rev=' . $assetRevision],
     'body_class' => 'mineacle-home',
     'external_fonts' => false,
-    'theme_color' => '#161616',
+    'theme_color' => '#111111',
 ]);
 ?>
 <main class="home-page" aria-labelledby="home-page-title">
@@ -89,7 +100,7 @@ mineacle_page_head('Home', [
                 muted
                 loop
                 playsinline
-                preload="metadata"
+                preload="auto"
                 disablepictureinpicture
                 disableremoteplayback
                 controlslist="nodownload nofullscreen noremoteplayback"
