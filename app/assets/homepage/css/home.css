@@ -26,6 +26,7 @@
   --home-background: #111111;
   --home-white: #f8f8f8;
   --home-hover: #ffffff;
+  --home-link-hover: #d0afff;
   --home-icon: #f8f8f8;
   --home-accent: #b078ff;
   --home-play: #389222;
@@ -277,13 +278,17 @@ body.mineacle-home img {
 }
 
 .home-navigation__link.is-current {
-  color: var(--home-white);
+  color: var(--home-accent);
 }
 
 .home-navigation__link:hover,
 .home-navigation__link:focus-visible {
-  color: var(--home-hover);
   transform: translateY(-2px);
+}
+
+.home-navigation__link:not(.is-current):hover,
+.home-navigation__link:not(.is-current):focus-visible {
+  color: var(--home-link-hover);
 }
 
 .home-navigation__link.is-current::after {
