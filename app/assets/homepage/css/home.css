@@ -35,8 +35,9 @@
   --home-secondary: #b078ff;
   --home-green: #11fc7b;
   --home-stroke: #5c0dff;
-  --home-play: #11fc7b;
-  --home-play-stroke: #5c0dff;
+  --home-play: #00dd57;
+  --home-play-hover: #00bc4a;
+  --home-play-stroke: #5cff9b;
   --home-discord: #5865f2;
   --home-discord-stroke: #8991f2;
   --home-x: #18161b;
@@ -305,7 +306,7 @@ body.mineacle-home img {
 
 .home-navigation__link.is-current:hover,
 .home-navigation__link.is-current:focus-visible {
-  color: var(--home-nav-static);
+  color: var(--home-link-hover);
 }
 
 .home-menu {
@@ -391,14 +392,14 @@ body.mineacle-home img {
 }
 
 .home-menu__link.is-current {
-  color: var(--home-white);
+  color: var(--home-nav-current);
   background: rgba(132, 54, 254, 0.14);
 }
 
 .home-menu__link:hover,
 .home-menu__link:focus-visible {
-  color: var(--home-background);
-  background: rgba(208, 175, 255, 0.92);
+  color: var(--home-link-hover);
+  background: rgba(208, 175, 255, 0.12);
   transform: translateY(-1px);
 }
 
@@ -499,11 +500,14 @@ body.mineacle-home img {
 .home-action--play:focus-visible,
 .home-action--help:hover,
 .home-action--help:focus-visible {
+  border-color: var(--home-play-stroke);
+  background: var(--home-play-hover);
   color: var(--home-white);
+  filter: none;
 }
 
 .home-action--play.is-copied {
-  background: var(--home-green);
+  background: var(--home-play-hover);
 }
 
 .home-action--help {
@@ -514,6 +518,11 @@ body.mineacle-home img {
   font-size: 32px;
   font-weight: 600;
   line-height: 1;
+}
+
+.home-action:focus-visible,
+.join-dialog__copy:focus-visible {
+  outline-color: var(--home-play-stroke);
 }
 
 .home-social {
@@ -664,8 +673,10 @@ body.mineacle-home img {
 
 .join-dialog__copy:hover,
 .join-dialog__copy:focus-visible {
+  border-color: var(--home-play-stroke);
+  background: var(--home-play-hover);
   color: var(--home-background);
-  filter: brightness(1.07);
+  filter: none;
   transform: translateY(-2px);
 }
 
