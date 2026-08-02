@@ -25,7 +25,7 @@
 :root {
   --home-background: #111111;
   --home-white: #f8f8f8;
-  --home-nav-current: #ffffff;
+  --home-nav-current: #b078ff;
   --home-nav-static: #f8f8f8;
   --home-hover: #d0afff;
   --home-link-hover: #d0afff;
@@ -273,8 +273,8 @@ body.mineacle-home img {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 100%;
-  height: 2px;
+  width: 75%;
+  height: 3px;
   background: currentColor;
   content: "";
   transform: scaleX(0);
@@ -309,8 +309,7 @@ body.mineacle-home img {
 }
 
 .home-menu {
-  position: relative;
-  flex: none;
+  display: none;
 }
 
 .home-menu__button {
@@ -445,18 +444,18 @@ body.mineacle-home img {
 }
 
 .home-actions__primary {
-  gap: 12px;
+  gap: 16px;
 }
 
 .home-socials {
-  gap: 12px;
+  gap: 16px;
 }
 
 .home-action,
 .home-social {
   display: grid;
   place-items: center;
-  height: 48px;
+  height: 64px;
   padding: 0;
   border-style: solid;
   border-width: 2px;
@@ -486,11 +485,11 @@ body.mineacle-home img {
 }
 
 .home-action--play {
-  width: 192px;
+  width: 256px;
   border-color: var(--home-play-stroke);
   background: var(--home-play);
-  color: var(--home-background);
-  font-size: 24px;
+  color: var(--home-white);
+  font-size: 32px;
   font-weight: 600;
   line-height: 1;
   text-transform: uppercase;
@@ -500,7 +499,7 @@ body.mineacle-home img {
 .home-action--play:focus-visible,
 .home-action--help:hover,
 .home-action--help:focus-visible {
-  color: var(--home-background);
+  color: var(--home-white);
 }
 
 .home-action--play.is-copied {
@@ -508,17 +507,17 @@ body.mineacle-home img {
 }
 
 .home-action--help {
-  width: 48px;
+  width: 64px;
   border-color: var(--home-play-stroke);
   background: var(--home-play);
-  color: var(--home-background);
-  font-size: 24px;
+  color: var(--home-white);
+  font-size: 32px;
   font-weight: 600;
   line-height: 1;
 }
 
 .home-social {
-  width: 48px;
+  width: 64px;
   color: var(--home-icon);
 }
 
@@ -539,8 +538,8 @@ body.mineacle-home img {
 
 .home-social__icon {
   display: block;
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   background: currentColor;
   mask-position: center;
   mask-repeat: no-repeat;
@@ -727,15 +726,15 @@ body.mineacle-home img {
   }
 
   .home-actions {
-    gap: 18px;
+    gap: 24px;
   }
 
   .home-actions__primary {
-    gap: 12px;
+    gap: 16px;
   }
 
   .home-action--play {
-    width: 168px;
+    width: 224px;
   }
 }
 
@@ -800,7 +799,7 @@ body.mineacle-home img {
     width: auto;
     min-width: 0;
     flex: 1;
-    font-size: 21px;
+    font-size: 28px;
   }
 
   .home-socials {
@@ -819,17 +818,17 @@ body.mineacle-home img {
 
   .home-action,
   .home-social {
-    height: 48px;
+    height: 56px;
   }
 
   .home-action--help,
   .home-social {
-    width: 48px;
+    width: 56px;
   }
 
   .home-social__icon {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
   }
 }
 
@@ -857,17 +856,17 @@ body.mineacle-home img {
 
   .home-action,
   .home-social {
-    height: 48px;
+    height: 56px;
   }
 
   .home-action--play {
-    width: 168px;
-    font-size: 21px;
+    width: 224px;
+    font-size: 28px;
   }
 
   .home-action--help,
   .home-social {
-    width: 48px;
+    width: 56px;
   }
 }
 
