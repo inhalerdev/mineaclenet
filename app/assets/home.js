@@ -23,11 +23,11 @@
   let statusRequestActive = false;
 
   const particlePalette = [
-    "#30cf5c",
-    "#5ee45f",
-    "#a5f23b",
-    "#d9f447",
-    "#f4d84b",
+    "#11fc7b",
+    "#8436fe",
+    "#b078ff",
+    "#d0afff",
+    "#5c0dff",
   ];
 
   document.addEventListener("contextmenu", (event) => {

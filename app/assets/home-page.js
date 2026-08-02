@@ -57,7 +57,7 @@
   let leaderboardCurrentUrl = `${window.location.pathname}${window.location.search}`;
   let externalStatusFailureCount = 0;
   let lastExternalStatusCheck = 0;
-  const videoFallbackSvg = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360"%3E%3Crect width="640" height="360" fill="%23202020"/%3E%3Cpath fill="%23ff55ff" d="M282 238V122l104 58-104 58z"/%3E%3C/svg%3E';
+  const videoFallbackSvg = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360"%3E%3Crect width="640" height="360" fill="%23111111"/%3E%3Cpath fill="%238436fe" d="M282 238V122l104 58-104 58z"/%3E%3C/svg%3E';
 
   const runWhenIdle = (callback, timeout = 1200) => {
     if ('requestIdleCallback' in window) {
@@ -856,7 +856,7 @@
 
       const displayName = typeof player.display_name === 'string' && player.display_name.trim() !== '' ? player.display_name.trim() : name;
       const rankLabel = typeof player.rank_label === 'string' ? player.rank_label.trim() : '';
-      const rankColor = typeof player.rank_color === 'string' && /^#[0-9a-f]{6}$/i.test(player.rank_color.trim()) ? player.rank_color.trim() : '#bbbbbb';
+      const rankColor = typeof player.rank_color === 'string' && /^#[0-9a-f]{6}$/i.test(player.rank_color.trim()) ? player.rank_color.trim() : '#f8f8f8';
       const statusLabel = typeof player.status_label === 'string' ? player.status_label.trim() : '';
       const statusLine = typeof player.status_line === 'string' ? player.status_line.trim() : '';
       const row = document.createElement('a');

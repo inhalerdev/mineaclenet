@@ -22,7 +22,7 @@
   min-height: 590px;
   padding: clamp(24px, 2.5vw, 44px);
   background:
-    linear-gradient(145deg, rgba(103, 78, 167, 0.24), transparent 48%),
+    linear-gradient(145deg, rgba(176, 120, 255, 0.24), transparent 48%),
     var(--container-bg);
 }
 
@@ -70,9 +70,9 @@
   align-items: center;
   gap: var(--half-space);
   padding: var(--half-space);
-  border: 1px solid rgba(115, 83, 186, 0.86);
+  border: 1px solid rgba(92, 13, 255, 0.86);
   border-radius: var(--radius);
-  background: rgba(103, 78, 167, 0.26);
+  background: rgba(132, 54, 254, 0.26);
 }
 
 .contact-reward > div {
@@ -136,7 +136,7 @@
   left: 0;
   width: var(--contact-check-size);
   height: var(--contact-check-size);
-  background: #55ff55;
+  background: #11fc7b;
   content: "";
   mask: url("contact-check.png") center / contain no-repeat;
   transform: translateY(-50%);
@@ -171,12 +171,12 @@
   padding: var(--half-space);
   border: 1px solid var(--container-stroke);
   border-radius: var(--radius);
-  background: rgba(103, 78, 167, 0.3);
+  background: rgba(132, 54, 254, 0.3);
 }
 
 .contact-notice.is-success {
-  border-color: rgba(69, 217, 104, 0.52);
-  background: rgba(48, 70, 48, 0.72);
+  border-color: rgba(17, 252, 123, 0.52);
+  background: rgba(17, 252, 123, 0.12);
 }
 
 .contact-notice.is-error {
@@ -272,8 +272,8 @@
 .contact-form select:focus,
 .contact-form textarea:focus {
   border-color: var(--accent);
-  background: #141414;
-  box-shadow: 0 0 0 2px rgba(200, 0, 250, 0.16);
+  background: var(--container-bg);
+  box-shadow: 0 0 0 2px rgba(132, 54, 254, 0.2);
 }
 
 .contact-player-field {
@@ -369,7 +369,8 @@
 .contact-player-option:focus-visible,
 .contact-player-option.is-active {
   outline: 0;
-  background: var(--button-bg);
+  background: var(--button-hover-bg);
+  color: var(--main-bg);
 }
 
 .contact-player-option__head,
@@ -427,6 +428,15 @@
   white-space: nowrap;
 }
 
+.contact-player-option:hover strong,
+.contact-player-option:hover small,
+.contact-player-option:focus-visible strong,
+.contact-player-option:focus-visible small,
+.contact-player-option.is-active strong,
+.contact-player-option.is-active small {
+  color: var(--main-bg);
+}
+
 .contact-player-selected {
   display: grid;
   grid-template-columns: calc(var(--control-size) * 0.86) minmax(0, 1fr) auto;
@@ -436,7 +446,7 @@
   padding: 6px;
   border: 1px solid var(--button-stroke);
   border-radius: var(--radius);
-  background: rgba(103, 78, 167, 0.32);
+  background: rgba(132, 54, 254, 0.32);
 }
 
 .contact-player-selected[hidden] {
@@ -469,7 +479,9 @@
 }
 
 .contact-player-selected button:hover {
-  filter: brightness(1.1);
+  background: var(--button-hover-bg);
+  color: var(--main-bg);
+  filter: none;
   transform: translateY(-1px);
 }
 
@@ -483,7 +495,7 @@
   border: 1px solid var(--play-stroke);
   border-radius: var(--radius);
   background: var(--play-bg);
-  color: var(--heading);
+  color: var(--main-bg);
   font-size: var(--control-font-size);
   font-weight: 600;
   transition:
@@ -493,10 +505,11 @@
 }
 
 .contact-submit:hover {
-  border-color: var(--accent);
+  border-color: var(--play-stroke);
   background: var(--button-hover-bg);
+  color: var(--main-bg);
   filter: none;
-  box-shadow: 0 0 14px rgba(200, 0, 250, 0.24);
+  box-shadow: 0 0 14px rgba(92, 13, 255, 0.24);
   transform: translateY(-1px);
 }
 

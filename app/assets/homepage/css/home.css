@@ -25,12 +25,18 @@
 :root {
   --home-background: #111111;
   --home-white: #f8f8f8;
-  --home-hover: #ffffff;
+  --home-nav-current: #ffffff;
+  --home-nav-static: #f8f8f8;
+  --home-hover: #d0afff;
   --home-link-hover: #d0afff;
-  --home-icon: #f8f8f8;
-  --home-accent: #b078ff;
-  --home-play: #389222;
-  --home-play-stroke: #62c249;
+  --home-icon: #ffffff;
+  --home-accent: #8436fe;
+  --home-accent-deep: #5c0dff;
+  --home-secondary: #b078ff;
+  --home-green: #11fc7b;
+  --home-stroke: #5c0dff;
+  --home-play: #11fc7b;
+  --home-play-stroke: #5c0dff;
   --home-discord: #5865f2;
   --home-discord-stroke: #8991f2;
   --home-x: #18161b;
@@ -156,7 +162,7 @@ body.mineacle-home img {
   position: absolute;
   z-index: 0;
   inset: 0;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(17, 17, 17, 0.3);
   content: "";
   pointer-events: none;
 }
@@ -253,7 +259,7 @@ body.mineacle-home img {
   display: inline-flex;
   align-items: center;
   min-height: 29px;
-  color: var(--home-white);
+  color: var(--home-nav-static);
   font-size: 18px;
   font-weight: 600;
   line-height: 1;
@@ -267,18 +273,18 @@ body.mineacle-home img {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 24px;
+  width: 100%;
   height: 2px;
   background: currentColor;
   content: "";
-  opacity: 0;
-  transform: translateX(-6px) scaleX(0.35);
+  transform: scaleX(0);
   transform-origin: left center;
-  transition: opacity 120ms ease-out, transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: transform 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
 }
 
 .home-navigation__link.is-current {
-  color: var(--home-accent);
+  color: var(--home-nav-current);
 }
 
 .home-navigation__link:hover,
@@ -291,23 +297,15 @@ body.mineacle-home img {
   color: var(--home-link-hover);
 }
 
+.home-navigation__link:not(.is-current):hover::after,
+.home-navigation__link:not(.is-current):focus-visible::after,
 .home-navigation__link.is-current::after {
-  background: var(--home-accent);
-  opacity: 1;
-  transform: translateX(0) scaleX(1);
-  animation: home-navigation-indicator-in 220ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  transform: scaleX(1);
 }
 
-@keyframes home-navigation-indicator-in {
-  from {
-    opacity: 0;
-    transform: translateX(-6px) scaleX(0.35);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0) scaleX(1);
-  }
+.home-navigation__link.is-current:hover,
+.home-navigation__link.is-current:focus-visible {
+  color: var(--home-nav-static);
 }
 
 .home-menu {
@@ -374,9 +372,9 @@ body.mineacle-home img {
   display: grid;
   width: 192px;
   padding: 12px;
-  border: 2px solid var(--home-x-stroke);
+  border: 2px solid var(--home-stroke);
   border-radius: 2px;
-  background: rgba(24, 22, 27, 0.97);
+  background: rgba(17, 17, 17, 0.97);
   box-shadow: 0 16px 32px rgba(0, 0, 0, 0.38);
 }
 
@@ -395,13 +393,13 @@ body.mineacle-home img {
 
 .home-menu__link.is-current {
   color: var(--home-white);
-  background: rgba(176, 120, 255, 0.08);
+  background: rgba(132, 54, 254, 0.14);
 }
 
 .home-menu__link:hover,
 .home-menu__link:focus-visible {
-  color: var(--home-hover);
-  background: rgba(188, 188, 188, 0.08);
+  color: var(--home-background);
+  background: rgba(208, 175, 255, 0.92);
   transform: translateY(-1px);
 }
 
@@ -469,11 +467,15 @@ body.mineacle-home img {
 }
 
 .home-action:hover,
-.home-action:focus-visible,
+.home-action:focus-visible {
+  filter: brightness(1.07);
+  transform: translateY(-2px);
+}
+
 .home-social:hover,
 .home-social:focus-visible {
-  color: var(--home-hover);
-  filter: brightness(1.07);
+  color: #ffffff;
+  filter: none;
   transform: translateY(-2px);
 }
 
@@ -487,22 +489,29 @@ body.mineacle-home img {
   width: 192px;
   border-color: var(--home-play-stroke);
   background: var(--home-play);
-  color: var(--home-white);
+  color: var(--home-background);
   font-size: 24px;
   font-weight: 600;
   line-height: 1;
   text-transform: uppercase;
 }
 
+.home-action--play:hover,
+.home-action--play:focus-visible,
+.home-action--help:hover,
+.home-action--help:focus-visible {
+  color: var(--home-background);
+}
+
 .home-action--play.is-copied {
-  background: #44a92a;
+  background: var(--home-green);
 }
 
 .home-action--help {
   width: 48px;
   border-color: var(--home-play-stroke);
   background: var(--home-play);
-  color: var(--home-white);
+  color: var(--home-background);
   font-size: 24px;
   font-weight: 600;
   line-height: 1;
@@ -560,9 +569,9 @@ body.mineacle-home img {
   width: min(512px, calc(100vw - 32px));
   max-width: none;
   padding: 0;
-  border: 2px solid var(--home-x-stroke);
+  border: 2px solid var(--home-stroke);
   border-radius: var(--home-radius);
-  background: var(--home-x);
+  background: var(--home-background);
   color: var(--home-white);
   font-family: "Rubik", Arial, sans-serif;
   box-shadow: 0 32px 64px rgba(0, 0, 0, 0.52);
@@ -646,7 +655,7 @@ body.mineacle-home img {
   border: 2px solid var(--home-play-stroke);
   border-radius: 2px;
   background: var(--home-play);
-  color: var(--home-white);
+  color: var(--home-background);
   font-size: 18px;
   font-weight: 600;
   text-transform: uppercase;
@@ -656,7 +665,7 @@ body.mineacle-home img {
 
 .join-dialog__copy:hover,
 .join-dialog__copy:focus-visible {
-  color: var(--home-hover);
+  color: var(--home-background);
   filter: brightness(1.07);
   transform: translateY(-2px);
 }
