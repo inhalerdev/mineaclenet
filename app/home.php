@@ -14,7 +14,6 @@ require_once __DIR__ . '/includes/layout.php';
 $config = mineacle_config();
 $site = is_array($config['site'] ?? null) ? $config['site'] : [];
 $home = is_array($config['home'] ?? null) ? $config['home'] : [];
-$menuEnabled = (bool) ($home['menu_enabled'] ?? false);
 $minecraftIp = trim((string) ($site['minecraft_ip'] ?? 'mineacle.net')) ?: 'mineacle.net';
 
 $publicUrl = static function (mixed $value, string $fallback): string {
@@ -137,24 +136,22 @@ mineacle_page_head('Home', [
                         <?php endforeach; ?>
                     </div>
 
-                    <?php if ($menuEnabled): ?>
-                        <details class="home-menu" data-home-menu>
-                            <summary class="home-menu__button" aria-label="Open navigation menu">
-                                <span aria-hidden="true"></span>
-                                <span aria-hidden="true"></span>
-                            </summary>
-                            <nav class="home-menu__panel" aria-label="Menu navigation">
-                                <?php foreach ($navigation as $link): ?>
-                                    <a
-                                        class="home-menu__link<?php echo $link['current'] ? ' is-current' : ''; ?>"
-                                        href="<?php echo h((string) $link['url']); ?>"
-                                        <?php echo $link['current'] ? 'aria-current="page"' : ''; ?>
-                                        <?php echo $link['external'] ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>
-                                    ><?php echo h((string) $link['label']); ?></a>
-                                <?php endforeach; ?>
-                            </nav>
-                        </details>
-                    <?php endif; ?>
+                    <details class="home-menu" data-home-menu>
+                        <summary class="home-menu__button" aria-label="Open navigation menu">
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                        </summary>
+                        <nav class="home-menu__panel" aria-label="Menu navigation">
+                            <?php foreach ($navigation as $link): ?>
+                                <a
+                                    class="home-menu__link<?php echo $link['current'] ? ' is-current' : ''; ?>"
+                                    href="<?php echo h((string) $link['url']); ?>"
+                                    <?php echo $link['current'] ? 'aria-current="page"' : ''; ?>
+                                    <?php echo $link['external'] ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>
+                                ><?php echo h((string) $link['label']); ?></a>
+                            <?php endforeach; ?>
+                        </nav>
+                    </details>
                 </nav>
             </header>
 

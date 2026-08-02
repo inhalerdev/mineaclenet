@@ -74,7 +74,6 @@ return [
     ],
     'home' => [
         'database_enabled' => strtolower($mineacleEnv(['HOME_DATABASE_ENABLED', 'home_database_enabled'])) === 'true',
-        'menu_enabled' => strtolower($mineacleEnv(['HOME_MENU_ENABLED', 'home_menu_enabled'], 'false')) === 'true',
         'hero_video_url' => $mineacleEnv(
             ['HERO_VIDEO_URL', 'hero_video_url'],
             'https://pub-a87f1944ab6f4788a1974177e59cf562.r2.dev/hero-bg.mp4'
