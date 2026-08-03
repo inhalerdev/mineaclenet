@@ -35,15 +35,15 @@
   --home-secondary: #b078ff;
   --home-green: #11fc7b;
   --home-stroke: #5c0dff;
-  --home-play: #00dd57;
-  --home-play-hover: #00bc4a;
-  --home-play-stroke: #5cff9b;
+  --home-play: #62c249;
+  --home-play-hover: #6bc650;
+  --home-play-stroke: #62c249;
   --home-discord: #5865f2;
-  --home-discord-stroke: #8991f2;
-  --home-x: #18161b;
-  --home-x-stroke: #6a6276;
+  --home-discord-stroke: #a9b0ff;
+  --home-x: #111111;
+  --home-x-stroke: #373737;
   --home-youtube: #ff5555;
-  --home-youtube-stroke: #ff9f9f;
+  --home-youtube-stroke: #ffa2a2;
   --home-space-1: 8px;
   --home-space-2: 16px;
   --home-space-3: 32px;
@@ -456,7 +456,7 @@ body.mineacle-home img {
 .home-social {
   display: grid;
   place-items: center;
-  height: 64px;
+  height: 48px;
   padding: 0;
   border-style: solid;
   border-width: 2px;
@@ -475,7 +475,7 @@ body.mineacle-home img {
 .home-social:hover,
 .home-social:focus-visible {
   color: #ffffff;
-  filter: none;
+  filter: brightness(1.06);
   transform: translateY(-2px);
 }
 
@@ -486,11 +486,11 @@ body.mineacle-home img {
 }
 
 .home-action--play {
-  width: 256px;
+  width: 192px;
   border-color: var(--home-play-stroke);
   background: var(--home-play);
   color: var(--home-white);
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 600;
   line-height: 1;
   text-transform: uppercase;
@@ -511,11 +511,11 @@ body.mineacle-home img {
 }
 
 .home-action--help {
-  width: 64px;
+  width: 48px;
   border-color: var(--home-play-stroke);
   background: var(--home-play);
   color: var(--home-white);
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 600;
   line-height: 1;
 }
@@ -526,7 +526,7 @@ body.mineacle-home img {
 }
 
 .home-social {
-  width: 64px;
+  width: 48px;
   color: var(--home-icon);
 }
 
@@ -547,8 +547,8 @@ body.mineacle-home img {
 
 .home-social__icon {
   display: block;
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   background: currentColor;
   mask-position: center;
   mask-repeat: no-repeat;
@@ -559,18 +559,18 @@ body.mineacle-home img {
 }
 
 .home-social--discord .home-social__icon {
-  mask-image: url("../images/discord.png");
-  -webkit-mask-image: url("../images/discord.png");
+  mask-image: url("../images/discord-inverse.png");
+  -webkit-mask-image: url("../images/discord-inverse.png");
 }
 
 .home-social--x .home-social__icon {
-  mask-image: url("../images/x.png");
-  -webkit-mask-image: url("../images/x.png");
+  mask-image: url("../images/x-inverse.png");
+  -webkit-mask-image: url("../images/x-inverse.png");
 }
 
 .home-social--youtube .home-social__icon {
-  mask-image: url("../images/youtube.png");
-  -webkit-mask-image: url("../images/youtube.png");
+  mask-image: url("../images/youtube-inverse.png");
+  -webkit-mask-image: url("../images/youtube-inverse.png");
 }
 
 .join-dialog {
@@ -745,7 +745,7 @@ body.mineacle-home img {
   }
 
   .home-action--play {
-    width: 224px;
+    width: 168px;
   }
 }
 
@@ -810,7 +810,7 @@ body.mineacle-home img {
     width: auto;
     min-width: 0;
     flex: 1;
-    font-size: 28px;
+    font-size: 24px;
   }
 
   .home-socials {
@@ -829,17 +829,17 @@ body.mineacle-home img {
 
   .home-action,
   .home-social {
-    height: 56px;
+    height: 48px;
   }
 
   .home-action--help,
   .home-social {
-    width: 56px;
+    width: 48px;
   }
 
   .home-social__icon {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
   }
 }
 
@@ -867,17 +867,17 @@ body.mineacle-home img {
 
   .home-action,
   .home-social {
-    height: 56px;
+    height: 48px;
   }
 
   .home-action--play {
-    width: 224px;
-    font-size: 28px;
+    width: 168px;
+    font-size: 24px;
   }
 
   .home-action--help,
   .home-social {
-    width: 56px;
+    width: 48px;
   }
 }
 
