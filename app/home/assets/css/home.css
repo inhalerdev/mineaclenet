@@ -30,7 +30,7 @@
   --home-nav-static: #f8f8f8;
   --home-hover: #d0afff;
   --home-link-hover: #d0afff;
-  --home-accent: #8436FE;
+  --home-accent: #b078ff;
   --home-play: #389222;
   --home-frame: clamp(16px, 3.333333vw, 64px);
   --home-frame-top: max(var(--home-frame), env(safe-area-inset-top, 0px));
