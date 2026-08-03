@@ -32,6 +32,7 @@
   --home-link-hover: #d0afff;
   --home-accent: #b078ff;
   --home-play: #389222;
+  --join-close-hover: #ff5555;
   --home-frame: clamp(16px, 3.333333vw, 64px);
   --home-frame-top: max(var(--home-frame), env(safe-area-inset-top, 0px));
   --home-frame-right: max(var(--home-frame), env(safe-area-inset-right, 0px));
@@ -560,7 +561,7 @@ body.mineacle-home img {
 }
 
 .join-dialog__close:hover {
-  color: var(--home-hover);
+  color: var(--join-close-hover);
   transform: translateY(-2px);
 }
 
