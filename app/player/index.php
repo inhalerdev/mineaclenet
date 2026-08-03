@@ -6,7 +6,7 @@ require_once __DIR__ . '/../shared/php/layout.php';
 require_once __DIR__ . '/../shared/php/stats-lib.php';
 
 $config = mineacle_config();
-$site = $config['site'] ?? [];
+$site = is_array($config['site'] ?? null) ? $config['site'] : [];
 $leaderboardsUrl = mineacle_page_leaderboards_url($site);
 $directPath = parse_url((string) ($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH);
 $directUsername = trim((string) ($_GET['username'] ?? ''));
@@ -64,19 +64,15 @@ function mineacle_profile_view_model(array $player, ?array $team): array
 {
     $skin = is_array($player['skin'] ?? null) ? $player['skin'] : [];
     $teamView = mineacle_profile_team_view_model($player, $team);
-    $rankName = mineacle_stats_rank_name($player);
     $statusView = mineacle_stats_status_view($player);
-    $displayName = mineacle_stats_display_name($player);
-    $username = mineacle_stats_username($player);
-    $rankColor = mineacle_stats_rank_color($player);
 
     return [
         'uuid' => trim((string) ($player['uuid'] ?? '')),
-        'username' => $username,
-        'display_name' => $displayName,
+        'username' => mineacle_stats_username($player),
+        'display_name' => mineacle_stats_display_name($player),
         'ranked_name_html' => mineacle_stats_ranked_name_html($player, 'profile-ranked-name'),
-        'rank_name' => $rankName,
-        'rank_color' => $rankColor,
+        'rank_name' => mineacle_stats_rank_name($player),
+        'rank_color' => mineacle_stats_rank_color($player),
         'skin_head' => trim((string) ($skin['head'] ?? '')),
         'skin_bust' => trim((string) (($skin['bust'] ?? '') ?: ($skin['chest'] ?? ''))),
         'online' => $statusView['online'],
@@ -99,19 +95,30 @@ function mineacle_profile_view_model(array $player, ?array $team): array
     ];
 }
 
-function mineacle_profile_stat_item(string $label, string $value, string $icon, string $alt = '', string $subvalue = ''): void
+function mineacle_profile_icon(string $name, string $className = ''): string
 {
-    echo '<article class="profile-summary-item">';
-    echo '<span>' . h($label) . '</span>';
-    echo '<strong>';
-    if ($icon !== '') {
-        echo '<img src="' . h($icon) . '" alt="' . h($alt) . '" draggable="false"> ';
-    }
-    echo '<span class="profile-summary-value">' . h($value);
+    $safeName = preg_replace('/[^a-z0-9-]/', '', strtolower($name)) ?: 'rank';
+    $classes = trim('profile-icon profile-icon--' . $safeName . ' ' . $className);
+
+    return '<span class="' . h($classes) . '" aria-hidden="true"></span>';
+}
+
+function mineacle_profile_stat_item(
+    string $label,
+    string $value,
+    string $icon,
+    string $tone = 'main',
+    string $subvalue = ''
+): void {
+    echo '<article class="profile-stat-card profile-stat-card--' . h($tone) . '">';
+    echo '<span class="profile-stat-card__icon">' . mineacle_profile_icon($icon) . '</span>';
+    echo '<span class="profile-stat-card__copy">';
+    echo '<span class="profile-stat-card__label">' . h($label) . '</span>';
+    echo '<strong class="profile-stat-card__value">' . h($value) . '</strong>';
     if ($subvalue !== '') {
-        echo '<small>' . h($subvalue) . '</small>';
+        echo '<span class="profile-stat-card__subvalue">' . h($subvalue) . '</span>';
     }
-    echo '</span></strong>';
+    echo '</span>';
     echo '</article>';
 }
 
@@ -195,7 +202,7 @@ function mineacle_profile_duel_fighter_html(string $headHtml, string $name, mixe
 
 function mineacle_profile_fight_row(array $fight, array $viewModel, int $index): void
 {
-    $result = (string) ($fight['result'] ?? 'LOSS');
+    $result = strtoupper((string) ($fight['result'] ?? 'LOSS'));
     $isWin = $result === 'WIN';
     $opponentDisplay = trim((string) ($fight['opponent_display_name'] ?? 'Unknown Player'));
     $opponentSkin = is_array($fight['opponent_skin'] ?? null) ? $fight['opponent_skin'] : [];
@@ -211,11 +218,11 @@ function mineacle_profile_fight_row(array $fight, array $viewModel, int $index):
     echo '<article class="profile-duel-row ' . ($isWin ? 'is-win' : 'is-loss') . '">';
     echo '<span class="profile-duel-result">' . h($result) . '</span>';
     echo mineacle_profile_duel_fighter_html($playerHeadHtml, $playerName, $playerHearts, 'is-self');
-    echo '<span class="profile-duel-vs">vs</span>';
+    echo '<span class="profile-duel-vs">VS</span>';
     echo mineacle_profile_duel_fighter_html($opponentHeadHtml, $opponentDisplay, $opponentHearts, 'is-opponent');
-    echo '<span class="profile-duel-world">' . h((string) ($fight['world_label'] ?? 'Survival')) . '</span>';
-    echo '<span class="profile-duel-duration">' . h((string) ($fight['duration_label'] ?? '0s')) . '</span>';
-    echo '<span class="profile-duel-date">' . h(mineacle_profile_fight_date_label($fight['ended_at'] ?? 0)) . '</span>';
+    echo '<span class="profile-duel-detail"><small>World</small><strong>' . h((string) ($fight['world_label'] ?? 'Survival')) . '</strong></span>';
+    echo '<span class="profile-duel-detail"><small>Duration</small><strong>' . h((string) ($fight['duration_label'] ?? '0s')) . '</strong></span>';
+    echo '<span class="profile-duel-detail"><small>Date</small><strong>' . h(mineacle_profile_fight_date_label($fight['ended_at'] ?? 0)) . '</strong></span>';
     echo '</article>';
 }
 
@@ -246,7 +253,7 @@ $uniquePlayerCount = 0;
 try {
     $uniquePlayerCount = mineacle_stats_unique_players_count();
 } catch (Throwable) {
-    // Player profiles remain usable while aggregate statistics are unavailable.
+    // A profile remains usable while aggregate counts are unavailable.
 }
 
 $searchPlaceholder = $uniquePlayerCount > 0
@@ -262,22 +269,20 @@ $siteUrl = static function (mixed $value, string $fallback): string {
     return $resolved === '#' ? $fallback : $resolved;
 };
 
-$navLinks = [
+$navigation = [
     ['key' => 'home', 'label' => 'Home', 'url' => '/', 'external' => false],
     ['key' => 'vote', 'label' => 'Vote', 'url' => '/vote', 'external' => false],
     ['key' => 'leaderboards', 'label' => 'Leaderboards', 'url' => '/leaderboards', 'external' => false],
     ['key' => 'bans', 'label' => 'Bans', 'url' => '/bans', 'external' => false],
     ['key' => 'store', 'label' => 'Store', 'url' => $siteUrl($site['store_url'] ?? '', 'https://store.mineacle.net/'), 'external' => true],
 ];
-$socialLinks = [
-    ['key' => 'x', 'label' => 'Mineacle on X', 'title' => 'X', 'url' => $siteUrl($site['x_url'] ?? '', 'https://x.com/mineaclenetwork')],
-    ['key' => 'discord', 'label' => 'Mineacle Discord', 'title' => 'Discord', 'url' => $siteUrl($site['discord_url'] ?? '', 'https://discord.gg/qmpJ4xMguT')],
-];
 $currentNavKey = 'leaderboards';
 $assetVersion = mineacle_page_asset_version();
-$homeStylesheetVersion = (string) (filemtime(__DIR__ . '/../shared/assets/css/site.css') ?: $assetVersion);
+$siteStylesheetVersion = (string) (filemtime(__DIR__ . '/../shared/assets/css/site.css') ?: $assetVersion);
 $pagesStylesheetVersion = (string) (filemtime(__DIR__ . '/../shared/assets/css/pages.css') ?: $assetVersion);
 $playerStylesheetVersion = (string) (filemtime(__DIR__ . '/assets/css/player.css') ?: $assetVersion);
+$playerScriptVersion = (string) (filemtime(__DIR__ . '/assets/js/player.js') ?: $assetVersion);
+$homeLogoVersion = (string) (filemtime(__DIR__ . '/../home/assets/images/logo-small.png') ?: $assetVersion);
 $viewModel = $player ? mineacle_profile_view_model($player, $team) : null;
 $fightState = $viewModel !== null ? mineacle_stats_recent_fights((string) $viewModel['uuid'], 16) : ['available' => true, 'fights' => []];
 $pageTitle = $viewModel ? (string) $viewModel['display_name'] : 'Player';
@@ -298,169 +303,258 @@ if ($viewModel !== null) {
 
 $metaOptions = array_merge($metaOptions, [
     'stylesheets' => [
-        '/shared/assets/css/site.css?rev=' . rawurlencode($homeStylesheetVersion),
+        '/shared/assets/css/site.css?rev=' . rawurlencode($siteStylesheetVersion),
         '/shared/assets/css/pages.css?rev=' . rawurlencode($pagesStylesheetVersion),
         '/player/assets/css/player.css?rev=' . rawurlencode($playerStylesheetVersion),
     ],
-    'body_class' => 'secondary-page player-page',
+    'body_class' => 'secondary-page player-page player-page--cinematic',
     'external_fonts' => false,
     'theme_color' => '#111111',
 ]);
 
 mineacle_page_head($pageTitle, $metaOptions);
 ?>
-<div class="canvas">
-    <div class="interface-stage">
-        <section class="interface" aria-label="Mineacle player profile">
-            <aside class="sidebar" aria-label="Sidebar navigation">
-                <a class="brand-link" href="/" aria-label="Mineacle home">
-                    <img class="brand-mark" src="/shared/assets/images/navigation/logo.png?v=<?php echo h(rawurlencode($assetVersion)); ?>" alt="" width="64" height="64" draggable="false">
-                </a>
+<div class="player-site">
+    <header class="player-site-header">
+        <a class="player-brand" href="/" aria-label="Mineacle home">
+            <img
+                src="/home/assets/images/logo-small.png?rev=<?php echo h(rawurlencode($homeLogoVersion)); ?>"
+                alt=""
+                width="64"
+                height="55"
+                draggable="false"
+            >
+        </a>
 
-                <nav class="nav-stack nav-stack--upper" aria-label="Main">
-                    <?php foreach ($navLinks as $link): ?>
-                        <?php $isActiveNavLink = (string) $link['key'] === $currentNavKey; ?>
+        <nav class="player-navigation" aria-label="Primary navigation">
+            <div class="player-navigation__links">
+                <?php foreach ($navigation as $link): ?>
+                    <?php $isCurrent = (string) $link['key'] === $currentNavKey; ?>
+                    <a
+                        class="player-navigation__link<?php echo $isCurrent ? ' is-current' : ''; ?>"
+                        href="<?php echo h((string) $link['url']); ?>"
+                        <?php echo $isCurrent ? 'aria-current="page"' : ''; ?>
+                        <?php echo $link['external'] ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>
+                    ><?php echo h((string) $link['label']); ?></a>
+                <?php endforeach; ?>
+            </div>
+
+            <details class="player-menu" data-player-menu>
+                <summary class="player-menu__button" aria-label="Open navigation menu">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </summary>
+                <nav class="player-menu__panel" aria-label="Menu navigation">
+                    <?php foreach ($navigation as $link): ?>
+                        <?php $isCurrent = (string) $link['key'] === $currentNavKey; ?>
                         <a
-                            class="square-button"
+                            class="player-menu__link<?php echo $isCurrent ? ' is-current' : ''; ?>"
                             href="<?php echo h((string) $link['url']); ?>"
-                            aria-label="<?php echo h((string) $link['label']); ?>"
-                            title="<?php echo h((string) $link['label']); ?>"
-                            <?php echo $isActiveNavLink ? 'aria-current="page"' : ''; ?>
+                            <?php echo $isCurrent ? 'aria-current="page"' : ''; ?>
                             <?php echo $link['external'] ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>
-                        >
-                            <img class="nav-icon" src="/shared/assets/images/navigation/<?php echo h((string) $link['key']); ?>.png?v=<?php echo h(rawurlencode($assetVersion)); ?>" alt="" aria-hidden="true" draggable="false">
-                        </a>
+                        ><?php echo h((string) $link['label']); ?></a>
                     <?php endforeach; ?>
                 </nav>
+            </details>
+        </nav>
+    </header>
 
-                <nav class="nav-stack nav-stack--lower" aria-label="Social links">
-                    <?php foreach ($socialLinks as $link): ?>
-                        <a
-                            class="social-link social-link--rail social-link--<?php echo h((string) $link['key']); ?>"
-                            href="<?php echo h((string) $link['url']); ?>"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="<?php echo h((string) $link['label']); ?>"
-                            title="<?php echo h((string) $link['title']); ?>"
-                        >
-                            <span class="social-logo social-logo--<?php echo h((string) $link['key']); ?>" aria-hidden="true"></span>
-                        </a>
-                    <?php endforeach; ?>
-                </nav>
-            </aside>
+    <section class="player-tools" aria-label="Player search and server actions">
+        <div class="search-shell player-search-shell">
+            <form class="search-control" id="player-search" role="search" action="/player" method="get">
+                <div class="search-field">
+                    <img class="search-user-icon" src="/shared/assets/images/search/user.png?v=<?php echo h(rawurlencode($assetVersion)); ?>" alt="" aria-hidden="true" draggable="false">
+                    <label class="visually-hidden" for="site-search"><?php echo h($searchLabel); ?></label>
+                    <input
+                        id="site-search"
+                        name="username"
+                        type="search"
+                        placeholder="<?php echo h($searchPlaceholder); ?>"
+                        maxlength="64"
+                        autocomplete="off"
+                        autocapitalize="none"
+                        spellcheck="false"
+                        role="combobox"
+                        aria-autocomplete="list"
+                        aria-expanded="false"
+                        aria-controls="home-player-suggestions"
+                    >
+                </div>
+                <button class="search-submit" type="submit" aria-label="Search player" title="Search">
+                    <img class="search-arrow-icon" src="/shared/assets/images/search/submit.png?v=<?php echo h(rawurlencode($assetVersion)); ?>" alt="" aria-hidden="true" draggable="false">
+                </button>
+            </form>
+            <div class="search-suggestions" id="home-player-suggestions" role="listbox" aria-label="Player suggestions" hidden></div>
+        </div>
 
-            <div class="content player-content">
-                <div class="page-stack">
-                <header class="topbar secondary-topbar">
-                    <div class="search-shell">
-                        <form class="search-control" id="player-search" role="search" action="/player" method="get">
-                            <div class="search-field">
-                                <img class="search-user-icon" src="/shared/assets/images/search/user.png?v=<?php echo h(rawurlencode($assetVersion)); ?>" alt="" aria-hidden="true" draggable="false">
-                                <label class="visually-hidden" for="site-search"><?php echo h($searchLabel); ?></label>
-                                <input
-                                    id="site-search"
-                                    name="username"
-                                    type="search"
-                                    placeholder="<?php echo h($searchPlaceholder); ?>"
-                                    maxlength="64"
-                                    autocomplete="off"
-                                    autocapitalize="none"
-                                    spellcheck="false"
-                                    role="combobox"
-                                    aria-autocomplete="list"
-                                    aria-expanded="false"
-                                    aria-controls="home-player-suggestions"
-                                >
-                            </div>
-                            <button class="search-submit" type="submit" aria-label="Search player" title="Search">
-                                <img class="search-arrow-icon" src="/shared/assets/images/search/submit.png?v=<?php echo h(rawurlencode($assetVersion)); ?>" alt="" aria-hidden="true" draggable="false">
-                            </button>
-                        </form>
-                        <div class="search-suggestions" id="home-player-suggestions" role="listbox" aria-label="Player suggestions" hidden></div>
-                    </div>
+        <div class="player-tools__actions">
+            <div
+                class="header-status is-loading"
+                id="home-server-status"
+                data-server-ip="<?php echo h($minecraftIp); ?>"
+                role="status"
+                aria-live="polite"
+                aria-label="Checking Mineacle server status"
+                title="Checking server status"
+            >
+                <span class="header-status__dot" aria-hidden="true"></span>
+                <span class="header-status__copy">
+                    <span class="header-status__count" id="home-server-status-count">--</span>
+                    <span class="header-status__label" id="home-server-status-label">Currently Playing</span>
+                </span>
+            </div>
+            <button
+                class="player-play-button"
+                type="button"
+                data-player-copy-server
+                data-copy-value="<?php echo h($minecraftIp); ?>"
+                aria-label="Copy Mineacle server address"
+                title="Copy <?php echo h($minecraftIp); ?>"
+            >
+                <span data-player-copy-label aria-live="polite">Play</span>
+            </button>
+        </div>
+    </section>
 
-                    <nav class="top-actions" aria-label="Header actions">
-                        <div
-                            class="header-status is-loading"
-                            id="home-server-status"
-                            data-server-ip="<?php echo h($minecraftIp); ?>"
-                            role="status"
-                            aria-live="polite"
-                            aria-label="Checking Mineacle server status"
-                            title="Checking server status"
-                        >
-                            <span class="header-status__dot" aria-hidden="true"></span>
-                            <span class="header-status__copy">
-                                <span class="header-status__count" id="home-server-status-count">--</span>
-                                <span class="header-status__label" id="home-server-status-label">Currently Playing</span>
-                            </span>
-                        </div>
-                        <button class="top-action top-action--play" id="play-button" type="button" data-copy-value="<?php echo h($minecraftIp); ?>" aria-label="Copy Mineacle server address" title="Copy <?php echo h($minecraftIp); ?>">
-                            <span class="play-label" aria-live="polite">PLAY</span>
-                        </button>
-                    </nav>
-                </header>
-
-                    <main class="player-surface profile-page" aria-label="Player profile">
+    <main class="player-surface" aria-label="Player profile">
         <?php if ($loadError): ?>
-            <section class="panel profile-message">
-                <h1>Unable to load player stats right now</h1>
+            <section class="profile-message" aria-labelledby="profile-load-error-title">
+                <span class="profile-message__icon"><?php echo mineacle_profile_icon('status'); ?></span>
+                <p class="profile-eyebrow">Player Profile</p>
+                <h1 id="profile-load-error-title">Unable to load player stats</h1>
                 <p>Please check the Mineacle Core database connection, then try again.</p>
+                <a class="profile-button profile-button--primary" href="<?php echo h($leaderboardsUrl); ?>">
+                    <?php echo mineacle_profile_icon('rank'); ?>
+                    <span>Leaderboards</span>
+                </a>
             </section>
         <?php elseif ($viewModel === null): ?>
-            <section class="panel profile-message">
-                <h1>Player not found</h1>
+            <section class="profile-message" aria-labelledby="profile-not-found-title">
+                <span class="profile-message__icon"><?php echo mineacle_profile_icon('user'); ?></span>
+                <p class="profile-eyebrow">Player Profile</p>
+                <h1 id="profile-not-found-title">Player not found</h1>
                 <p>No stored Mineacle profile was found for <?php echo h($query !== '' ? $query : 'that player'); ?>.</p>
-                <a class="profile-message-link" href="<?php echo h($leaderboardsUrl); ?>">Back to leaderboards</a>
+                <a class="profile-button profile-button--primary" href="<?php echo h($leaderboardsUrl); ?>">
+                    <?php echo mineacle_profile_icon('rank'); ?>
+                    <span>Leaderboards</span>
+                </a>
             </section>
         <?php else: ?>
-            <section class="panel profile-main-panel" aria-label="<?php echo h((string) $viewModel['display_name']); ?> stats">
-                <div class="profile-hero-content">
-                    <div class="profile-bust-stage<?php echo $viewModel['skin_bust'] !== '' ? ' has-skin' : ''; ?>">
-                        <?php if ($viewModel['skin_bust'] !== ''): ?>
-                            <img src="<?php echo h((string) $viewModel['skin_bust']); ?>" alt="" draggable="false" aria-hidden="true" onerror="this.parentElement.classList.remove('has-skin');this.remove();">
-                        <?php endif; ?>
-                        <span class="profile-bust-fallback"><?php echo h(strtoupper(substr((string) $viewModel['display_name'], 0, 1))); ?></span>
+            <?php $profileUrl = 'https://mineacle.net/player/' . rawurlencode((string) $viewModel['username']); ?>
+            <section class="profile-hero" aria-labelledby="profile-player-name">
+                <div class="profile-hero__glow" aria-hidden="true"></div>
+                <div class="profile-hero__content">
+                    <div class="profile-identity">
+                        <p class="profile-eyebrow">Player Profile</p>
+                        <h1 id="profile-player-name"><?php echo $viewModel['ranked_name_html']; ?></h1>
+
+                        <div class="profile-presence">
+                            <span class="profile-presence__badge <?php echo $viewModel['online'] ? 'is-online' : 'is-offline'; ?>">
+                                <span aria-hidden="true"></span>
+                                <?php echo h((string) $viewModel['status_label']); ?>
+                            </span>
+                            <span class="profile-presence__line">
+                                <?php echo mineacle_profile_status_line_html((string) $viewModel['location_label'], (string) $viewModel['world_name']); ?>
+                            </span>
+                        </div>
+
+                        <div class="profile-meta" aria-label="Player account details">
+                            <span>
+                                <?php echo mineacle_profile_icon('calendar'); ?>
+                                <span><small>First Joined</small><strong><?php echo h((string) $viewModel['first_joined']); ?></strong></span>
+                            </span>
+                            <span>
+                                <?php echo mineacle_profile_icon('team'); ?>
+                                <span><small>Player Team</small><strong><?php echo h((string) $viewModel['team']['name']); ?></strong></span>
+                            </span>
+                            <span>
+                                <?php echo mineacle_profile_icon('rank'); ?>
+                                <span><small>Global Rank</small><strong><?php echo h((string) $viewModel['global_rank']); ?></strong></span>
+                            </span>
+                        </div>
+
+                        <div class="profile-hero__actions">
+                            <a class="profile-button profile-button--primary" href="<?php echo h($leaderboardsUrl); ?>">
+                                <?php echo mineacle_profile_icon('rank'); ?>
+                                <span>Leaderboards</span>
+                            </a>
+                            <button
+                                class="profile-button profile-button--secondary"
+                                type="button"
+                                data-copy-profile
+                                data-copy-value="<?php echo h($profileUrl); ?>"
+                            >
+                                <?php echo mineacle_profile_icon('copy'); ?>
+                                <span data-profile-copy-label aria-live="polite">Copy Profile</span>
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="profile-player-lockup">
-                        <h1><?php echo $viewModel['ranked_name_html']; ?></h1>
-                        <div class="profile-state-lines">
-                            <p>
-                                <strong class="<?php echo $viewModel['online'] ? 'is-online' : 'is-offline'; ?>"><?php echo h((string) $viewModel['status_label']); ?></strong>
-                                <span><?php echo mineacle_profile_status_line_html((string) $viewModel['location_label'], (string) $viewModel['world_name']); ?></span>
-                            </p>
-                        </div>
-                        <p class="profile-joined-date">Joined <?php echo h((string) $viewModel['first_joined']); ?></p>
+                    <div class="profile-skin-stage<?php echo $viewModel['skin_bust'] !== '' ? ' has-skin' : ''; ?>">
+                        <?php if ($viewModel['skin_bust'] !== ''): ?>
+                            <img
+                                src="<?php echo h((string) $viewModel['skin_bust']); ?>"
+                                alt=""
+                                decoding="async"
+                                draggable="false"
+                                aria-hidden="true"
+                                onerror="this.parentElement.classList.remove('has-skin');this.remove();"
+                            >
+                        <?php endif; ?>
+                        <span class="profile-skin-fallback"><?php echo h(strtoupper(substr((string) $viewModel['display_name'], 0, 1))); ?></span>
                     </div>
                 </div>
+            </section>
 
-                <div class="profile-summary-bar" aria-label="Player stat summary">
+            <section class="profile-stats-section" aria-labelledby="profile-stats-title">
+                <header class="profile-section-header">
+                    <div>
+                        <p class="profile-eyebrow">Performance</p>
+                        <h2 id="profile-stats-title">Global Statistics</h2>
+                    </div>
+                    <span class="profile-section-header__note">Live from Mineacle Core</span>
+                </header>
+
+                <div class="profile-stats-grid">
                     <?php
-                    mineacle_profile_stat_item('Current Balance', (string) $viewModel['balance'], '/player/assets/icons/balance.png?v=' . rawurlencode($assetVersion), 'Balance');
-                    mineacle_profile_stat_item('Global Kills', (string) $viewModel['kills'], '/player/assets/icons/kills.png?v=' . rawurlencode($assetVersion), 'Kills');
-                    mineacle_profile_stat_item('Global Deaths', (string) $viewModel['deaths'], '/player/assets/icons/deaths.png?v=' . rawurlencode($assetVersion), 'Deaths');
-                    mineacle_profile_stat_item('Global Playtime', (string) $viewModel['playtime'], '/player/assets/icons/playtime.png?v=' . rawurlencode($assetVersion), 'Playtime');
-                    mineacle_profile_stat_item('Player Team', (string) $viewModel['team']['name'], '/player/assets/icons/team.png?v=' . rawurlencode($assetVersion), 'Team', (string) $viewModel['team']['role']);
-                    mineacle_profile_stat_item('Global Rank', (string) $viewModel['global_rank'], '/player/assets/icons/top-player.png?v=' . rawurlencode($assetVersion), 'Global rank');
+                    mineacle_profile_stat_item('Current Balance', (string) $viewModel['balance'], 'balance', 'green', (string) $viewModel['money_rank'] . ' richest');
+                    mineacle_profile_stat_item('Global Kills', (string) $viewModel['kills'], 'kills', 'main', (string) $viewModel['kills_rank'] . ' overall');
+                    mineacle_profile_stat_item('Global Deaths', (string) $viewModel['deaths'], 'deaths', 'danger', 'K/D ' . (string) $viewModel['kd']);
+                    mineacle_profile_stat_item('Global Playtime', (string) $viewModel['playtime'], 'playtime', 'secondary', (string) $viewModel['playtime_rank'] . ' overall');
+                    mineacle_profile_stat_item('Player Team', (string) $viewModel['team']['name'], 'team', 'main', (string) $viewModel['team']['role']);
+                    mineacle_profile_stat_item('Global Rank', (string) $viewModel['global_rank'], 'rank', 'secondary', (string) $viewModel['rank_name']);
                     ?>
                 </div>
             </section>
 
-            <section class="panel profile-recent-panel" aria-label="Recent fights">
-                <header class="profile-section-heading">
-                    <span><img src="/player/assets/icons/duels.png?v=<?php echo h(rawurlencode($assetVersion)); ?>" alt="" aria-hidden="true" draggable="false"></span>
-                    <h2>Recent Duels</h2>
+            <section class="profile-duels-section" aria-labelledby="profile-duels-title">
+                <header class="profile-section-header profile-section-header--duels">
+                    <div class="profile-section-header__title">
+                        <span class="profile-section-icon"><?php echo mineacle_profile_icon('duels'); ?></span>
+                        <div>
+                            <p class="profile-eyebrow">Combat History</p>
+                            <h2 id="profile-duels-title">Recent Duels</h2>
+                        </div>
+                    </div>
+                    <span class="profile-section-header__note">Latest 16 recorded fights</span>
                 </header>
 
                 <?php if (!$fightState['available']): ?>
-                    <div class="profile-duels-empty">Fight history is temporarily unavailable</div>
+                    <div class="profile-duels-empty">
+                        <span class="profile-duels-empty__icon"><?php echo mineacle_profile_icon('duels'); ?></span>
+                        <strong>Fight history is temporarily unavailable</strong>
+                        <span>Core data is connected, but the duel history source did not respond.</span>
+                    </div>
                 <?php elseif (($fightState['fights'] ?? []) === []): ?>
-                    <div class="profile-duels-empty">No recorded fights yet</div>
+                    <div class="profile-duels-empty">
+                        <span class="profile-duels-empty__icon"><?php echo mineacle_profile_icon('duels'); ?></span>
+                        <strong>No recorded fights yet</strong>
+                        <span>Completed Mineacle duels will appear here automatically.</span>
+                    </div>
                 <?php else: ?>
                     <div class="profile-duels-table">
                         <div class="profile-duels-head" aria-hidden="true">
-                            <span>Status</span>
+                            <span>Result</span>
                             <span>Player</span>
                             <span></span>
                             <span>Opponent</span>
@@ -468,7 +562,7 @@ mineacle_page_head($pageTitle, $metaOptions);
                             <span>Duration</span>
                             <span>Date</span>
                         </div>
-                        <div class="profile-duels-scroll" aria-label="16 most recent duels">
+                        <div class="profile-duels-list" aria-label="16 most recent duels">
                             <?php foreach ($fightState['fights'] as $index => $fight): ?>
                                 <?php if (is_array($fight)) mineacle_profile_fight_row($fight, $viewModel, (int) $index); ?>
                             <?php endforeach; ?>
@@ -477,11 +571,13 @@ mineacle_page_head($pageTitle, $metaOptions);
                 <?php endif; ?>
             </section>
         <?php endif; ?>
-                    </main>
-                    <?php mineacle_page_footer($site); ?>
-                </div>
-            </div>
-        </section>
-    </div>
+    </main>
+
+    <?php mineacle_page_footer($site); ?>
 </div>
-<?php mineacle_page_end(['scripts' => ['/shared/assets/js/site.js']]); ?>
+<?php mineacle_page_end([
+    'scripts' => [
+        '/shared/assets/js/site.js',
+        '/player/assets/js/player.js?rev=' . rawurlencode($playerScriptVersion),
+    ],
+]); ?>
