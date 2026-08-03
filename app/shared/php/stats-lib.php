@@ -990,89 +990,244 @@ function mineacle_stats_display_name(array $player): string
     return $displayName !== '' ? $displayName : mineacle_stats_username($player);
 }
 
+function mineacle_stats_rank_plain_text(string $value): string
+{
+    $value = html_entity_decode(strip_tags($value), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $value = preg_replace('/(?:§|&)x(?:(?:§|&)[0-9a-f]){6}/i', '', $value) ?? $value;
+    $value = preg_replace('/(?:§|&)#[0-9a-f]{6}/i', '', $value) ?? $value;
+    $value = preg_replace('/&#[0-9a-f]{6}/i', '', $value) ?? $value;
+    $value = preg_replace('/(?:§|&)[0-9a-fk-or]/i', '', $value) ?? $value;
+    $value = preg_replace('/<[^>]*>/', '', $value) ?? $value;
+    $value = str_replace(['[', ']', '(', ')', '{', '}', '<', '>'], ' ', $value);
+    $value = preg_replace('/\s+/', ' ', $value) ?? $value;
+
+    return trim($value);
+}
+
+function mineacle_stats_rank_token(string $value): string
+{
+    $value = strtolower(mineacle_stats_rank_plain_text($value));
+
+    return preg_replace('/[^a-z0-9+]+/', '', $value) ?? '';
+}
+
 function mineacle_stats_rank_is_default(string $value): bool
 {
-    $normalized = strtolower(trim($value));
+    $normalized = mineacle_stats_rank_token($value);
 
-    return $normalized === '' || in_array($normalized, ['default', 'member', 'unranked', 'none', 'normal', 'player', 'user'], true);
+    return $normalized === '' || in_array($normalized, [
+        'default',
+        'member',
+        'unranked',
+        'none',
+        'normal',
+        'player',
+        'user',
+    ], true);
 }
 
-function mineacle_stats_rank_name(array $player): string
+function mineacle_stats_rank_definitions(): array
 {
-    $rankKey = trim((string) ($player['rank_key'] ?? ''));
-    $rankName = trim((string) ($player['rank_name'] ?? ''));
-    $rankPrefix = trim(strip_tags((string) ($player['rank_prefix'] ?? '')));
-
-    foreach ([$rankPrefix, $rankName, $rankKey] as $candidate) {
-        if (mineacle_stats_rank_is_default($candidate)) {
-            continue;
-        }
-
-        return '+';
-    }
-
-    return '';
+    return [
+        'plus' => [
+            'aliases' => ['+', 'plus', 'mineacleplus', 'mineacle+'],
+            'label' => '+',
+            'color' => '#8436fe',
+            'compact' => true,
+        ],
+        'admin' => [
+            'aliases' => ['admin', 'administrator'],
+            'label' => 'ADMIN',
+            'color' => '#ff5555',
+            'compact' => false,
+        ],
+        'developer' => [
+            'aliases' => ['developer', 'dev'],
+            'label' => 'DEV',
+            'color' => '#ffaa00',
+            'compact' => false,
+        ],
+    ];
 }
 
-function mineacle_stats_known_rank_color(string $rank): ?string
+function mineacle_stats_rank_known_definition(string $value): ?array
 {
-    if (mineacle_stats_rank_is_default($rank)) {
+    $token = mineacle_stats_rank_token($value);
+
+    if ($token === '' || mineacle_stats_rank_is_default($token)) {
         return null;
     }
 
-    $normalized = strtolower(str_replace([' ', '_', '-'], '', trim($rank)));
-
-    if (in_array($normalized, ['admin', 'administrator'], true)) {
-        return '#ff5555';
-    }
-
-    if (in_array($normalized, ['developer', 'dev'], true)) {
-        return '#ffaa00';
-    }
-
-    if (in_array($normalized, ['mineacle+', 'mineacleplus', 'plus'], true)) {
-        return '#8436fe';
+    foreach (mineacle_stats_rank_definitions() as $key => $definition) {
+        if (in_array($token, $definition['aliases'], true)) {
+            return array_merge($definition, ['key' => $key]);
+        }
     }
 
     return null;
 }
 
-function mineacle_stats_rank_color(array $player): string
+function mineacle_stats_rank_custom_label(array $player): string
 {
-    $rankKey = trim((string) ($player['rank_key'] ?? ''));
-    $rankPrefix = trim(strip_tags((string) ($player['rank_prefix'] ?? '')));
-    $rankName = trim((string) ($player['rank_name'] ?? ''));
-    $color = strtolower(trim((string) ($player['rank_color'] ?? '')));
+    foreach (['rank_name', 'rank_prefix', 'rank_key'] as $field) {
+        $candidate = mineacle_stats_rank_plain_text((string) ($player[$field] ?? ''));
 
-    if (preg_match('/^#?[0-9a-f]{6}$/', $color) === 1) {
-        return '#' . ltrim($color, '#');
+        if ($candidate === '' || mineacle_stats_rank_is_default($candidate)) {
+            continue;
+        }
+
+        $candidate = preg_replace('/\brank\b/i', '', $candidate) ?? $candidate;
+        $candidate = preg_replace('/[^A-Za-z0-9+]+/', ' ', $candidate) ?? $candidate;
+        $candidate = trim(preg_replace('/\s+/', ' ', $candidate) ?? $candidate);
+
+        if ($candidate === '') {
+            continue;
+        }
+
+        $candidate = strtoupper($candidate);
+
+        return substr($candidate, 0, 16);
     }
 
-    foreach ([$rankKey, $rankPrefix, $rankName] as $source) {
-        $knownColor = mineacle_stats_known_rank_color($source);
+    return '';
+}
 
-        if ($knownColor !== null) {
-            return $knownColor;
+function mineacle_stats_rank_key_slug(string $value): string
+{
+    $token = mineacle_stats_rank_token($value);
+    $token = str_replace('+', 'plus', $token);
+    $token = preg_replace('/[^a-z0-9]+/', '-', $token) ?? '';
+
+    return trim($token, '-');
+}
+
+function mineacle_stats_rank_color_value(mixed $value): ?string
+{
+    $color = strtolower(trim((string) $value));
+
+    if (preg_match('/^#?[0-9a-f]{6}$/', $color) !== 1) {
+        return null;
+    }
+
+    return '#' . ltrim($color, '#');
+}
+
+function mineacle_stats_rank_view(array $player): array
+{
+    $sources = [
+        (string) ($player['rank_key'] ?? ''),
+        (string) ($player['rank_name'] ?? ''),
+        (string) ($player['rank_prefix'] ?? ''),
+    ];
+    $known = null;
+    $source = '';
+
+    foreach ($sources as $candidate) {
+        if (mineacle_stats_rank_is_default($candidate)) {
+            continue;
+        }
+
+        if ($source === '') {
+            $source = $candidate;
+        }
+
+        $known = mineacle_stats_rank_known_definition($candidate);
+
+        if ($known !== null) {
+            break;
         }
     }
 
-    return '#f8f8f8';
+    $databaseColor = mineacle_stats_rank_color_value($player['rank_color'] ?? '');
+
+    if ($known !== null) {
+        return [
+            'key' => (string) $known['key'],
+            'label' => (string) $known['label'],
+            'color' => $databaseColor ?? (string) $known['color'],
+            'weight' => max(0, (int) ($player['rank_weight'] ?? 0)),
+            'compact' => (bool) $known['compact'],
+            'is_default' => false,
+        ];
+    }
+
+    $label = mineacle_stats_rank_custom_label($player);
+
+    if ($label === '') {
+        return [
+            'key' => 'default',
+            'label' => '',
+            'color' => '#f8f8f8',
+            'weight' => max(0, (int) ($player['rank_weight'] ?? 0)),
+            'compact' => false,
+            'is_default' => true,
+        ];
+    }
+
+    $key = mineacle_stats_rank_key_slug($source !== '' ? $source : $label);
+
+    return [
+        'key' => $key !== '' ? $key : 'custom',
+        'label' => $label,
+        'color' => $databaseColor ?? '#f8f8f8',
+        'weight' => max(0, (int) ($player['rank_weight'] ?? 0)),
+        'compact' => $label === '+',
+        'is_default' => false,
+    ];
+}
+
+function mineacle_stats_rank_name(array $player): string
+{
+    return (string) mineacle_stats_rank_view($player)['label'];
+}
+
+function mineacle_stats_known_rank_color(string $rank): ?string
+{
+    $definition = mineacle_stats_rank_known_definition($rank);
+
+    return $definition !== null ? (string) $definition['color'] : null;
+}
+
+function mineacle_stats_rank_color(array $player): string
+{
+    return (string) mineacle_stats_rank_view($player)['color'];
 }
 
 function mineacle_stats_ranked_name_html(array $player, string $className = 'ranked-player-name'): string
 {
     $displayName = mineacle_stats_display_name($player);
-    $rankName = mineacle_stats_rank_name($player);
+    $rank = mineacle_stats_rank_view($player);
     $class = preg_match('/^[A-Za-z0-9_-]+$/', $className) === 1 ? $className : 'ranked-player-name';
-    $classAttribute = $class . ($rankName === '+' ? ' is-plus-rank' : '');
-    $rankStyle = $rankName !== '' ? ' style="--rank-color: ' . h(mineacle_stats_rank_color($player)) . '"' : '';
-    $html = '<span class="' . h($classAttribute) . '"' . $rankStyle . '>';
+    $classes = [$class, 'mineacle-ranked-name'];
 
-    if ($rankName !== '') {
-        $html .= '<span class="' . h($class) . '__rank">' . h($rankName) . '</span>';
+    if (!$rank['is_default']) {
+        $classes[] = 'has-rank';
+        $classes[] = 'rank-key-' . $rank['key'];
+
+        if ($rank['compact']) {
+            $classes[] = 'is-compact-rank';
+        }
+
+        if ($rank['key'] === 'plus') {
+            $classes[] = 'is-plus-rank';
+        }
     }
 
-    $html .= '<span class="' . h($class) . '__name">' . h($displayName) . '</span>';
+    $attributes = ' class="' . h(implode(' ', $classes)) . '"';
+
+    if (!$rank['is_default']) {
+        $attributes .= ' style="--rank-color: ' . h((string) $rank['color']) . '"';
+        $attributes .= ' data-rank-key="' . h((string) $rank['key']) . '"';
+        $attributes .= ' data-rank-label="' . h((string) $rank['label']) . '"';
+    }
+
+    $html = '<span' . $attributes . '>';
+
+    if (!$rank['is_default']) {
+        $html .= '<span class="' . h($class) . '__rank mineacle-ranked-name__rank">' . h((string) $rank['label']) . '</span>';
+    }
+
+    $html .= '<span class="' . h($class) . '__name mineacle-ranked-name__name">' . h($displayName) . '</span>';
     $html .= '</span>';
 
     return $html;
