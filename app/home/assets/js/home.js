@@ -125,11 +125,13 @@
     }
 
     label.textContent = copied ? "Copied" : "Copy failed";
+    button.classList.add("has-copy-feedback");
     button.classList.toggle("is-copied", copied);
+    button.classList.toggle("is-copy-error", !copied);
 
     const timer = window.setTimeout(() => {
       label.textContent = button.dataset.defaultLabel || "Play";
-      button.classList.remove("is-copied");
+      button.classList.remove("has-copy-feedback", "is-copied", "is-copy-error");
       resetTimers.delete(button);
     }, copied ? 1800 : 2400);
 
