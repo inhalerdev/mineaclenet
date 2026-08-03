@@ -33,22 +33,27 @@
   --home-accent: #8436fe;
   --home-play: #389222;
   --join-close-hover: #ff5555;
-  --home-frame: clamp(16px, 3.333333vw, 64px);
+  /* 1920×1080 is the design baseline. Width and height both participate so
+     3440×1440 and similar ultrawide canvases scale without becoming oversized. */
+  --home-frame: clamp(16px, min(3.333333vw, 5.925926vh), 128px);
   --home-frame-top: max(var(--home-frame), env(safe-area-inset-top, 0px));
   --home-frame-right: max(var(--home-frame), env(safe-area-inset-right, 0px));
   --home-frame-bottom: max(var(--home-frame), env(safe-area-inset-bottom, 0px));
   --home-frame-left: max(var(--home-frame), env(safe-area-inset-left, 0px));
-  --home-hero-padding: clamp(16px, 1.666667vw, 32px);
+  --home-hero-padding: clamp(16px, min(1.666667vw, 2.962963vh), 64px);
+  --home-gap: clamp(16px, min(1.666667vw, 2.962963vh), 64px);
+  --home-small-gap: clamp(12px, min(0.833333vw, 1.481481vh), 32px);
   --home-viewport-height: 100vh;
   --home-radius: 3px;
-  --home-brand-width: clamp(48px, 3.333333vw, 64px);
-  --home-brand-height: clamp(42px, 2.864583vw, 55px);
-  --home-control-size: clamp(48px, 3.333333vw, 64px);
-  --home-play-width: clamp(208px, 14.166667vw, 272px);
-  --home-nav-size: clamp(18px, 1.25vw, 24px);
-  --home-heading-size: clamp(24px, 1.666667vw, 32px);
-  --home-copy-size: clamp(15px, 1.041667vw, 20px);
-  --home-story-width: clamp(600px, 41.666667vw, 800px);
+  --home-brand-width: clamp(48px, min(3.333333vw, 5.925926vh), 128px);
+  --home-brand-height: clamp(42px, min(2.864583vw, 5.092593vh), 110px);
+  --home-control-size: clamp(48px, min(3.333333vw, 5.925926vh), 128px);
+  --home-play-width: clamp(208px, min(13.333333vw, 23.703704vh), 512px);
+  --home-nav-size: clamp(18px, min(1.041667vw, 1.851852vh), 40px);
+  --home-heading-size: clamp(24px, min(1.666667vw, 2.962963vh), 64px);
+  --home-copy-size: clamp(15px, min(1.041667vw, 1.851852vh), 40px);
+  --home-button-size: clamp(24px, min(1.666667vw, 2.962963vh), 64px);
+  --home-story-width: clamp(600px, min(41.666667vw, 74.074074vh), 1600px);
 }
 
 @supports (height: 100svh) {
@@ -180,7 +185,7 @@ body.mineacle-home img {
   justify-content: space-between;
   width: 100%;
   min-height: var(--home-brand-height);
-  gap: clamp(24px, 1.666667vw, 32px);
+  gap: var(--home-gap);
 }
 
 .home-brand {
@@ -225,21 +230,21 @@ body.mineacle-home img {
   align-items: flex-start;
   justify-content: flex-end;
   min-width: 0;
-  gap: clamp(24px, 1.666667vw, 32px);
+  gap: var(--home-gap);
 }
 
 .home-navigation__links {
   display: flex;
   align-items: flex-start;
   justify-content: flex-end;
-  gap: clamp(24px, 1.666667vw, 32px);
+  gap: var(--home-gap);
 }
 
 .home-navigation__link {
   position: relative;
   display: inline-flex;
   align-items: center;
-  min-height: clamp(29px, 2.03125vw, 39px);
+  min-height: clamp(29px, min(2.03125vw, 3.611111vh), 78px);
   color: var(--home-nav-static);
   font-size: var(--home-nav-size);
   font-weight: 600;
@@ -255,7 +260,7 @@ body.mineacle-home img {
   bottom: 0;
   left: 0;
   width: 75%;
-  height: clamp(3px, 0.208333vw, 4px);
+  height: clamp(3px, min(0.208333vw, 0.37037vh), 8px);
   background: currentColor;
   content: "";
   transform: scaleX(0);
@@ -409,8 +414,8 @@ body.mineacle-home img {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  margin-top: clamp(18px, 1.25vw, 24px);
-  gap: clamp(24px, 1.666667vw, 32px);
+  margin-top: clamp(18px, min(1.25vw, 2.222222vh), 48px);
+  gap: var(--home-gap);
 }
 
 .home-actions__primary,
@@ -421,7 +426,7 @@ body.mineacle-home img {
 
 .home-actions__primary,
 .home-socials {
-  gap: 16px;
+  gap: var(--home-small-gap);
 }
 
 .home-action,
@@ -458,10 +463,12 @@ body.mineacle-home img {
 }
 
 .home-action--play {
-  width: var(--home-play-width);
+  width: max-content;
+  min-width: var(--home-play-width);
+  padding-inline: var(--home-gap);
   background-image: url("../images/action-play.png");
   color: var(--home-white);
-  font-size: clamp(21px, 1.458333vw, 28px);
+  font-size: var(--home-button-size);
   font-weight: 600;
   line-height: 1;
   letter-spacing: 0.015em;
@@ -589,7 +596,7 @@ body.mineacle-home img {
   display: grid;
   margin: 0;
   padding-left: 24px;
-  gap: 16px;
+  gap: var(--home-small-gap);
   font-size: 16px;
   font-weight: 400;
   line-height: 1.45;
@@ -739,7 +746,7 @@ body.mineacle-home img {
     width: auto;
     min-width: 0;
     flex: 1;
-    font-size: 22px;
+    font-size: 24px;
   }
 
   .home-socials {

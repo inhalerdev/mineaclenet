@@ -15,6 +15,7 @@
   const primaryPlayLabel = primaryPlayButton?.querySelector("[data-play-label]");
   const resetTimers = new WeakMap();
   let onlineCount = 0;
+  let serverOnline = false;
   let statusResolved = false;
   let statusRequestActive = false;
 
@@ -75,6 +76,28 @@
     });
   }
 
+  const formatCompactCount = (value) => {
+    const count = Math.max(0, Math.floor(Number(value) || 0));
+    const units = [
+      { threshold: 1_000_000_000, divisor: 1_000_000_000, suffix: "B" },
+      { threshold: 1_000_000, divisor: 1_000_000, suffix: "M" },
+      { threshold: 1_000, divisor: 1_000, suffix: "K" },
+    ];
+
+    for (const unit of units) {
+      if (count < unit.threshold) {
+        continue;
+      }
+
+      const compact = count / unit.divisor;
+      const decimals = compact < 10 && !Number.isInteger(compact) ? 1 : 0;
+
+      return `${compact.toFixed(decimals).replace(/\.0$/, "")}${unit.suffix}`;
+    }
+
+    return String(count);
+  };
+
   const primaryPlayIsActive = () => {
     return Boolean(
       primaryPlayButton?.matches(":hover") ||
@@ -95,9 +118,20 @@
     const defaultLabel = primaryPlayButton.dataset.defaultLabel || "Play";
 
     primaryPlayButton.classList.toggle("is-status-preview", showStatus);
-    primaryPlayLabel.textContent = showStatus
-      ? `${statusResolved ? onlineCount : "…"} ONLINE`
-      : defaultLabel;
+
+    if (!showStatus) {
+      primaryPlayLabel.textContent = defaultLabel;
+      return;
+    }
+
+    if (!statusResolved) {
+      primaryPlayLabel.textContent = "… ONLINE";
+      return;
+    }
+
+    primaryPlayLabel.textContent = serverOnline
+      ? `${formatCompactCount(onlineCount)} ONLINE`
+      : "OFFLINE";
   };
 
   primaryPlayButton?.addEventListener("pointerenter", syncPrimaryPlayLabel);
@@ -233,7 +267,8 @@
     }
 
     statusResolved = true;
-    onlineCount = status.online ? status.onlineCount : 0;
+    serverOnline = Boolean(status.online);
+    onlineCount = serverOnline ? status.onlineCount : 0;
     primaryPlayButton?.setAttribute(
       "aria-label",
       status.online
