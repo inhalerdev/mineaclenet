@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../includes/db.php';
+require_once __DIR__ . '/../shared/php/db.php';
 
 mineacle_security_headers();
 header('Content-Type: application/json; charset=utf-8');

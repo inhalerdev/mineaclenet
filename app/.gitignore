@@ -3,3 +3,5 @@
 .env.production
 secrets/
 *.log
+storage/uploads/announcements/*
+!storage/uploads/announcements/.gitkeep

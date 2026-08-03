@@ -5,7 +5,7 @@ declare(strict_types=1);
 $requestPath = parse_url((string) ($_SERVER['REQUEST_URI'] ?? '/'), PHP_URL_PATH);
 $requestPath = is_string($requestPath) ? rawurldecode($requestPath) : '/';
 $isPrivatePath = preg_match(
-    '#(?:^|/)\.|^/(?:includes|database|secrets)(?:/|$)#i',
+    '#(?:^|/)\.|^/(?:shared/php|database|secrets)(?:/|$)#i',
     $requestPath
 ) === 1;
 

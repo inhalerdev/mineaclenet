@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../includes/stats-lib.php';
+require_once __DIR__ . '/../shared/php/stats-lib.php';
 
 mineacle_security_headers();
 header('Content-Type: application/json; charset=utf-8');

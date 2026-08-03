@@ -7,7 +7,7 @@ $requestPath = is_string($requestPath) ? rtrim($requestPath, '/') : '';
 $requestPath = $requestPath === '' ? '/' : $requestPath;
 
 if ($requestPath === '/' || $requestPath === '/index.php') {
-    require __DIR__ . '/home.php';
+    require __DIR__ . '/home/index.php';
     exit;
 }
 
@@ -23,23 +23,28 @@ if ($requestPath === '/players') {
 }
 
 if ($requestPath === '/leaderboards') {
-    require __DIR__ . '/leaderboards.php';
+    require __DIR__ . '/leaderboards/index.php';
     exit;
 }
 
 if ($requestPath === '/contact') {
-    require __DIR__ . '/contact.php';
+    require __DIR__ . '/contact/index.php';
     exit;
 }
 
 if ($requestPath === '/player') {
-    require __DIR__ . '/player.php';
+    require __DIR__ . '/player/index.php';
     exit;
 }
 
 if (preg_match('#^/player/([A-Za-z0-9_-]{1,64})$#', $requestPath, $playerMatch) === 1) {
     $_GET['username'] = rawurldecode($playerMatch[1]);
-    require __DIR__ . '/player.php';
+    require __DIR__ . '/player/index.php';
+    exit;
+}
+
+if ($requestPath === '/admin') {
+    require __DIR__ . '/admin/index.php';
     exit;
 }
 
