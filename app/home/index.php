@@ -212,7 +212,7 @@ mineacle_page_head('Home', [
             <p class="join-dialog__eyebrow">Java Edition</p>
             <h2 id="join-dialog-title">Join Mineacle</h2>
             <ol>
-                <li>Press <strong>Play</strong> to copy <span><?php echo h($minecraftIp); ?></span>.</li>
+                <li>Press <strong>Play</strong> to copy <span><?php echo h($minecraftIp); ?></span></li>
                 <li>Open Minecraft, select <strong>Multiplayer</strong>, then <strong>Add Server</strong>.</li>
                 <li>Paste the address, save the server, and join the world.</li>
             </ol>
