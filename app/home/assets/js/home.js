@@ -9,7 +9,14 @@
   const hero = document.querySelector("[data-home-hero]");
   const heroVideo = document.querySelector("[data-home-hero-video]");
   const heroSource = document.querySelector("[data-home-hero-source]");
+  const primaryPlayButton = document.querySelector(
+    ".home-action--play[data-copy-server]",
+  );
+  const primaryPlayLabel = primaryPlayButton?.querySelector("[data-play-label]");
   const resetTimers = new WeakMap();
+  let onlineCount = 0;
+  let statusResolved = false;
+  let statusRequestActive = false;
 
   const useHeroFallback = () => {
     hero?.classList.add("is-video-fallback");
@@ -68,6 +75,36 @@
     });
   }
 
+  const primaryPlayIsActive = () => {
+    return Boolean(
+      primaryPlayButton?.matches(":hover") ||
+        document.activeElement === primaryPlayButton,
+    );
+  };
+
+  const syncPrimaryPlayLabel = () => {
+    if (!(primaryPlayButton instanceof HTMLButtonElement) || !primaryPlayLabel) {
+      return;
+    }
+
+    if (primaryPlayButton.classList.contains("has-copy-feedback")) {
+      return;
+    }
+
+    const showStatus = primaryPlayIsActive();
+    const defaultLabel = primaryPlayButton.dataset.defaultLabel || "Play";
+
+    primaryPlayButton.classList.toggle("is-status-preview", showStatus);
+    primaryPlayLabel.textContent = showStatus
+      ? `${statusResolved ? onlineCount : "…"} ONLINE`
+      : defaultLabel;
+  };
+
+  primaryPlayButton?.addEventListener("pointerenter", syncPrimaryPlayLabel);
+  primaryPlayButton?.addEventListener("pointerleave", syncPrimaryPlayLabel);
+  primaryPlayButton?.addEventListener("focus", syncPrimaryPlayLabel);
+  primaryPlayButton?.addEventListener("blur", syncPrimaryPlayLabel);
+
   const copyText = async (value) => {
     if (navigator.clipboard && window.isSecureContext) {
       try {
@@ -124,15 +161,21 @@
       button.dataset.defaultLabel = label.textContent?.trim() || "Play";
     }
 
+    button.classList.remove("is-status-preview");
     label.textContent = copied ? "Copied" : "Copy failed";
     button.classList.add("has-copy-feedback");
     button.classList.toggle("is-copied", copied);
     button.classList.toggle("is-copy-error", !copied);
 
     const timer = window.setTimeout(() => {
-      label.textContent = button.dataset.defaultLabel || "Play";
       button.classList.remove("has-copy-feedback", "is-copied", "is-copy-error");
       resetTimers.delete(button);
+
+      if (button === primaryPlayButton) {
+        syncPrimaryPlayLabel();
+      } else {
+        label.textContent = button.dataset.defaultLabel || "Play";
+      }
     }, copied ? 1800 : 2400);
 
     resetTimers.set(button, timer);
@@ -150,6 +193,190 @@
       const copied = await copyText(serverAddress);
       setCopyFeedback(button, copied);
     });
+  });
+
+
+  const statusServerIp =
+    primaryPlayButton?.dataset.serverAddress?.trim() || "mineacle.net";
+  const statusCacheKey = `mineacle:home-status:${statusServerIp}`;
+  const statusCacheMaxAge = 15000;
+
+  const statusNumber = (value) => {
+    const number = Number(value);
+
+    return Number.isFinite(number) && number > 0 ? Math.floor(number) : 0;
+  };
+
+  const normalizeStatus = (payload) => {
+    if (!payload || typeof payload !== "object") {
+      return null;
+    }
+
+    const players =
+      payload.players && typeof payload.players === "object"
+        ? payload.players
+        : {};
+
+    return {
+      online: Boolean(payload.online),
+      onlineCount: statusNumber(
+        payload.players_online ?? payload.online_players ?? players.online,
+      ),
+      checked: payload.checked !== false,
+      source: typeof payload.source === "string" ? payload.source : "",
+    };
+  };
+
+  const applyServerStatus = (status) => {
+    if (!status) {
+      return;
+    }
+
+    statusResolved = true;
+    onlineCount = status.online ? status.onlineCount : 0;
+    primaryPlayButton?.setAttribute(
+      "aria-label",
+      status.online
+        ? `Copy the Mineacle server address. ${onlineCount} online.`
+        : "Copy the Mineacle server address. Server offline.",
+    );
+    syncPrimaryPlayLabel();
+  };
+
+  const readStatusCache = () => {
+    try {
+      const cached = JSON.parse(
+        window.localStorage.getItem(statusCacheKey) || "null",
+      );
+
+      if (!cached || Date.now() - cached.updatedAt > statusCacheMaxAge) {
+        return null;
+      }
+
+      return {
+        online: Boolean(cached.online),
+        onlineCount: statusNumber(cached.onlineCount),
+      };
+    } catch {
+      return null;
+    }
+  };
+
+  const writeStatusCache = (status) => {
+    try {
+      window.localStorage.setItem(
+        statusCacheKey,
+        JSON.stringify({
+          online: status.online,
+          onlineCount: status.onlineCount,
+          updatedAt: Date.now(),
+        }),
+      );
+    } catch {
+      // Storage may be unavailable in private or restricted browsing.
+    }
+  };
+
+  const fetchStatus = async (url, timeout = 4200) => {
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), timeout);
+
+    try {
+      const response = await fetch(url, {
+        headers: { Accept: "application/json" },
+        cache: "no-store",
+        signal: controller.signal,
+      });
+
+      return response.ok ? await response.json() : null;
+    } catch {
+      return null;
+    } finally {
+      window.clearTimeout(timer);
+    }
+  };
+
+  const loadExternalStatus = async () => {
+    const encodedIp = encodeURIComponent(statusServerIp);
+    const providers = [
+      `https://api.mcsrvstat.us/3/${encodedIp}`,
+      `https://api.mcstatus.io/v2/status/java/${encodedIp}`,
+    ];
+    let confirmedOffline = null;
+
+    for (const provider of providers) {
+      const payload = await fetchStatus(`${provider}?t=${Date.now()}`, 2600);
+      const status = normalizeStatus(payload);
+
+      if (!status) {
+        continue;
+      }
+
+      if (status.online) {
+        return status;
+      }
+
+      confirmedOffline ??= status;
+    }
+
+    return confirmedOffline;
+  };
+
+  const loadServerStatus = async () => {
+    if (!primaryPlayButton || statusRequestActive) {
+      return;
+    }
+
+    statusRequestActive = true;
+
+    try {
+      const localPayload = await fetchStatus(
+        `/api/server-status.php?mode=home&t=${Date.now()}`,
+      );
+      const localStatus = normalizeStatus(localPayload);
+      let status = localStatus?.checked ? localStatus : null;
+
+      if (!status) {
+        const externalStatus = await loadExternalStatus();
+
+        if (externalStatus) {
+          status = {
+            ...externalStatus,
+            onlineCount:
+              localStatus?.source === "web_profiles"
+                ? localStatus.onlineCount
+                : externalStatus.onlineCount,
+          };
+        }
+      }
+
+      if (status) {
+        applyServerStatus(status);
+        writeStatusCache(status);
+      }
+    } finally {
+      statusRequestActive = false;
+    }
+  };
+
+  const cachedStatus = readStatusCache();
+
+  if (cachedStatus) {
+    applyServerStatus(cachedStatus);
+  }
+
+  syncPrimaryPlayLabel();
+  loadServerStatus();
+  window.setInterval(() => {
+    if (!document.hidden) {
+      loadServerStatus();
+    }
+  }, 15000);
+  window.addEventListener("focus", loadServerStatus);
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) {
+      loadServerStatus();
+    }
   });
 
   const openJoinDialog = () => {
