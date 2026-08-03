@@ -66,7 +66,9 @@ $assetFiles = [
     $assetDirectory . '/js/home.js',
     $assetDirectory . '/images/hero.webp',
     $assetDirectory . '/images/logo-small.png',
-    $assetDirectory . '/images/socials.png',
+    $assetDirectory . '/images/social-discord.png',
+    $assetDirectory . '/images/social-x.png',
+    $assetDirectory . '/images/social-youtube.png',
 ];
 $assetVersion = 1;
 
