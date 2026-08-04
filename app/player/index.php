@@ -72,7 +72,7 @@ function mineacle_profile_view_model(array $player, ?array $team): array
     $username = mineacle_stats_username($player);
     $skinIdentifier = mineacle_stats_skin_identifier($uuid, $username);
     $fullBody = $skinIdentifier !== null
-        ? mineacle_stats_skin_url('https://mc-heads.net/body/' . $skinIdentifier . '/512.png')
+        ? mineacle_stats_skin_url('https://mc-heads.net/body/' . $skinIdentifier . '/right')
         : '';
 
     if ($fullBody === '') {
@@ -322,29 +322,59 @@ mineacle_page_head($pageTitle, $metaOptions);
             ]); ?>
 
             <?php if ($viewModel !== null): ?>
-                <?php $profileUrl = 'https://mineacle.net/player/' . rawurlencode((string) $viewModel['username']); ?>
+                <?php
+                $profileUrl = 'https://mineacle.net/player/' . rawurlencode((string) $viewModel['username']);
+                $followKey = trim((string) $viewModel['uuid']) !== ''
+                    ? strtolower((string) $viewModel['uuid'])
+                    : strtolower((string) $viewModel['username']);
+                ?>
                 <div class="profile-hero__layout">
-                    <div class="profile-hero__copy">
-                        <h1 id="profile-player-name"><?php echo $viewModel['ranked_name_html']; ?></h1>
-
-                        <div class="profile-presence">
-                            <span class="profile-presence__state <?php echo $viewModel['online'] ? 'is-online' : 'is-offline'; ?>">
-                                <span aria-hidden="true"></span><?php echo h((string) $viewModel['status_label']); ?>
-                            </span>
-                            <span><?php echo mineacle_profile_status_line_html((string) $viewModel['location_label'], (string) $viewModel['world_name']); ?></span>
+                    <div class="profile-social-profile">
+                        <div class="profile-social-profile__avatar" aria-hidden="true">
+                            <?php if ($viewModel['skin_head'] !== ''): ?>
+                                <img
+                                    src="<?php echo h((string) $viewModel['skin_head']); ?>"
+                                    alt=""
+                                    decoding="async"
+                                    draggable="false"
+                                >
+                            <?php else: ?>
+                                <span><?php echo h(strtoupper(substr((string) $viewModel['display_name'], 0, 1))); ?></span>
+                            <?php endif; ?>
                         </div>
 
-                        <div class="profile-meta" aria-label="Player details">
-                            <span>Team <strong><?php echo h((string) $viewModel['team']['name']); ?></strong></span>
-                            <span>Joined <strong><?php echo h((string) $viewModel['first_joined']); ?></strong></span>
-                            <span>Global rank <strong><?php echo h((string) $viewModel['global_rank']); ?></strong></span>
-                        </div>
+                        <div class="profile-social-profile__identity">
+                            <h1 id="profile-player-name"><?php echo $viewModel['ranked_name_html']; ?></h1>
 
-                        <div class="profile-summary__actions">
-                            <a class="profile-action" href="<?php echo h($leaderboardsUrl); ?>">Leaderboards</a>
-                            <button class="profile-action profile-action--muted" type="button" data-copy-profile data-copy-value="<?php echo h($profileUrl); ?>">
-                                <span data-profile-copy-label aria-live="polite">Copy link</span>
-                            </button>
+                            <div class="profile-presence">
+                                <span class="profile-presence__state <?php echo $viewModel['online'] ? 'is-online' : 'is-offline'; ?>">
+                                    <span aria-hidden="true"></span><?php echo h((string) $viewModel['status_label']); ?>
+                                </span>
+                                <span><?php echo mineacle_profile_status_line_html((string) $viewModel['location_label'], (string) $viewModel['world_name']); ?></span>
+                            </div>
+
+                            <div class="profile-meta" aria-label="Player details">
+                                <span>Team <strong><?php echo h((string) $viewModel['team']['name']); ?></strong></span>
+                                <span>Joined <strong><?php echo h((string) $viewModel['first_joined']); ?></strong></span>
+                                <span>Global rank <strong><?php echo h((string) $viewModel['global_rank']); ?></strong></span>
+                            </div>
+
+                            <div class="profile-summary__actions">
+                                <button
+                                    class="profile-action profile-action--follow"
+                                    type="button"
+                                    data-follow-profile
+                                    data-follow-key="<?php echo h($followKey); ?>"
+                                    aria-pressed="false"
+                                    title="Save this player on this device"
+                                >
+                                    <span data-follow-label>Follow</span>
+                                </button>
+                                <button class="profile-action profile-action--muted" type="button" data-copy-profile data-copy-value="<?php echo h($profileUrl); ?>">
+                                    <span data-profile-copy-label aria-live="polite">Copy link</span>
+                                </button>
+                                <a class="profile-action profile-action--text" href="<?php echo h($leaderboardsUrl); ?>">View rankings</a>
+                            </div>
                         </div>
                     </div>
 

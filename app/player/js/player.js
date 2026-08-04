@@ -72,4 +72,46 @@
       resetTimers.set(button, timer);
     });
   });
+
+  document.querySelectorAll("[data-follow-profile]").forEach((button) => {
+    const label = button.querySelector("[data-follow-label]");
+    const playerKey = button.dataset.followKey?.trim().toLowerCase() ?? "";
+
+    if (!(label instanceof HTMLElement) || playerKey === "") {
+      return;
+    }
+
+    const storageKey = `mineacle:followed-player:${playerKey}`;
+    let following = false;
+
+    try {
+      following = window.localStorage.getItem(storageKey) === "1";
+    } catch {
+      following = false;
+    }
+
+    const render = () => {
+      button.classList.toggle("is-following", following);
+      button.setAttribute("aria-pressed", following ? "true" : "false");
+      label.textContent = following ? "Following" : "Follow";
+    };
+
+    button.addEventListener("click", () => {
+      following = !following;
+
+      try {
+        if (following) {
+          window.localStorage.setItem(storageKey, "1");
+        } else {
+          window.localStorage.removeItem(storageKey);
+        }
+      } catch {
+        // Keep the current-tab state if browser storage is unavailable.
+      }
+
+      render();
+    });
+
+    render();
+  });
 })();
