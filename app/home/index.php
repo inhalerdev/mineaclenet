@@ -161,7 +161,7 @@ mineacle_page_head('Home', [
 
             <div class="home-story">
                 <div class="home-story__copy">
-                    <h2 id="merchant-title">The Merchant</h2>
+                    <h2 id="merchant-title">The Merchant | Season I</h2>
                     <p>In a silent world stripped of color, a nameless wanderer found a portal hidden behind layers of unbreakable stone. It opened into a vibrant land filled with crowded markets, growing settlements, and Merchants who valued every block gathered and every item crafted. They claimed the realm’s prosperity came from an ancient source buried beneath the first village. With nothing left to lose, the wanderer began searching for it before the gray world consumed itself completely.</p>
                 </div>
 
