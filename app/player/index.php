@@ -68,14 +68,25 @@ function mineacle_profile_view_model(array $player, ?array $team): array
     $teamView = mineacle_profile_team_view_model($player, $team);
     $statusView = mineacle_stats_status_view($player);
     $rankName = trim(mineacle_stats_rank_name($player));
+    $uuid = trim((string) ($player['uuid'] ?? ''));
+    $username = mineacle_stats_username($player);
+    $skinIdentifier = mineacle_stats_skin_identifier($uuid, $username);
+    $fullBody = $skinIdentifier !== null
+        ? mineacle_stats_skin_url('https://mc-heads.net/body/' . $skinIdentifier . '/512.png')
+        : '';
+
+    if ($fullBody === '') {
+        $fullBody = trim((string) (($skin['bust'] ?? '') ?: ($skin['chest'] ?? '')));
+    }
 
     return [
-        'uuid' => trim((string) ($player['uuid'] ?? '')),
-        'username' => mineacle_stats_username($player),
+        'uuid' => $uuid,
+        'username' => $username,
         'display_name' => mineacle_stats_display_name($player),
         'ranked_name_html' => mineacle_stats_ranked_name_html($player, 'profile-ranked-name'),
         'rank_name' => $rankName !== '' ? $rankName : 'Member',
         'skin_head' => trim((string) ($skin['head'] ?? '')),
+        'skin_body' => $fullBody,
         'online' => $statusView['online'],
         'status_label' => $statusView['label'],
         'location_label' => $statusView['line'],
@@ -103,7 +114,10 @@ function mineacle_profile_icon(string $name): string
         return '';
     }
 
-    return '<img class="profile-icon profile-icon--' . h($safeName) . '" src="/player/assets/icons/' . h($safeName) . '.png" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false">';
+    $iconPath = __DIR__ . '/assets/icons/' . $safeName . '.png';
+    $iconRevision = (string) (is_file($iconPath) ? (filemtime($iconPath) ?: mineacle_page_asset_version()) : mineacle_page_asset_version());
+
+    return '<img class="profile-icon profile-icon--' . h($safeName) . '" src="/player/assets/icons/' . h($safeName) . '.png?rev=' . h(rawurlencode($iconRevision)) . '" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false">';
 }
 
 function mineacle_profile_stat_item(string $label, string $value, string $icon, string $tone = '', string $detail = ''): void
@@ -291,42 +305,47 @@ mineacle_page_head($pageTitle, $metaOptions);
 
             <?php if ($viewModel !== null): ?>
                 <?php $profileUrl = 'https://mineacle.net/player/' . rawurlencode((string) $viewModel['username']); ?>
-                <div class="profile-summary">
-                    <div class="profile-summary__identity">
-                        <span class="profile-avatar">
-                            <?php if ($viewModel['skin_head'] !== ''): ?>
-                                <img src="<?php echo h((string) $viewModel['skin_head']); ?>" alt="" decoding="async" draggable="false" aria-hidden="true">
-                            <?php else: ?>
-                                <span aria-hidden="true"><?php echo h(strtoupper(substr((string) $viewModel['display_name'], 0, 1))); ?></span>
-                            <?php endif; ?>
-                        </span>
+                <div class="profile-hero__layout">
+                    <div class="profile-hero__copy">
+                        <h1 id="profile-player-name"><?php echo $viewModel['ranked_name_html']; ?></h1>
 
-                        <div class="profile-summary__copy">
-                            <h1 id="profile-player-name"><?php echo $viewModel['ranked_name_html']; ?></h1>
-                            <div class="profile-presence">
-                                <span class="profile-presence__state <?php echo $viewModel['online'] ? 'is-online' : 'is-offline'; ?>">
-                                    <span aria-hidden="true"></span><?php echo h((string) $viewModel['status_label']); ?>
-                                </span>
-                                <span><?php echo mineacle_profile_status_line_html((string) $viewModel['location_label'], (string) $viewModel['world_name']); ?></span>
-                            </div>
-                            <div class="profile-meta" aria-label="Player details">
-                                <span><small>Team</small><strong><?php echo h((string) $viewModel['team']['name']); ?></strong></span>
-                                <span><small>Joined</small><strong><?php echo h((string) $viewModel['first_joined']); ?></strong></span>
-                                <span><small>Rank</small><strong><?php echo h((string) $viewModel['global_rank']); ?></strong></span>
-                            </div>
+                        <div class="profile-presence">
+                            <span class="profile-presence__state <?php echo $viewModel['online'] ? 'is-online' : 'is-offline'; ?>">
+                                <span aria-hidden="true"></span><?php echo h((string) $viewModel['status_label']); ?>
+                            </span>
+                            <span><?php echo mineacle_profile_status_line_html((string) $viewModel['location_label'], (string) $viewModel['world_name']); ?></span>
+                        </div>
+
+                        <div class="profile-meta" aria-label="Player details">
+                            <span>Team <strong><?php echo h((string) $viewModel['team']['name']); ?></strong></span>
+                            <span>Joined <strong><?php echo h((string) $viewModel['first_joined']); ?></strong></span>
+                            <span>Global rank <strong><?php echo h((string) $viewModel['global_rank']); ?></strong></span>
+                        </div>
+
+                        <div class="profile-summary__actions">
+                            <a class="profile-action" href="<?php echo h($leaderboardsUrl); ?>">Leaderboards</a>
+                            <button class="profile-action profile-action--muted" type="button" data-copy-profile data-copy-value="<?php echo h($profileUrl); ?>">
+                                <span data-profile-copy-label aria-live="polite">Copy link</span>
+                            </button>
                         </div>
                     </div>
 
-                    <div class="profile-summary__actions">
-                        <a class="profile-action" href="<?php echo h($leaderboardsUrl); ?>">Leaderboards</a>
-                        <button class="profile-action profile-action--muted" type="button" data-copy-profile data-copy-value="<?php echo h($profileUrl); ?>">
-                            <span data-profile-copy-label aria-live="polite">Copy Link</span>
-                        </button>
+                    <div class="profile-skin-stage<?php echo $viewModel['skin_body'] !== '' ? ' has-skin' : ''; ?>" aria-hidden="true">
+                        <?php if ($viewModel['skin_body'] !== ''): ?>
+                            <img
+                                src="<?php echo h((string) $viewModel['skin_body']); ?>"
+                                alt=""
+                                decoding="async"
+                                draggable="false"
+                                onerror="this.parentElement.classList.remove('has-skin');this.remove();"
+                            >
+                        <?php endif; ?>
+                        <span class="profile-skin-fallback"><?php echo h(strtoupper(substr((string) $viewModel['display_name'], 0, 1))); ?></span>
                     </div>
                 </div>
             <?php else: ?>
-                <div class="profile-summary profile-summary--state">
-                    <div>
+                <div class="profile-hero__layout profile-hero__layout--state">
+                    <div class="profile-hero__copy">
                         <h1 id="profile-player-name">Mineacle Players</h1>
                         <p>View player statistics, team information, and recent duel history.</p>
                     </div>
@@ -351,11 +370,8 @@ mineacle_page_head($pageTitle, $metaOptions);
         <?php else: ?>
             <section class="profile-panel" aria-labelledby="profile-stats-title">
                 <header class="profile-panel__header">
-                    <div>
-                        <p class="profile-eyebrow">Performance</p>
-                        <h2 id="profile-stats-title">Global Statistics</h2>
-                    </div>
-                    <span>Live data · refreshes every minute</span>
+                    <h2 id="profile-stats-title">Global Statistics</h2>
+                    <span>Live data · updates every minute</span>
                 </header>
 
                 <div class="profile-stats-grid">
@@ -372,11 +388,8 @@ mineacle_page_head($pageTitle, $metaOptions);
 
             <section class="profile-panel" aria-labelledby="profile-duels-title">
                 <header class="profile-panel__header">
-                    <div>
-                        <p class="profile-eyebrow">Combat History</p>
-                        <h2 id="profile-duels-title">Recent Duels</h2>
-                    </div>
-                    <span>Latest 16 recorded fights</span>
+                    <h2 id="profile-duels-title">Recent Duels</h2>
+                    <span>Up to 16 recent fights</span>
                 </header>
 
                 <?php if (!$fightState['available']): ?>

@@ -2,6 +2,7 @@
   --player-bg: #111111;
   --player-surface: #202020;
   --player-surface-soft: #1a1a1a;
+  --player-surface-hover: #252525;
   --player-line: rgba(248, 248, 248, 0.075);
   --player-line-strong: rgba(248, 248, 248, 0.13);
   --player-main: #8436fe;
@@ -12,9 +13,9 @@
   --player-money: #62c249;
   --player-danger: #ff5555;
   --player-playtime: #ffff55;
-  --player-hero-height: clamp(320px, min(22.916667vw, 40.740741vh), 880px);
-  --player-panel-padding: clamp(16px, min(1.666667vw, 2.962963vh), 64px);
-  --player-control-height: clamp(38px, min(2.5vw, 4.444444vh), 96px);
+  --player-hero-height: clamp(360px, min(23.958333vw, 42.592593vh), 920px);
+  --player-panel-padding: clamp(16px, min(1.25vw, 2.222222vh), 48px);
+  --player-control-height: clamp(38px, min(2.291667vw, 4.074074vh), 88px);
   --player-row-height: clamp(66px, min(4.166667vw, 7.407407vh), 160px);
 }
 
@@ -53,6 +54,10 @@ body.player-page a {
   -webkit-tap-highlight-color: transparent;
 }
 
+body.player-page img {
+  user-select: none;
+}
+
 .player-site {
   display: grid;
   width: 100%;
@@ -69,8 +74,9 @@ body.player-page a {
   isolation: isolate;
   width: 100%;
   height: var(--player-hero-height);
-  min-height: 320px;
+  min-height: 360px;
   overflow: hidden;
+  border: 0;
   border-radius: var(--home-radius);
   background: #242018;
 }
@@ -80,8 +86,8 @@ body.player-page a {
   inset: 0;
   z-index: 0;
   background:
-    linear-gradient(90deg, rgba(17, 17, 17, 0.76) 0%, rgba(17, 17, 17, 0.34) 52%, rgba(17, 17, 17, 0.14) 100%),
-    linear-gradient(0deg, rgba(17, 17, 17, 0.68) 0%, rgba(17, 17, 17, 0.08) 62%);
+    linear-gradient(90deg, rgba(17, 17, 17, 0.78) 0%, rgba(17, 17, 17, 0.42) 48%, rgba(17, 17, 17, 0.12) 78%),
+    linear-gradient(0deg, rgba(17, 17, 17, 0.74) 0%, rgba(17, 17, 17, 0.08) 62%);
   content: "";
   pointer-events: none;
 }
@@ -96,7 +102,6 @@ body.player-page a {
   object-fit: cover;
   object-position: center 55%;
   pointer-events: none;
-  user-select: none;
 }
 
 .profile-hero__surface {
@@ -113,71 +118,38 @@ body.player-page a {
   flex: none;
 }
 
-.profile-summary {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
+.profile-hero__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.48fr);
+  align-items: end;
   width: 100%;
-  min-width: 0;
+  min-height: 0;
   margin-top: auto;
   gap: var(--home-gap);
 }
 
-.profile-summary__identity {
-  display: flex;
-  align-items: center;
-  min-width: 0;
-  gap: clamp(14px, min(1.25vw, 2.222222vh), 48px);
+.profile-hero__layout--state {
+  grid-template-columns: minmax(0, 1fr);
 }
 
-.profile-avatar {
+.profile-hero__copy {
   display: grid;
-  place-items: center;
-  width: clamp(64px, min(5vw, 8.888889vh), 192px);
-  height: clamp(64px, min(5vw, 8.888889vh), 192px);
-  flex: none;
-  overflow: hidden;
-  border-radius: 2px;
-  background: rgba(17, 17, 17, 0.72);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
-}
-
-.profile-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  image-rendering: pixelated;
-}
-
-.profile-avatar > span {
-  font-size: clamp(24px, min(2.5vw, 4.444444vh), 96px);
-  font-weight: 500;
-}
-
-.profile-summary__copy {
+  align-content: end;
+  justify-items: start;
+  width: min(100%, 760px);
   min-width: 0;
-  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.72);
+  padding-bottom: 2px;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.72);
 }
 
-.profile-eyebrow {
-  margin: 0 0 6px;
-  color: var(--player-secondary);
-  font-size: var(--secondary-label-size);
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.profile-summary h1,
-.profile-summary--state h1 {
+.profile-hero__copy h1 {
   max-width: 100%;
   margin: 0;
   overflow: hidden;
   color: var(--player-text);
   font-size: var(--secondary-page-title-size);
-  font-weight: 500;
-  line-height: 1;
+  font-weight: 600;
+  line-height: 1.05;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -196,14 +168,14 @@ body.player-page a {
 .profile-ranked-name__rank {
   flex: none;
   color: var(--rank-color, var(--player-secondary));
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .profile-ranked-name__name {
   min-width: 0;
   overflow: hidden;
   color: var(--player-text);
-  font-weight: 500;
+  font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -212,11 +184,11 @@ body.player-page a {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  margin-top: 8px;
+  margin-top: 9px;
   color: var(--player-muted);
   font-size: var(--secondary-small-size);
-  line-height: 1.25;
-  gap: 10px;
+  line-height: 1.3;
+  gap: 8px 12px;
 }
 
 .profile-presence__state {
@@ -258,34 +230,28 @@ body.player-page a {
   align-items: center;
   margin-top: 12px;
   color: var(--player-muted);
-  gap: 8px 18px;
+  font-size: var(--secondary-small-size);
+  line-height: 1.3;
+  gap: 7px 18px;
 }
 
 .profile-meta > span {
   display: inline-flex;
   align-items: baseline;
   min-width: 0;
-  gap: 6px;
-}
-
-.profile-meta small {
-  color: var(--player-muted);
-  font-size: var(--secondary-meta-size);
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  gap: 5px;
 }
 
 .profile-meta strong {
   color: var(--player-text);
-  font-size: var(--secondary-small-size);
   font-weight: 500;
 }
 
 .profile-summary__actions {
   display: flex;
-  flex: none;
+  flex-wrap: wrap;
   align-items: center;
+  margin-top: 16px;
   gap: 8px;
 }
 
@@ -294,7 +260,7 @@ body.player-page a {
   align-items: center;
   justify-content: center;
   min-height: var(--player-control-height);
-  padding: 0 clamp(14px, min(1.041667vw, 1.851852vh), 40px);
+  padding: 0 clamp(14px, min(0.9375vw, 1.666667vh), 36px);
   border: 0;
   border-radius: 2px;
   background: var(--player-main);
@@ -303,20 +269,19 @@ body.player-page a {
   font-weight: 500;
   line-height: 1;
   text-decoration: none;
-  text-transform: uppercase;
   white-space: nowrap;
   cursor: pointer;
-  transition: filter 120ms ease-out, transform 120ms ease-out, background-color 120ms ease-out;
+  transition: background-color 120ms ease-out, filter 120ms ease-out, transform 120ms ease-out;
 }
 
 .profile-action--muted {
-  background: rgba(17, 17, 17, 0.76);
+  background: rgba(17, 17, 17, 0.78);
 }
 
 .profile-action:hover,
 .profile-action:focus-visible {
   filter: brightness(1.08);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 .profile-action--muted:hover,
@@ -333,13 +298,45 @@ body.player-page a {
   background: #b63d3d;
 }
 
-.profile-summary--state {
-  align-items: flex-end;
+.profile-skin-stage {
+  display: grid;
+  align-self: end;
+  justify-self: center;
+  place-items: end center;
+  width: min(100%, clamp(220px, min(17.1875vw, 30.555556vh), 660px));
+  height: min(88%, clamp(260px, min(19.791667vw, 35.185185vh), 760px));
+  min-height: 0;
+  overflow: visible;
+  filter: drop-shadow(0 22px 26px rgba(0, 0, 0, 0.48));
 }
 
-.profile-summary--state p:last-child {
+.profile-skin-stage img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+.profile-skin-stage.has-skin .profile-skin-fallback {
+  display: none;
+}
+
+.profile-skin-fallback {
+  display: grid;
+  place-items: center;
+  width: min(48%, 150px);
+  aspect-ratio: 1;
+  border-radius: 2px;
+  background: rgba(132, 54, 254, 0.24);
+  color: var(--player-text);
+  font-size: clamp(36px, min(3.333333vw, 5.925926vh), 128px);
+  font-weight: 500;
+}
+
+.profile-hero__layout--state .profile-hero__copy p {
   max-width: 52ch;
-  margin: 8px 0 0;
+  margin: 9px 0 0;
   color: var(--player-text);
   font-size: var(--secondary-body-size);
   line-height: 1.35;
@@ -355,6 +352,7 @@ body.player-page a {
 .profile-message {
   min-width: 0;
   overflow: hidden;
+  border: 0;
   border-radius: var(--home-radius);
   background: var(--player-surface);
   color: var(--player-text);
@@ -371,27 +369,24 @@ body.player-page a {
   gap: var(--home-gap);
 }
 
-.profile-panel__header > div {
-  min-width: 0;
-}
-
-.profile-panel__header .profile-eyebrow {
-  margin-bottom: 4px;
-}
-
 .profile-panel__header h2 {
+  min-width: 0;
   margin: 0;
+  overflow: hidden;
   color: var(--player-text);
   font-size: var(--secondary-section-title-size);
   font-weight: 600;
   line-height: 1.1;
+  text-overflow: ellipsis;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .profile-panel__header > span {
   flex: none;
   color: var(--player-muted);
   font-size: var(--secondary-small-size);
+  line-height: 1.3;
   white-space: nowrap;
 }
 
@@ -428,11 +423,11 @@ body.player-page a {
 }
 
 .profile-icon {
-  filter: none;
   display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
+  filter: none;
 }
 
 .profile-stat__copy {
@@ -454,8 +449,6 @@ body.player-page a {
   color: var(--player-muted);
   font-size: var(--secondary-label-size);
   font-weight: 500;
-  letter-spacing: 0.055em;
-  text-transform: uppercase;
 }
 
 .profile-stat__value {
@@ -508,16 +501,24 @@ body.player-page a {
   color: var(--player-muted);
   font-size: var(--secondary-label-size);
   font-weight: 500;
-  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
 .profile-duels-list {
   max-height: calc(var(--player-row-height) * 6);
+  overflow-x: hidden;
   overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-color: rgba(176, 120, 255, 0.6) transparent;
+  scrollbar-color: rgba(176, 120, 255, 0.48) transparent;
   scrollbar-width: thin;
+}
+
+.profile-duels-list::-webkit-scrollbar {
+  width: 7px;
+}
+
+.profile-duels-list::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+  background: rgba(176, 120, 255, 0.48);
 }
 
 .profile-duel-row {
@@ -545,7 +546,6 @@ body.player-page a {
   color: var(--player-text);
   font-size: var(--secondary-label-size);
   font-weight: 500;
-  letter-spacing: 0.04em;
 }
 
 .profile-duel-row.is-win .profile-duel-result {
@@ -571,6 +571,7 @@ body.player-page a {
 }
 
 .profile-duel-head img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -578,7 +579,7 @@ body.player-page a {
 }
 
 .profile-duel-head > span {
-  font-size: 16px;
+  font-size: var(--secondary-body-size);
   font-weight: 500;
 }
 
@@ -609,8 +610,6 @@ body.player-page a {
   color: var(--player-muted);
   font-size: var(--secondary-meta-size);
   font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
 }
 
 .profile-duel-detail strong {
@@ -679,18 +678,17 @@ body.player-page a {
   gap: 10px;
 }
 
-.profile-message .profile-eyebrow,
 .profile-message h2,
 .profile-message p {
   margin: 0;
 }
 
 .profile-message h2 {
-  font-size: var(--secondary-section-title-size);
+  font-size: var(--secondary-page-title-size);
   font-weight: 500;
 }
 
-.profile-message p:not(.profile-eyebrow) {
+.profile-message p {
   max-width: 54ch;
   color: var(--player-muted);
   font-size: var(--secondary-body-size);
@@ -708,12 +706,21 @@ body.player-page a {
 
 .profile-hero,
 .profile-panel,
-.profile-message {
+.profile-message,
+.compact-footer {
   animation: profile-enter 170ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .profile-panel:nth-child(2) {
   animation-delay: 25ms;
+}
+
+.compact-footer {
+  animation-delay: 40ms;
+}
+
+.profile-skin-stage {
+  animation: profile-skin-enter 230ms 25ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes profile-enter {
@@ -728,14 +735,21 @@ body.player-page a {
   }
 }
 
-@media (max-width: 1120px) {
-  .profile-summary {
-    align-items: flex-start;
-    flex-direction: column;
+@keyframes profile-skin-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.985);
   }
 
-  .profile-summary__actions {
-    align-self: flex-start;
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 1120px) {
+  .profile-hero__layout {
+    grid-template-columns: minmax(0, 1fr) minmax(190px, 0.42fr);
   }
 
   .profile-stats-grid {
@@ -769,44 +783,47 @@ body.player-page a {
   .profile-duel-detail small {
     display: block;
   }
-
 }
 
 @media (max-width: 720px) {
   .profile-hero {
-    height: 380px;
-    min-height: 380px;
+    height: 410px;
+    min-height: 410px;
   }
 
   .profile-hero::after {
     background:
-      linear-gradient(0deg, rgba(17, 17, 17, 0.9), rgba(17, 17, 17, 0.28) 72%),
-      linear-gradient(90deg, rgba(17, 17, 17, 0.52), rgba(17, 17, 17, 0.08));
+      linear-gradient(0deg, rgba(17, 17, 17, 0.92) 0%, rgba(17, 17, 17, 0.36) 72%),
+      linear-gradient(90deg, rgba(17, 17, 17, 0.62) 0%, rgba(17, 17, 17, 0.08) 100%);
   }
 
   .profile-hero__image {
     object-position: 58% center;
   }
 
-  .profile-summary__identity {
-    align-items: flex-end;
+  .profile-hero__layout {
+    grid-template-columns: minmax(0, 1fr) minmax(120px, 0.34fr);
+    gap: 12px;
   }
 
-  .profile-avatar {
-    width: 56px;
-    height: 56px;
+  .profile-hero__copy {
+    position: relative;
+    z-index: 2;
+  }
+
+  .profile-skin-stage {
+    width: min(100%, 185px);
+    height: 270px;
+    justify-self: end;
   }
 
   .profile-meta {
-    gap: 7px 12px;
+    display: grid;
+    gap: 5px;
   }
 
   .profile-summary__actions {
-    width: 100%;
-  }
-
-  .profile-action {
-    flex: 1;
+    margin-top: 13px;
   }
 
   .profile-panel__header {
@@ -845,35 +862,40 @@ body.player-page a {
   .profile-duel-detail:last-child {
     display: grid;
   }
-
 }
 
-@media (max-width: 480px) {
+@media (max-width: 500px) {
   .profile-hero {
-    height: 400px;
-    min-height: 400px;
+    height: 430px;
+    min-height: 430px;
   }
 
-  .profile-summary__identity {
-    align-items: flex-start;
+  .profile-hero__layout {
+    grid-template-columns: minmax(0, 1fr) 106px;
   }
 
-  .profile-avatar {
-    width: 48px;
-    height: 48px;
+  .profile-hero__copy h1 {
+    font-size: clamp(24px, 7.5vw, 32px);
   }
 
   .profile-presence > span:last-child {
     width: 100%;
   }
 
-  .profile-meta {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+  .profile-skin-stage {
+    width: 140px;
+    height: 235px;
+    transform: translateX(12px);
   }
 
-  .profile-meta > span:last-child {
-    grid-column: 1 / -1;
+  .profile-summary__actions {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1fr;
+  }
+
+  .profile-action {
+    width: 100%;
   }
 
   .profile-duel-row {
