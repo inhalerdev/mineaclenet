@@ -145,7 +145,7 @@ body.leaderboards-page svg {
 
 .leaderboards-hero__copy h1 {
   color: var(--leaderboards-text);
-  font-size: var(--home-heading-size);
+  font-size: var(--secondary-page-title-size);
   font-weight: 600;
   line-height: 1.12;
   text-transform: uppercase;
@@ -154,7 +154,7 @@ body.leaderboards-page svg {
 .leaderboards-hero__copy p {
   max-width: 67ch;
   color: var(--leaderboards-text);
-  font-size: var(--home-copy-size);
+  font-size: var(--secondary-body-size);
   font-weight: 400;
   line-height: 1.28;
 }
@@ -201,7 +201,7 @@ body.leaderboards-page svg {
 
 .leaderboard-panel__title span {
   color: var(--leaderboards-secondary);
-  font-size: clamp(11px, min(0.729167vw, 1.296296vh), 28px);
+  font-size: var(--secondary-small-size);
   font-weight: 500;
   letter-spacing: 0.08em;
   line-height: 1;
@@ -213,7 +213,7 @@ body.leaderboards-page svg {
   margin: 0;
   overflow: hidden;
   color: var(--leaderboards-text);
-  font-size: clamp(18px, min(1.041667vw, 1.851852vh), 40px);
+  font-size: var(--secondary-section-title-size);
   font-weight: 600;
   line-height: 1.1;
   text-overflow: ellipsis;
@@ -270,7 +270,7 @@ body.leaderboards-page svg {
   outline: 0;
   background: transparent;
   color: var(--leaderboards-text);
-  font-size: clamp(12px, min(0.833333vw, 1.481481vh), 32px);
+  font-size: var(--secondary-body-size);
   font-weight: 400;
   line-height: 1;
 }
@@ -396,7 +396,7 @@ body.leaderboards-page svg {
 .leaderboard-filter__label {
   padding: 8px 10px 5px;
   color: var(--leaderboards-muted);
-  font-size: 10px;
+  font-size: var(--secondary-meta-size);
   font-weight: 500;
   letter-spacing: 0.08em;
   line-height: 1;
@@ -415,7 +415,7 @@ body.leaderboards-page svg {
   background: transparent;
   color: var(--leaderboards-muted);
   cursor: pointer;
-  font-size: 13px;
+  font-size: var(--secondary-small-size);
   font-weight: 500;
   text-align: left;
   text-transform: uppercase;
@@ -461,7 +461,7 @@ body.leaderboards-page svg {
   align-items: center;
   flex-wrap: wrap;
   min-width: 0;
-  font-size: clamp(11px, min(0.729167vw, 1.296296vh), 28px);
+  font-size: var(--secondary-small-size);
   font-weight: 400;
   gap: 8px;
 }
@@ -500,7 +500,7 @@ body.leaderboards-page svg {
 .leaderboard-sort-heading {
   min-width: 0;
   color: var(--leaderboards-text);
-  font-size: clamp(12px, min(0.833333vw, 1.481481vh), 32px);
+  font-size: var(--secondary-label-size);
   font-weight: 500;
   line-height: 1;
   text-transform: uppercase;
@@ -611,7 +611,7 @@ a.leaderboard-row:focus-visible {
   border-radius: 2px;
   background: #444444;
   color: var(--leaderboards-text);
-  font-size: clamp(13px, min(0.9375vw, 1.666667vh), 36px);
+  font-size: var(--secondary-body-size);
   font-weight: 500;
 }
 
@@ -674,13 +674,13 @@ a.leaderboard-row:focus-visible {
 
 .leaderboard-row__name > strong {
   color: var(--leaderboards-text);
-  font-size: clamp(15px, min(1.041667vw, 1.851852vh), 40px);
+  font-size: var(--secondary-body-size);
   font-weight: 500;
 }
 
 .leaderboard-row__name small {
   color: var(--leaderboards-secondary);
-  font-size: clamp(12px, min(0.833333vw, 1.481481vh), 32px);
+  font-size: var(--secondary-small-size);
   font-weight: 400;
 }
 
@@ -722,14 +722,14 @@ a.leaderboard-row:focus-visible {
 .leaderboard-row__metric small {
   display: none;
   color: var(--leaderboards-muted);
-  font-size: 11px;
+  font-size: var(--secondary-meta-size);
   font-weight: 400;
   text-transform: uppercase;
 }
 
 .leaderboard-row__metric strong {
   color: var(--leaderboards-text);
-  font-size: clamp(14px, min(0.9375vw, 1.666667vh), 36px);
+  font-size: var(--secondary-body-size);
   font-weight: 500;
 }
 
@@ -757,7 +757,7 @@ a.leaderboard-row:focus-visible {
   padding: 0 var(--leaderboards-panel-padding);
   border-top: 1px solid var(--leaderboards-line);
   color: var(--leaderboards-muted);
-  font-size: clamp(11px, min(0.729167vw, 1.296296vh), 28px);
+  font-size: var(--secondary-small-size);
   font-weight: 400;
   gap: var(--home-small-gap);
 }
@@ -779,61 +779,24 @@ a.leaderboard-row:focus-visible {
 
 .leaderboard-empty h3 {
   color: var(--leaderboards-text);
-  font-size: clamp(22px, min(1.666667vw, 2.962963vh), 64px);
+  font-size: var(--secondary-section-title-size);
   font-weight: 600;
 }
 
 .leaderboard-empty p {
   max-width: 54ch;
   color: var(--leaderboards-muted);
-  font-size: clamp(14px, min(1.041667vw, 1.851852vh), 40px);
+  font-size: var(--secondary-body-size);
   line-height: 1.4;
 }
 
-.leaderboards-page .site-footer {
-  overflow: hidden;
-  border: 0;
-  border-radius: var(--home-radius);
-  background: var(--leaderboards-surface);
-  color: var(--leaderboards-text);
-}
-
-.leaderboards-page .site-footer,
-.leaderboards-page .site-footer p,
-.leaderboards-page .site-footer a,
-.leaderboards-page .site-footer span {
-  font-family: "Rubik", Arial, sans-serif;
-}
-
-.leaderboards-page .site-footer h2,
-.leaderboards-page .site-footer h3,
-.leaderboards-page .site-footer p,
-.leaderboards-page .site-footer a {
-  font-size: clamp(13px, min(0.9375vw, 1.666667vh), 36px);
-}
-
-.leaderboards-page .site-footer__bottom {
-  border-top-color: var(--leaderboards-line);
-  background: #1b1b1b;
-}
-
-.leaderboards-page .site-footer__links a:hover,
-.leaderboards-page .site-footer__bug-link:hover strong {
-  color: var(--leaderboards-hover);
-}
-
 .leaderboard-panel,
-.leaderboards-hero,
-.leaderboards-page .site-footer {
+.leaderboards-hero {
   animation: leaderboards-enter 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .leaderboard-panel {
   animation-delay: 22ms;
-}
-
-.leaderboards-page .site-footer {
-  animation-delay: 44ms;
 }
 
 @keyframes leaderboards-enter {
@@ -953,11 +916,11 @@ a.leaderboard-row:focus-visible {
   }
 
   .leaderboards-hero__copy h1 {
-    font-size: 24px;
+    font-size: var(--secondary-page-title-size);
   }
 
   .leaderboards-hero__copy p {
-    font-size: 14px;
+    font-size: var(--secondary-body-size);
     line-height: 1.38;
   }
 
@@ -1030,7 +993,7 @@ a.leaderboard-row:focus-visible {
 
 @media (max-width: 420px) {
   .leaderboard-panel__title h2 {
-    font-size: 16px;
+    font-size: var(--secondary-body-size);
   }
 
   .leaderboard-filter__menu {

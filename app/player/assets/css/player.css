@@ -162,7 +162,7 @@ body.player-page a {
 .profile-eyebrow {
   margin: 0 0 6px;
   color: var(--player-secondary);
-  font-size: clamp(10px, min(0.625vw, 1.111111vh), 24px);
+  font-size: var(--secondary-label-size);
   font-weight: 500;
   letter-spacing: 0.08em;
   line-height: 1;
@@ -175,7 +175,7 @@ body.player-page a {
   margin: 0;
   overflow: hidden;
   color: var(--player-text);
-  font-size: clamp(28px, min(2.083333vw, 3.703704vh), 80px);
+  font-size: var(--secondary-page-title-size);
   font-weight: 500;
   line-height: 1;
   text-overflow: ellipsis;
@@ -214,7 +214,7 @@ body.player-page a {
   align-items: center;
   margin-top: 8px;
   color: var(--player-muted);
-  font-size: clamp(12px, min(0.78125vw, 1.388889vh), 30px);
+  font-size: var(--secondary-small-size);
   line-height: 1.25;
   gap: 10px;
 }
@@ -270,7 +270,7 @@ body.player-page a {
 
 .profile-meta small {
   color: var(--player-muted);
-  font-size: clamp(9px, min(0.572917vw, 1.018519vh), 22px);
+  font-size: var(--secondary-meta-size);
   font-weight: 500;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -278,7 +278,7 @@ body.player-page a {
 
 .profile-meta strong {
   color: var(--player-text);
-  font-size: clamp(11px, min(0.729167vw, 1.296296vh), 28px);
+  font-size: var(--secondary-small-size);
   font-weight: 500;
 }
 
@@ -299,7 +299,7 @@ body.player-page a {
   border-radius: 2px;
   background: var(--player-main);
   color: var(--player-text);
-  font-size: clamp(11px, min(0.729167vw, 1.296296vh), 28px);
+  font-size: var(--secondary-small-size);
   font-weight: 500;
   line-height: 1;
   text-decoration: none;
@@ -341,7 +341,7 @@ body.player-page a {
   max-width: 52ch;
   margin: 8px 0 0;
   color: var(--player-text);
-  font-size: clamp(12px, min(0.833333vw, 1.481481vh), 32px);
+  font-size: var(--secondary-body-size);
   line-height: 1.35;
 }
 
@@ -352,8 +352,7 @@ body.player-page a {
 }
 
 .profile-panel,
-.profile-message,
-.profile-footer {
+.profile-message {
   min-width: 0;
   overflow: hidden;
   border-radius: var(--home-radius);
@@ -383,7 +382,7 @@ body.player-page a {
 .profile-panel__header h2 {
   margin: 0;
   color: var(--player-text);
-  font-size: clamp(16px, min(1.041667vw, 1.851852vh), 40px);
+  font-size: var(--secondary-section-title-size);
   font-weight: 600;
   line-height: 1.1;
   text-transform: uppercase;
@@ -392,7 +391,7 @@ body.player-page a {
 .profile-panel__header > span {
   flex: none;
   color: var(--player-muted);
-  font-size: clamp(10px, min(0.677083vw, 1.203704vh), 26px);
+  font-size: var(--secondary-small-size);
   white-space: nowrap;
 }
 
@@ -429,6 +428,7 @@ body.player-page a {
 }
 
 .profile-icon {
+  filter: none;
   display: block;
   width: 100%;
   height: 100%;
@@ -452,7 +452,7 @@ body.player-page a {
 
 .profile-stat__label {
   color: var(--player-muted);
-  font-size: clamp(9px, min(0.625vw, 1.111111vh), 24px);
+  font-size: var(--secondary-label-size);
   font-weight: 500;
   letter-spacing: 0.055em;
   text-transform: uppercase;
@@ -460,14 +460,14 @@ body.player-page a {
 
 .profile-stat__value {
   color: var(--player-text);
-  font-size: clamp(17px, min(1.25vw, 2.222222vh), 48px);
+  font-size: var(--secondary-value-size);
   font-weight: 500;
   line-height: 1.08;
 }
 
 .profile-stat__detail {
   color: var(--player-secondary);
-  font-size: clamp(10px, min(0.677083vw, 1.203704vh), 26px);
+  font-size: var(--secondary-small-size);
 }
 
 .profile-stat--money .profile-stat__value {
@@ -506,7 +506,7 @@ body.player-page a {
   padding: 0 var(--player-panel-padding);
   border-bottom: 1px solid var(--player-line);
   color: var(--player-muted);
-  font-size: clamp(9px, min(0.625vw, 1.111111vh), 24px);
+  font-size: var(--secondary-label-size);
   font-weight: 500;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -543,7 +543,7 @@ body.player-page a {
   border-radius: 2px;
   background: var(--player-danger);
   color: var(--player-text);
-  font-size: clamp(9px, min(0.625vw, 1.111111vh), 24px);
+  font-size: var(--secondary-label-size);
   font-weight: 500;
   letter-spacing: 0.04em;
 }
@@ -592,7 +592,7 @@ body.player-page a {
   min-width: 0;
   overflow: hidden;
   color: var(--player-text);
-  font-size: clamp(12px, min(0.833333vw, 1.481481vh), 32px);
+  font-size: var(--secondary-body-size);
   font-weight: 500;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -607,7 +607,7 @@ body.player-page a {
 .profile-duel-detail small {
   display: none;
   color: var(--player-muted);
-  font-size: 9px;
+  font-size: var(--secondary-meta-size);
   font-weight: 500;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -617,7 +617,7 @@ body.player-page a {
   min-width: 0;
   overflow: hidden;
   color: var(--player-text);
-  font-size: clamp(11px, min(0.729167vw, 1.296296vh), 28px);
+  font-size: var(--secondary-small-size);
   font-weight: 400;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -661,12 +661,12 @@ body.player-page a {
 
 .profile-empty strong {
   color: var(--player-text);
-  font-size: clamp(15px, min(1.041667vw, 1.851852vh), 40px);
+  font-size: var(--secondary-section-title-size);
   font-weight: 500;
 }
 
 .profile-empty span {
-  font-size: clamp(11px, min(0.729167vw, 1.296296vh), 28px);
+  font-size: var(--secondary-small-size);
 }
 
 .profile-message {
@@ -686,14 +686,14 @@ body.player-page a {
 }
 
 .profile-message h2 {
-  font-size: clamp(22px, min(1.666667vw, 2.962963vh), 64px);
+  font-size: var(--secondary-section-title-size);
   font-weight: 500;
 }
 
 .profile-message p:not(.profile-eyebrow) {
   max-width: 54ch;
   color: var(--player-muted);
-  font-size: clamp(12px, min(0.833333vw, 1.481481vh), 32px);
+  font-size: var(--secondary-body-size);
   line-height: 1.45;
 }
 
@@ -701,91 +701,19 @@ body.player-page a {
   margin-top: 4px;
 }
 
-.profile-footer {
-  display: grid;
-}
-
-.profile-footer__main {
-  display: grid;
-  grid-template-columns: minmax(240px, 1.35fr) auto auto;
-  align-items: center;
-  min-width: 0;
-  padding: clamp(18px, min(1.666667vw, 2.962963vh), 64px) var(--player-panel-padding);
-  gap: var(--home-gap);
-}
-
-.profile-footer__brand {
-  display: grid;
-  min-width: 0;
-  gap: 4px;
-}
-
-.profile-footer__brand strong {
-  color: var(--player-text);
-  font-size: clamp(15px, min(1.041667vw, 1.851852vh), 40px);
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-.profile-footer__brand span {
-  color: var(--player-muted);
-  font-size: clamp(10px, min(0.677083vw, 1.203704vh), 26px);
-  line-height: 1.35;
-}
-
-.profile-footer__links {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-  gap: 8px 16px;
-}
-
-.profile-footer__links a {
-  color: var(--player-muted);
-  font-size: clamp(10px, min(0.677083vw, 1.203704vh), 26px);
-  font-weight: 500;
-  text-decoration: none;
-  text-transform: uppercase;
-  transition: color 120ms ease-out;
-}
-
-.profile-footer__links a:hover,
-.profile-footer__links a:focus-visible {
-  color: var(--player-hover);
-}
-
-.profile-footer__legal {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-width: 0;
-  padding: 10px var(--player-panel-padding);
-  border-top: 1px solid var(--player-line);
-  color: var(--player-muted);
-  font-size: clamp(9px, min(0.572917vw, 1.018519vh), 22px);
-  gap: 16px;
-}
-
-.profile-action:focus-visible,
-.profile-footer a:focus-visible {
+.profile-action:focus-visible {
   outline: 2px solid var(--player-hover);
   outline-offset: 3px;
 }
 
 .profile-hero,
 .profile-panel,
-.profile-message,
-.profile-footer {
+.profile-message {
   animation: profile-enter 170ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .profile-panel:nth-child(2) {
   animation-delay: 25ms;
-}
-
-.profile-footer {
-  animation-delay: 40ms;
 }
 
 @keyframes profile-enter {
@@ -842,14 +770,6 @@ body.player-page a {
     display: block;
   }
 
-  .profile-footer__main {
-    grid-template-columns: 1fr auto;
-  }
-
-  .profile-footer__links--social {
-    grid-column: 1 / -1;
-    justify-content: flex-start;
-  }
 }
 
 @media (max-width: 720px) {
@@ -875,11 +795,6 @@ body.player-page a {
   .profile-avatar {
     width: 56px;
     height: 56px;
-  }
-
-  .profile-summary h1,
-  .profile-summary--state h1 {
-    font-size: clamp(26px, 8vw, 38px);
   }
 
   .profile-meta {
@@ -931,20 +846,6 @@ body.player-page a {
     display: grid;
   }
 
-  .profile-footer__main {
-    grid-template-columns: 1fr;
-  }
-
-  .profile-footer__links,
-  .profile-footer__links--social {
-    justify-content: flex-start;
-  }
-
-  .profile-footer__legal {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 4px;
-  }
 }
 
 @media (max-width: 480px) {

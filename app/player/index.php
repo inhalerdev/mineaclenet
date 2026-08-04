@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../shared/php/layout.php';
 require_once __DIR__ . '/../shared/php/navigation.php';
+require_once __DIR__ . '/../shared/php/compact-footer.php';
 require_once __DIR__ . '/../shared/php/stats-lib.php';
 
 $config = mineacle_config();
@@ -205,45 +206,6 @@ function mineacle_profile_fight_row(array $fight): void
     echo '</article>';
 }
 
-function mineacle_profile_footer(array $site): void
-{
-    $links = [
-        ['label' => 'Home', 'url' => '/'],
-        ['label' => 'Vote', 'url' => '/vote'],
-        ['label' => 'Leaderboards', 'url' => '/leaderboards'],
-        ['label' => 'Bans', 'url' => '/bans'],
-        ['label' => 'Store', 'url' => (string) ($site['store_url'] ?? '#')],
-    ];
-    $socials = [
-        ['label' => 'Discord', 'url' => (string) ($site['discord_url'] ?? 'https://discord.gg/qmpJ4xMguT')],
-        ['label' => 'X', 'url' => (string) ($site['x_url'] ?? 'https://x.com/mineaclenetwork')],
-        ['label' => 'YouTube', 'url' => (string) ($site['youtube_url'] ?? 'https://www.youtube.com/@mineaclenetwork')],
-    ];
-
-    echo '<footer class="profile-footer" aria-label="Mineacle footer">';
-    echo '<div class="profile-footer__main">';
-    echo '<div class="profile-footer__brand"><strong>Mineacle</strong><span>The original survival server, built by Mineacle Studios.</span></div>';
-    echo '<nav class="profile-footer__links" aria-label="Quick links">';
-    foreach ($links as $link) {
-        $url = mineacle_page_public_link($link['url']);
-        if ($url !== '#') {
-            echo '<a href="' . h($url) . '">' . h($link['label']) . '</a>';
-        }
-    }
-    echo '</nav>';
-    echo '<nav class="profile-footer__links profile-footer__links--social" aria-label="Social links">';
-    foreach ($socials as $link) {
-        $url = mineacle_page_public_link($link['url']);
-        if ($url !== '#') {
-            echo '<a href="' . h($url) . '" target="_blank" rel="noopener noreferrer">' . h($link['label']) . '</a>';
-        }
-    }
-    echo '<a href="/contact">Contact</a>';
-    echo '</nav>';
-    echo '</div>';
-    echo '<div class="profile-footer__legal"><span>© 2026 Mineacle Studios</span><span>Not affiliated with Mojang Studios or Microsoft.</span></div>';
-    echo '</footer>';
-}
 
 $query = mineacle_profile_requested_username();
 $validUsername = preg_match('/^[A-Za-z0-9_-]{1,64}$/', $query) === 1;
@@ -270,6 +232,7 @@ $assetVersion = mineacle_page_asset_version();
 $siteStylesheetVersion = (string) (filemtime(__DIR__ . '/../shared/assets/css/site.css') ?: $assetVersion);
 $homeStylesheetVersion = (string) (filemtime(__DIR__ . '/../home/assets/css/home.css') ?: $assetVersion);
 $navigationStylesheetVersion = (string) (filemtime(__DIR__ . '/../shared/assets/css/navigation.css') ?: $assetVersion);
+$secondaryPagesStylesheetVersion = (string) (filemtime(__DIR__ . '/../shared/assets/css/secondary-pages.css') ?: $assetVersion);
 $navigationScriptVersion = (string) (filemtime(__DIR__ . '/../shared/assets/js/navigation.js') ?: $assetVersion);
 $playerStylesheetVersion = (string) (filemtime(__DIR__ . '/assets/css/player.css') ?: $assetVersion);
 $playerScriptVersion = (string) (filemtime(__DIR__ . '/js/player.js') ?: $assetVersion);
@@ -298,6 +261,7 @@ $metaOptions = array_merge($metaOptions, [
         '/shared/assets/css/site.css?rev=' . rawurlencode($siteStylesheetVersion),
         '/home/assets/css/home.css?rev=' . rawurlencode($homeStylesheetVersion),
         '/shared/assets/css/navigation.css?rev=' . rawurlencode($navigationStylesheetVersion),
+        '/shared/assets/css/secondary-pages.css?rev=' . rawurlencode($secondaryPagesStylesheetVersion),
         '/player/assets/css/player.css?rev=' . rawurlencode($playerStylesheetVersion),
     ],
     'body_class' => 'secondary-page player-page',
@@ -338,7 +302,6 @@ mineacle_page_head($pageTitle, $metaOptions);
                         </span>
 
                         <div class="profile-summary__copy">
-                            <p class="profile-eyebrow">Player Profile</p>
                             <h1 id="profile-player-name"><?php echo $viewModel['ranked_name_html']; ?></h1>
                             <div class="profile-presence">
                                 <span class="profile-presence__state <?php echo $viewModel['online'] ? 'is-online' : 'is-offline'; ?>">
@@ -364,7 +327,6 @@ mineacle_page_head($pageTitle, $metaOptions);
             <?php else: ?>
                 <div class="profile-summary profile-summary--state">
                     <div>
-                        <p class="profile-eyebrow">Player Profile</p>
                         <h1 id="profile-player-name">Mineacle Players</h1>
                         <p>View player statistics, team information, and recent duel history.</p>
                     </div>
@@ -376,14 +338,12 @@ mineacle_page_head($pageTitle, $metaOptions);
     <div class="player-content">
         <?php if ($loadError): ?>
             <section class="profile-message" aria-labelledby="profile-load-error-title">
-                <p class="profile-eyebrow">Player Profile</p>
                 <h2 id="profile-load-error-title">Unable to load player stats</h2>
                 <p>Please check the Mineacle Core database connection, then try again.</p>
                 <a class="profile-action" href="<?php echo h($leaderboardsUrl); ?>">Leaderboards</a>
             </section>
         <?php elseif ($viewModel === null): ?>
             <section class="profile-message" aria-labelledby="profile-not-found-title">
-                <p class="profile-eyebrow">Player Profile</p>
                 <h2 id="profile-not-found-title">Player not found</h2>
                 <p>No stored Mineacle profile was found for <?php echo h($query !== '' ? $query : 'that player'); ?>.</p>
                 <a class="profile-action" href="<?php echo h($leaderboardsUrl); ?>">Leaderboards</a>
@@ -395,7 +355,7 @@ mineacle_page_head($pageTitle, $metaOptions);
                         <p class="profile-eyebrow">Performance</p>
                         <h2 id="profile-stats-title">Global Statistics</h2>
                     </div>
-                    <span>Live from Mineacle Core</span>
+                    <span>Live data · refreshes every minute</span>
                 </header>
 
                 <div class="profile-stats-grid">
@@ -445,7 +405,7 @@ mineacle_page_head($pageTitle, $metaOptions);
         <?php endif; ?>
     </div>
 
-    <?php mineacle_profile_footer($site); ?>
+    <?php mineacle_compact_footer($site); ?>
 </main>
 <?php mineacle_page_end([
     'scripts' => [

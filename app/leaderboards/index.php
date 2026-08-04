@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../shared/php/layout.php';
 require_once __DIR__ . '/../shared/php/navigation.php';
+require_once __DIR__ . '/../shared/php/compact-footer.php';
 require_once __DIR__ . '/../shared/php/stats-lib.php';
 
 $config = mineacle_config();
@@ -192,6 +193,7 @@ $siteStylesheetVersion = (string) (filemtime(__DIR__ . '/../shared/assets/css/si
 $pagesStylesheetVersion = (string) (filemtime(__DIR__ . '/../shared/assets/css/pages.css') ?: $assetVersion);
 $homeStylesheetVersion = (string) (filemtime(__DIR__ . '/../home/assets/css/home.css') ?: $assetVersion);
 $navigationStylesheetVersion = (string) (filemtime(__DIR__ . '/../shared/assets/css/navigation.css') ?: $assetVersion);
+$secondaryPagesStylesheetVersion = (string) (filemtime(__DIR__ . '/../shared/assets/css/secondary-pages.css') ?: $assetVersion);
 $navigationScriptVersion = (string) (filemtime(__DIR__ . '/../shared/assets/js/navigation.js') ?: $assetVersion);
 $leaderboardsStylesheetVersion = (string) (filemtime(__DIR__ . '/assets/css/leaderboards.css') ?: $assetVersion);
 $leaderboardsScriptVersion = (string) (filemtime(__DIR__ . '/assets/js/leaderboards.js') ?: $assetVersion);
@@ -237,6 +239,7 @@ mineacle_page_head('Leaderboards', [
         '/shared/assets/css/pages.css?rev=' . rawurlencode($pagesStylesheetVersion),
         '/home/assets/css/home.css?rev=' . rawurlencode($homeStylesheetVersion),
         '/shared/assets/css/navigation.css?rev=' . rawurlencode($navigationStylesheetVersion),
+        '/shared/assets/css/secondary-pages.css?rev=' . rawurlencode($secondaryPagesStylesheetVersion),
         '/leaderboards/assets/css/leaderboards.css?rev=' . rawurlencode($leaderboardsStylesheetVersion),
     ],
     'body_class' => 'secondary-page leaderboards-page',
@@ -507,7 +510,7 @@ mineacle_page_head('Leaderboards', [
         </div>
     </section>
 
-    <?php mineacle_page_footer($site); ?>
+    <?php mineacle_compact_footer($site); ?>
 </main>
 <?php mineacle_page_end([
     'scripts' => [
