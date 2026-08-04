@@ -19,17 +19,24 @@
 }
 
 html {
+  width: 100%;
+  height: auto !important;
   min-width: 320px;
   min-height: 100%;
   overflow-x: hidden;
+  overflow-y: auto !important;
   background: var(--player-bg);
 }
 
-body.player-page {
+body.secondary-page.player-page {
+  width: 100%;
+  height: auto !important;
   min-width: 320px;
-  min-height: 100%;
+  min-height: 100vh;
   margin: 0;
-  overflow-x: hidden;
+  overflow-x: hidden !important;
+  overflow-y: visible !important;
+  overscroll-behavior-y: auto;
   background: var(--player-bg);
   color: var(--player-text);
   color-scheme: dark;
@@ -49,7 +56,9 @@ body.player-page a {
 .player-site {
   display: grid;
   width: 100%;
+  height: auto;
   min-height: 100vh;
+  overflow: visible;
   padding: var(--home-frame-top) var(--home-frame-right) var(--home-frame-bottom) var(--home-frame-left);
   background: var(--player-bg);
   gap: var(--home-gap);
