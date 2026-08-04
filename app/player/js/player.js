@@ -2,7 +2,11 @@
   "use strict";
 
   const menu = document.querySelector("[data-player-menu]");
-  const menuButton = menu?.querySelector(".player-menu__button");
+  const menuButton = menu?.querySelector(".home-menu__button");
+  const serverStatus = document.querySelector("#home-server-status");
+  const serverStatusCount = document.querySelector(
+    "#home-server-status-count",
+  );
   const resetTimers = new WeakMap();
 
   const copyText = async (value) => {
@@ -44,6 +48,14 @@
     return copied;
   };
 
+  const fallbackText = (fallbackLabel) => {
+    if (typeof fallbackLabel === "function") {
+      return fallbackLabel();
+    }
+
+    return fallbackLabel;
+  };
+
   const setCopyFeedback = (button, label, copied, fallbackLabel) => {
     const previousTimer = resetTimers.get(button);
 
@@ -56,8 +68,8 @@
     button.classList.toggle("is-copy-error", !copied);
 
     const timer = window.setTimeout(() => {
-      label.textContent = fallbackLabel;
       button.classList.remove("is-copied", "is-copy-error");
+      label.textContent = fallbackText(fallbackLabel);
       resetTimers.delete(button);
     }, copied ? 1800 : 2400);
 
@@ -68,7 +80,7 @@
     const label = button.querySelector(labelSelector);
 
     if (!(label instanceof HTMLElement)) {
-      return;
+      return null;
     }
 
     button.addEventListener("click", async () => {
@@ -76,10 +88,97 @@
       const copied = value ? await copyText(value) : false;
       setCopyFeedback(button, label, copied, fallbackLabel);
     });
+
+    return label;
   };
 
   document.querySelectorAll("[data-player-copy-server]").forEach((button) => {
-    bindCopyButton(button, "[data-player-copy-label]", "Play");
+    let hovered = false;
+    let focused = false;
+    let label = null;
+
+    const livePlayLabel = () => {
+      if (!hovered && !focused) {
+        return "Play";
+      }
+
+      if (!serverStatus?.classList.contains("is-online")) {
+        return "Play";
+      }
+
+      const rawCount = serverStatusCount?.textContent
+        ?.replaceAll(",", "")
+        .trim();
+
+      if (!rawCount || !/^\d+$/.test(rawCount)) {
+        return "Play";
+      }
+
+      const count = Number(rawCount);
+
+      if (!Number.isSafeInteger(count) || count < 0) {
+        return "Play";
+      }
+
+      return `Play ${count.toLocaleString()}`;
+    };
+
+    const renderIdleLabel = () => {
+      if (
+        !(label instanceof HTMLElement) ||
+        button.classList.contains("is-copied") ||
+        button.classList.contains("is-copy-error")
+      ) {
+        return;
+      }
+
+      label.textContent = livePlayLabel();
+    };
+
+    label = bindCopyButton(
+      button,
+      "[data-player-copy-label]",
+      livePlayLabel,
+    );
+
+    button.addEventListener("pointerenter", () => {
+      hovered = true;
+      renderIdleLabel();
+    });
+
+    button.addEventListener("pointerleave", () => {
+      hovered = false;
+      renderIdleLabel();
+    });
+
+    button.addEventListener("focus", () => {
+      focused = true;
+      renderIdleLabel();
+    });
+
+    button.addEventListener("blur", () => {
+      focused = false;
+      renderIdleLabel();
+    });
+
+    if (label instanceof HTMLElement) {
+      const observer = new MutationObserver(renderIdleLabel);
+
+      if (serverStatusCount) {
+        observer.observe(serverStatusCount, {
+          childList: true,
+          characterData: true,
+          subtree: true,
+        });
+      }
+
+      if (serverStatus) {
+        observer.observe(serverStatus, {
+          attributes: true,
+          attributeFilter: ["class"],
+        });
+      }
+    }
   });
 
   document.querySelectorAll("[data-copy-profile]").forEach((button) => {

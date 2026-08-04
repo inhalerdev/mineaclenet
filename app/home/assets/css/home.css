@@ -255,19 +255,6 @@ body.mineacle-home img {
   transition: color 120ms ease-out, transform 120ms ease-out;
 }
 
-.home-navigation__link::after {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 75%;
-  height: clamp(3px, min(0.208333vw, 0.37037vh), 8px);
-  background: currentColor;
-  content: "";
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  will-change: transform;
-}
 
 .home-navigation__link.is-current {
   color: var(--home-nav-current);
@@ -285,9 +272,6 @@ body.mineacle-home img {
   color: var(--home-link-hover);
 }
 
-.home-navigation__link.is-current::after {
-  transform: scaleX(1);
-}
 
 .home-menu {
   display: none;
