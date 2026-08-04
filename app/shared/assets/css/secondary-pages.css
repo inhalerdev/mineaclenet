@@ -1,7 +1,7 @@
 :root {
-  /* Shared secondary-page typography. At the 1920×1080 baseline these resolve
-     to 32 / 20 / 16 / 13 / 12 / 11 px, then scale by both width and height. */
-  --secondary-page-title-size: clamp(24px, min(1.666667vw, 2.962963vh), 64px);
+  /* One responsive type scale for Player and Leaderboards. At 1920×1080:
+     title 32px, section title 20px, body 16px, supporting 13px, label 12px. */
+  --secondary-page-title-size: clamp(26px, min(1.666667vw, 2.962963vh), 64px);
   --secondary-section-title-size: clamp(17px, min(1.041667vw, 1.851852vh), 40px);
   --secondary-body-size: clamp(13px, min(0.833333vw, 1.481481vh), 32px);
   --secondary-small-size: clamp(11px, min(0.677083vw, 1.203704vh), 26px);
@@ -12,6 +12,7 @@
   --secondary-muted: rgba(248, 248, 248, 0.66);
   --secondary-line: rgba(248, 248, 248, 0.075);
   --secondary-surface: #202020;
+  --secondary-surface-soft: #1a1a1a;
   --secondary-hover: #d0afff;
 }
 
@@ -33,36 +34,51 @@ body.leaderboards-page {
 
 .compact-footer__main {
   display: grid;
-  grid-template-columns: minmax(260px, 1.35fr) minmax(0, auto) minmax(0, auto);
+  grid-template-columns: minmax(240px, 1fr) minmax(0, auto);
   align-items: center;
   min-width: 0;
-  padding: clamp(18px, min(1.666667vw, 2.962963vh), 64px)
-    clamp(16px, min(1.666667vw, 2.962963vh), 64px);
+  padding: clamp(18px, min(1.666667vw, 2.962963vh), 64px);
   gap: var(--home-gap);
 }
 
 .compact-footer__brand {
   display: grid;
+  justify-items: start;
   min-width: 0;
-  color: inherit;
-  text-decoration: none;
-  gap: 4px;
+  gap: 5px;
 }
 
-.compact-footer__brand strong {
+.compact-footer__brand-link {
+  display: inline-flex;
+  width: max-content;
+  max-width: 100%;
   color: var(--secondary-text);
   font-size: var(--secondary-section-title-size);
   font-weight: 600;
   line-height: 1.1;
+  text-decoration: none;
   text-transform: uppercase;
+  transition: color 120ms ease-out;
 }
 
-.compact-footer__brand span {
+.compact-footer__brand-link:hover,
+.compact-footer__brand-link:focus-visible {
+  color: var(--secondary-hover);
+}
+
+.compact-footer__brand > span {
   max-width: 44ch;
   color: var(--secondary-muted);
   font-size: var(--secondary-small-size);
   font-weight: 400;
   line-height: 1.35;
+}
+
+.compact-footer__navigation {
+  display: grid;
+  justify-items: end;
+  min-width: 0;
+  gap: 12px;
 }
 
 .compact-footer__links {
@@ -71,7 +87,7 @@ body.leaderboards-page {
   justify-content: flex-end;
   flex-wrap: wrap;
   min-width: 0;
-  gap: 8px 16px;
+  gap: 9px 18px;
 }
 
 .compact-footer__links a {
@@ -86,10 +102,41 @@ body.leaderboards-page {
 }
 
 .compact-footer__links a:hover,
-.compact-footer__links a:focus-visible,
-.compact-footer__brand:hover strong,
-.compact-footer__brand:focus-visible strong {
+.compact-footer__links a:focus-visible {
   color: var(--secondary-hover);
+}
+
+.compact-footer__socials {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+  gap: 8px;
+}
+
+.compact-footer__social {
+  display: grid;
+  place-items: center;
+  width: clamp(26px, min(1.666667vw, 2.962963vh), 64px);
+  height: clamp(26px, min(1.666667vw, 2.962963vh), 64px);
+  flex: none;
+  overflow: hidden;
+  border-radius: 2px;
+  text-decoration: none;
+  transition: filter 120ms ease-out, transform 120ms ease-out;
+}
+
+.compact-footer__social img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.compact-footer__social:hover,
+.compact-footer__social:focus-visible {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
 }
 
 .compact-footer__legal {
@@ -111,27 +158,22 @@ body.leaderboards-page {
   outline-offset: 3px;
 }
 
-@media (max-width: 1120px) {
-  .compact-footer__main {
-    grid-template-columns: 1fr auto;
-  }
-
-  .compact-footer__links--social {
-    grid-column: 1 / -1;
-    justify-content: flex-start;
-  }
-}
-
-@media (max-width: 720px) {
+@media (max-width: 860px) {
   .compact-footer__main {
     grid-template-columns: 1fr;
   }
 
-  .compact-footer__links,
-  .compact-footer__links--social {
-    justify-content: flex-start;
+  .compact-footer__navigation {
+    justify-items: start;
   }
 
+  .compact-footer__links,
+  .compact-footer__socials {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 560px) {
   .compact-footer__legal {
     align-items: flex-start;
     flex-direction: column;
