@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../shared/php/layout.php';
+require_once __DIR__ . '/../shared/php/navigation.php';
 require_once __DIR__ . '/../shared/php/stats-lib.php';
 
 $config = mineacle_config();
@@ -279,27 +280,14 @@ $searchLabel = $uniquePlayerCount > 0
     ? 'Search ' . number_format($uniquePlayerCount) . ' players across all Mineacle dimensions'
     : 'Search players across all Mineacle dimensions';
 
-$siteUrl = static function (mixed $value, string $fallback): string {
-    $resolved = mineacle_page_public_link($value);
-
-    return $resolved === '#' ? $fallback : $resolved;
-};
-
-$navigation = [
-    ['key' => 'home', 'label' => 'Home', 'url' => '/', 'external' => false],
-    ['key' => 'vote', 'label' => 'Vote', 'url' => '/vote', 'external' => false],
-    ['key' => 'leaderboards', 'label' => 'Leaderboards', 'url' => '/leaderboards', 'external' => false],
-    ['key' => 'bans', 'label' => 'Bans', 'url' => '/bans', 'external' => false],
-    ['key' => 'store', 'label' => 'Store', 'url' => $siteUrl($site['store_url'] ?? '', 'https://store.mineacle.net/'), 'external' => true],
-];
-$currentNavKey = 'leaderboards';
 $assetVersion = mineacle_page_asset_version();
 $siteStylesheetVersion = (string) (filemtime(__DIR__ . '/../shared/assets/css/site.css') ?: $assetVersion);
 $pagesStylesheetVersion = (string) (filemtime(__DIR__ . '/../shared/assets/css/pages.css') ?: $assetVersion);
 $homeStylesheetVersion = (string) (filemtime(__DIR__ . '/../home/assets/css/home.css') ?: $assetVersion);
+$navigationStylesheetVersion = (string) (filemtime(__DIR__ . '/../shared/assets/css/navigation.css') ?: $assetVersion);
+$navigationScriptVersion = (string) (filemtime(__DIR__ . '/../shared/assets/js/navigation.js') ?: $assetVersion);
 $playerStylesheetVersion = (string) (filemtime(__DIR__ . '/assets/css/player.css') ?: $assetVersion);
 $playerScriptVersion = (string) (filemtime(__DIR__ . '/assets/js/player.js') ?: $assetVersion);
-$homeLogoVersion = (string) (filemtime(__DIR__ . '/../home/assets/images/logo-small.png') ?: $assetVersion);
 $heroImagePath = __DIR__ . '/assets/images/hero.webp';
 $hasHeroImage = is_file($heroImagePath);
 $heroImageVersion = (string) ($hasHeroImage ? (filemtime($heroImagePath) ?: $assetVersion) : $assetVersion);
@@ -326,6 +314,7 @@ $metaOptions = array_merge($metaOptions, [
         '/shared/assets/css/site.css?rev=' . rawurlencode($siteStylesheetVersion),
         '/shared/assets/css/pages.css?rev=' . rawurlencode($pagesStylesheetVersion),
         '/home/assets/css/home.css?rev=' . rawurlencode($homeStylesheetVersion),
+        '/shared/assets/css/navigation.css?rev=' . rawurlencode($navigationStylesheetVersion),
         '/player/assets/css/player.css?rev=' . rawurlencode($playerStylesheetVersion),
     ],
     'body_class' => 'secondary-page player-page player-page--cinematic',
@@ -350,49 +339,10 @@ mineacle_page_head($pageTitle, $metaOptions);
         <?php endif; ?>
 
         <div class="profile-hero__surface">
-            <header class="home-header player-header">
-                <a class="home-brand" href="/" aria-label="Mineacle home">
-                    <img
-                        src="/home/assets/images/logo-small.png?rev=<?php echo h(rawurlencode($homeLogoVersion)); ?>"
-                        alt=""
-                        width="64"
-                        height="55"
-                        draggable="false"
-                    >
-                </a>
-
-                <nav class="home-navigation" aria-label="Primary navigation">
-                    <div class="home-navigation__links">
-                        <?php foreach ($navigation as $link): ?>
-                            <?php $isCurrent = (string) $link['key'] === $currentNavKey; ?>
-                            <a
-                                class="home-navigation__link<?php echo $isCurrent ? ' is-current' : ''; ?>"
-                                href="<?php echo h((string) $link['url']); ?>"
-                                <?php echo $isCurrent ? 'aria-current="page"' : ''; ?>
-                                <?php echo $link['external'] ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>
-                            ><?php echo h((string) $link['label']); ?></a>
-                        <?php endforeach; ?>
-                    </div>
-
-                    <details class="home-menu" data-player-menu>
-                        <summary class="home-menu__button" aria-label="Open navigation menu">
-                            <span aria-hidden="true"></span>
-                            <span aria-hidden="true"></span>
-                        </summary>
-                        <nav class="home-menu__panel" aria-label="Menu navigation">
-                            <?php foreach ($navigation as $link): ?>
-                                <?php $isCurrent = (string) $link['key'] === $currentNavKey; ?>
-                                <a
-                                    class="home-menu__link<?php echo $isCurrent ? ' is-current' : ''; ?>"
-                                    href="<?php echo h((string) $link['url']); ?>"
-                                    <?php echo $isCurrent ? 'aria-current="page"' : ''; ?>
-                                    <?php echo $link['external'] ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>
-                                ><?php echo h((string) $link['label']); ?></a>
-                            <?php endforeach; ?>
-                        </nav>
-                    </details>
-                </nav>
-            </header>
+            <?php mineacle_site_navigation($site, [
+                'current_key' => 'leaderboards',
+                'header_class' => 'player-header',
+            ]); ?>
 
             <?php if ($viewModel !== null): ?>
                 <?php $profileUrl = 'https://mineacle.net/player/' . rawurlencode((string) $viewModel['username']); ?>
@@ -624,6 +574,7 @@ mineacle_page_head($pageTitle, $metaOptions);
 <?php mineacle_page_end([
     'scripts' => [
         '/shared/assets/js/site.js',
+        '/shared/assets/js/navigation.js?rev=' . rawurlencode($navigationScriptVersion),
         '/player/assets/js/player.js?rev=' . rawurlencode($playerScriptVersion),
     ],
 ]); ?>

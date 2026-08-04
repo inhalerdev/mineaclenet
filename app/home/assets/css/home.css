@@ -45,8 +45,6 @@
   --home-small-gap: clamp(12px, min(0.833333vw, 1.481481vh), 32px);
   --home-viewport-height: 100vh;
   --home-radius: 3px;
-  --home-brand-width: clamp(48px, min(3.333333vw, 5.925926vh), 128px);
-  --home-brand-height: clamp(42px, min(2.864583vw, 5.092593vh), 110px);
   --home-control-size: clamp(48px, min(3.333333vw, 5.925926vh), 128px);
   --home-play-width: clamp(208px, min(13.333333vw, 23.703704vh), 512px);
   --home-nav-size: clamp(18px, min(1.041667vw, 1.851852vh), 40px);
@@ -175,196 +173,6 @@ body.mineacle-home img {
   width: 100%;
   height: 100%;
   padding: var(--home-hero-padding);
-}
-
-.home-header {
-  position: relative;
-  z-index: 10;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  width: 100%;
-  min-height: var(--home-brand-height);
-  gap: var(--home-gap);
-}
-
-.home-brand {
-  display: block;
-  flex: none;
-  width: var(--home-brand-width);
-  height: var(--home-brand-height);
-  color: var(--home-accent);
-  transition: transform 120ms ease-out, filter 120ms ease-out;
-}
-
-.home-brand img {
-  width: var(--home-brand-width);
-  height: var(--home-brand-height);
-  object-fit: contain;
-}
-
-.home-brand:hover,
-.home-brand:focus-visible {
-  filter: brightness(1.08);
-  transform: translateY(-2px);
-}
-
-.home-brand:active {
-  filter: brightness(0.98);
-  transform: translateY(0);
-}
-
-.home-brand:focus-visible,
-.home-navigation__link:focus-visible,
-.home-menu__button:focus-visible,
-.home-menu__link:focus-visible,
-.home-action:focus-visible,
-.home-social:focus-visible,
-.join-dialog button:focus-visible {
-  outline: 3px solid var(--home-white-hover);
-  outline-offset: 4px;
-}
-
-.home-navigation {
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-end;
-  min-width: 0;
-  gap: var(--home-gap);
-}
-
-.home-navigation__links {
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-end;
-  gap: var(--home-gap);
-}
-
-.home-navigation__link {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  min-height: clamp(29px, min(2.03125vw, 3.611111vh), 78px);
-  color: var(--home-nav-static);
-  font-size: var(--home-nav-size);
-  font-weight: 600;
-  line-height: 1;
-  text-decoration: none;
-  text-transform: uppercase;
-  white-space: nowrap;
-  transition: color 120ms ease-out, transform 120ms ease-out;
-}
-
-
-.home-navigation__link.is-current {
-  color: var(--home-nav-current);
-}
-
-.home-navigation__link:hover,
-.home-navigation__link:focus-visible {
-  transform: translateY(-2px);
-}
-
-.home-navigation__link:not(.is-current):hover,
-.home-navigation__link:not(.is-current):focus-visible,
-.home-navigation__link.is-current:hover,
-.home-navigation__link.is-current:focus-visible {
-  color: var(--home-link-hover);
-}
-
-
-.home-menu {
-  display: none;
-}
-
-.home-menu__button {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--home-white);
-  cursor: pointer;
-  gap: 6px;
-  list-style: none;
-  transition: color 120ms ease-out, transform 120ms ease-out;
-}
-
-.home-menu__button::-webkit-details-marker {
-  display: none;
-}
-
-.home-menu__button::marker {
-  display: none;
-  content: "";
-}
-
-.home-menu__button span {
-  display: block;
-  width: 28px;
-  height: 3px;
-  flex: none;
-  align-self: flex-end;
-  border-radius: 1px;
-  background: currentColor;
-  transform-origin: center;
-  transition: transform 140ms ease-out, opacity 100ms ease-out;
-}
-
-.home-menu__button:hover,
-.home-menu__button:focus-visible,
-.home-menu[open] .home-menu__button {
-  color: var(--home-hover);
-  transform: translateY(-2px);
-}
-
-.home-menu[open] .home-menu__button span:first-child {
-  transform: translateY(4.5px) rotate(45deg);
-}
-
-.home-menu[open] .home-menu__button span:last-child {
-  transform: translateY(-4.5px) rotate(-45deg);
-}
-
-.home-menu__panel {
-  position: absolute;
-  top: calc(100% + 12px);
-  right: 0;
-  display: grid;
-  width: 192px;
-  padding: 12px;
-  border: 0;
-  border-radius: var(--home-radius);
-  background: rgba(17, 17, 17, 0.97);
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.38);
-}
-
-.home-menu__link {
-  display: flex;
-  align-items: center;
-  min-height: 40px;
-  padding: 0 12px;
-  color: var(--home-white);
-  font-size: 14px;
-  font-weight: 500;
-  text-decoration: none;
-  text-transform: uppercase;
-  transition: color 120ms ease-out, background-color 120ms ease-out, transform 120ms ease-out;
-}
-
-.home-menu__link.is-current {
-  color: var(--home-nav-current);
-  background: rgba(132, 54, 254, 0.14);
-}
-
-.home-menu__link:hover,
-.home-menu__link:focus-visible {
-  color: var(--home-link-hover);
-  background: rgba(208, 175, 255, 0.12);
-  transform: translateY(-1px);
 }
 
 .home-story {
@@ -624,49 +432,13 @@ body.mineacle-home img {
   transform: translateY(0);
 }
 
-@view-transition {
-  navigation: auto;
-}
-
-::view-transition-old(root) {
-  animation: home-page-out 90ms ease-in both;
-}
-
-::view-transition-new(root) {
-  animation: home-page-in 150ms ease-out both;
-}
-
-@keyframes home-page-out {
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes home-page-in {
-  from {
-    opacity: 0;
-  }
-}
-
 @media (max-width: 1240px) {
-  .home-navigation__links {
-    gap: 18px;
-  }
-
   .home-story__copy p {
     line-height: 1.3;
   }
 }
 
 @media (max-width: 960px) {
-  .home-navigation__links {
-    display: none;
-  }
-
-  .home-menu {
-    display: block;
-  }
-
   .home-story__copy {
     width: min(600px, 100%);
   }
@@ -677,8 +449,6 @@ body.mineacle-home img {
     --home-frame: 16px;
     --home-hero-padding: 16px;
     --home-control-size: 48px;
-    --home-brand-width: 48px;
-    --home-brand-height: 42px;
   }
 
   .home-hero {
@@ -692,14 +462,6 @@ body.mineacle-home img {
 
   .home-hero__surface {
     min-height: calc(var(--home-viewport-height) - var(--home-frame-top) - var(--home-frame-bottom));
-  }
-
-  .home-header {
-    min-height: var(--home-brand-height);
-  }
-
-  .home-menu__panel {
-    width: min(192px, calc(100vw - 64px));
   }
 
   .home-story {

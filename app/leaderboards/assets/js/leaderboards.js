@@ -1,14 +1,65 @@
 (() => {
   "use strict";
 
-  const navigationMenu = document.querySelector("[data-leaderboards-menu]");
-  const navigationButton = navigationMenu?.querySelector(".home-menu__button");
   let requestController = null;
   let requestRun = 0;
   let currentUrl = `${window.location.pathname}${window.location.search}`;
 
   const leaderboardRoot = () => document.querySelector("[data-leaderboard-root]");
   const filterMenu = () => document.querySelector("[data-leaderboard-filter]");
+  const placementNav = () => document.querySelector("[data-leaderboard-placement-nav]");
+
+  const selectPlacement = (button) => {
+    if (!(button instanceof HTMLButtonElement) || button.disabled) {
+      return;
+    }
+
+    const root = leaderboardRoot();
+    const nav = placementNav();
+
+    if (!(root instanceof HTMLElement) || !(nav instanceof HTMLElement)) {
+      return;
+    }
+
+    nav.querySelectorAll("[data-leaderboard-placement]").forEach((control) => {
+      const active = control === button;
+      control.classList.toggle("is-active", active);
+      control.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+
+    root.querySelectorAll(".leaderboard-row.is-placement-focus").forEach((row) => {
+      row.classList.remove("is-placement-focus");
+    });
+
+    const scrollRegion = root.querySelector("[data-leaderboard-scroll]");
+
+    if (!(scrollRegion instanceof HTMLElement)) {
+      return;
+    }
+
+    const placement = button.dataset.leaderboardPlacement || "all";
+    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? "auto"
+      : "smooth";
+
+    if (placement === "all") {
+      scrollRegion.scrollTo({ top: 0, behavior });
+      return;
+    }
+
+    const target = root.querySelector(`[data-leaderboard-rank="${placement}"]`);
+
+    if (!(target instanceof HTMLElement)) {
+      return;
+    }
+
+    target.classList.add("is-placement-focus");
+    const centeredTop = Math.max(
+      0,
+      target.offsetTop - (scrollRegion.clientHeight - target.offsetHeight) / 2,
+    );
+    scrollRegion.scrollTo({ top: centeredTop, behavior });
+  };
 
   const setStatus = (message) => {
     const status = document.querySelector("[data-leaderboard-status]");
@@ -131,21 +182,15 @@
     }
   };
 
-  navigationMenu?.addEventListener("toggle", () => {
-    navigationButton?.setAttribute(
-      "aria-label",
-      navigationMenu.open ? "Close navigation menu" : "Open navigation menu",
-    );
-  });
-
-  navigationMenu?.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", () => {
-      navigationMenu.open = false;
-    });
-  });
-
   document.addEventListener("click", async (event) => {
     if (!(event.target instanceof Element)) {
+      return;
+    }
+
+    const placementButton = event.target.closest("[data-leaderboard-placement]");
+
+    if (placementButton instanceof HTMLButtonElement) {
+      selectPlacement(placementButton);
       return;
     }
 
@@ -182,9 +227,6 @@
       currentFilter.open = false;
     }
 
-    if (navigationMenu?.open && !navigationMenu.contains(event.target)) {
-      navigationMenu.open = false;
-    }
   });
 
   document.addEventListener("keydown", (event) => {
@@ -197,12 +239,6 @@
     if (currentFilter?.open) {
       currentFilter.open = false;
       currentFilter.querySelector("summary")?.focus();
-      return;
-    }
-
-    if (navigationMenu?.open) {
-      navigationMenu.open = false;
-      navigationButton?.focus();
     }
   });
 

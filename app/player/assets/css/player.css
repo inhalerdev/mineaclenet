@@ -989,10 +989,6 @@ body.player-page img {
   height: clamp(22px, min(1.458333vw, 2.592593vh), 56px);
 }
 
-.home-brand:focus-visible,
-.home-navigation__link:focus-visible,
-.home-menu__button:focus-visible,
-.home-menu__link:focus-visible,
 .player-page .search-submit:focus-visible,
 .player-play-button:focus-visible,
 .profile-button:focus-visible,

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../shared/php/layout.php';
+require_once __DIR__ . '/../shared/php/navigation.php';
 require_once __DIR__ . '/../shared/php/stats-lib.php';
 
 $config = mineacle_config();
@@ -187,28 +188,15 @@ function mineacle_leaderboards_rank_class(int $rank): string
     return '';
 }
 
-$siteUrl = static function (mixed $value, string $fallback): string {
-    $resolved = mineacle_page_public_link($value);
-
-    return $resolved === '#' ? $fallback : $resolved;
-};
-
-$navigation = [
-    ['key' => 'home', 'label' => 'Home', 'url' => '/', 'external' => false],
-    ['key' => 'vote', 'label' => 'Vote', 'url' => '/vote', 'external' => false],
-    ['key' => 'leaderboards', 'label' => 'Leaderboards', 'url' => '/leaderboards', 'external' => false],
-    ['key' => 'bans', 'label' => 'Bans', 'url' => '/bans', 'external' => false],
-    ['key' => 'store', 'label' => 'Store', 'url' => $siteUrl($site['store_url'] ?? '', 'https://store.mineacle.net/'), 'external' => true],
-];
-$currentNavKey = 'leaderboards';
 $assetVersion = mineacle_page_asset_version();
 $siteStylesheetVersion = (string) (filemtime(__DIR__ . '/../shared/assets/css/site.css') ?: $assetVersion);
 $pagesStylesheetVersion = (string) (filemtime(__DIR__ . '/../shared/assets/css/pages.css') ?: $assetVersion);
 $homeStylesheetVersion = (string) (filemtime(__DIR__ . '/../home/assets/css/home.css') ?: $assetVersion);
+$navigationStylesheetVersion = (string) (filemtime(__DIR__ . '/../shared/assets/css/navigation.css') ?: $assetVersion);
+$navigationScriptVersion = (string) (filemtime(__DIR__ . '/../shared/assets/js/navigation.js') ?: $assetVersion);
 $leaderboardsStylesheetVersion = (string) (filemtime(__DIR__ . '/assets/css/leaderboards.css') ?: $assetVersion);
 $leaderboardsScriptVersion = (string) (filemtime(__DIR__ . '/assets/js/leaderboards.js') ?: $assetVersion);
 $heroVersion = (string) (filemtime(__DIR__ . '/assets/images/hero.webp') ?: $assetVersion);
-$logoVersion = (string) (filemtime(__DIR__ . '/../home/assets/images/logo-small.png') ?: $assetVersion);
 $categoryLabel = (string) $categories[$category]['label'];
 $metricLabel = (string) $metricConfig['label'];
 $resultCount = count($rows);
@@ -217,6 +205,15 @@ $panelTitle = $order === 'desc'
     ? 'Top 5 ' . $categoryLabel . ' Global'
     : $categoryLabel . ' Global';
 $orderLabel = $order === 'asc' ? 'Ascending' : 'Descending';
+$loadedRankLookup = [];
+
+foreach ($rows as $row) {
+    $loadedRank = max(0, (int) ($row['_global_rank'] ?? 0));
+
+    if ($loadedRank > 0) {
+        $loadedRankLookup[$loadedRank] = true;
+    }
+}
 
 mineacle_page_head('Leaderboards', [
     'meta_title' => 'Leaderboards | Mineacle',
@@ -226,6 +223,7 @@ mineacle_page_head('Leaderboards', [
         '/shared/assets/css/site.css?rev=' . rawurlencode($siteStylesheetVersion),
         '/shared/assets/css/pages.css?rev=' . rawurlencode($pagesStylesheetVersion),
         '/home/assets/css/home.css?rev=' . rawurlencode($homeStylesheetVersion),
+        '/shared/assets/css/navigation.css?rev=' . rawurlencode($navigationStylesheetVersion),
         '/leaderboards/assets/css/leaderboards.css?rev=' . rawurlencode($leaderboardsStylesheetVersion),
     ],
     'body_class' => 'secondary-page leaderboards-page',
@@ -245,49 +243,10 @@ mineacle_page_head('Leaderboards', [
             aria-hidden="true"
         >
         <div class="leaderboards-hero__surface">
-            <header class="home-header leaderboards-header">
-                <a class="home-brand" href="/" aria-label="Mineacle home">
-                    <img
-                        src="/home/assets/images/logo-small.png?rev=<?php echo h(rawurlencode($logoVersion)); ?>"
-                        alt=""
-                        width="64"
-                        height="55"
-                        draggable="false"
-                    >
-                </a>
-
-                <nav class="home-navigation" aria-label="Primary navigation">
-                    <div class="home-navigation__links">
-                        <?php foreach ($navigation as $link): ?>
-                            <?php $isCurrent = (string) $link['key'] === $currentNavKey; ?>
-                            <a
-                                class="home-navigation__link<?php echo $isCurrent ? ' is-current' : ''; ?>"
-                                href="<?php echo h((string) $link['url']); ?>"
-                                <?php echo $isCurrent ? 'aria-current="page"' : ''; ?>
-                                <?php echo $link['external'] ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>
-                            ><?php echo h((string) $link['label']); ?></a>
-                        <?php endforeach; ?>
-                    </div>
-
-                    <details class="home-menu" data-leaderboards-menu>
-                        <summary class="home-menu__button" aria-label="Open navigation menu">
-                            <span aria-hidden="true"></span>
-                            <span aria-hidden="true"></span>
-                        </summary>
-                        <nav class="home-menu__panel" aria-label="Menu navigation">
-                            <?php foreach ($navigation as $link): ?>
-                                <?php $isCurrent = (string) $link['key'] === $currentNavKey; ?>
-                                <a
-                                    class="home-menu__link<?php echo $isCurrent ? ' is-current' : ''; ?>"
-                                    href="<?php echo h((string) $link['url']); ?>"
-                                    <?php echo $isCurrent ? 'aria-current="page"' : ''; ?>
-                                    <?php echo $link['external'] ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>
-                                ><?php echo h((string) $link['label']); ?></a>
-                            <?php endforeach; ?>
-                        </nav>
-                    </details>
-                </nav>
-            </header>
+            <?php mineacle_site_navigation($site, [
+                'current_key' => 'leaderboards',
+                'header_class' => 'leaderboards-header',
+            ]); ?>
 
             <div class="leaderboards-hero__copy">
                 <h1 id="leaderboards-page-title">Leaderboards</h1>
@@ -309,6 +268,25 @@ mineacle_page_head('Leaderboards', [
                 <span>Global rankings</span>
                 <h2 id="leaderboard-panel-title"><?php echo h($panelTitle); ?></h2>
             </div>
+
+            <nav class="leaderboard-placement" aria-label="Leaderboard placements" data-leaderboard-placement-nav>
+                <button
+                    class="leaderboard-placement__button is-active"
+                    type="button"
+                    data-leaderboard-placement="all"
+                    aria-pressed="true"
+                >Overall</button>
+                <?php foreach ([1, 2, 3] as $placement): ?>
+                    <?php $placementAvailable = isset($loadedRankLookup[$placement]); ?>
+                    <button
+                        class="leaderboard-placement__button"
+                        type="button"
+                        data-leaderboard-placement="<?php echo h((string) $placement); ?>"
+                        aria-pressed="false"
+                        <?php echo $placementAvailable ? '' : 'disabled'; ?>
+                    >#<?php echo h((string) $placement); ?></button>
+                <?php endforeach; ?>
+            </nav>
 
             <div class="leaderboard-panel__controls">
                 <nav class="leaderboard-order" aria-label="Ranking order">
@@ -431,7 +409,7 @@ mineacle_page_head('Leaderboards', [
                                 $deaths = mineacle_stats_int($row['deaths'] ?? 0);
                                 $teamName = mineacle_stats_team_name($row);
                                 ?>
-                                <a class="leaderboard-row<?php echo h($rankClass); ?>" href="<?php echo h(mineacle_leaderboards_player_url($row)); ?>">
+                                <a class="leaderboard-row<?php echo h($rankClass); ?>" href="<?php echo h(mineacle_leaderboards_player_url($row)); ?>" data-leaderboard-rank="<?php echo h((string) $rank); ?>">
                                     <span class="leaderboard-row__rank">#<?php echo h((string) $rank); ?></span>
                                     <span class="leaderboard-row__identity">
                                         <span class="leaderboard-row__avatar<?php echo $head !== '' ? ' has-image' : ''; ?>" aria-hidden="true">
@@ -465,7 +443,7 @@ mineacle_page_head('Leaderboards', [
                                 $deaths = mineacle_stats_int($row['deaths'] ?? 0);
                                 $members = mineacle_stats_int($row['members'] ?? 0);
                                 ?>
-                                <article class="leaderboard-row<?php echo h($rankClass); ?>">
+                                <article class="leaderboard-row<?php echo h($rankClass); ?>" data-leaderboard-rank="<?php echo h((string) $rank); ?>">
                                     <span class="leaderboard-row__rank">#<?php echo h((string) $rank); ?></span>
                                     <span class="leaderboard-row__identity">
                                         <span class="leaderboard-row__avatar" aria-hidden="true"><?php echo h(mineacle_leaderboards_team_initial($row)); ?></span>
@@ -505,6 +483,7 @@ mineacle_page_head('Leaderboards', [
 <?php mineacle_page_end([
     'scripts' => [
         '/shared/assets/js/site.js',
+        '/shared/assets/js/navigation.js?rev=' . rawurlencode($navigationScriptVersion),
         '/leaderboards/assets/js/leaderboards.js?rev=' . rawurlencode($leaderboardsScriptVersion),
     ],
 ]); ?>

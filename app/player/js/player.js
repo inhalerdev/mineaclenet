@@ -1,8 +1,6 @@
 (() => {
   "use strict";
 
-  const menu = document.querySelector("[data-player-menu]");
-  const menuButton = menu?.querySelector(".home-menu__button");
   const serverStatus = document.querySelector("#home-server-status");
   const serverStatusCount = document.querySelector(
     "#home-server-status-count",
@@ -185,29 +183,4 @@
     bindCopyButton(button, "[data-profile-copy-label]", "Copy Profile");
   });
 
-  menu?.addEventListener("toggle", () => {
-    menuButton?.setAttribute(
-      "aria-label",
-      menu.open ? "Close navigation menu" : "Open navigation menu",
-    );
-  });
-
-  menu?.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", () => {
-      menu.open = false;
-    });
-  });
-
-  document.addEventListener("pointerdown", (event) => {
-    if (menu?.open && !menu.contains(event.target)) {
-      menu.open = false;
-    }
-  });
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && menu?.open) {
-      menu.open = false;
-      menuButton?.focus();
-    }
-  });
 })();

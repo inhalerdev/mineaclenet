@@ -1,8 +1,6 @@
 (() => {
   "use strict";
 
-  const menu = document.querySelector("[data-home-menu]");
-  const menuButton = menu?.querySelector(".home-menu__button");
   const dialog = document.querySelector("[data-join-dialog]");
   const openHelpButton = document.querySelector("[data-open-join-help]");
   const closeHelpButton = document.querySelector("[data-close-join-help]");
@@ -449,33 +447,4 @@
     }
   });
 
-  menu?.addEventListener("toggle", () => {
-    if (!menuButton) {
-      return;
-    }
-
-    menuButton.setAttribute(
-      "aria-label",
-      menu.open ? "Close navigation menu" : "Open navigation menu",
-    );
-  });
-
-  menu?.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", () => {
-      menu.open = false;
-    });
-  });
-
-  document.addEventListener("pointerdown", (event) => {
-    if (menu?.open && !menu.contains(event.target)) {
-      menu.open = false;
-    }
-  });
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && menu?.open) {
-      menu.open = false;
-      menuButton?.focus();
-    }
-  });
 })();

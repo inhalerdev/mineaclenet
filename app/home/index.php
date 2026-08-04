@@ -10,6 +10,7 @@ if (in_array($requestPath, ['/home', '/home.php', '/home/index.php'], true)) {
 }
 
 require_once __DIR__ . '/../shared/php/layout.php';
+require_once __DIR__ . '/../shared/php/navigation.php';
 
 $config = mineacle_config();
 $site = is_array($config['site'] ?? null) ? $config['site'] : [];
@@ -22,7 +23,6 @@ $publicUrl = static function (mixed $value, string $fallback): string {
     return $url === '#' ? $fallback : $url;
 };
 
-$storeUrl = $publicUrl($site['store_url'] ?? '', 'https://store.mineacle.net/');
 $discordUrl = $publicUrl($site['discord_url'] ?? '', 'https://discord.gg/qmpJ4xMguT');
 $xUrl = $publicUrl($site['x_url'] ?? '', 'https://x.com/mineaclenetwork');
 $youtubeUrl = $publicUrl($site['youtube_url'] ?? '', 'https://www.youtube.com/@mineaclenetwork');
@@ -45,14 +45,6 @@ if (
 ) {
     $heroVideoUrl = '';
 }
-
-$navigation = [
-    ['label' => 'Home', 'url' => '/', 'current' => true, 'external' => false],
-    ['label' => 'Vote', 'url' => '/vote', 'current' => false, 'external' => false],
-    ['label' => 'Leaderboards', 'url' => '/leaderboards', 'current' => false, 'external' => false],
-    ['label' => 'Bans', 'url' => '/bans', 'current' => false, 'external' => false],
-    ['label' => 'Store', 'url' => $storeUrl, 'current' => false, 'external' => true],
-];
 
 $socialLinks = [
     ['key' => 'discord', 'label' => 'Join Mineacle on Discord', 'url' => $discordUrl],
@@ -79,12 +71,19 @@ foreach ($assetFiles as $assetFile) {
 }
 
 $assetRevision = rawurlencode((string) $assetVersion);
+$navigationStylesheetPath = __DIR__ . '/../shared/assets/css/navigation.css';
+$navigationScriptPath = __DIR__ . '/../shared/assets/js/navigation.js';
+$navigationStylesheetVersion = (string) (is_file($navigationStylesheetPath) ? (filemtime($navigationStylesheetPath) ?: $assetVersion) : $assetVersion);
+$navigationScriptVersion = (string) (is_file($navigationScriptPath) ? (filemtime($navigationScriptPath) ?: $assetVersion) : $assetVersion);
 
 mineacle_page_head('Home', [
     'meta_title' => 'Home | Mineacle',
     'meta_description' => 'Enter the world of Mineacle, join the Minecraft server, vote, view leaderboards, and connect with the community.',
     'canonical_url' => 'https://mineacle.net/',
-    'stylesheets' => ['/home/assets/css/home.css?rev=' . $assetRevision],
+    'stylesheets' => [
+        '/shared/assets/css/navigation.css?rev=' . rawurlencode($navigationStylesheetVersion),
+        '/home/assets/css/home.css?rev=' . $assetRevision,
+    ],
     'body_class' => 'mineacle-home',
     'external_fonts' => false,
     'theme_color' => '#111111',
@@ -117,51 +116,11 @@ mineacle_page_head('Home', [
         <?php endif; ?>
 
         <div class="home-hero__surface">
-            <header class="home-header">
-                <a class="home-brand" href="/" aria-label="Mineacle home" aria-current="page">
-                    <img
-                        src="/home/assets/images/logo-small.png?rev=<?php echo h($assetRevision); ?>"
-                        alt=""
-                        width="64"
-                        height="55"
-                        draggable="false"
-                    >
-                </a>
-
-                <nav class="home-navigation" aria-label="Primary navigation">
-                    <div class="home-navigation__links">
-                        <?php foreach ($navigation as $link): ?>
-                            <a
-                                class="home-navigation__link<?php echo $link['current'] ? ' is-current' : ''; ?>"
-                                href="<?php echo h((string) $link['url']); ?>"
-                                <?php echo $link['current'] ? 'aria-current="page"' : ''; ?>
-                                <?php echo $link['external'] ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>
-                            ><?php echo h((string) $link['label']); ?></a>
-                        <?php endforeach; ?>
-                    </div>
-
-                    <details class="home-menu" data-home-menu>
-                        <summary class="home-menu__button" aria-label="Open navigation menu">
-                            <span aria-hidden="true"></span>
-                            <span aria-hidden="true"></span>
-                        </summary>
-                        <nav class="home-menu__panel" aria-label="Menu navigation">
-                            <?php foreach ($navigation as $link): ?>
-                                <a
-                                    class="home-menu__link<?php echo $link['current'] ? ' is-current' : ''; ?>"
-                                    href="<?php echo h((string) $link['url']); ?>"
-                                    <?php echo $link['current'] ? 'aria-current="page"' : ''; ?>
-                                    <?php echo $link['external'] ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>
-                                ><?php echo h((string) $link['label']); ?></a>
-                            <?php endforeach; ?>
-                        </nav>
-                    </details>
-                </nav>
-            </header>
+            <?php mineacle_site_navigation($site, ['current_key' => 'home']); ?>
 
             <div class="home-story">
                 <div class="home-story__copy">
-                    <h2 id="merchant-title">The Merchant | Season I</h2>
+                    <h2 id="merchant-title">The Merchant</h2>
                     <p>In a silent world stripped of color, a nameless wanderer found a portal hidden behind layers of unbreakable stone. It opened into a vibrant land filled with crowded markets, growing settlements, and Merchants who valued every block gathered and every item crafted. They claimed the realm’s prosperity came from an ancient source buried beneath the first village. With nothing left to lose, the wanderer began searching for it before the gray world consumed itself completely.</p>
                 </div>
 
@@ -222,4 +181,9 @@ mineacle_page_head('Home', [
         </div>
     </dialog>
 </main>
-<?php mineacle_page_end(['scripts' => ['/home/assets/js/home.js?rev=' . $assetRevision]]); ?>
+<?php mineacle_page_end([
+    'scripts' => [
+        '/shared/assets/js/navigation.js?rev=' . rawurlencode($navigationScriptVersion),
+        '/home/assets/js/home.js?rev=' . $assetRevision,
+    ],
+]); ?>
