@@ -204,17 +204,24 @@ $visibleCount = min(5, $resultCount);
 $panelTitle = $order === 'desc'
     ? 'Top 5 ' . $categoryLabel . ' Global'
     : $categoryLabel . ' Global';
-$orderLabel = $order === 'asc' ? 'Ascending' : 'Descending';
-$loadedRankLookup = [];
-
-foreach ($rows as $row) {
-    $loadedRank = max(0, (int) ($row['_global_rank'] ?? 0));
-
-    if ($loadedRank > 0) {
-        $loadedRankLookup[$loadedRank] = true;
-    }
-}
-
+$orderLabel = $order === 'asc' ? 'Lowest first' : 'Best first';
+$tableColumns = $category === 'players'
+    ? [
+        ['label' => 'Rank', 'metric' => 'overall'],
+        ['label' => 'Player', 'metric' => null],
+        ['label' => 'Balance', 'metric' => 'balance'],
+        ['label' => 'K/D Ratio', 'metric' => 'kd'],
+        ['label' => 'Playtime', 'metric' => 'playtime'],
+    ]
+    : [
+        ['label' => 'Rank', 'metric' => 'overall'],
+        ['label' => 'Team', 'metric' => null],
+        ['label' => 'Capital', 'metric' => 'balance'],
+        ['label' => 'K/D Ratio', 'metric' => 'kd'],
+        ['label' => 'Members', 'metric' => 'members'],
+    ];
+$directionOrder = $order === 'desc' ? 'asc' : 'desc';
+$directionLabel = $order === 'desc' ? 'Show lowest first' : 'Show best first';
 mineacle_page_head('Leaderboards', [
     'meta_title' => 'Leaderboards | Mineacle',
     'meta_description' => 'Explore Mineacle global player and team rankings across economy, combat, and playtime.',
@@ -269,100 +276,42 @@ mineacle_page_head('Leaderboards', [
                 <h2 id="leaderboard-panel-title"><?php echo h($panelTitle); ?></h2>
             </div>
 
-            <nav class="leaderboard-placement" aria-label="Leaderboard placements" data-leaderboard-placement-nav>
-                <button
-                    class="leaderboard-placement__button is-active"
-                    type="button"
-                    data-leaderboard-placement="all"
-                    aria-pressed="true"
-                >Overall</button>
-                <?php foreach ([1, 2, 3] as $placement): ?>
-                    <?php $placementAvailable = isset($loadedRankLookup[$placement]); ?>
-                    <button
-                        class="leaderboard-placement__button"
-                        type="button"
-                        data-leaderboard-placement="<?php echo h((string) $placement); ?>"
-                        aria-pressed="false"
-                        <?php echo $placementAvailable ? '' : 'disabled'; ?>
-                    >#<?php echo h((string) $placement); ?></button>
+            <nav class="leaderboard-scope" aria-label="Choose leaderboard">
+                <?php foreach ($categories as $categoryKey => $categoryData): ?>
+                    <?php $isCurrentCategory = $category === $categoryKey; ?>
+                    <a
+                        class="leaderboard-scope__link<?php echo $isCurrentCategory ? ' is-active' : ''; ?>"
+                        href="<?php echo h(mineacle_leaderboards_url((string) $categoryKey, 'overall', 'desc', $search)); ?>"
+                        data-leaderboard-link
+                        <?php echo $isCurrentCategory ? 'aria-current="page"' : ''; ?>
+                    ><?php echo h((string) $categoryData['label']); ?></a>
                 <?php endforeach; ?>
             </nav>
-
-            <div class="leaderboard-panel__controls">
-                <nav class="leaderboard-order" aria-label="Ranking order">
-                    <a
-                        class="leaderboard-order__button<?php echo $order === 'asc' ? ' is-active' : ''; ?>"
-                        href="<?php echo h(mineacle_leaderboards_url($category, $metric, 'asc', $search)); ?>"
-                        data-leaderboard-link
-                        aria-label="Sort <?php echo h($categoryLabel); ?> ascending"
-                        title="Ascending"
-                        <?php echo $order === 'asc' ? 'aria-current="page"' : ''; ?>
-                    >
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5 5 12h4v7h6v-7h4L12 5Z"/></svg>
-                    </a>
-                    <a
-                        class="leaderboard-order__button<?php echo $order === 'desc' ? ' is-active' : ''; ?>"
-                        href="<?php echo h(mineacle_leaderboards_url($category, $metric, 'desc', $search)); ?>"
-                        data-leaderboard-link
-                        aria-label="Sort <?php echo h($categoryLabel); ?> descending"
-                        title="Descending"
-                        <?php echo $order === 'desc' ? 'aria-current="page"' : ''; ?>
-                    >
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19 7-7h-4V5H9v7H5l7 7Z"/></svg>
-                    </a>
-                </nav>
-
-                <details class="leaderboard-filter" data-leaderboard-filter>
-                    <summary class="leaderboard-filter__button" aria-label="Filter leaderboards" title="Filter leaderboards">
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M4 6h7v2H4V6Zm11 0h5v2h-5V6ZM9 4h2v6H9V4ZM4 11h3v2H4v-2Zm7 0h9v2h-9v-2Zm-2-2h2v6H9V9Zm-5 7h10v2H4v-2Zm14 0h2v2h-2v-2Zm-2-2h2v6h-2v-6Z"/>
-                        </svg>
-                    </summary>
-
-                    <div class="leaderboard-filter__menu">
-                        <section aria-labelledby="leaderboard-filter-scope">
-                            <h3 id="leaderboard-filter-scope">Leaderboard</h3>
-                            <div class="leaderboard-filter__options">
-                                <?php foreach ($categories as $categoryKey => $categoryData): ?>
-                                    <?php $isCurrentCategory = $category === $categoryKey; ?>
-                                    <a
-                                        class="leaderboard-filter__option<?php echo $isCurrentCategory ? ' is-active' : ''; ?>"
-                                        href="<?php echo h(mineacle_leaderboards_url((string) $categoryKey, 'overall', 'desc', $search)); ?>"
-                                        data-leaderboard-link
-                                        <?php echo $isCurrentCategory ? 'aria-current="page"' : ''; ?>
-                                    >
-                                        <span><?php echo h((string) $categoryData['label']); ?></span>
-                                        <small>Global</small>
-                                    </a>
-                                <?php endforeach; ?>
-                            </div>
-                        </section>
-
-                        <section aria-labelledby="leaderboard-filter-metric">
-                            <h3 id="leaderboard-filter-metric">Rank by</h3>
-                            <div class="leaderboard-filter__metrics">
-                                <?php foreach ($categories[$category]['metrics'] as $metricKey => $metricData): ?>
-                                    <?php $isCurrentMetric = $metric === $metricKey; ?>
-                                    <a
-                                        class="leaderboard-filter__metric<?php echo $isCurrentMetric ? ' is-active' : ''; ?>"
-                                        href="<?php echo h(mineacle_leaderboards_url($category, (string) $metricKey, $order, $search)); ?>"
-                                        data-leaderboard-link
-                                        <?php echo $isCurrentMetric ? 'aria-current="page"' : ''; ?>
-                                    ><?php echo h((string) $metricData['label']); ?></a>
-                                <?php endforeach; ?>
-                            </div>
-                        </section>
-                    </div>
-                </details>
-            </div>
         </header>
 
         <div class="leaderboard-panel__context">
-            <span><?php echo h($metricLabel); ?></span>
-            <span aria-hidden="true">•</span>
-            <span><?php echo h($orderLabel); ?></span>
-            <span aria-hidden="true">•</span>
-            <span><?php echo h(number_format(min($totalAvailable, $maxResults))); ?> ranked</span>
+            <div class="leaderboard-panel__context-copy">
+                <span>Ranked by</span>
+                <strong><?php echo h($metricLabel); ?></strong>
+                <span aria-hidden="true">•</span>
+                <span><?php echo h(number_format($totalAvailable)); ?> ranked</span>
+            </div>
+            <a
+                class="leaderboard-direction"
+                href="<?php echo h(mineacle_leaderboards_url($category, $metric, $directionOrder, $search)); ?>"
+                data-leaderboard-link
+                aria-label="<?php echo h($directionLabel); ?>"
+                title="<?php echo h($directionLabel); ?>"
+            >
+                <span><?php echo h($orderLabel); ?></span>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <?php if ($order === 'desc'): ?>
+                        <path d="m12 18 6-6h-4V5h-4v7H6l6 6Z"/>
+                    <?php else: ?>
+                        <path d="m12 6-6 6h4v7h4v-7h4l-6-6Z"/>
+                    <?php endif; ?>
+                </svg>
+            </a>
         </div>
 
         <?php if ($loadError): ?>
@@ -377,23 +326,36 @@ mineacle_page_head('Leaderboards', [
             </section>
         <?php else: ?>
             <div class="leaderboard-table leaderboard-table--<?php echo h($category); ?>">
-                <?php if ($category === 'players'): ?>
-                    <div class="leaderboard-table__head" aria-hidden="true">
-                        <span>Rank</span>
-                        <span>Player</span>
-                        <span>Balance</span>
-                        <span>K/D Ratio</span>
-                        <span>Playtime</span>
-                    </div>
-                <?php else: ?>
-                    <div class="leaderboard-table__head" aria-hidden="true">
-                        <span>Rank</span>
-                        <span>Team</span>
-                        <span>Capital</span>
-                        <span>K/D Ratio</span>
-                        <span>Members</span>
-                    </div>
-                <?php endif; ?>
+                <div class="leaderboard-table__head" aria-label="Sort leaderboard columns">
+                    <?php foreach ($tableColumns as $column): ?>
+                        <?php if ($column['metric'] === null): ?>
+                            <span class="leaderboard-table__label"><?php echo h((string) $column['label']); ?></span>
+                        <?php else: ?>
+                            <?php
+                            $columnMetric = (string) $column['metric'];
+                            $columnActive = $metric === $columnMetric;
+                            $columnOrder = $columnActive && $order === 'desc' ? 'asc' : 'desc';
+                            ?>
+                            <a
+                                class="leaderboard-sort-heading<?php echo $columnActive ? ' is-active' : ''; ?>"
+                                href="<?php echo h(mineacle_leaderboards_url($category, $columnMetric, $columnOrder, $search)); ?>"
+                                data-leaderboard-link
+                                aria-label="Sort by <?php echo h((string) $column['label']); ?><?php echo $columnActive ? ($order === 'desc' ? ', currently best first' : ', currently lowest first') : ''; ?>"
+                            >
+                                <span><?php echo h((string) $column['label']); ?></span>
+                                <?php if ($columnActive): ?>
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <?php if ($order === 'desc'): ?>
+                                            <path d="m12 18 6-6h-4V5h-4v7H6l6 6Z"/>
+                                        <?php else: ?>
+                                            <path d="m12 6-6 6h4v7h4v-7h4l-6-6Z"/>
+                                        <?php endif; ?>
+                                    </svg>
+                                <?php endif; ?>
+                            </a>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </div>
 
                 <div class="leaderboard-table__scroll" data-leaderboard-scroll tabindex="0" aria-label="Scrollable global <?php echo h(strtolower($categoryLabel)); ?> rankings">
                     <div class="leaderboard-table__rows">
