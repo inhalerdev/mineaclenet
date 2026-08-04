@@ -120,15 +120,33 @@ function mineacle_profile_icon(string $name): string
     return '<img class="profile-icon profile-icon--' . h($safeName) . '" src="/player/assets/icons/' . h($safeName) . '.png?rev=' . h(rawurlencode($iconRevision)) . '" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false">';
 }
 
-function mineacle_profile_stat_item(string $label, string $value, string $icon, string $tone = '', string $detail = ''): void
+function mineacle_profile_stat_has_value(string $value, array $unavailableLabels = []): bool
 {
-    $classes = trim('profile-stat ' . ($tone !== '' ? 'profile-stat--' . $tone : ''));
+    $normalized = strtolower(trim($value));
+    $unavailable = ['unknown', 'n/a', 'none', 'no data', '-', '—'];
+
+    foreach ($unavailableLabels as $label) {
+        $unavailable[] = strtolower(trim((string) $label));
+    }
+
+    return $normalized !== '' && !in_array($normalized, $unavailable, true);
+}
+
+function mineacle_profile_stat_item(
+    string $label,
+    string $value,
+    string $icon,
+    string $tone,
+    string $detail = '',
+    bool $available = true
+): void {
+    $classes = trim('profile-stat profile-stat--' . $tone . ($available ? '' : ' is-unavailable'));
 
     echo '<div class="' . h($classes) . '">';
     echo '<span class="profile-stat__icon">' . mineacle_profile_icon($icon) . '</span>';
     echo '<span class="profile-stat__copy">';
     echo '<span class="profile-stat__label">' . h($label) . '</span>';
-    echo '<strong class="profile-stat__value">' . h($value) . '</strong>';
+    echo '<strong class="profile-stat__value">' . h($value !== '' ? $value : 'No data') . '</strong>';
     if ($detail !== '') {
         echo '<span class="profile-stat__detail">' . h($detail) . '</span>';
     }
@@ -374,14 +392,20 @@ mineacle_page_head($pageTitle, $metaOptions);
                     <span>Live data · updates every minute</span>
                 </header>
 
-                <div class="profile-stats-grid">
+                <div class="profile-stats-row" aria-label="Player statistics">
                     <?php
-                    mineacle_profile_stat_item('Balance', (string) $viewModel['balance'], 'balance', 'money', (string) $viewModel['money_rank'] . ' richest');
-                    mineacle_profile_stat_item('Kills', (string) $viewModel['kills'], 'kills', 'kills', (string) $viewModel['kills_rank'] . ' overall');
-                    mineacle_profile_stat_item('Deaths', (string) $viewModel['deaths'], 'deaths', 'deaths', 'K/D ' . (string) $viewModel['kd']);
-                    mineacle_profile_stat_item('K/D Ratio', (string) $viewModel['kd'], 'duels', 'kd');
-                    mineacle_profile_stat_item('Playtime', (string) $viewModel['playtime'], 'playtime', 'playtime', (string) $viewModel['playtime_rank'] . ' overall');
-                    mineacle_profile_stat_item('Global Rank', (string) $viewModel['global_rank'], 'rank', 'rank', (string) $viewModel['rank_name']);
+                    mineacle_profile_stat_item('Balance', (string) $viewModel['balance'], 'balance', 'balance', (string) $viewModel['money_rank'] . ' richest', mineacle_profile_stat_has_value((string) $viewModel['balance']));
+                    mineacle_profile_stat_item(
+                        'Team',
+                        (string) $viewModel['team']['name'],
+                        'team',
+                        'team',
+                        $viewModel['team']['has_team'] ? (string) $viewModel['team']['role'] : '',
+                        (bool) $viewModel['team']['has_team']
+                    );
+                    mineacle_profile_stat_item('Kills', (string) $viewModel['kills'], 'kills', 'kills', (string) $viewModel['kills_rank'] . ' overall', mineacle_profile_stat_has_value((string) $viewModel['kills']));
+                    mineacle_profile_stat_item('Deaths', (string) $viewModel['deaths'], 'deaths', 'deaths', 'K/D ' . (string) $viewModel['kd'], mineacle_profile_stat_has_value((string) $viewModel['deaths']));
+                    mineacle_profile_stat_item('Playtime', (string) $viewModel['playtime'], 'playtime', 'playtime', (string) $viewModel['playtime_rank'] . ' overall', mineacle_profile_stat_has_value((string) $viewModel['playtime']));
                     ?>
                 </div>
             </section>

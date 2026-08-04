@@ -6,13 +6,17 @@
   --player-line: rgba(248, 248, 248, 0.075);
   --player-line-strong: rgba(248, 248, 248, 0.13);
   --player-main: #8436fe;
-  --player-secondary: #b078ff;
+  --player-secondary: #B078FF;
   --player-hover: #d0afff;
   --player-text: #f8f8f8;
   --player-muted: rgba(248, 248, 248, 0.66);
   --player-money: #62c249;
+  --player-balance: #55FF55;
+  --player-team: #B078FF;
+  --player-kills: #ff5555;
+  --player-deaths: #ffa033;
+  --player-playtime: #FFFF55;
   --player-danger: #ff5555;
-  --player-playtime: #ffff55;
   --player-hero-height: clamp(360px, min(23.958333vw, 42.592593vh), 920px);
   --player-panel-padding: clamp(16px, min(1.25vw, 2.222222vh), 48px);
   --player-control-height: clamp(38px, min(2.291667vw, 4.074074vh), 88px);
@@ -120,7 +124,7 @@ body.player-page img {
 
 .profile-hero__layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.48fr);
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.62fr);
   align-items: end;
   width: 100%;
   min-height: 0;
@@ -301,10 +305,11 @@ body.player-page img {
 .profile-skin-stage {
   display: grid;
   align-self: end;
-  justify-self: center;
+  justify-self: end;
   place-items: end center;
-  width: min(100%, clamp(220px, min(17.1875vw, 30.555556vh), 660px));
-  height: min(88%, clamp(260px, min(19.791667vw, 35.185185vh), 760px));
+  width: min(100%, clamp(300px, min(21.875vw, 38.888889vh), 840px));
+  height: min(98%, clamp(340px, min(25vw, 44.444444vh), 960px));
+  margin-right: clamp(4px, min(1.25vw, 2.222222vh), 48px);
   min-height: 0;
   overflow: visible;
   filter: drop-shadow(0 22px 26px rgba(0, 0, 0, 0.48));
@@ -316,6 +321,7 @@ body.player-page img {
   height: 100%;
   object-fit: contain;
   object-position: center bottom;
+  image-rendering: pixelated;
 }
 
 .profile-skin-stage.has-skin .profile-skin-fallback {
@@ -390,35 +396,44 @@ body.player-page img {
   white-space: nowrap;
 }
 
-.profile-stats-grid {
+.profile-stats-row {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-color: rgba(176, 120, 255, 0.42) transparent;
+  scrollbar-width: thin;
+}
+
+.profile-stats-row::-webkit-scrollbar {
+  height: 6px;
+}
+
+.profile-stats-row::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+  background: rgba(176, 120, 255, 0.42);
 }
 
 .profile-stat {
+  position: relative;
   display: flex;
   align-items: center;
   min-width: 0;
-  min-height: clamp(84px, min(6.25vw, 11.111111vh), 240px);
-  padding: clamp(14px, min(1.25vw, 2.222222vh), 48px) var(--player-panel-padding);
-  border-right: 1px solid var(--player-line);
-  border-bottom: 1px solid var(--player-line);
-  gap: clamp(12px, min(0.9375vw, 1.666667vh), 36px);
+  min-height: clamp(82px, min(5.729167vw, 10.185185vh), 220px);
+  padding: clamp(14px, min(1.041667vw, 1.851852vh), 40px) clamp(16px, min(1.25vw, 2.222222vh), 48px);
+  gap: clamp(10px, min(0.729167vw, 1.296296vh), 28px);
 }
 
-.profile-stat:nth-child(3n) {
-  border-right: 0;
-}
-
-.profile-stat:nth-last-child(-n + 3) {
-  border-bottom: 0;
+.profile-stat + .profile-stat {
+  border-left: 1px solid var(--player-line);
 }
 
 .profile-stat__icon {
   display: grid;
   place-items: center;
-  width: clamp(30px, min(2.083333vw, 3.703704vh), 80px);
-  height: clamp(30px, min(2.083333vw, 3.703704vh), 80px);
+  width: clamp(28px, min(1.770833vw, 3.148148vh), 68px);
+  height: clamp(28px, min(1.770833vw, 3.148148vh), 68px);
   flex: none;
 }
 
@@ -459,26 +474,41 @@ body.player-page img {
 }
 
 .profile-stat__detail {
-  color: var(--player-secondary);
+  color: inherit;
   font-size: var(--secondary-small-size);
+  opacity: 0.72;
 }
 
-.profile-stat--money .profile-stat__value {
-  color: var(--player-money);
+.profile-stat--balance {
+  color: var(--player-balance);
 }
 
-.profile-stat--kills .profile-stat__value,
-.profile-stat--deaths .profile-stat__value,
-.profile-stat--kd .profile-stat__value {
-  color: var(--player-danger);
+.profile-stat--team {
+  color: var(--player-team);
 }
 
-.profile-stat--playtime .profile-stat__value {
+.profile-stat--kills {
+  color: var(--player-kills);
+}
+
+.profile-stat--deaths {
+  color: var(--player-deaths);
+}
+
+.profile-stat--playtime {
   color: var(--player-playtime);
 }
 
-.profile-stat--rank .profile-stat__value {
-  color: var(--player-secondary);
+.profile-stat__value {
+  color: inherit;
+}
+
+.profile-stat.is-unavailable {
+  color: var(--player-muted);
+}
+
+.profile-stat.is-unavailable .profile-stat__icon {
+  opacity: 0.55;
 }
 
 .profile-duels-table {
@@ -749,27 +779,11 @@ body.player-page img {
 
 @media (max-width: 1120px) {
   .profile-hero__layout {
-    grid-template-columns: minmax(0, 1fr) minmax(190px, 0.42fr);
+    grid-template-columns: minmax(0, 1fr) minmax(250px, 0.54fr);
   }
 
-  .profile-stats-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .profile-stat:nth-child(3n) {
-    border-right: 1px solid var(--player-line);
-  }
-
-  .profile-stat:nth-child(2n) {
-    border-right: 0;
-  }
-
-  .profile-stat:nth-last-child(-n + 3) {
-    border-bottom: 1px solid var(--player-line);
-  }
-
-  .profile-stat:nth-last-child(-n + 2) {
-    border-bottom: 0;
+  .profile-stats-row {
+    grid-template-columns: repeat(5, minmax(170px, 1fr));
   }
 
   .profile-duels-head {
@@ -802,7 +816,7 @@ body.player-page img {
   }
 
   .profile-hero__layout {
-    grid-template-columns: minmax(0, 1fr) minmax(120px, 0.34fr);
+    grid-template-columns: minmax(0, 1fr) minmax(165px, 0.46fr);
     gap: 12px;
   }
 
@@ -812,9 +826,10 @@ body.player-page img {
   }
 
   .profile-skin-stage {
-    width: min(100%, 185px);
-    height: 270px;
+    width: min(100%, 225px);
+    height: 320px;
     justify-self: end;
+    margin-right: 0;
   }
 
   .profile-meta {
@@ -836,19 +851,12 @@ body.player-page img {
     white-space: normal;
   }
 
-  .profile-stats-grid {
-    grid-template-columns: 1fr;
+  .profile-stats-row {
+    grid-template-columns: repeat(5, minmax(150px, 1fr));
   }
 
-  .profile-stat,
-  .profile-stat:nth-child(n) {
+  .profile-stat {
     min-height: 76px;
-    border-right: 0;
-    border-bottom: 1px solid var(--player-line);
-  }
-
-  .profile-stat:last-child {
-    border-bottom: 0;
   }
 
   .profile-duel-row {
@@ -871,7 +879,7 @@ body.player-page img {
   }
 
   .profile-hero__layout {
-    grid-template-columns: minmax(0, 1fr) 106px;
+    grid-template-columns: minmax(0, 1fr) 136px;
   }
 
   .profile-hero__copy h1 {
@@ -883,8 +891,9 @@ body.player-page img {
   }
 
   .profile-skin-stage {
-    width: 140px;
-    height: 235px;
+    width: 170px;
+    height: 270px;
+    margin-right: 0;
     transform: translateX(12px);
   }
 
