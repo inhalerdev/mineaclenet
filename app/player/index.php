@@ -330,19 +330,6 @@ mineacle_page_head($pageTitle, $metaOptions);
                 ?>
                 <div class="profile-hero__layout">
                     <div class="profile-social-profile">
-                        <div class="profile-social-profile__avatar" aria-hidden="true">
-                            <?php if ($viewModel['skin_head'] !== ''): ?>
-                                <img
-                                    src="<?php echo h((string) $viewModel['skin_head']); ?>"
-                                    alt=""
-                                    decoding="async"
-                                    draggable="false"
-                                >
-                            <?php else: ?>
-                                <span><?php echo h(strtoupper(substr((string) $viewModel['display_name'], 0, 1))); ?></span>
-                            <?php endif; ?>
-                        </div>
-
                         <div class="profile-social-profile__identity">
                             <h1 id="profile-player-name"><?php echo $viewModel['ranked_name_html']; ?></h1>
 

@@ -23,7 +23,6 @@
   --player-panel-padding: clamp(22px, min(1.666667vw, 2.962963vh), 40px);
   --player-control-height: clamp(40px, min(2.291667vw, 4.074074vh), 48px);
   --player-row-height: clamp(74px, min(4.6875vw, 8.333333vh), 96px);
-  --profile-avatar-size: clamp(72px, min(5.208333vw, 9.259259vh), 100px);
 }
 
 html {
@@ -145,40 +144,12 @@ body.player-page img {
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: var(--profile-avatar-size) minmax(0, 1fr);
   align-items: end;
   width: min(100%, 940px);
   min-width: 0;
   padding-bottom: clamp(18px, min(1.666667vw, 2.962963vh), 34px);
   gap: clamp(16px, min(1.25vw, 2.222222vh), 28px);
   text-shadow: 0 2px 18px rgba(0, 0, 0, 0.72);
-}
-
-.profile-social-profile__avatar {
-  display: grid;
-  place-items: center;
-  width: var(--profile-avatar-size);
-  height: var(--profile-avatar-size);
-  overflow: hidden;
-  border-radius: 3px;
-  background: rgba(17, 17, 17, 0.82);
-  box-shadow:
-    0 14px 36px rgba(0, 0, 0, 0.34),
-    inset 0 0 0 1px rgba(248, 248, 248, 0.16);
-}
-
-.profile-social-profile__avatar img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  image-rendering: pixelated;
-}
-
-.profile-social-profile__avatar span {
-  color: var(--player-text);
-  font-size: clamp(28px, min(2.083333vw, 3.703704vh), 40px);
-  font-weight: 500;
 }
 
 .profile-social-profile__identity,
@@ -899,7 +870,6 @@ body.player-page img {
     --player-page-gap: 18px;
     --player-hero-height: 620px;
     --player-hero-padding: 20px;
-    --profile-avatar-size: 68px;
   }
 
   .profile-hero {
@@ -992,16 +962,10 @@ body.player-page img {
 @media (max-width: 520px) {
   :root {
     --player-hero-height: 680px;
-    --profile-avatar-size: 60px;
   }
 
   .profile-hero {
     min-height: 680px;
-  }
-
-  .profile-social-profile {
-    grid-template-columns: var(--profile-avatar-size) minmax(0, 1fr);
-    gap: 12px;
   }
 
   .profile-social-profile__identity h1,
@@ -1062,3 +1026,116 @@ body.player-page img {
     animation-iteration-count: 1 !important;
   }
 }
+
+/* Center the profile information and full-body skin as one balanced hero group. */
+.profile-hero__layout {
+  grid-template-columns: minmax(0, 680px) minmax(260px, 360px);
+  align-items: center;
+  justify-content: center;
+  width: min(100%, 1180px);
+  margin: 0 auto;
+  padding-top: clamp(24px, min(2.083333vw, 3.703704vh), 48px);
+  gap: clamp(44px, min(4.166667vw, 7.407407vh), 80px);
+}
+
+.profile-social-profile {
+  position: relative;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  display: block;
+  align-self: center;
+  width: 100%;
+  padding: 0;
+}
+
+.profile-social-profile__identity {
+  align-content: center;
+  justify-items: start;
+}
+
+.profile-skin-stage {
+  position: relative;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  align-self: center;
+  justify-self: center;
+  width: 100%;
+  height: clamp(360px, min(28.125vw, 50vh), 500px);
+  padding: 0;
+  transform: none;
+}
+
+.profile-skin-stage__render,
+.profile-skin-stage > img {
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+@media (max-width: 1120px) {
+  .profile-hero__layout {
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 330px);
+    width: min(100%, 980px);
+    gap: clamp(28px, 4vw, 52px);
+  }
+
+  .profile-skin-stage {
+    height: clamp(350px, 45vw, 470px);
+  }
+}
+
+@media (max-width: 760px) {
+  .profile-hero__layout {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(170px, 0.52fr);
+    align-items: center;
+    width: 100%;
+    margin: 0;
+    padding-top: 20px;
+    gap: 18px;
+  }
+
+  .profile-social-profile {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    align-self: center;
+    width: 100%;
+    padding: 0;
+  }
+
+  .profile-skin-stage {
+    position: relative;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    align-self: center;
+    justify-self: center;
+    width: 100%;
+    height: clamp(330px, 58vw, 430px);
+    padding: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .profile-hero__layout {
+    grid-template-columns: minmax(0, 1fr) minmax(122px, 0.46fr);
+    gap: 12px;
+  }
+
+  .profile-skin-stage {
+    right: auto;
+    height: clamp(280px, 76vw, 350px);
+    transform: none;
+  }
+}
+

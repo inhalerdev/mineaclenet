@@ -264,3 +264,78 @@
     animation: none;
   }
 }
+
+/* Compact account action shared by desktop and responsive navigation. */
+.site-navigation__login {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(32px, min(2.03125vw, 3.611111vh), 42px);
+  padding: 0 clamp(14px, min(0.9375vw, 1.666667vh), 20px);
+  border-radius: 2px;
+  background: var(--site-nav-accent);
+  color: var(--site-nav-static);
+  font-size: clamp(14px, min(0.833333vw, 1.481481vh), 16px);
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background-color 120ms ease-out, color 120ms ease-out, filter 120ms ease-out, transform 120ms ease-out;
+}
+
+.site-navigation__login:hover,
+.site-navigation__login:focus-visible {
+  background: var(--site-nav-hover);
+  color: #111111;
+  transform: translateY(-2px);
+}
+
+.site-navigation__login:active {
+  filter: brightness(0.96);
+  transform: translateY(0);
+}
+
+.site-menu__login {
+  justify-content: center;
+  margin-top: 8px;
+  background: var(--site-nav-accent);
+  color: var(--site-nav-static);
+  font-weight: 600;
+}
+
+.site-menu__login:hover,
+.site-menu__login:focus-visible {
+  background: var(--site-nav-hover);
+  color: #111111;
+}
+
+.site-navigation__login:focus-visible {
+  outline: 3px solid #f8f8f8;
+  outline-offset: 4px;
+}
+
+/* Use one identical gap from Merchant title to copy and from copy to Play. */
+:root {
+  --home-story-section-gap: clamp(18px, min(1.25vw, 2.222222vh), 48px);
+}
+
+.mineacle-home .home-story__copy {
+  display: grid;
+  gap: var(--home-story-section-gap);
+}
+
+.mineacle-home .home-actions {
+  margin-top: var(--home-story-section-gap);
+}
+
+@media (max-width: 640px) {
+  :root {
+    --home-story-section-gap: 18px;
+  }
+
+  .site-navigation__login {
+    display: none;
+  }
+}
+

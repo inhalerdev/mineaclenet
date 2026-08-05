@@ -53,6 +53,12 @@ function mineacle_site_navigation(array $site, array $options = []): void
     }
 
     $links = mineacle_site_navigation_links($site);
+    $loginUrl = mineacle_page_public_link($site['login_url'] ?? '');
+
+    if ($loginUrl === '#') {
+        $loginUrl = '/login';
+    }
+
     $logoPath = __DIR__ . '/../../home/assets/images/logo-small.png';
     $logoVersion = (string) (is_file($logoPath) ? (filemtime($logoPath) ?: 1) : 1);
     ?>
@@ -84,6 +90,8 @@ function mineacle_site_navigation(array $site, array $options = []): void
                 <?php endforeach; ?>
             </div>
 
+            <a class="site-navigation__login" href="<?php echo h($loginUrl); ?>">Login</a>
+
             <details class="site-menu" data-site-menu>
                 <summary class="site-menu__button" aria-label="Open navigation menu">
                     <span aria-hidden="true"></span>
@@ -99,6 +107,7 @@ function mineacle_site_navigation(array $site, array $options = []): void
                             <?php echo $link['external'] ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>
                         ><?php echo h((string) $link['label']); ?></a>
                     <?php endforeach; ?>
+                    <a class="site-menu__link site-menu__login" href="<?php echo h($loginUrl); ?>">Login</a>
                 </nav>
             </details>
         </nav>
