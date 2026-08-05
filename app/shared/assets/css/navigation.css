@@ -62,22 +62,26 @@
 
 .site-navigation {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: flex-end;
   min-width: 0;
+  min-height: calc(var(--site-nav-link-height) + 3px);
   gap: var(--site-nav-gap);
 }
 
 .site-navigation__links {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: flex-end;
+  min-height: calc(var(--site-nav-link-height) + 3px);
   gap: var(--site-nav-gap);
 }
 
 .site-navigation__link {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  height: var(--site-nav-link-height);
   min-height: var(--site-nav-link-height);
   color: var(--site-nav-static);
   font-size: var(--site-nav-font-size);
@@ -309,6 +313,7 @@ body.mineacle-home .join-dialog__copy span {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  height: calc(var(--site-nav-link-height) + 3px);
   min-height: calc(var(--site-nav-link-height) + 3px);
   padding: 0 clamp(11px, min(0.78125vw, 1.388889vh), 18px);
   border-radius: 2px;
