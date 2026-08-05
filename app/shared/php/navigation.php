@@ -80,12 +80,9 @@ function mineacle_site_navigation(array $site, array $options = []): void
         <nav class="site-navigation" aria-label="<?php echo h($ariaLabel); ?>">
             <div class="site-navigation__links">
                 <?php foreach ($links as $link): ?>
-                    <?php
-                    $isCurrent = (string) $link['key'] === $currentKey;
-                    $isStore = (string) $link['key'] === 'store';
-                    ?>
+                    <?php $isCurrent = (string) $link['key'] === $currentKey; ?>
                     <a
-                        class="site-navigation__link<?php echo $isStore ? ' site-navigation__link--store' : ''; ?><?php echo $isCurrent ? ' is-current' : ''; ?>"
+                        class="site-navigation__link<?php echo $isCurrent ? ' is-current' : ''; ?>"
                         href="<?php echo h((string) $link['url']); ?>"
                         <?php echo $isCurrent ? 'aria-current="page"' : ''; ?>
                         <?php echo $link['external'] ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>
@@ -102,12 +99,9 @@ function mineacle_site_navigation(array $site, array $options = []): void
                 </summary>
                 <nav class="site-menu__panel" aria-label="Menu navigation">
                     <?php foreach ($links as $link): ?>
-                        <?php
-                        $isCurrent = (string) $link['key'] === $currentKey;
-                        $isStore = (string) $link['key'] === 'store';
-                        ?>
+                        <?php $isCurrent = (string) $link['key'] === $currentKey; ?>
                         <a
-                            class="site-menu__link<?php echo $isStore ? ' site-menu__link--store' : ''; ?><?php echo $isCurrent ? ' is-current' : ''; ?>"
+                            class="site-menu__link<?php echo $isCurrent ? ' is-current' : ''; ?>"
                             href="<?php echo h((string) $link['url']); ?>"
                             <?php echo $isCurrent ? 'aria-current="page"' : ''; ?>
                             <?php echo $link['external'] ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>

@@ -6,8 +6,6 @@
   --site-nav-font-size: clamp(14px, min(0.78125vw, 1.388889vh), 30px);
   --site-nav-link-height: clamp(22px, min(1.523438vw, 2.708333vh), 59px);
   --site-nav-static: #f8f8f8;
-  --site-nav-store-bg: #b078ff;
-  --site-nav-store-hover: #d0afff;
   --site-nav-login-bg: #8436fe;
   --site-nav-current: #b078ff;
   --site-nav-hover: #d0afff;
@@ -99,22 +97,6 @@
 .site-navigation__link:focus-visible {
   color: var(--site-nav-hover);
   transform: translateY(-2px);
-}
-
-.site-navigation__link--store {
-  justify-content: center;
-  min-height: var(--site-nav-link-height);
-  padding: 0 clamp(9px, min(0.625vw, 1.111111vh), 24px);
-  border-radius: 2px;
-  background: var(--site-nav-store-bg);
-  color: #111111;
-}
-
-.site-navigation__link--store.is-current,
-.site-navigation__link--store:hover,
-.site-navigation__link--store:focus-visible {
-  background: var(--site-nav-store-hover);
-  color: #111111;
 }
 
 .site-menu {
@@ -209,22 +191,6 @@
   color: var(--site-nav-hover);
   background: rgba(208, 175, 255, 0.12);
   transform: translateY(-1px);
-}
-
-.site-menu__link--store {
-  justify-content: center;
-  margin-top: 4px;
-  border-radius: 2px;
-  background: var(--site-nav-store-bg);
-  color: #111111;
-  font-weight: 600;
-}
-
-.site-menu__link--store.is-current,
-.site-menu__link--store:hover,
-.site-menu__link--store:focus-visible {
-  background: var(--site-nav-store-hover);
-  color: #111111;
 }
 
 .site-brand:focus-visible,
