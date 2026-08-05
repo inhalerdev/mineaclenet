@@ -119,12 +119,6 @@ body.player-page img {
   padding: var(--player-hero-padding);
 }
 
-.player-header {
-  position: relative;
-  z-index: 4;
-  flex: none;
-}
-
 .profile-hero__layout {
   display: grid;
   flex: 1;
@@ -417,6 +411,8 @@ body.player-page img {
   color: var(--player-text);
   font-size: var(--secondary-body-size);
   line-height: 1.45;
+  text-align: justify;
+  text-align-last: left;
 }
 
 .player-content {

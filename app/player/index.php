@@ -317,8 +317,7 @@ mineacle_page_head($pageTitle, $metaOptions);
 
         <div class="profile-hero__surface">
             <?php mineacle_site_navigation($site, [
-                'current_key' => 'leaderboards',
-                'header_class' => 'player-header',
+                'current_key' => '',
             ]); ?>
 
             <?php if ($viewModel !== null): ?>

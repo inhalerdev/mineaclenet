@@ -157,6 +157,8 @@ body.leaderboards-page svg {
   font-size: var(--secondary-body-size);
   font-weight: 400;
   line-height: 1.28;
+  text-align: justify;
+  text-align-last: left;
 }
 
 .leaderboard-panel {

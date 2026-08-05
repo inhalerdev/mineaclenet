@@ -4,11 +4,23 @@
   --site-nav-brand-width: clamp(36px, min(2.5vw, 4.444444vh), 96px);
   --site-nav-brand-height: clamp(32px, min(2.148438vw, 3.819444vh), 83px);
   --site-nav-font-size: clamp(14px, min(0.78125vw, 1.388889vh), 30px);
+  --site-nav-link-height: clamp(22px, min(1.523438vw, 2.708333vh), 59px);
   --site-nav-static: #f8f8f8;
+  --site-nav-store-bg: #b078ff;
+  --site-nav-store-hover: #d0afff;
+  --site-nav-login-bg: #8436fe;
   --site-nav-current: #b078ff;
   --site-nav-hover: #d0afff;
   --site-nav-accent: #8436fe;
   --site-nav-radius: 3px;
+}
+
+.site-header,
+.site-header a,
+.site-header summary,
+.site-header button {
+  font-family: "Rubik", Arial, sans-serif;
+  font-synthesis: none;
 }
 
 .site-header {
@@ -68,7 +80,7 @@
 .site-navigation__link {
   display: inline-flex;
   align-items: center;
-  min-height: clamp(22px, min(1.523438vw, 2.708333vh), 59px);
+  min-height: var(--site-nav-link-height);
   color: var(--site-nav-static);
   font-size: var(--site-nav-font-size);
   font-weight: 600;
@@ -87,6 +99,22 @@
 .site-navigation__link:focus-visible {
   color: var(--site-nav-hover);
   transform: translateY(-2px);
+}
+
+.site-navigation__link--store {
+  justify-content: center;
+  min-height: var(--site-nav-link-height);
+  padding: 0 clamp(9px, min(0.625vw, 1.111111vh), 24px);
+  border-radius: 2px;
+  background: var(--site-nav-store-bg);
+  color: #111111;
+}
+
+.site-navigation__link--store.is-current,
+.site-navigation__link--store:hover,
+.site-navigation__link--store:focus-visible {
+  background: var(--site-nav-store-hover);
+  color: #111111;
 }
 
 .site-menu {
@@ -183,6 +211,22 @@
   transform: translateY(-1px);
 }
 
+.site-menu__link--store {
+  justify-content: center;
+  margin-top: 4px;
+  border-radius: 2px;
+  background: var(--site-nav-store-bg);
+  color: #111111;
+  font-weight: 600;
+}
+
+.site-menu__link--store.is-current,
+.site-menu__link--store:hover,
+.site-menu__link--store:focus-visible {
+  background: var(--site-nav-store-hover);
+  color: #111111;
+}
+
 .site-brand:focus-visible,
 .site-navigation__link:focus-visible,
 .site-menu__button:focus-visible,
@@ -249,6 +293,35 @@
   }
 }
 
+
+
+/* Shared Home rhythm, type contract, and footer flow. */
+body.mineacle-home .home-page {
+  display: grid;
+  gap: var(--home-gap);
+}
+
+body.mineacle-home .home-story__copy p {
+  text-align: justify;
+  text-align-last: left;
+}
+
+body.mineacle-home .home-action,
+body.mineacle-home .home-action span,
+body.mineacle-home .join-dialog,
+body.mineacle-home .join-dialog button {
+  font-family: "Rubik", Arial, sans-serif;
+  font-synthesis: none;
+}
+
+body.mineacle-home .home-action--play,
+body.mineacle-home .home-action--play span,
+body.mineacle-home .home-action--help,
+body.mineacle-home .join-dialog__copy,
+body.mineacle-home .join-dialog__copy span {
+  font-weight: 600;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .site-brand,
   .site-navigation__link,
@@ -270,10 +343,10 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: clamp(22px, min(1.523438vw, 2.708333vh), 59px);
-  padding: 0 clamp(10px, min(0.703125vw, 1.25vh), 15px);
+  min-height: calc(var(--site-nav-link-height) + 3px);
+  padding: 0 clamp(11px, min(0.78125vw, 1.388889vh), 18px);
   border-radius: 2px;
-  background: var(--site-nav-accent);
+  background: var(--site-nav-login-bg);
   color: var(--site-nav-static);
   font-size: var(--site-nav-font-size);
   font-weight: 600;
@@ -299,7 +372,7 @@
 .site-menu__login {
   justify-content: center;
   margin-top: 6px;
-  background: var(--site-nav-accent);
+  background: var(--site-nav-login-bg);
   color: var(--site-nav-static);
   font-weight: 600;
 }
