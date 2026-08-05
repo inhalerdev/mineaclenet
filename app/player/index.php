@@ -72,7 +72,7 @@ function mineacle_profile_view_model(array $player, ?array $team): array
     $username = mineacle_stats_username($player);
     $skinIdentifier = mineacle_stats_skin_identifier($uuid, $username);
     $fullBody = $skinIdentifier !== null
-        ? mineacle_stats_skin_url('https://mc-heads.net/body/' . $skinIdentifier . '/right')
+        ? mineacle_stats_skin_url('https://mc-heads.net/player/' . $skinIdentifier . '/600')
         : '';
 
     if ($fullBody === '') {
@@ -382,7 +382,10 @@ mineacle_page_head($pageTitle, $metaOptions);
                         <?php if ($viewModel['skin_body'] !== ''): ?>
                             <img
                                 src="<?php echo h((string) $viewModel['skin_body']); ?>"
+                                class="profile-skin-stage__render"
                                 alt=""
+                                width="600"
+                                height="1200"
                                 decoding="async"
                                 draggable="false"
                                 onerror="this.parentElement.classList.remove('has-skin');this.remove();"
