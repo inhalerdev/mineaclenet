@@ -1,9 +1,9 @@
 
 :root {
-  --site-nav-gap: clamp(16px, min(1.666667vw, 2.962963vh), 64px);
-  --site-nav-brand-width: clamp(48px, min(3.333333vw, 5.925926vh), 128px);
-  --site-nav-brand-height: clamp(42px, min(2.864583vw, 5.092593vh), 110px);
-  --site-nav-font-size: clamp(18px, min(1.041667vw, 1.851852vh), 40px);
+  --site-nav-gap: clamp(12px, min(1.25vw, 2.222222vh), 48px);
+  --site-nav-brand-width: clamp(36px, min(2.5vw, 4.444444vh), 96px);
+  --site-nav-brand-height: clamp(32px, min(2.148438vw, 3.819444vh), 83px);
+  --site-nav-font-size: clamp(14px, min(0.78125vw, 1.388889vh), 30px);
   --site-nav-static: #f8f8f8;
   --site-nav-current: #b078ff;
   --site-nav-hover: #d0afff;
@@ -68,7 +68,7 @@
 .site-navigation__link {
   display: inline-flex;
   align-items: center;
-  min-height: clamp(29px, min(2.03125vw, 3.611111vh), 78px);
+  min-height: clamp(22px, min(1.523438vw, 2.708333vh), 59px);
   color: var(--site-nav-static);
   font-size: var(--site-nav-font-size);
   font-weight: 600;
@@ -97,14 +97,14 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   padding: 0;
   border: 0;
   background: transparent;
   color: var(--site-nav-static);
   cursor: pointer;
-  gap: 6px;
+  gap: 4px;
   list-style: none;
   transition: color 120ms ease-out, transform 120ms ease-out;
 }
@@ -120,8 +120,8 @@
 
 .site-menu__button span {
   display: block;
-  width: 28px;
-  height: 3px;
+  width: 21px;
+  height: 2px;
   flex: none;
   align-self: flex-end;
   border-radius: 1px;
@@ -138,20 +138,20 @@
 }
 
 .site-menu[open] .site-menu__button span:first-child {
-  transform: translateY(4.5px) rotate(45deg);
+  transform: translateY(3px) rotate(45deg);
 }
 
 .site-menu[open] .site-menu__button span:last-child {
-  transform: translateY(-4.5px) rotate(-45deg);
+  transform: translateY(-3px) rotate(-45deg);
 }
 
 .site-menu__panel {
   position: absolute;
-  top: calc(100% + 12px);
+  top: calc(100% + 9px);
   right: 0;
   display: grid;
-  width: 192px;
-  padding: 12px;
+  width: 144px;
+  padding: 9px;
   border: 0;
   border-radius: var(--site-nav-radius);
   background: rgba(17, 17, 17, 0.97);
@@ -161,10 +161,10 @@
 .site-menu__link {
   display: flex;
   align-items: center;
-  min-height: 40px;
-  padding: 0 12px;
+  min-height: 30px;
+  padding: 0 9px;
   color: var(--site-nav-static);
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 500;
   text-decoration: none;
   text-transform: uppercase;
@@ -223,7 +223,7 @@
 
 @media (max-width: 1240px) {
   .site-navigation__links {
-    gap: 18px;
+    gap: 14px;
   }
 }
 
@@ -239,13 +239,13 @@
 
 @media (max-width: 640px) {
   :root {
-    --site-nav-gap: 16px;
-    --site-nav-brand-width: 48px;
-    --site-nav-brand-height: 42px;
+    --site-nav-gap: 12px;
+    --site-nav-brand-width: 36px;
+    --site-nav-brand-height: 32px;
   }
 
   .site-menu__panel {
-    width: min(192px, calc(100vw - 64px));
+    width: min(144px, calc(100vw - 48px));
   }
 }
 
@@ -270,12 +270,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: clamp(32px, min(2.03125vw, 3.611111vh), 42px);
-  padding: 0 clamp(14px, min(0.9375vw, 1.666667vh), 20px);
+  min-height: clamp(22px, min(1.523438vw, 2.708333vh), 59px);
+  padding: 0 clamp(10px, min(0.703125vw, 1.25vh), 15px);
   border-radius: 2px;
   background: var(--site-nav-accent);
   color: var(--site-nav-static);
-  font-size: clamp(14px, min(0.833333vw, 1.481481vh), 16px);
+  font-size: var(--site-nav-font-size);
   font-weight: 600;
   line-height: 1;
   text-decoration: none;
@@ -298,7 +298,7 @@
 
 .site-menu__login {
   justify-content: center;
-  margin-top: 8px;
+  margin-top: 6px;
   background: var(--site-nav-accent);
   color: var(--site-nav-static);
   font-weight: 600;
@@ -311,27 +311,73 @@
 }
 
 .site-navigation__login:focus-visible {
-  outline: 3px solid #f8f8f8;
-  outline-offset: 4px;
+  outline: 2px solid #f8f8f8;
+  outline-offset: 3px;
 }
 
-/* Use one identical gap from Merchant title to copy and from copy to Play. */
-:root {
-  --home-story-section-gap: clamp(18px, min(1.25vw, 2.222222vh), 48px);
+/* Home hero scale: title, copy, controls, labels, and social assets are 25% smaller.
+   The title-to-copy and copy-to-actions spacing remains identical. */
+body.mineacle-home {
+  --home-compact-title-size: clamp(18px, min(1.25vw, 2.222222vh), 48px);
+  --home-compact-copy-size: clamp(12px, min(0.78125vw, 1.388889vh), 30px);
+  --home-compact-control-size: clamp(36px, min(2.5vw, 4.444444vh), 96px);
+  --home-compact-play-width: clamp(156px, min(10vw, 17.777778vh), 384px);
+  --home-compact-button-size: clamp(18px, min(1.25vw, 2.222222vh), 48px);
+  --home-compact-small-gap: clamp(9px, min(0.625vw, 1.111111vh), 24px);
+  --home-story-section-gap: clamp(14px, min(0.9375vw, 1.666667vh), 36px);
 }
 
-.mineacle-home .home-story__copy {
+body.mineacle-home .home-story__copy {
   display: grid;
   gap: var(--home-story-section-gap);
 }
 
-.mineacle-home .home-actions {
+body.mineacle-home .home-story__copy h2 {
+  font-size: var(--home-compact-title-size);
+}
+
+body.mineacle-home .home-story__copy p {
+  font-size: var(--home-compact-copy-size);
+}
+
+body.mineacle-home .home-actions {
   margin-top: var(--home-story-section-gap);
 }
 
+body.mineacle-home .home-actions__primary,
+body.mineacle-home .home-socials {
+  gap: var(--home-compact-small-gap);
+}
+
+body.mineacle-home .home-action,
+body.mineacle-home .home-social {
+  height: var(--home-compact-control-size);
+}
+
+body.mineacle-home .home-action--play {
+  min-width: var(--home-compact-play-width);
+  padding-inline: clamp(12px, min(1.25vw, 2.222222vh), 48px);
+  font-size: var(--home-compact-button-size);
+}
+
+body.mineacle-home .home-action--help,
+body.mineacle-home .home-social {
+  width: var(--home-compact-control-size);
+}
+
 @media (max-width: 640px) {
-  :root {
-    --home-story-section-gap: 18px;
+  body.mineacle-home {
+    --home-compact-title-size: 16px;
+    --home-compact-copy-size: 11px;
+    --home-compact-control-size: 36px;
+    --home-compact-button-size: 18px;
+    --home-compact-small-gap: 9px;
+    --home-story-section-gap: 14px;
+  }
+
+  body.mineacle-home .home-action--play {
+    min-width: 0;
+    font-size: var(--home-compact-button-size);
   }
 
   .site-navigation__login {
@@ -339,3 +385,14 @@
   }
 }
 
+@media (max-width: 420px) {
+  body.mineacle-home .home-action,
+  body.mineacle-home .home-social {
+    height: var(--home-compact-control-size);
+  }
+
+  body.mineacle-home .home-action--help,
+  body.mineacle-home .home-social {
+    width: var(--home-compact-control-size);
+  }
+}
