@@ -70,13 +70,10 @@ function mineacle_profile_view_model(array $player, ?array $team): array
     $rankName = trim(mineacle_stats_rank_name($player));
     $uuid = trim((string) ($player['uuid'] ?? ''));
     $username = mineacle_stats_username($player);
-    $skinIdentifier = mineacle_stats_skin_identifier($uuid, $username);
-    $fullBody = $skinIdentifier !== null
-        ? mineacle_stats_skin_url('https://mc-heads.net/player/' . $skinIdentifier . '/600')
-        : '';
+    $bustRender = mineacle_stats_mc_api_path($uuid, $username, 'bust', 512) ?? '';
 
-    if ($fullBody === '') {
-        $fullBody = trim((string) (($skin['bust'] ?? '') ?: ($skin['chest'] ?? '')));
+    if ($bustRender === '') {
+        $bustRender = trim((string) (($skin['bust'] ?? '') ?: ($skin['chest'] ?? '')));
     }
 
     return [
@@ -86,7 +83,7 @@ function mineacle_profile_view_model(array $player, ?array $team): array
         'ranked_name_html' => mineacle_stats_ranked_name_html($player, 'profile-ranked-name'),
         'rank_name' => $rankName !== '' ? $rankName : 'Member',
         'skin_head' => trim((string) ($skin['head'] ?? '')),
-        'skin_body' => $fullBody,
+        'skin_body' => $bustRender,
         'online' => $statusView['online'],
         'status_label' => $statusView['label'],
         'location_label' => $statusView['line'],
@@ -318,6 +315,7 @@ mineacle_page_head($pageTitle, $metaOptions);
         <div class="profile-hero__surface">
             <?php mineacle_site_navigation($site, [
                 'current_key' => '',
+                'header_class' => 'player-header',
             ]); ?>
 
             <?php if ($viewModel !== null): ?>
@@ -328,6 +326,22 @@ mineacle_page_head($pageTitle, $metaOptions);
                     : strtolower((string) $viewModel['username']);
                 ?>
                 <div class="profile-hero__layout">
+                    <div class="profile-skin-stage<?php echo $viewModel['skin_body'] !== '' ? ' has-skin' : ''; ?>" aria-hidden="true">
+                        <?php if ($viewModel['skin_body'] !== ''): ?>
+                            <img
+                                src="<?php echo h((string) $viewModel['skin_body']); ?>"
+                                class="profile-skin-stage__render"
+                                alt=""
+                                width="512"
+                                height="512"
+                                decoding="async"
+                                draggable="false"
+                                onerror="this.parentElement.classList.remove('has-skin');this.remove();"
+                            >
+                        <?php endif; ?>
+                        <span class="profile-skin-fallback"><?php echo h(strtoupper(substr((string) $viewModel['display_name'], 0, 1))); ?></span>
+                    </div>
+
                     <div class="profile-social-profile">
                         <div class="profile-social-profile__identity">
                             <h1 id="profile-player-name"><?php echo $viewModel['ranked_name_html']; ?></h1>
@@ -362,22 +376,6 @@ mineacle_page_head($pageTitle, $metaOptions);
                                 <a class="profile-action profile-action--text" href="<?php echo h($leaderboardsUrl); ?>">View rankings</a>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="profile-skin-stage<?php echo $viewModel['skin_body'] !== '' ? ' has-skin' : ''; ?>" aria-hidden="true">
-                        <?php if ($viewModel['skin_body'] !== ''): ?>
-                            <img
-                                src="<?php echo h((string) $viewModel['skin_body']); ?>"
-                                class="profile-skin-stage__render"
-                                alt=""
-                                width="600"
-                                height="1200"
-                                decoding="async"
-                                draggable="false"
-                                onerror="this.parentElement.classList.remove('has-skin');this.remove();"
-                            >
-                        <?php endif; ?>
-                        <span class="profile-skin-fallback"><?php echo h(strtoupper(substr((string) $viewModel['display_name'], 0, 1))); ?></span>
                     </div>
                 </div>
             <?php else: ?>

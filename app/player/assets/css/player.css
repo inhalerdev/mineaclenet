@@ -19,7 +19,6 @@
   --player-danger: #ff5555;
   --player-page-gap: clamp(22px, min(1.875vw, 3.333333vh), 42px);
   --player-hero-height: clamp(520px, min(34.375vw, 61.111111vh), 680px);
-  --player-hero-padding: clamp(24px, min(2.083333vw, 3.703704vh), 48px);
   --player-panel-padding: clamp(22px, min(1.666667vw, 2.962963vh), 40px);
   --player-control-height: clamp(40px, min(2.291667vw, 4.074074vh), 48px);
   --player-row-height: clamp(74px, min(4.6875vw, 8.333333vh), 96px);
@@ -91,7 +90,7 @@ body.player-page img {
   inset: 0;
   z-index: 0;
   background:
-    linear-gradient(90deg, rgba(17, 17, 17, 0.83) 0%, rgba(17, 17, 17, 0.56) 43%, rgba(17, 17, 17, 0.14) 76%),
+    linear-gradient(90deg, rgba(17, 17, 17, 0.14) 24%, rgba(17, 17, 17, 0.56) 57%, rgba(17, 17, 17, 0.83) 100%),
     linear-gradient(0deg, rgba(17, 17, 17, 0.86) 0%, rgba(17, 17, 17, 0.18) 55%, rgba(17, 17, 17, 0.04) 82%);
   content: "";
   pointer-events: none;
@@ -109,6 +108,7 @@ body.player-page img {
   pointer-events: none;
 }
 
+/* Use the exact shared hero inset so the header stays fixed across Home, Leaderboards, and Player. */
 .profile-hero__surface {
   position: relative;
   z-index: 1;
@@ -116,7 +116,13 @@ body.player-page img {
   flex-direction: column;
   width: 100%;
   height: 100%;
-  padding: var(--player-hero-padding);
+  padding: var(--home-hero-padding);
+}
+
+.player-header {
+  position: relative;
+  z-index: 4;
+  flex: none;
 }
 
 .profile-hero__layout {
@@ -411,8 +417,6 @@ body.player-page img {
   color: var(--player-text);
   font-size: var(--secondary-body-size);
   line-height: 1.45;
-  text-align: justify;
-  text-align-last: left;
 }
 
 .player-content {
@@ -865,7 +869,6 @@ body.player-page img {
   :root {
     --player-page-gap: 18px;
     --player-hero-height: 620px;
-    --player-hero-padding: 20px;
   }
 
   .profile-hero {
@@ -1025,7 +1028,7 @@ body.player-page img {
 
 /* Center the profile information and full-body skin as one balanced hero group. */
 .profile-hero__layout {
-  grid-template-columns: minmax(0, 680px) minmax(260px, 360px);
+  grid-template-columns: minmax(260px, 360px) minmax(0, 680px);
   align-items: center;
   justify-content: center;
   width: min(100%, 1180px);
@@ -1066,8 +1069,8 @@ body.player-page img {
 
 .profile-skin-stage__render,
 .profile-skin-stage > img {
-  width: auto;
-  height: 100%;
+  width: min(100%, 440px);
+  height: auto;
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
@@ -1076,7 +1079,7 @@ body.player-page img {
 
 @media (max-width: 1120px) {
   .profile-hero__layout {
-    grid-template-columns: minmax(0, 1fr) minmax(240px, 330px);
+    grid-template-columns: minmax(240px, 330px) minmax(0, 1fr);
     width: min(100%, 980px);
     gap: clamp(28px, 4vw, 52px);
   }
@@ -1090,7 +1093,7 @@ body.player-page img {
   .profile-hero__layout {
     position: relative;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(170px, 0.52fr);
+    grid-template-columns: minmax(170px, 0.52fr) minmax(0, 1fr);
     align-items: center;
     width: 100%;
     margin: 0;
@@ -1124,7 +1127,7 @@ body.player-page img {
 
 @media (max-width: 520px) {
   .profile-hero__layout {
-    grid-template-columns: minmax(0, 1fr) minmax(122px, 0.46fr);
+    grid-template-columns: minmax(122px, 0.46fr) minmax(0, 1fr);
     gap: 12px;
   }
 
