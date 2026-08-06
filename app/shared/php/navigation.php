@@ -3,10 +3,9 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/layout.php';
+require_once __DIR__ . '/auth.php';
 
 /**
- * Return the canonical primary navigation used by Home, Leaderboards, and Player pages.
- *
  * @return list<array{key:string,label:string,url:string,external:bool}>
  */
 function mineacle_site_navigation_links(array $site): array
@@ -31,14 +30,23 @@ function mineacle_site_navigation_links(array $site): array
     ];
 }
 
-/**
- * Render the shared Mineacle header and responsive navigation menu.
- *
- * Supported options:
- * - current_key: home, vote, leaderboards, bans, store, or an empty string
- * - header_class: optional page-specific class appended to the shared header
- * - aria_label: optional navigation label
- */
+function mineacle_site_account_action(string $className, bool $mobile = false): void
+{
+    $user = mineacle_auth_current_user();
+
+    if ($user === null) {
+        echo '<a class="' . h($className) . '" href="/login">Login</a>';
+
+        return;
+    }
+
+    $formClass = $mobile ? 'site-menu__account-form' : 'site-navigation__account-form';
+    echo '<form class="' . h($formClass) . '" action="/logout" method="post">';
+    echo '<input type="hidden" name="csrf" value="' . h(mineacle_auth_csrf_token()) . '">';
+    echo '<button class="' . h($className) . '" type="submit" aria-label="Log out ' . h((string) $user['username']) . '">Logout</button>';
+    echo '</form>';
+}
+
 function mineacle_site_navigation(array $site, array $options = []): void
 {
     $currentKey = strtolower(trim((string) ($options['current_key'] ?? '')));
@@ -53,21 +61,11 @@ function mineacle_site_navigation(array $site, array $options = []): void
     }
 
     $links = mineacle_site_navigation_links($site);
-    $loginUrl = mineacle_page_public_link($site['login_url'] ?? '');
-
-    if ($loginUrl === '#') {
-        $loginUrl = '/login';
-    }
-
     $logoPath = __DIR__ . '/../../home/assets/images/logo-small.png';
     $logoVersion = (string) (is_file($logoPath) ? (filemtime($logoPath) ?: 1) : 1);
     ?>
     <header class="<?php echo h(implode(' ', array_unique($headerClasses))); ?>" data-site-header>
-        <a
-            class="site-brand"
-            href="/"
-            aria-label="Mineacle home"
-        >
+        <a class="site-brand" href="/" aria-label="Mineacle home">
             <img
                 src="/home/assets/images/logo-small.png?rev=<?php echo h(rawurlencode($logoVersion)); ?>"
                 alt=""
@@ -90,7 +88,7 @@ function mineacle_site_navigation(array $site, array $options = []): void
                 <?php endforeach; ?>
             </div>
 
-            <a class="site-navigation__login" href="<?php echo h($loginUrl); ?>">Login</a>
+            <?php mineacle_site_account_action('site-navigation__login'); ?>
 
             <details class="site-menu" data-site-menu>
                 <summary class="site-menu__button" aria-label="Open navigation menu">
@@ -107,7 +105,7 @@ function mineacle_site_navigation(array $site, array $options = []): void
                             <?php echo $link['external'] ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>
                         ><?php echo h((string) $link['label']); ?></a>
                     <?php endforeach; ?>
-                    <a class="site-menu__link site-menu__login" href="<?php echo h($loginUrl); ?>">Login</a>
+                    <?php mineacle_site_account_action('site-menu__link site-menu__login', true); ?>
                 </nav>
             </details>
         </nav>

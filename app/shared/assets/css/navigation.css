@@ -440,3 +440,27 @@ body.mineacle-home .home-social {
     width: var(--home-compact-control-size);
   }
 }
+
+/* Authenticated account action keeps the exact Login button footprint. */
+.site-navigation__account-form,
+.site-menu__account-form {
+  margin: 0;
+  padding: 0;
+}
+
+.site-navigation__account-form {
+  display: flex;
+  align-items: center;
+  min-height: calc(var(--site-nav-link-height) + 3px);
+}
+
+.site-navigation__login,
+.site-menu__login {
+  border: 0;
+  font-family: "Rubik", Arial, sans-serif;
+  cursor: pointer;
+}
+
+.site-menu__account-form .site-menu__login {
+  width: 100%;
+}
