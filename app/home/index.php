@@ -11,7 +11,6 @@ if (in_array($requestPath, ['/home', '/home.php', '/home/index.php'], true)) {
 
 require_once __DIR__ . '/../shared/php/layout.php';
 require_once __DIR__ . '/../shared/php/navigation.php';
-require_once __DIR__ . '/../shared/php/compact-footer.php';
 
 $config = mineacle_config();
 $site = is_array($config['site'] ?? null) ? $config['site'] : [];
@@ -73,10 +72,8 @@ foreach ($assetFiles as $assetFile) {
 
 $assetRevision = rawurlencode((string) $assetVersion);
 $navigationStylesheetPath = __DIR__ . '/../shared/assets/css/navigation.css';
-$secondaryPagesStylesheetPath = __DIR__ . '/../shared/assets/css/secondary-pages.css';
 $navigationScriptPath = __DIR__ . '/../shared/assets/js/navigation.js';
 $navigationStylesheetVersion = (string) (is_file($navigationStylesheetPath) ? (filemtime($navigationStylesheetPath) ?: $assetVersion) : $assetVersion);
-$secondaryPagesStylesheetVersion = (string) (is_file($secondaryPagesStylesheetPath) ? (filemtime($secondaryPagesStylesheetPath) ?: $assetVersion) : $assetVersion);
 $navigationScriptVersion = (string) (is_file($navigationScriptPath) ? (filemtime($navigationScriptPath) ?: $assetVersion) : $assetVersion);
 
 mineacle_page_head('Home', [
@@ -85,7 +82,6 @@ mineacle_page_head('Home', [
     'canonical_url' => 'https://mineacle.net/',
     'stylesheets' => [
         '/shared/assets/css/navigation.css?rev=' . rawurlencode($navigationStylesheetVersion),
-        '/shared/assets/css/secondary-pages.css?rev=' . rawurlencode($secondaryPagesStylesheetVersion),
         '/home/assets/css/home.css?rev=' . $assetRevision,
     ],
     'body_class' => 'mineacle-home',
@@ -168,8 +164,6 @@ mineacle_page_head('Home', [
             </div>
         </div>
     </section>
-
-    <?php mineacle_compact_footer($site); ?>
 
     <dialog class="join-dialog" data-join-dialog aria-labelledby="join-dialog-title">
         <div class="join-dialog__content">

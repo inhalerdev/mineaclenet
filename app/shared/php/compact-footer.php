@@ -13,72 +13,111 @@ function mineacle_compact_footer(array $site): void
 
         return $resolved;
     };
+
+    $storeUrl = $resolveUrl($site['store_url'] ?? '', 'https://store.mineacle.net/');
+    $discordUrl = $resolveUrl($site['discord_url'] ?? '', 'https://discord.gg/qmpJ4xMguT');
+    $xUrl = $resolveUrl($site['x_url'] ?? '', 'https://x.com/mineaclenetwork');
+    $youtubeUrl = $resolveUrl($site['youtube_url'] ?? '', 'https://www.youtube.com/@mineaclenetwork');
+    $wikiUrl = $resolveUrl($site['wiki_url'] ?? '', '#');
+    $appealsUrl = $resolveUrl($site['appeals_url'] ?? '', 'https://bans.mineacle.net/appeal');
+    $supportEmail = trim((string) ($site['support_email'] ?? 'support@mineacle.net')) ?: 'support@mineacle.net';
+    $contactUrl = '/contact';
+    $assetVersion = rawurlencode(mineacle_page_asset_version());
+
     $quickLinks = [
-        ['label' => 'Home', 'url' => '/'],
-        ['label' => 'Vote', 'url' => '/vote'],
-        ['label' => 'Leaderboards', 'url' => '/leaderboards'],
-        ['label' => 'Bans', 'url' => '/bans'],
-        ['label' => 'Store', 'url' => (string) ($site['store_url'] ?? '#')],
-        ['label' => 'Contact', 'url' => '/contact'],
+        ['label' => 'Store', 'url' => $storeUrl, 'external' => true],
+        ['label' => 'Discord', 'url' => $discordUrl, 'external' => true],
+        ['label' => 'Vote', 'url' => '/vote', 'external' => false],
+        ['label' => 'Leaderboard', 'url' => '/leaderboards', 'external' => false],
+        ['label' => 'Wiki', 'url' => $wikiUrl, 'external' => true],
+        ['label' => 'Ban Appeals', 'url' => $appealsUrl, 'external' => true],
     ];
+
+    $legalLinks = [
+        ['label' => 'Terms of Service', 'url' => (string) ($site['terms_url'] ?? '#')],
+        ['label' => 'Privacy Policy', 'url' => (string) ($site['privacy_url'] ?? '#')],
+        ['label' => 'Refund Policy', 'url' => (string) ($site['refund_url'] ?? '#')],
+        ['label' => 'Server Rules', 'url' => (string) ($site['rules_url'] ?? '/rules')],
+    ];
+
     $socialLinks = [
-        [
-            'key' => 'discord',
-            'label' => 'Mineacle Discord',
-            'url' => $resolveUrl($site['discord_url'] ?? '', 'https://discord.gg/qmpJ4xMguT'),
-        ],
-        [
-            'key' => 'x',
-            'label' => 'Mineacle on X',
-            'url' => $resolveUrl($site['x_url'] ?? '', 'https://x.com/mineaclenetwork'),
-        ],
-        [
-            'key' => 'youtube',
-            'label' => 'Mineacle on YouTube',
-            'url' => $resolveUrl($site['youtube_url'] ?? '', 'https://www.youtube.com/@mineaclenetwork'),
-        ],
+        ['key' => 'discord', 'label' => 'Mineacle Discord', 'url' => $discordUrl],
+        ['key' => 'x', 'label' => 'Mineacle on X', 'url' => $xUrl],
+        ['key' => 'youtube', 'label' => 'Mineacle on YouTube', 'url' => $youtubeUrl],
     ];
+    ?>
+    <footer class="compact-footer" aria-label="Mineacle footer">
+        <div class="compact-footer__main">
+            <section class="compact-footer__brand" aria-label="Mineacle Studios">
+                <a class="compact-footer__studio-logo" href="/" aria-label="Mineacle home">
+                    <img
+                        src="/shared/assets/images/footer/studios-logo.webp?v=<?php echo h($assetVersion); ?>"
+                        alt="Mineacle Studios"
+                        draggable="false"
+                    >
+                </a>
+                <p>Mineacle Studios is a small team of passionate Minecraft developers building fun, fair, and community-first servers since 2021.</p>
+                <nav class="compact-footer__socials" aria-label="Mineacle social links">
+                    <?php foreach ($socialLinks as $social): ?>
+                        <?php if ($social['url'] === '#') continue; ?>
+                        <a
+                            class="compact-footer__social compact-footer__social--<?php echo h($social['key']); ?>"
+                            href="<?php echo h($social['url']); ?>"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="<?php echo h($social['label']); ?>"
+                        >
+                            <img
+                                src="/shared/assets/images/footer/<?php echo h($social['key']); ?>.png?v=<?php echo h($assetVersion); ?>"
+                                alt=""
+                                aria-hidden="true"
+                                loading="lazy"
+                                decoding="async"
+                                draggable="false"
+                            >
+                        </a>
+                    <?php endforeach; ?>
+                </nav>
+            </section>
 
-    echo '<footer class="compact-footer" aria-label="Mineacle footer">';
-    echo '<div class="compact-footer__main">';
+            <section class="compact-footer__links-column" aria-labelledby="compact-footer-links-title">
+                <h2 class="compact-footer__heading" id="compact-footer-links-title">Quick Links</h2>
+                <nav class="compact-footer__links" aria-label="Quick links">
+                    <?php foreach ($quickLinks as $link): ?>
+                        <?php if ($link['url'] === '#') continue; ?>
+                        <a
+                            href="<?php echo h($link['url']); ?>"
+                            <?php echo $link['external'] ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>
+                        ><?php echo h($link['label']); ?></a>
+                    <?php endforeach; ?>
+                </nav>
+            </section>
 
-    echo '<div class="compact-footer__brand">';
-    echo '<a class="compact-footer__brand-link" href="/">Mineacle</a>';
-    echo '<span>The original survival server, built by Mineacle Studios.</span>';
-    echo '</div>';
+            <section class="compact-footer__support" aria-labelledby="compact-footer-support-title">
+                <h2 class="compact-footer__heading" id="compact-footer-support-title">Support</h2>
+                <p>Reach us directly or open a ticket on our contact page.</p>
+                <address class="compact-footer__support-address"><?php echo h($supportEmail); ?></address>
+                <a class="compact-footer__support-button" href="<?php echo h($contactUrl); ?>">Go to Contact Page →</a>
+            </section>
+        </div>
 
-    echo '<div class="compact-footer__navigation">';
-    echo '<nav class="compact-footer__links" aria-label="Quick links">';
-    foreach ($quickLinks as $link) {
-        $url = $resolveUrl($link['url']);
+        <div class="compact-footer__bottom">
+            <div class="compact-footer__copyright">
+                <img src="/home/assets/images/logo-small.png?v=<?php echo h($assetVersion); ?>" alt="" aria-hidden="true" draggable="false">
+                <span>© 2026 Mineacle Studios · Not affiliated with Mojang Studios or Microsoft</span>
+            </div>
 
-        if ($url !== '#') {
-            echo '<a href="' . h($url) . '">' . h($link['label']) . '</a>';
-        }
-    }
-    echo '</nav>';
-
-    echo '<nav class="compact-footer__socials" aria-label="Social links">';
-    foreach ($socialLinks as $link) {
-        $url = (string) $link['url'];
-        $key = (string) $link['key'];
-
-        if ($url !== '#') {
-            $iconPath = __DIR__ . '/../assets/images/footer/' . $key . '.png';
-            $iconRevision = (string) (is_file($iconPath) ? (filemtime($iconPath) ?: mineacle_page_asset_version()) : mineacle_page_asset_version());
-
-            echo '<a class="compact-footer__social compact-footer__social--' . h($key) . '" href="' . h($url) . '" target="_blank" rel="noopener noreferrer" aria-label="' . h((string) $link['label']) . '">';
-            echo '<img src="/shared/assets/images/footer/' . h($key) . '.png?rev=' . h(rawurlencode($iconRevision)) . '" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false">';
-            echo '</a>';
-        }
-    }
-    echo '</nav>';
-    echo '</div>';
-    echo '</div>';
-
-    echo '<div class="compact-footer__legal">';
-    echo '<span>© 2026 Mineacle Studios</span>';
-    echo '<span>Not affiliated with Mojang Studios or Microsoft.</span>';
-    echo '</div>';
-    echo '</footer>';
+            <nav class="compact-footer__legal" aria-label="Legal links">
+                <?php foreach ($legalLinks as $link): ?>
+                    <?php $url = mineacle_page_public_link($link['url']); ?>
+                    <?php if ($url === '#'): ?>
+                        <span><?php echo h($link['label']); ?></span>
+                    <?php else: ?>
+                        <a href="<?php echo h($url); ?>"><?php echo h($link['label']); ?></a>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </nav>
+        </div>
+    </footer>
+    <?php
 }

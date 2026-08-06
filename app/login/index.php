@@ -93,147 +93,159 @@ mineacle_page_head('Login', [
 ]);
 ?>
 <main class="auth-page">
-    <section class="auth-hero" aria-labelledby="auth-title">
-        <div class="auth-hero__surface">
-            <?php mineacle_site_navigation($site, ['current_key' => '']); ?>
+    <section class="auth-layout" aria-labelledby="auth-title">
+        <?php mineacle_site_navigation($site, ['current_key' => '']); ?>
 
-            <div class="auth-shell">
-                <section class="auth-card" data-auth-card>
-                    <div class="auth-card__heading">
-                        <span class="auth-card__eyebrow">Mineacle Account</span>
-                        <h1 id="auth-title"><?php echo $mode === 'create' ? 'Create your account' : 'Welcome back'; ?></h1>
-                        <p><?php echo $mode === 'create'
-                            ? 'Link your website account to the Minecraft profile that has already joined Mineacle.'
-                            : 'Use the Minecraft username and password attached to your verified profile.'; ?></p>
-                    </div>
+        <div class="auth-stage">
+            <section class="auth-card" data-auth-card>
+                <div class="auth-card__heading">
+                    <img class="auth-card__logo" src="/home/assets/images/logo-small.png" alt="" aria-hidden="true" draggable="false">
+                    <h1 id="auth-title"><?php echo $mode === 'create' ? 'Create your account' : 'Welcome back'; ?></h1>
+                    <p><?php echo $mode === 'create'
+                        ? 'Verify your Minecraft account to get started'
+                        : 'Sign in to vote and access your profile'; ?></p>
+                </div>
 
-                    <nav class="auth-tabs" aria-label="Account options">
-                        <a class="auth-tab<?php echo $mode === 'login' ? ' is-active' : ''; ?>" href="/login?return=<?php echo h(rawurlencode($returnPath)); ?>">Login</a>
-                        <a class="auth-tab<?php echo $mode === 'create' ? ' is-active' : ''; ?>" href="/login?mode=create&amp;return=<?php echo h(rawurlencode($returnPath)); ?>">Create Account</a>
-                    </nav>
+                <nav class="auth-tabs" aria-label="Account options">
+                    <a class="auth-tab<?php echo $mode === 'create' ? ' is-active' : ''; ?>" href="/login?mode=create&amp;return=<?php echo h(rawurlencode($returnPath)); ?>">Create Account</a>
+                    <a class="auth-tab<?php echo $mode === 'login' ? ' is-active' : ''; ?>" href="/login?return=<?php echo h(rawurlencode($returnPath)); ?>">Sign In</a>
+                </nav>
 
-                    <?php if ($error !== ''): ?>
-                        <div class="auth-message auth-message--error" role="alert"><?php echo h($error); ?></div>
-                    <?php elseif ($notice !== ''): ?>
-                        <div class="auth-message auth-message--success" role="status"><?php echo h($notice); ?></div>
-                    <?php endif; ?>
+                <?php if ($error !== ''): ?>
+                    <div class="auth-message auth-message--error" role="alert"><?php echo h($error); ?></div>
+                <?php elseif ($notice !== ''): ?>
+                    <div class="auth-message auth-message--success" role="status"><?php echo h($notice); ?></div>
+                <?php endif; ?>
 
-                    <?php if ($mode === 'login'): ?>
-                        <form class="auth-form" method="post" action="/login">
+                <?php if ($mode === 'login'): ?>
+                    <form class="auth-form" method="post" action="/login">
+                        <input type="hidden" name="csrf" value="<?php echo h(mineacle_auth_csrf_token()); ?>">
+                        <input type="hidden" name="action" value="login">
+                        <input type="hidden" name="return" value="<?php echo h($returnPath); ?>">
+
+                        <label class="auth-field">
+                            <span>Minecraft username</span>
+                            <input name="username" type="text" minlength="3" maxlength="16" pattern="[A-Za-z0-9_]{3,16}" autocomplete="username" placeholder="YourUsername" required>
+                        </label>
+
+                        <label class="auth-field">
+                            <span>Password</span>
+                            <input name="password" type="password" minlength="10" maxlength="128" autocomplete="current-password" placeholder="••••••••••" required>
+                        </label>
+
+                        <button class="auth-primary" type="submit">Sign In</button>
+                    </form>
+
+                    <p class="auth-card__switch">Don’t have an account? <a href="/login?mode=create&amp;return=<?php echo h(rawurlencode($returnPath)); ?>">Create account</a></p>
+                <?php else: ?>
+                    <?php $status = (string) ($registration['status'] ?? 'none'); ?>
+                    <ol class="auth-steps" aria-label="Account creation progress">
+                        <li class="<?php echo $status === 'none' || $status === 'expired' ? 'is-active' : 'is-complete'; ?>"><span><?php echo $status === 'none' || $status === 'expired' ? '1' : '✓'; ?></span><strong>Username</strong></li>
+                        <li class="<?php echo in_array($status, ['pending', 'unavailable'], true) ? 'is-active' : ($status === 'verified' ? 'is-complete' : ''); ?>"><span><?php echo $status === 'verified' ? '✓' : '2'; ?></span><strong>Verify In-Game</strong></li>
+                        <li class="<?php echo $status === 'verified' ? 'is-active' : ''; ?>"><span>3</span><strong>Set Password</strong></li>
+                    </ol>
+
+                    <?php if ($status === 'none' || $status === 'expired'): ?>
+                        <form class="auth-form" method="post" action="/login?mode=create">
                             <input type="hidden" name="csrf" value="<?php echo h(mineacle_auth_csrf_token()); ?>">
-                            <input type="hidden" name="action" value="login">
+                            <input type="hidden" name="action" value="start_registration">
                             <input type="hidden" name="return" value="<?php echo h($returnPath); ?>">
 
                             <label class="auth-field">
-                                <span>Minecraft username</span>
-                                <input name="username" type="text" minlength="3" maxlength="16" pattern="[A-Za-z0-9_]{3,16}" autocomplete="username" required>
+                                <span>Minecraft Java username</span>
+                                <input name="username" type="text" minlength="3" maxlength="16" pattern="[A-Za-z0-9_]{3,16}" autocomplete="username" placeholder="YourUsername" required>
                             </label>
 
-                            <label class="auth-field">
-                                <span>Password</span>
-                                <input name="password" type="password" minlength="10" maxlength="128" autocomplete="current-password" required>
-                            </label>
+                            <div class="auth-help">
+                                <span aria-hidden="true">⌁</span>
+                                <p>Enter your exact in-game username. You must have joined <strong>play.mineacle.net</strong> before verification.</p>
+                            </div>
 
-                            <button class="auth-primary" type="submit">Login</button>
-                            <p class="auth-form__note">No account yet? Verify the player you use in game before choosing a password.</p>
+                            <?php if ($status === 'expired'): ?>
+                                <p class="auth-form__note auth-form__note--warning">The previous code expired. Generate a new one below.</p>
+                            <?php endif; ?>
+
+                            <button class="auth-primary" type="submit">Generate Verification Code →</button>
                         </form>
-                    <?php else: ?>
-                        <?php $status = (string) ($registration['status'] ?? 'none'); ?>
-                        <ol class="auth-steps" aria-label="Account creation progress">
-                            <li class="is-complete"><span>1</span><strong>Player</strong></li>
-                            <li class="<?php echo in_array($status, ['pending', 'verified'], true) ? 'is-active' : ''; ?><?php echo $status === 'verified' ? ' is-complete' : ''; ?>"><span>2</span><strong>Verify</strong></li>
-                            <li class="<?php echo $status === 'verified' ? 'is-active' : ''; ?>"><span>3</span><strong>Password</strong></li>
-                        </ol>
+                    <?php elseif ($status === 'pending' || $status === 'unavailable'): ?>
+                        <section class="verification" data-verification-poll data-status-url="/login/status.php">
+                            <div class="verification__player">
+                                <img src="<?php echo h(mineacle_auth_bust_url((string) $registration['uuid'], (string) $registration['username'], 256)); ?>" alt="" width="96" height="96" draggable="false">
+                                <div>
+                                    <span>Verifying player</span>
+                                    <strong><?php echo h((string) $registration['username']); ?></strong>
+                                </div>
+                            </div>
 
-                        <?php if ($status === 'none' || $status === 'expired'): ?>
+                            <div class="verification__command">
+                                <span>Your verification command</span>
+                                <div>
+                                    <code data-verification-command><?php echo h((string) $registration['command']); ?></code>
+                                    <button type="button" data-copy-command>Copy</button>
+                                </div>
+                            </div>
+
+                            <div class="verification__instructions">
+                                <strong>How to verify:</strong>
+                                <ol>
+                                    <li>Join the server at <span>play.mineacle.net</span></li>
+                                    <li>Open chat and run the command shown above</li>
+                                    <li>Return here; verification completes automatically</li>
+                                </ol>
+                            </div>
+
+                            <div class="verification__status" role="status" aria-live="polite">
+                                <span class="verification__pulse" aria-hidden="true"></span>
+                                <strong data-verification-status>Waiting for in-game verification…</strong>
+                                <span data-verification-countdown data-expires-at="<?php echo h((string) $registration['expires_at']); ?>">--:--</span>
+                            </div>
+
+                            <form method="post" action="/login?mode=create">
+                                <input type="hidden" name="csrf" value="<?php echo h(mineacle_auth_csrf_token()); ?>">
+                                <input type="hidden" name="action" value="cancel_registration">
+                                <input type="hidden" name="return" value="<?php echo h($returnPath); ?>">
+                                <button class="auth-secondary" type="submit">Change username</button>
+                            </form>
+                        </section>
+                    <?php elseif ($status === 'verified'): ?>
+                        <section class="verification verification--complete">
+                            <div class="verification__player">
+                                <img src="<?php echo h(mineacle_auth_bust_url((string) $registration['uuid'], (string) $registration['username'], 256)); ?>" alt="" width="96" height="96" draggable="false">
+                                <div>
+                                    <span>Identity confirmed</span>
+                                    <strong><?php echo h((string) $registration['username']); ?></strong>
+                                </div>
+                            </div>
+
                             <form class="auth-form" method="post" action="/login?mode=create">
                                 <input type="hidden" name="csrf" value="<?php echo h(mineacle_auth_csrf_token()); ?>">
-                                <input type="hidden" name="action" value="start_registration">
+                                <input type="hidden" name="action" value="complete_registration">
                                 <input type="hidden" name="return" value="<?php echo h($returnPath); ?>">
 
                                 <label class="auth-field">
-                                    <span>Exact Minecraft username</span>
-                                    <input name="username" type="text" minlength="3" maxlength="16" pattern="[A-Za-z0-9_]{3,16}" autocomplete="username" required>
+                                    <span>Choose a password</span>
+                                    <input name="password" type="password" minlength="10" maxlength="128" autocomplete="new-password" placeholder="At least 10 characters" required>
                                 </label>
 
-                                <?php if ($status === 'expired'): ?>
-                                    <p class="auth-form__note auth-form__note--warning">The previous code expired. Generate a new one below.</p>
-                                <?php endif; ?>
+                                <label class="auth-field">
+                                    <span>Confirm password</span>
+                                    <input name="password_confirm" type="password" minlength="10" maxlength="128" autocomplete="new-password" placeholder="••••••••••" required>
+                                </label>
 
-                                <button class="auth-primary" type="submit">Generate Verification Code</button>
-                                <p class="auth-form__note">The username must already exist in Mineacle’s player database.</p>
+                                <button class="auth-primary" type="submit">Create Account &amp; Sign In</button>
                             </form>
-                        <?php elseif ($status === 'pending' || $status === 'unavailable'): ?>
-                            <section class="verification" data-verification-poll data-status-url="/login/status.php">
-                                <div class="verification__player">
-                                    <img src="<?php echo h(mineacle_auth_bust_url((string) $registration['uuid'], (string) $registration['username'], 256)); ?>" alt="" width="128" height="128" draggable="false">
-                                    <div>
-                                        <span>Verifying player</span>
-                                        <strong><?php echo h((string) $registration['username']); ?></strong>
-                                    </div>
-                                </div>
-
-                                <div class="verification__command">
-                                    <span>Run this command while connected to Mineacle</span>
-                                    <code data-verification-command><?php echo h((string) $registration['command']); ?></code>
-                                    <button type="button" data-copy-command>Copy Command</button>
-                                </div>
-
-                                <div class="verification__status" role="status" aria-live="polite">
-                                    <span class="verification__pulse" aria-hidden="true"></span>
-                                    <span data-verification-status>Waiting for in-game verification…</span>
-                                </div>
-
-                                <p class="auth-form__note">This code expires in <strong data-verification-countdown data-expires-at="<?php echo h((string) $registration['expires_at']); ?>">10:00</strong>. The command only works for this Minecraft UUID.</p>
-
-                                <form method="post" action="/login?mode=create">
-                                    <input type="hidden" name="csrf" value="<?php echo h(mineacle_auth_csrf_token()); ?>">
-                                    <input type="hidden" name="action" value="cancel_registration">
-                                    <input type="hidden" name="return" value="<?php echo h($returnPath); ?>">
-                                    <button class="auth-secondary" type="submit">Use Another Player</button>
-                                </form>
-                            </section>
-                        <?php elseif ($status === 'verified'): ?>
-                            <section class="verification verification--complete">
-                                <div class="verification__player">
-                                    <img src="<?php echo h(mineacle_auth_bust_url((string) $registration['uuid'], (string) $registration['username'], 256)); ?>" alt="" width="128" height="128" draggable="false">
-                                    <div>
-                                        <span>Verified in game</span>
-                                        <strong><?php echo h((string) $registration['username']); ?></strong>
-                                    </div>
-                                </div>
-
-                                <form class="auth-form" method="post" action="/login?mode=create">
-                                    <input type="hidden" name="csrf" value="<?php echo h(mineacle_auth_csrf_token()); ?>">
-                                    <input type="hidden" name="action" value="complete_registration">
-                                    <input type="hidden" name="return" value="<?php echo h($returnPath); ?>">
-
-                                    <label class="auth-field">
-                                        <span>Create password</span>
-                                        <input name="password" type="password" minlength="10" maxlength="128" autocomplete="new-password" required>
-                                    </label>
-
-                                    <label class="auth-field">
-                                        <span>Confirm password</span>
-                                        <input name="password_confirm" type="password" minlength="10" maxlength="128" autocomplete="new-password" required>
-                                    </label>
-
-                                    <button class="auth-primary" type="submit">Create Account</button>
-                                    <p class="auth-form__note">Use at least 10 characters. Your password is stored as a one-way hash.</p>
-                                </form>
-                            </section>
-                        <?php endif; ?>
+                        </section>
                     <?php endif; ?>
-                </section>
 
-                <aside class="auth-context" aria-label="Why verify in game">
-                    <span class="auth-context__label">Verified access</span>
-                    <h2>Your website profile is your Minecraft profile.</h2>
-                    <p>In-game verification prevents another person from registering your username. Once linked, the same account unlocks voting and future player-only tools.</p>
-                    <div class="auth-context__command"><span>Server command</span><strong>/verify CODE</strong></div>
-                </aside>
-            </div>
+                    <p class="auth-card__switch">Already have an account? <a href="/login?return=<?php echo h(rawurlencode($returnPath)); ?>">Sign in</a></p>
+                <?php endif; ?>
+            </section>
         </div>
+
+        <footer class="auth-footer">
+            <div><img src="/home/assets/images/logo-small.png" alt="" aria-hidden="true" draggable="false"><span>© 2026 Mineacle Studios</span></div>
+            <nav aria-label="Legal links"><a href="/terms">Terms of Service</a><a href="/privacy">Privacy Policy</a><a href="/rules">Server Rules</a></nav>
+        </footer>
     </section>
 </main>
 <?php mineacle_page_end([
