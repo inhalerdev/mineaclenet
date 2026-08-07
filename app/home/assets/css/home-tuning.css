@@ -38,3 +38,11 @@ body.mineacle-home .join-dialog__copy {
     16px
   );
 }
+
+
+/* Home action typography: Rubik Medium. */
+body.mineacle-home .home-action--play,
+body.mineacle-home .home-action--play span,
+body.mineacle-home .home-action--help {
+  font-weight: 500;
+}
