@@ -1,15 +1,28 @@
 /*
- * Mineacle Home-only sizing pass
+ * Mineacle Home-only sizing + navigation pass
  *
- * This file intentionally loads after both shared navigation.css and home.css.
- * Every selector is scoped to body.mineacle-home so no other page is changed.
+ * This stylesheet loads after shared navigation.css and home.css.
+ * Every visual override is scoped to body.mineacle-home so Player,
+ * Leaderboards, Vote, Bans, etc. remain untouched until they are handled.
  */
 
-/* The Home Play/copy button typography was slightly oversized relative to the
-   surrounding Home typography. Keep the same button dimensions and artwork,
-   only reduce the text scale. At the 1920x1080 design baseline this resolves
-   to 20px instead of the previous 24px. */
+/* -------------------------------------------------------------------------
+   HOME PAGE FRAME
+   ------------------------------------------------------------------------- */
+
+/*
+ * Fixed site-edge spacing.
+ * The main Home container remains exactly 64px from every viewport edge
+ * instead of scaling the frame with vw/vh.
+ */
 body.mineacle-home {
+  --home-frame: 64px;
+  --home-frame-top: max(64px, env(safe-area-inset-top, 0px));
+  --home-frame-right: max(64px, env(safe-area-inset-right, 0px));
+  --home-frame-bottom: max(64px, env(safe-area-inset-bottom, 0px));
+  --home-frame-left: max(64px, env(safe-area-inset-left, 0px));
+
+  /* Existing Home button typography pass. */
   --home-compact-button-size: clamp(
     16px,
     min(1.041667vw, 1.851852vh),
@@ -17,12 +30,149 @@ body.mineacle-home {
   );
 }
 
+/* -------------------------------------------------------------------------
+   HOME NAVIGATION — FIGMA REFERENCE
+   Baseline reference export: 1766px wide / 55px high
+   ------------------------------------------------------------------------- */
+
+body.mineacle-home .site-header {
+  min-height: 55px;
+  gap: 16px;
+}
+
+/* Exact Figma logo footprint: 64 x 55. */
+body.mineacle-home .site-brand {
+  width: 64px;
+  height: 55px;
+  flex: 0 0 64px;
+  filter: none;
+  transform: none;
+  transition: none;
+}
+
+body.mineacle-home .site-brand img {
+  width: 64px;
+  height: 55px;
+  object-fit: contain;
+
+  /* Exact non-hover logo supplied in the Figma export. */
+  content: url("../images/logo-nav-static.png");
+}
+
+/* Exact hover logo supplied in the Figma export. */
+body.mineacle-home .site-brand:hover,
+body.mineacle-home .site-brand:focus-visible {
+  filter: none;
+  transform: none;
+}
+
+body.mineacle-home .site-brand:hover img,
+body.mineacle-home .site-brand:focus-visible img {
+  content: url("../images/logo-nav-hover.png");
+}
+
+/*
+ * Figma auto-layout spacing is 16px.
+ * Apply it both between the text links and between the link group/Login.
+ */
+body.mineacle-home .site-navigation,
+body.mineacle-home .site-navigation__links {
+  gap: 16px;
+}
+
+/*
+ * Navigation text states from the supplied references:
+ * static link        #BBBBBB
+ * current page       #B078FF
+ * hovered other link #D0AFFF
+ *
+ * Current-page links intentionally do NOT change color on hover.
+ */
+body.mineacle-home .site-navigation__link {
+  min-height: 34px;
+  padding: 0;
+  color: #bbbbbb;
+  font-family: "Rubik", Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1;
+  text-transform: none;
+  transform: none;
+  transition: color 120ms ease-out;
+}
+
+body.mineacle-home .site-navigation__link.is-current {
+  color: #b078ff;
+}
+
+body.mineacle-home .site-navigation__link:not(.is-current):hover,
+body.mineacle-home .site-navigation__link:not(.is-current):focus-visible {
+  color: #d0afff;
+  transform: none;
+}
+
+body.mineacle-home .site-navigation__link.is-current:hover,
+body.mineacle-home .site-navigation__link.is-current:focus-visible {
+  color: #b078ff;
+  transform: none;
+}
+
+/*
+ * Login button footprint from the 1766px reference:
+ * 73px wide x 34px tall.
+ *
+ * Its text remains full-size Rubik; only the surrounding button is slim.
+ */
+body.mineacle-home .site-navigation__login {
+  width: 73px;
+  min-width: 73px;
+  height: 34px;
+  min-height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 2px;
+  background: #b078ff;
+  color: #eeeeee;
+  font-family: "Rubik", Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1;
+  text-transform: none;
+  transform: none;
+  transition:
+    background-color 120ms ease-out,
+    color 120ms ease-out;
+}
+
+body.mineacle-home .site-navigation__login:hover,
+body.mineacle-home .site-navigation__login:focus-visible {
+  background: #8436fe;
+  color: #ffffff;
+  transform: none;
+}
+
+/*
+ * Authenticated Logout is longer than Login, so preserve the same 34px
+ * height while allowing only its width to expand.
+ */
+body.mineacle-home .site-navigation__account-form .site-navigation__login {
+  width: auto;
+  min-width: 88px;
+  height: 34px;
+  min-height: 34px;
+  padding-inline: 14px;
+}
+
+/* -------------------------------------------------------------------------
+   EXISTING HOME BUTTON TYPOGRAPHY TUNING
+   ------------------------------------------------------------------------- */
+
 body.mineacle-home .home-action--play {
   font-size: var(--home-compact-button-size);
 }
 
-/* Keep the modal's action text in the same slightly smaller family without
-   changing the modal button's existing size or layout. */
 body.mineacle-home .join-dialog__copy {
   font-size: clamp(
     15px,
@@ -31,42 +181,5 @@ body.mineacle-home .join-dialog__copy {
   );
 }
 
-/*
- * Home desktop Login button
- *
- * Keep the existing Login text size. Only slim the button itself.
- * At the 1920x1080 baseline this is about 67px wide x 38px tall,
- * which is approximately a 1 : 1.75 height-to-width ratio.
- */
-body.mineacle-home .site-navigation__login {
-  width: clamp(
-    60px,
-    min(3.489583vw, 6.203704vh),
-    72px
-  );
-  min-width: clamp(
-    60px,
-    min(3.489583vw, 6.203704vh),
-    72px
-  );
-  height: clamp(
-    34px,
-    min(1.979167vw, 3.518519vh),
-    40px
-  );
-  min-height: 0;
-  padding: 0;
-  font-size: var(--site-nav-font-size);
-  line-height: 1;
-}
-
-/* Preserve enough width if this same control is showing an authenticated
-   account action such as Logout. */
-body.mineacle-home .site-navigation__account-form .site-navigation__login {
-  width: auto;
-  min-width: 88px;
-  padding-inline: 14px;
-}
-
-/* The mobile navigation Login remains full-width by design. This sizing pass
-   only targets the desktop Home navigation button. */
+/* Keep the mobile menu behavior from shared navigation.css.
+   The fixed 64px page edge remains intentional at every viewport size. */
