@@ -44,10 +44,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mode = 'create';
 
             if (($result['ok'] ?? false) === true) {
-                $notice = 'Verification command generated.';
-            } else {
-                $error = (string) ($result['message'] ?? 'Verification could not be started.');
+                /*
+                 * POST/Redirect/GET is required here.
+                 *
+                 * Once /verify succeeds in Minecraft, the browser refreshes
+                 * this page to render the password stage. If this response is
+                 * still the original POST, a refresh resubmits
+                 * start_registration, consumes/replaces the verified
+                 * challenge, and verification appears to fail.
+                 */
+                header(
+                    'Location: /login?mode=create&return=' . rawurlencode($returnPath),
+                    true,
+                    303
+                );
+                exit;
             }
+
+            $error = (string) ($result['message'] ?? 'Verification could not be started.');
         } elseif ($action === 'complete_registration') {
             $result = mineacle_auth_complete_registration($_POST['password'] ?? '', $_POST['password_confirm'] ?? '');
             $mode = 'create';
