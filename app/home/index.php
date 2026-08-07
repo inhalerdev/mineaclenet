@@ -55,6 +55,7 @@ $socialLinks = [
 $assetDirectory = __DIR__ . '/assets';
 $assetFiles = [
     $assetDirectory . '/css/home.css',
+    $assetDirectory . '/css/home-tuning.css',
     $assetDirectory . '/js/home.js',
     $assetDirectory . '/images/hero.webp',
     $assetDirectory . '/images/logo-small.png',
@@ -83,6 +84,7 @@ mineacle_page_head('Home', [
     'stylesheets' => [
         '/shared/assets/css/navigation.css?rev=' . rawurlencode($navigationStylesheetVersion),
         '/home/assets/css/home.css?rev=' . $assetRevision,
+        '/home/assets/css/home-tuning.css?rev=' . $assetRevision,
     ],
     'body_class' => 'mineacle-home',
     'external_fonts' => false,

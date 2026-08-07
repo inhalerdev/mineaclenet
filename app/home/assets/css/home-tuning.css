@@ -1,0 +1,72 @@
+/*
+ * Mineacle Home-only sizing pass
+ *
+ * This file intentionally loads after both shared navigation.css and home.css.
+ * Every selector is scoped to body.mineacle-home so no other page is changed.
+ */
+
+/* The Home Play/copy button typography was slightly oversized relative to the
+   surrounding Home typography. Keep the same button dimensions and artwork,
+   only reduce the text scale. At the 1920x1080 design baseline this resolves
+   to 20px instead of the previous 24px. */
+body.mineacle-home {
+  --home-compact-button-size: clamp(
+    16px,
+    min(1.041667vw, 1.851852vh),
+    40px
+  );
+}
+
+body.mineacle-home .home-action--play {
+  font-size: var(--home-compact-button-size);
+}
+
+/* Keep the modal's action text in the same slightly smaller family without
+   changing the modal button's existing size or layout. */
+body.mineacle-home .join-dialog__copy {
+  font-size: clamp(
+    15px,
+    min(0.833333vw, 1.481481vh),
+    16px
+  );
+}
+
+/*
+ * Home desktop Login button
+ *
+ * Keep the existing Login text size. Only slim the button itself.
+ * At the 1920x1080 baseline this is about 67px wide x 38px tall,
+ * which is approximately a 1 : 1.75 height-to-width ratio.
+ */
+body.mineacle-home .site-navigation__login {
+  width: clamp(
+    60px,
+    min(3.489583vw, 6.203704vh),
+    72px
+  );
+  min-width: clamp(
+    60px,
+    min(3.489583vw, 6.203704vh),
+    72px
+  );
+  height: clamp(
+    34px,
+    min(1.979167vw, 3.518519vh),
+    40px
+  );
+  min-height: 0;
+  padding: 0;
+  font-size: var(--site-nav-font-size);
+  line-height: 1;
+}
+
+/* Preserve enough width if this same control is showing an authenticated
+   account action such as Logout. */
+body.mineacle-home .site-navigation__account-form .site-navigation__login {
+  width: auto;
+  min-width: 88px;
+  padding-inline: 14px;
+}
+
+/* The mobile navigation Login remains full-width by design. This sizing pass
+   only targets the desktop Home navigation button. */
