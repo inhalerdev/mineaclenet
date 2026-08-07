@@ -238,7 +238,7 @@
   letter-spacing: 0;
   line-height: 1;
   text-decoration: none;
-  text-transform: none;
+  text-transform: uppercase;
   white-space: nowrap;
   cursor: pointer;
 }
@@ -451,7 +451,7 @@
   border-radius: 2px;
   background: #8436fe;
   color: #f8f8f8;
-  text-transform: none;
+  text-transform: uppercase;
   transition: background-color 120ms ease-out, color 120ms ease-out;
 }
 
@@ -529,91 +529,6 @@
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation: none;
-  }
-}
-
-/* ==========================================================================
-   HOME TYPOGRAPHY / CONTROL SCALE
-   ========================================================================== */
-
-/* Preserve the compact Home hero scale while the shared shell follows the reference layout. */
-body.mineacle-home {
-  --home-compact-title-size: clamp(18px, min(1.25vw, 2.222222vh), 48px);
-  --home-compact-copy-size: clamp(12px, min(0.78125vw, 1.388889vh), 30px);
-  --home-compact-control-size: clamp(36px, min(2.5vw, 4.444444vh), 96px);
-  --home-compact-play-width: clamp(156px, min(10vw, 17.777778vh), 384px);
-  --home-compact-button-size: clamp(18px, min(1.25vw, 2.222222vh), 48px);
-  --home-compact-small-gap: clamp(9px, min(0.625vw, 1.111111vh), 24px);
-  --home-story-section-gap: clamp(14px, min(0.9375vw, 1.666667vh), 36px);
-}
-
-body.mineacle-home .home-story__copy {
-  display: grid;
-  gap: var(--home-story-section-gap);
-}
-
-body.mineacle-home .home-story__copy h2 {
-  font-size: var(--home-compact-title-size);
-}
-
-body.mineacle-home .home-story__copy p {
-  font-size: var(--home-compact-copy-size);
-  text-align: justify;
-  text-align-last: left;
-}
-
-body.mineacle-home .home-actions {
-  margin-top: var(--home-story-section-gap);
-}
-
-body.mineacle-home .home-actions__primary,
-body.mineacle-home .home-socials {
-  gap: var(--home-compact-small-gap);
-}
-
-body.mineacle-home .home-action,
-body.mineacle-home .home-social {
-  height: var(--home-compact-control-size);
-}
-
-body.mineacle-home .home-action--play {
-  min-width: var(--home-compact-play-width);
-  padding-inline: clamp(12px, min(1.25vw, 2.222222vh), 48px);
-  font-size: var(--home-compact-button-size);
-}
-
-body.mineacle-home .home-action--help,
-body.mineacle-home .home-social {
-  width: var(--home-compact-control-size);
-}
-
-body.mineacle-home .home-action,
-body.mineacle-home .home-action span,
-body.mineacle-home .join-dialog,
-body.mineacle-home .join-dialog button {
-  font-family: "Rubik", Arial, sans-serif;
-}
-
-body.mineacle-home .home-action--play,
-body.mineacle-home .home-action--play span,
-body.mineacle-home .home-action--help,
-body.mineacle-home .join-dialog__copy,
-body.mineacle-home .join-dialog__copy span {
-  font-weight: 600;
-}
-
-@media (max-width: 640px) {
-  body.mineacle-home {
-    --home-compact-title-size: 16px;
-    --home-compact-copy-size: 11px;
-    --home-compact-control-size: 36px;
-    --home-compact-button-size: 18px;
-    --home-compact-small-gap: 9px;
-    --home-story-section-gap: 14px;
-  }
-
-  body.mineacle-home .home-action--play {
-    min-width: 0;
   }
 }
 

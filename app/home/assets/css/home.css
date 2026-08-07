@@ -27,20 +27,21 @@
   --home-white: #f8f8f8;
   --home-white-hover: #ffffff;
   --home-nav-current: #b078ff;
-  --home-nav-static: #f8f8f8;
-  --home-hover: #d0afff;
-  --home-link-hover: #d0afff;
+  --home-nav-static: #bbbbbb;
+  --home-hover: #f8f8f8;
+  --home-link-hover: #f8f8f8;
   --home-accent: #8436fe;
-  --home-play: #389222;
+  --home-play: #62c249;
   --join-close-hover: #ff5555;
-  /* 1920×1080 is the design baseline. Width and height both participate so
-     3440×1440 and similar ultrawide canvases scale without becoming oversized. */
-  --home-frame: clamp(16px, min(3.333333vw, 5.925926vh), 128px);
-  --home-frame-top: max(var(--home-frame), env(safe-area-inset-top, 0px));
-  --home-frame-right: max(var(--home-frame), env(safe-area-inset-right, 0px));
-  --home-frame-bottom: max(var(--home-frame), env(safe-area-inset-bottom, 0px));
-  --home-frame-left: max(var(--home-frame), env(safe-area-inset-left, 0px));
-  --home-hero-padding: clamp(16px, min(1.666667vw, 2.962963vh), 64px);
+
+  /* Canonical 64px website frame. */
+  --home-frame: var(--mineacle-shell-frame, 64px);
+  --home-frame-top: var(--mineacle-shell-frame-top, max(64px, env(safe-area-inset-top, 0px)));
+  --home-frame-right: var(--mineacle-shell-frame-right, max(64px, env(safe-area-inset-right, 0px)));
+  --home-frame-bottom: var(--mineacle-shell-frame-bottom, max(64px, env(safe-area-inset-bottom, 0px)));
+  --home-frame-left: var(--mineacle-shell-frame-left, max(64px, env(safe-area-inset-left, 0px)));
+
+  --home-hero-padding: var(--mineacle-shell-inner, clamp(16px, min(1.666667vw, 2.962963vh), 64px));
   --home-gap: clamp(16px, min(1.666667vw, 2.962963vh), 64px);
   --home-small-gap: clamp(12px, min(0.833333vw, 1.481481vh), 32px);
   --home-viewport-height: 100vh;
@@ -52,6 +53,15 @@
   --home-copy-size: clamp(15px, min(1.041667vw, 1.851852vh), 40px);
   --home-button-size: clamp(24px, min(1.666667vw, 2.962963vh), 64px);
   --home-story-width: clamp(600px, min(41.666667vw, 74.074074vh), 1600px);
+
+  /* Compact Home scale moved here from shared navigation.css. */
+  --home-compact-title-size: clamp(18px, min(1.25vw, 2.222222vh), 48px);
+  --home-compact-copy-size: clamp(12px, min(0.78125vw, 1.388889vh), 30px);
+  --home-compact-control-size: clamp(36px, min(2.5vw, 4.444444vh), 96px);
+  --home-compact-play-width: clamp(156px, min(10vw, 17.777778vh), 384px);
+  --home-compact-button-size: clamp(16px, min(1.041667vw, 1.851852vh), 40px);
+  --home-compact-small-gap: clamp(9px, min(0.625vw, 1.111111vh), 24px);
+  --home-story-section-gap: clamp(14px, min(0.9375vw, 1.666667vh), 36px);
 }
 
 @supports (height: 100svh) {
@@ -181,13 +191,15 @@ body.mineacle-home img {
 }
 
 .home-story__copy {
+  display: grid;
   width: min(var(--home-story-width), 100%);
+  gap: var(--home-story-section-gap);
 }
 
 .home-story__copy h2 {
   margin: 0;
   color: var(--home-white);
-  font-size: var(--home-heading-size);
+  font-size: var(--home-compact-title-size);
   font-weight: 600;
   line-height: 1.2;
   text-transform: uppercase;
@@ -196,9 +208,11 @@ body.mineacle-home img {
 .home-story__copy p {
   margin: 0;
   color: var(--home-white);
-  font-size: var(--home-copy-size);
+  font-size: var(--home-compact-copy-size);
   font-weight: 400;
   line-height: 1.2;
+  text-align: justify;
+  text-align-last: left;
 }
 
 .home-actions {
@@ -206,7 +220,7 @@ body.mineacle-home img {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  margin-top: clamp(18px, min(1.25vw, 2.222222vh), 48px);
+  margin-top: var(--home-story-section-gap);
   gap: var(--home-gap);
 }
 
@@ -214,18 +228,14 @@ body.mineacle-home img {
 .home-socials {
   display: flex;
   align-items: center;
-}
-
-.home-actions__primary,
-.home-socials {
-  gap: var(--home-small-gap);
+  gap: var(--home-compact-small-gap);
 }
 
 .home-action,
 .home-social {
   display: grid;
   place-items: center;
-  height: var(--home-control-size);
+  height: var(--home-compact-control-size);
   padding: 0;
   border: 0;
   border-radius: 2px;
@@ -256,12 +266,12 @@ body.mineacle-home img {
 
 .home-action--play {
   width: max-content;
-  min-width: var(--home-play-width);
-  padding-inline: var(--home-gap);
-  background-image: url("../images/action-play.png");
-  color: var(--home-white);
-  font-size: var(--home-button-size);
-  font-weight: 600;
+  min-width: var(--home-compact-play-width);
+  padding-inline: clamp(12px, min(1.25vw, 2.222222vh), 48px);
+  background: var(--home-play);
+  color: #f8f8f8;
+  font-size: var(--home-compact-button-size);
+  font-weight: 500;
   line-height: 1;
   letter-spacing: 0.015em;
   text-transform: uppercase;
@@ -269,35 +279,48 @@ body.mineacle-home img {
 }
 
 .home-action--play [data-play-label] {
-  opacity: 0;
+  display: block;
+  color: inherit;
+  font-weight: 500;
+  opacity: 1;
+}
+
+.home-action--play:hover,
+.home-action--play:focus-visible {
+  background: var(--home-play);
+  color: #ffffff;
 }
 
 .home-action--play.has-copy-feedback,
 .home-action--play.is-status-preview {
-  background-color: var(--home-play);
-  background-image: none;
-}
-
-.home-action--play.has-copy-feedback [data-play-label],
-.home-action--play.is-status-preview [data-play-label] {
-  opacity: 1;
+  background: var(--home-play);
+  color: #ffffff;
 }
 
 .home-action--play.is-copy-error {
-  background-color: #b63d3d;
+  background: #b63d3d;
+  color: #ffffff;
 }
 
 .home-action--help {
-  width: var(--home-control-size);
+  width: var(--home-compact-control-size);
   overflow: hidden;
-  background-image: url("../images/action-info.png");
-  color: transparent;
-  font-size: 0;
+  background: var(--home-play);
+  color: #f8f8f8;
+  font-size: var(--home-compact-button-size);
+  font-weight: 500;
+  line-height: 1;
+}
+
+.home-action--help:hover,
+.home-action--help:focus-visible {
+  background: var(--home-play);
+  color: #ffffff;
 }
 
 .home-social {
   position: relative;
-  width: var(--home-control-size);
+  width: var(--home-compact-control-size);
   overflow: hidden;
 }
 
@@ -413,7 +436,7 @@ body.mineacle-home img {
   border-radius: 2px;
   background: var(--home-play);
   color: var(--home-white);
-  font-size: 18px;
+  font-size: clamp(15px, min(0.833333vw, 1.481481vh), 16px);
   font-weight: 600;
   text-transform: uppercase;
   cursor: pointer;
@@ -446,9 +469,13 @@ body.mineacle-home img {
 
 @media (max-width: 640px) {
   :root {
-    --home-frame: 16px;
-    --home-hero-padding: 16px;
     --home-control-size: 48px;
+    --home-compact-title-size: 16px;
+    --home-compact-copy-size: 11px;
+    --home-compact-control-size: 36px;
+    --home-compact-button-size: 18px;
+    --home-compact-small-gap: 9px;
+    --home-story-section-gap: 14px;
   }
 
   .home-hero {
@@ -469,18 +496,18 @@ body.mineacle-home img {
   }
 
   .home-story__copy h2 {
-    font-size: 21px;
+    font-size: 16px;
   }
 
   .home-story__copy p {
-    font-size: 14px;
+    font-size: 11px;
     line-height: 1.4;
   }
 
   .home-actions {
     flex-direction: column;
     align-items: stretch;
-    margin-top: 18px;
+    margin-top: 14px;
     gap: 12px;
   }
 
@@ -492,7 +519,7 @@ body.mineacle-home img {
     width: auto;
     min-width: 0;
     flex: 1;
-    font-size: 24px;
+    font-size: 18px;
   }
 
   .home-socials {
@@ -501,18 +528,14 @@ body.mineacle-home img {
 }
 
 @media (max-width: 420px) {
-  .home-story__copy h2 {
-    font-size: 20px;
-  }
-
   .home-action,
   .home-social {
-    height: 48px;
+    height: 36px;
   }
 
   .home-action--help,
   .home-social {
-    width: 48px;
+    width: 36px;
   }
 }
 
