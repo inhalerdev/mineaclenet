@@ -1031,3 +1031,23 @@ body.player-page .compact-footer {
   border-radius: 2px 2px 0 0;
   background: linear-gradient(180deg, var(--profile-purple), rgba(132, 54, 254, 0.22));
 }
+
+/* Player must remain a normal document-scrolling page even when shared site CSS locks the viewport. */
+html {
+  height: auto !important;
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto !important;
+}
+
+body.player-page {
+  height: auto !important;
+  min-height: 100%;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+.player-site {
+  height: auto !important;
+  overflow: visible !important;
+}
