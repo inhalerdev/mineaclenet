@@ -19,8 +19,8 @@
 
   /* Canonical navigation measurements. */
   --site-nav-gap: 16px;
-  --site-nav-logo-height: 64px;
-  --site-nav-logo-width: 75.155963px; /* 512 / 436 × 64 */
+  --site-nav-logo-height: 48px;
+  --site-nav-logo-width: 56.366972px; /* 512 / 436 × 48 */
   --site-nav-font-size: 16px;
   --site-nav-control-height: 34px;
   --site-nav-login-width: 73px;
