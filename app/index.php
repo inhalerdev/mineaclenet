@@ -16,6 +16,31 @@ if ($requestPath === '/home' || $requestPath === '/home.php') {
     exit;
 }
 
+/*
+ * Authentication/account routes must be handled explicitly by the same front
+ * controller as the public pages. This keeps verification polling working even
+ * when the web server rewrites every PHP request through app/index.php.
+ */
+if (in_array($requestPath, ['/login', '/login.php', '/login/index.php'], true)) {
+    require __DIR__ . '/login/index.php';
+    exit;
+}
+
+if (in_array($requestPath, ['/login/status', '/login/status.php', '/auth/status'], true)) {
+    require __DIR__ . '/login/status.php';
+    exit;
+}
+
+if (in_array($requestPath, ['/logout', '/logout/index.php'], true)) {
+    require __DIR__ . '/logout/index.php';
+    exit;
+}
+
+if (in_array($requestPath, ['/vote', '/vote.php', '/vote/index.php'], true)) {
+    require __DIR__ . '/vote/index.php';
+    exit;
+}
+
 if ($requestPath === '/players') {
     $queryString = trim((string) ($_SERVER['QUERY_STRING'] ?? ''));
     header('Location: /leaderboards' . ($queryString !== '' ? '?' . $queryString : ''), true, 302);
