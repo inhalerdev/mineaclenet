@@ -1,197 +1,31 @@
 /*
- * Mineacle Home-only sizing + navigation pass
+ * Mineacle Home-only sizing pass.
  *
- * Loads after shared navigation.css and home.css.
- * Everything here is scoped to body.mineacle-home so other pages remain unchanged.
+ * Navigation itself is no longer styled here. The Home page now uses the
+ * exact same shared navigation.css as every other page.
  */
-
-/* ==========================================================================
-   HOME PAGE FRAME
-   ========================================================================== */
 
 body.mineacle-home {
   /*
-   * Fixed 64px outer spacing from the browser edge to the Home main container.
-   * This stays 64px rather than scaling with viewport width/height.
+   * Use the global canonical 64px shell frame.
+   * This keeps Home aligned with Leaderboards, Vote, Player, and future pages.
    */
-  --home-frame: 64px;
-  --home-frame-top: max(64px, env(safe-area-inset-top, 0px));
-  --home-frame-right: max(64px, env(safe-area-inset-right, 0px));
-  --home-frame-bottom: max(64px, env(safe-area-inset-bottom, 0px));
-  --home-frame-left: max(64px, env(safe-area-inset-left, 0px));
+  --home-frame: var(--mineacle-shell-frame, 64px);
+  --home-frame-top: var(--mineacle-shell-frame-top, 64px);
+  --home-frame-right: var(--mineacle-shell-frame-right, 64px);
+  --home-frame-bottom: var(--mineacle-shell-frame-bottom, 64px);
+  --home-frame-left: var(--mineacle-shell-frame-left, 64px);
 
-  /* Slightly smaller Home action-button text. */
+  /* Use the exact same inner hero inset as the other page heroes. */
+  --home-hero-padding: var(--mineacle-shell-inner);
+
+  /* Keep the previously requested smaller Home action-button text. */
   --home-compact-button-size: clamp(
     16px,
     min(1.041667vw, 1.851852vh),
     40px
   );
 }
-
-/* ==========================================================================
-   HOME NAVIGATION
-   Figma baseline: 1766px-wide export
-   ========================================================================== */
-
-/*
- * 64px-tall logo establishes the visual height of the header.
- * Navigation links and Login remain vertically centered against it.
- */
-body.mineacle-home .site-header {
-  min-height: 64px;
-  align-items: center;
-}
-
-body.mineacle-home .site-navigation,
-body.mineacle-home .site-navigation__links {
-  align-items: center;
-  gap: 16px;
-}
-
-/* --------------------------------------------------------------------------
-   MAIN LOGO
-   -------------------------------------------------------------------------- */
-
-/*
- * Original supplied artwork is 512 x 436.
- * Height is fixed to 64px; width remains automatic so the original aspect
- * ratio is preserved (~75.16px wide at 64px tall).
- */
-body.mineacle-home .site-brand {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: auto;
-  height: 64px;
-  flex: 0 0 auto;
-  filter: none;
-  transform: none;
-  transition: none;
-}
-
-body.mineacle-home .site-brand img {
-  display: block;
-  width: auto;
-  height: 64px;
-  max-width: none;
-  object-fit: contain;
-  content: url("../images/static-logo.png");
-}
-
-/* Static logo: #8436FE artwork.
-   Hover logo:  #B078FF artwork. */
-body.mineacle-home .site-brand:hover,
-body.mineacle-home .site-brand:focus-visible {
-  filter: none;
-  transform: none;
-}
-
-body.mineacle-home .site-brand:hover img,
-body.mineacle-home .site-brand:focus-visible img {
-  content: url("../images/hover-logo.png");
-}
-
-/* --------------------------------------------------------------------------
-   NAV LINKS
-   -------------------------------------------------------------------------- */
-
-/*
- * Static:       #BBBBBB
- * Hover:        #F8F8F8
- * Current page: #B078FF
- *
- * The current-page link keeps #B078FF on hover/focus.
- */
-body.mineacle-home .site-navigation__link {
-  min-height: 34px;
-  padding: 0;
-  color: #bbbbbb;
-  background: transparent;
-  font-family: "Rubik", Arial, sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: 0;
-  line-height: 1;
-  text-transform: none;
-  transform: none;
-  transition: color 120ms ease-out;
-}
-
-body.mineacle-home .site-navigation__link.is-current {
-  color: #b078ff;
-}
-
-body.mineacle-home .site-navigation__link:not(.is-current):hover,
-body.mineacle-home .site-navigation__link:not(.is-current):focus-visible {
-  color: #f8f8f8;
-  transform: none;
-}
-
-body.mineacle-home .site-navigation__link.is-current:hover,
-body.mineacle-home .site-navigation__link.is-current:focus-visible {
-  color: #b078ff;
-  transform: none;
-}
-
-/* --------------------------------------------------------------------------
-   LOGIN BUTTON
-   -------------------------------------------------------------------------- */
-
-/*
- * Static:
- *   background #8436FE
- *   text       #F8F8F8
- *
- * Hover:
- *   background #B078FF
- *   text       #FFFFFF
- *
- * Keep the slim 73 x 34 reference footprint.
- */
-body.mineacle-home .site-navigation__login {
-  width: 73px;
-  min-width: 73px;
-  height: 34px;
-  min-height: 34px;
-  padding: 0;
-  border: 0;
-  border-radius: 2px;
-  background: #8436fe;
-  color: #f8f8f8;
-  font-family: "Rubik", Arial, sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: 0;
-  line-height: 1;
-  text-transform: none;
-  transform: none;
-  transition:
-    background-color 120ms ease-out,
-    color 120ms ease-out;
-}
-
-body.mineacle-home .site-navigation__login:hover,
-body.mineacle-home .site-navigation__login:focus-visible {
-  background: #b078ff;
-  color: #ffffff;
-  transform: none;
-}
-
-/*
- * Logout needs more horizontal room than Login while retaining the same
- * 34px vertical height.
- */
-body.mineacle-home .site-navigation__account-form .site-navigation__login {
-  width: auto;
-  min-width: 88px;
-  height: 34px;
-  min-height: 34px;
-  padding-inline: 14px;
-}
-
-/* ==========================================================================
-   HOME ACTION TYPOGRAPHY
-   ========================================================================== */
 
 body.mineacle-home .home-action--play {
   font-size: var(--home-compact-button-size);

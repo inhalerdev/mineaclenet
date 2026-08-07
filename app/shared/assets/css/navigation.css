@@ -1,6 +1,6 @@
 :root {
   --mineacle-content-width: 1648px;
-  --mineacle-page-edge: clamp(20px, 4vw, 72px);
+  --mineacle-page-edge: 64px;
   --mineacle-page-gap: clamp(28px, 3vw, 52px);
   --mineacle-radius: 3px;
   --mineacle-bg: #111111;
@@ -12,15 +12,23 @@
   --mineacle-muted: rgba(248, 248, 248, 0.54);
   --mineacle-main: #8436fe;
   --mineacle-secondary: #b078ff;
-  --mineacle-hover: #d0afff;
+  --mineacle-hover: #f8f8f8;
   --mineacle-green: #62c249;
   --mineacle-red: #ff5555;
   --mineacle-yellow: #ffd23f;
-  --site-nav-gap: clamp(20px, 2.15vw, 42px);
-  --site-nav-brand-width: 48px;
-  --site-nav-brand-height: 42px;
-  --site-nav-font-size: 14px;
-  --site-nav-link-height: 42px;
+
+  /* Canonical navigation measurements. */
+  --site-nav-gap: 16px;
+  --site-nav-logo-height: 64px;
+  --site-nav-logo-width: 75.155963px; /* 512 / 436 × 64 */
+  --site-nav-font-size: 16px;
+  --site-nav-control-height: 34px;
+  --site-nav-login-width: 73px;
+
+  /* Backward-compatible aliases used by older page CSS. */
+  --site-nav-brand-width: var(--site-nav-logo-width);
+  --site-nav-brand-height: var(--site-nav-logo-height);
+  --site-nav-link-height: var(--site-nav-control-height);
 }
 
 .site-header,
@@ -39,40 +47,94 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  min-height: var(--site-nav-brand-height);
+  min-width: 0;
+  min-height: var(--site-nav-logo-height);
   gap: var(--site-nav-gap);
   view-transition-name: mineacle-site-header;
 }
 
+/* ==========================================================================
+   BRAND / LOGO
+   The anchor itself never moves. Only the visual inside it moves, so a mouse
+   sitting on an edge cannot repeatedly enter/leave the hover target.
+   ========================================================================== */
+
 .site-brand {
+  position: relative;
   display: block;
-  width: var(--site-nav-brand-width);
-  height: var(--site-nav-brand-height);
-  flex: none;
+  width: var(--site-nav-logo-width);
+  height: var(--site-nav-logo-height);
+  flex: 0 0 var(--site-nav-logo-width);
+  overflow: visible;
   text-decoration: none;
-  transition: filter 140ms ease, transform 140ms ease;
 }
 
-.site-brand img {
+/* Slightly enlarge the vertical hit target without changing layout. */
+.site-brand::before {
+  position: absolute;
+  inset: -5px 0;
+  content: "";
+}
+
+.site-brand__visual {
+  position: absolute;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+  transform: translateY(0);
+  transition: transform 120ms ease-out, filter 120ms ease-out;
+  will-change: transform, filter;
+}
+
+.site-brand__logo {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
+  opacity: 1;
+  pointer-events: none;
+  user-select: none;
+  transition: opacity 90ms ease-out;
 }
 
-.site-brand:hover,
-.site-brand:focus-visible {
-  filter: brightness(1.14);
+.site-brand__logo--hover {
+  opacity: 0;
+}
+
+.site-brand:hover .site-brand__visual,
+.site-brand:focus-visible .site-brand__visual {
+  filter: brightness(1.03);
   transform: translateY(-2px);
 }
+
+.site-brand:hover .site-brand__logo--static,
+.site-brand:focus-visible .site-brand__logo--static {
+  opacity: 0;
+}
+
+.site-brand:hover .site-brand__logo--hover,
+.site-brand:focus-visible .site-brand__logo--hover {
+  opacity: 1;
+}
+
+.site-brand:active .site-brand__visual {
+  filter: brightness(0.98);
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   DESKTOP NAVIGATION
+   ========================================================================== */
 
 .site-navigation {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   min-width: 0;
-  min-height: var(--site-nav-link-height);
-  gap: clamp(22px, 2.2vw, 40px);
+  min-height: var(--site-nav-logo-height);
+  gap: var(--site-nav-gap);
 }
 
 .site-navigation__links {
@@ -80,56 +142,152 @@
   align-items: center;
   justify-content: flex-end;
   min-width: 0;
-  min-height: var(--site-nav-link-height);
+  min-height: var(--site-nav-control-height);
   gap: var(--site-nav-gap);
 }
 
-.site-navigation__link,
-.site-navigation__login {
+/*
+ * The anchor is the stationary hit box.
+ * The label is the visual that lifts, eliminating edge-hover flicker.
+ */
+.site-navigation__link {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: var(--site-nav-link-height);
+  height: var(--site-nav-control-height);
+  min-height: var(--site-nav-control-height);
+  padding: 0;
   border: 0;
-  color: rgba(248, 248, 248, 0.54);
   background: transparent;
+  color: #bbbbbb;
   font-size: var(--site-nav-font-size);
   font-weight: 600;
-  letter-spacing: 0.045em;
+  letter-spacing: 0;
   line-height: 1;
   text-decoration: none;
-  text-transform: uppercase;
+  text-transform: none;
   white-space: nowrap;
   cursor: pointer;
-  transition: color 130ms ease, background-color 130ms ease, border-color 130ms ease, transform 130ms ease;
+  transition: color 120ms ease-out;
+}
+
+/* Extra vertical hover tolerance, with no effect on visual spacing. */
+.site-navigation__link::before {
+  position: absolute;
+  inset: -6px 0;
+  content: "";
+}
+
+.site-navigation__label {
+  position: relative;
+  z-index: 1;
+  display: block;
+  pointer-events: none;
+  transform: translateY(0);
+  transition: transform 120ms ease-out;
+  will-change: transform;
 }
 
 .site-navigation__link.is-current {
-  color: var(--mineacle-text);
+  color: #b078ff;
 }
 
-.site-navigation__link:hover,
-.site-navigation__link:focus-visible {
-  color: var(--mineacle-text);
-  transform: translateY(-1px);
+.site-navigation__link:not(.is-current):hover,
+.site-navigation__link:not(.is-current):focus-visible {
+  color: #f8f8f8;
 }
+
+.site-navigation__link:hover .site-navigation__label,
+.site-navigation__link:focus-visible .site-navigation__label {
+  transform: translateY(-2px);
+}
+
+/* Current page still gets the subtle lift, but never changes its purple. */
+.site-navigation__link.is-current:hover,
+.site-navigation__link.is-current:focus-visible {
+  color: #b078ff;
+}
+
+.site-navigation__link:active .site-navigation__label {
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   LOGIN / ACCOUNT BUTTON
+   The anchor/button remains stationary. ::before + label carry the movement.
+   ========================================================================== */
 
 .site-navigation__login {
-  min-width: 80px;
-  height: calc(var(--site-nav-link-height) + 3px);
-  padding: 0 20px;
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--site-nav-login-width);
+  min-width: var(--site-nav-login-width);
+  height: var(--site-nav-control-height);
+  min-height: var(--site-nav-control-height);
+  padding: 0;
+  border: 0;
   border-radius: 2px;
-  background: var(--mineacle-main);
-  color: var(--mineacle-text);
+  background: transparent;
+  color: #f8f8f8;
+  font-size: var(--site-nav-font-size);
+  font-weight: 600;
   letter-spacing: 0;
+  line-height: 1;
+  text-decoration: none;
   text-transform: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.site-navigation__login::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: 2px;
+  background: #8436fe;
+  content: "";
+  transform: translateY(0);
+  transition: background-color 120ms ease-out, filter 120ms ease-out, transform 120ms ease-out;
+  will-change: transform;
+}
+
+.site-navigation__login::after {
+  position: absolute;
+  inset: -6px 0;
+  content: "";
+}
+
+.site-navigation__login .site-navigation__label {
+  color: inherit;
 }
 
 .site-navigation__login:hover,
 .site-navigation__login:focus-visible {
-  background: var(--mineacle-hover);
-  color: #111111;
-  transform: translateY(-1px);
+  color: #ffffff;
+}
+
+.site-navigation__login:hover::before,
+.site-navigation__login:focus-visible::before {
+  background: #b078ff;
+  transform: translateY(-2px);
+}
+
+.site-navigation__login:hover .site-navigation__label,
+.site-navigation__login:focus-visible .site-navigation__label {
+  transform: translateY(-2px);
+}
+
+.site-navigation__login:active::before,
+.site-navigation__login:active .site-navigation__label {
+  transform: translateY(0);
+}
+
+.site-navigation__login:active::before {
+  filter: brightness(0.96);
 }
 
 .site-navigation__account-form,
@@ -141,27 +299,44 @@
 }
 
 .site-navigation__account-form .site-navigation__login {
+  width: auto;
   min-width: 100px;
+  padding-inline: 14px;
+  color: var(--mineacle-red);
+}
+
+.site-navigation__account-form .site-navigation__login::before {
   border: 1px solid rgba(255, 85, 85, 0.38);
   background: transparent;
-  color: var(--mineacle-red);
 }
 
 .site-navigation__account-form .site-navigation__login:hover,
 .site-navigation__account-form .site-navigation__login:focus-visible {
-  border-color: var(--mineacle-red);
-  background: rgba(255, 85, 85, 0.1);
   color: #ff7777;
 }
+
+.site-navigation__account-form .site-navigation__login:hover::before,
+.site-navigation__account-form .site-navigation__login:focus-visible::before {
+  border-color: var(--mineacle-red);
+  background: rgba(255, 85, 85, 0.1);
+}
+
+/* ==========================================================================
+   KEYBOARD FOCUS
+   ========================================================================== */
 
 .site-brand:focus-visible,
 .site-navigation__link:focus-visible,
 .site-navigation__login:focus-visible,
 .site-menu__button:focus-visible,
 .site-menu__link:focus-visible {
-  outline: 2px solid var(--mineacle-hover);
+  outline: 2px solid #b078ff;
   outline-offset: 4px;
 }
+
+/* ==========================================================================
+   MOBILE MENU
+   ========================================================================== */
 
 .site-menu {
   position: relative;
@@ -227,23 +402,45 @@
 }
 
 .site-menu__link {
+  position: relative;
   display: flex;
   align-items: center;
   min-height: 42px;
   padding: 0 12px;
-  color: rgba(248, 248, 248, 0.58);
-  font-size: 13px;
+  background: transparent;
+  color: #bbbbbb;
+  font-size: 14px;
   font-weight: 600;
+  line-height: 1;
   text-decoration: none;
-  text-transform: uppercase;
-  transition: color 120ms ease, background-color 120ms ease;
+  text-transform: none;
+  transition: color 120ms ease-out;
 }
 
-.site-menu__link.is-current,
-.site-menu__link:hover,
-.site-menu__link:focus-visible {
-  color: var(--mineacle-text);
-  background: rgba(132, 54, 254, 0.12);
+.site-menu__label {
+  display: block;
+  pointer-events: none;
+  transform: translateY(0);
+  transition: transform 120ms ease-out;
+}
+
+.site-menu__link.is-current {
+  color: #b078ff;
+}
+
+.site-menu__link:not(.is-current):hover,
+.site-menu__link:not(.is-current):focus-visible {
+  color: #f8f8f8;
+}
+
+.site-menu__link:hover .site-menu__label,
+.site-menu__link:focus-visible .site-menu__label {
+  transform: translateY(-1px);
+}
+
+.site-menu__link.is-current:hover,
+.site-menu__link.is-current:focus-visible {
+  color: #b078ff;
 }
 
 .site-menu__login {
@@ -252,9 +449,16 @@
   margin-top: 8px;
   border: 0;
   border-radius: 2px;
-  background: var(--mineacle-main);
-  color: var(--mineacle-text);
+  background: #8436fe;
+  color: #f8f8f8;
   text-transform: none;
+  transition: background-color 120ms ease-out, color 120ms ease-out;
+}
+
+.site-menu__login:hover,
+.site-menu__login:focus-visible {
+  background: #b078ff;
+  color: #ffffff;
 }
 
 .site-menu__account-form .site-menu__login {
@@ -262,6 +466,10 @@
   background: transparent;
   color: var(--mineacle-red);
 }
+
+/* ==========================================================================
+   PAGE TRANSITIONS
+   ========================================================================== */
 
 @view-transition {
   navigation: auto;
@@ -283,13 +491,14 @@
   from { opacity: 0; }
 }
 
-@media (max-width: 1080px) {
-  :root {
-    --site-nav-gap: 18px;
-  }
+/* ==========================================================================
+   RESPONSIVE NAVIGATION
+   ========================================================================== */
 
+@media (max-width: 1080px) {
+  .site-navigation,
   .site-navigation__links {
-    gap: 18px;
+    gap: 16px;
   }
 }
 
@@ -305,19 +514,15 @@
   }
 }
 
-@media (max-width: 560px) {
-  :root {
-    --site-nav-brand-width: 42px;
-    --site-nav-brand-height: 37px;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .site-brand,
+  .site-brand__visual,
+  .site-brand__logo,
   .site-navigation__link,
-  .site-navigation__login,
+  .site-navigation__label,
+  .site-navigation__login::before,
   .site-menu__button,
-  .site-menu__link {
+  .site-menu__link,
+  .site-menu__label {
     transition: none;
   }
 
@@ -326,6 +531,10 @@
     animation: none;
   }
 }
+
+/* ==========================================================================
+   HOME TYPOGRAPHY / CONTROL SCALE
+   ========================================================================== */
 
 /* Preserve the compact Home hero scale while the shared shell follows the reference layout. */
 body.mineacle-home {
@@ -408,14 +617,17 @@ body.mineacle-home .join-dialog__copy span {
   }
 }
 
+/* ==========================================================================
+   CANONICAL PAGE SHELL
+   Every route now receives the same fixed 64px outer frame.
+   ========================================================================== */
 
-/* Canonical page shell: every route uses the Home page frame and inner padding. */
 :root {
-  --mineacle-shell-frame: clamp(16px, min(3.333333vw, 5.925926vh), 128px);
-  --mineacle-shell-frame-top: max(var(--mineacle-shell-frame), env(safe-area-inset-top, 0px));
-  --mineacle-shell-frame-right: max(var(--mineacle-shell-frame), env(safe-area-inset-right, 0px));
-  --mineacle-shell-frame-bottom: max(var(--mineacle-shell-frame), env(safe-area-inset-bottom, 0px));
-  --mineacle-shell-frame-left: max(var(--mineacle-shell-frame), env(safe-area-inset-left, 0px));
+  --mineacle-shell-frame: 64px;
+  --mineacle-shell-frame-top: max(64px, env(safe-area-inset-top, 0px));
+  --mineacle-shell-frame-right: max(64px, env(safe-area-inset-right, 0px));
+  --mineacle-shell-frame-bottom: max(64px, env(safe-area-inset-bottom, 0px));
+  --mineacle-shell-frame-left: max(64px, env(safe-area-inset-left, 0px));
   --mineacle-shell-inner: clamp(16px, min(1.666667vw, 2.962963vh), 64px);
   --mineacle-shell-gap: clamp(16px, min(1.666667vw, 2.962963vh), 64px);
   --mineacle-shell-radius: 3px;
