@@ -166,7 +166,7 @@
   letter-spacing: 0;
   line-height: 1;
   text-decoration: none;
-  text-transform: none;
+  text-transform: uppercase;
   white-space: nowrap;
   cursor: pointer;
   transition: color 120ms ease-out;
@@ -413,7 +413,7 @@
   font-weight: 600;
   line-height: 1;
   text-decoration: none;
-  text-transform: none;
+  text-transform: uppercase;
   transition: color 120ms ease-out;
 }
 
