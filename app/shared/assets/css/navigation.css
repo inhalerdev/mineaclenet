@@ -302,23 +302,22 @@
   width: auto;
   min-width: 100px;
   padding-inline: 14px;
-  color: var(--mineacle-red);
+  color: #f8f8f8;
 }
 
 .site-navigation__account-form .site-navigation__login::before {
-  border: 1px solid rgba(255, 85, 85, 0.38);
-  background: transparent;
+  border: 0;
+  background: var(--mineacle-red);
 }
 
 .site-navigation__account-form .site-navigation__login:hover,
 .site-navigation__account-form .site-navigation__login:focus-visible {
-  color: #ff7777;
+  color: #ffffff;
 }
 
 .site-navigation__account-form .site-navigation__login:hover::before,
 .site-navigation__account-form .site-navigation__login:focus-visible::before {
-  border-color: var(--mineacle-red);
-  background: rgba(255, 85, 85, 0.1);
+  background: #ff7777;
 }
 
 /* ==========================================================================
@@ -462,9 +461,15 @@
 }
 
 .site-menu__account-form .site-menu__login {
-  border: 1px solid rgba(255, 85, 85, 0.38);
-  background: transparent;
-  color: var(--mineacle-red);
+  border: 0;
+  background: var(--mineacle-red);
+  color: #f8f8f8;
+}
+
+.site-menu__account-form .site-menu__login:hover,
+.site-menu__account-form .site-menu__login:focus-visible {
+  background: #ff7777;
+  color: #ffffff;
 }
 
 /* ==========================================================================
