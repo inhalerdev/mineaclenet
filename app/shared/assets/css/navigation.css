@@ -575,3 +575,38 @@ body.mineacle-auth-page .auth-layout > .site-header {
     var(--mineacle-shell-inner)
     0;
 }
+
+/* ==========================================================================
+   SHARED FOOTER CONTACT BUTTON
+   Uses the exact Login-button interaction/style model. Only the width grows
+   to fit the longer footer label.
+   ========================================================================== */
+
+.compact-footer__support-button.site-navigation__login {
+  width: max-content;
+  min-width: var(--site-nav-login-width);
+  height: var(--site-nav-control-height);
+  min-height: var(--site-nav-control-height);
+  margin-top: 2px;
+  padding: 0 20px;
+  background: transparent;
+  color: #f8f8f8;
+  font-size: var(--site-nav-font-size);
+  font-weight: 500;
+  line-height: 1;
+  text-transform: uppercase;
+  transform: none;
+}
+
+.compact-footer__support-button.site-navigation__login:hover,
+.compact-footer__support-button.site-navigation__login:focus-visible {
+  background: transparent;
+  color: #ffffff;
+  transform: none;
+}
+
+.compact-footer__support-button.site-navigation__login:active {
+  background: transparent;
+  transform: none;
+}
+

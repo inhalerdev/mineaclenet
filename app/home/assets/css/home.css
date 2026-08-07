@@ -133,12 +133,10 @@ body.mineacle-home img {
 }
 
 .home-page {
-  display: grid;
   width: 100%;
   min-height: var(--home-viewport-height);
   padding: var(--home-frame-top) var(--home-frame-right) var(--home-frame-bottom) var(--home-frame-left);
   background: var(--home-background);
-  gap: var(--mineacle-shell-gap, var(--home-gap));
 }
 
 .home-hero {
