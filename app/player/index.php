@@ -135,10 +135,9 @@ function mineacle_profile_fight_row(array $fight): void
     echo '</article>';
 }
 
-function mineacle_profile_chart_points(array $fights, float $fallback): string
+function mineacle_profile_chart_bars(array $fights, float $fallback): array
 {
-    $ordered = array_reverse($fights);
-    $ordered = array_slice($ordered, -7);
+    $ordered = array_slice(array_reverse($fights), -7);
     $values = [];
     $score = max(0.5, min(8.0, $fallback));
 
@@ -163,15 +162,11 @@ function mineacle_profile_chart_points(array $fights, float $fallback): string
     $minimum = min($values);
     $maximum = max($values);
     $range = max(0.5, $maximum - $minimum);
-    $points = [];
 
-    foreach ($values as $index => $value) {
-        $x = 20 + ($index * (600 / max(1, count($values) - 1)));
-        $y = 155 - ((($value - $minimum) / $range) * 105);
-        $points[] = number_format($x, 1, '.', '') . ',' . number_format($y, 1, '.', '');
-    }
-
-    return implode(' ', $points);
+    return array_map(
+        static fn (float $value): float => 24.0 + ((($value - $minimum) / $range) * 76.0),
+        $values
+    );
 }
 
 $query = mineacle_profile_requested_username();
@@ -286,12 +281,12 @@ mineacle_page_head($pageTitle, $metaOptions);
         <section class="profile-message"><h2>Player not found</h2><p>No stored Mineacle profile was found for <?php echo h($query !== '' ? $query : 'that player'); ?>.</p><a class="profile-action" href="<?php echo h($leaderboardsUrl); ?>">Leaderboards</a></section>
     <?php else: ?>
         <section class="profile-stats-strip" aria-label="Player statistics">
-            <article class="is-balance"><span>◇ Balance</span><strong><?php echo h((string) $viewModel['balance']); ?></strong></article>
-            <article class="is-kills"><span>† Kills</span><strong><?php echo h(number_format((int) $viewModel['kills'])); ?></strong></article>
-            <article class="is-deaths"><span>✕ Deaths</span><strong><?php echo h(number_format((int) $viewModel['deaths'])); ?></strong></article>
-            <article class="is-kd"><span>∶ K/D Ratio</span><strong><?php echo h((string) $viewModel['kd']); ?></strong></article>
-            <article class="is-playtime"><span>◉ Playtime</span><strong><?php echo h((string) $viewModel['playtime']); ?></strong></article>
-            <article class="is-fights"><span>◆ Fights Won</span><strong><?php echo h($fightWins . '/' . max(0, $fightTotal)); ?></strong></article>
+            <article class="is-balance"><span>Balance</span><strong><?php echo h((string) $viewModel['balance']); ?></strong></article>
+            <article class="is-kills"><span>Kills</span><strong><?php echo h(number_format((int) $viewModel['kills'])); ?></strong></article>
+            <article class="is-deaths"><span>Deaths</span><strong><?php echo h(number_format((int) $viewModel['deaths'])); ?></strong></article>
+            <article class="is-kd"><span>K/D Ratio</span><strong><?php echo h((string) $viewModel['kd']); ?></strong></article>
+            <article class="is-playtime"><span>Playtime</span><strong><?php echo h((string) $viewModel['playtime']); ?></strong></article>
+            <article class="is-fights"><span>Fights Won</span><strong><?php echo h($fightWins . '/' . max(0, $fightTotal)); ?></strong></article>
         </section>
 
         <nav class="profile-tabs" aria-label="Profile sections"><a class="is-active" href="#overview">Overview</a><a href="#fights">Fights &amp; Duels</a></nav>
@@ -301,16 +296,16 @@ mineacle_page_head($pageTitle, $metaOptions);
         $balanceGoal = max(50000, (int) (ceil(max(1, $balanceAmount) / 50000) * 50000));
         if ($balanceGoal <= $balanceAmount) $balanceGoal += 50000;
         $balanceProgress = min(100, ($balanceAmount / max(1, $balanceGoal)) * 100);
-        $chartPoints = mineacle_profile_chart_points($fights, (float) $viewModel['kd']);
+        $chartBars = mineacle_profile_chart_bars($fights, (float) $viewModel['kd']);
         ?>
         <section class="profile-overview" id="overview" aria-label="Player overview">
             <article class="profile-overview-card profile-combat-card">
                 <header><h2>Combat Form — Recent</h2><span>avg <?php echo h((string) $viewModel['kd']); ?></span></header>
-                <svg viewBox="0 0 640 190" role="img" aria-label="Recent combat form trend">
-                    <defs><linearGradient id="profileTrendFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8436fe" stop-opacity="0.34"/><stop offset="1" stop-color="#8436fe" stop-opacity="0"/></linearGradient></defs>
-                    <polyline class="profile-trend-fill" points="20,170 <?php echo h($chartPoints); ?> 620,170"/>
-                    <polyline class="profile-trend-line" points="<?php echo h($chartPoints); ?>"/>
-                </svg>
+                <div class="profile-trend-bars" role="img" aria-label="Recent combat form trend">
+                    <?php foreach ($chartBars as $barHeight): ?>
+                        <span style="height: <?php echo h(number_format((float) $barHeight, 2, '.', '')); ?>%"></span>
+                    <?php endforeach; ?>
+                </div>
             </article>
 
             <article class="profile-overview-card profile-balance-card">

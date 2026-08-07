@@ -267,7 +267,7 @@ mineacle_page_head('Leaderboards', [
 
             <div class="leaderboard-toolbar" aria-label="Leaderboard controls">
                 <details class="leaderboard-metric" data-leaderboard-filter>
-                    <summary><?php echo h($metricLabel); ?><span aria-hidden="true">⌄</span></summary>
+                    <summary><?php echo h($metricLabel); ?></summary>
                     <div>
                         <?php foreach ($categories[$category]['metrics'] as $metricKey => $metricData): ?>
                             <button class="<?php echo $metric === $metricKey ? 'is-active' : ''; ?>" type="button" data-leaderboard-request="<?php echo h(mineacle_leaderboards_url($category, (string) $metricKey, 'desc', $search)); ?>"><?php echo h((string) $metricData['label']); ?></button>
@@ -280,7 +280,6 @@ mineacle_page_head('Leaderboards', [
                     <input type="hidden" name="category" value="<?php echo h($category); ?>">
                     <input type="hidden" name="view" value="<?php echo h($metric); ?>">
                     <input type="hidden" name="order" value="<?php echo h($order); ?>">
-                    <span aria-hidden="true">⌕</span>
                     <input type="search" name="search" value="<?php echo h($search); ?>" maxlength="64" placeholder="<?php echo h($searchPlaceholder); ?>" aria-label="Search leaderboard" autocomplete="off" spellcheck="false" data-leaderboard-search>
                 </form>
             </div>

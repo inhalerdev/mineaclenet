@@ -539,18 +539,7 @@ body.player-page a {
   overflow: visible;
 }
 
-.profile-trend-fill {
-  fill: url(#profileTrendFill);
-  stroke: none;
-}
 
-.profile-trend-line {
-  fill: none;
-  stroke: var(--profile-purple);
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 3;
-}
 
 .profile-balance-card__value {
   display: flex;
@@ -971,4 +960,74 @@ body.player-page .compact-footer {
   .profile-tabs a {
     transition: none;
   }
+}
+
+
+/* Home-shell alignment: Player shares Home width, frame, spacing, and nav placement. */
+.player-site {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding:
+    var(--mineacle-shell-frame-top)
+    var(--mineacle-shell-frame-right)
+    var(--mineacle-shell-frame-bottom)
+    var(--mineacle-shell-frame-left);
+  gap: var(--mineacle-shell-gap);
+}
+
+.profile-hero {
+  margin-top: 0;
+  border-radius: var(--mineacle-shell-radius);
+}
+
+.profile-hero__surface {
+  display: flex;
+  flex-direction: column;
+  padding: var(--mineacle-shell-inner);
+}
+
+.profile-hero .site-header {
+  position: relative;
+  top: auto;
+  left: auto;
+  width: 100%;
+  flex: none;
+}
+
+.profile-hero__layout {
+  flex: 1 1 auto;
+  height: auto;
+  min-height: 0;
+  padding-top: 0;
+}
+
+.profile-stats-strip,
+.profile-tabs,
+.profile-overview,
+.profile-duels,
+.profile-message,
+body.player-page .compact-footer {
+  width: 100%;
+  min-width: 0;
+}
+
+/* Pure-CSS combat trend; replaces the inline SVG renderer. */
+.profile-trend-bars {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  align-items: end;
+  height: 190px;
+  margin-top: 22px;
+  padding: 20px 10px 0;
+  border-bottom: 1px solid var(--profile-border-soft);
+  gap: clamp(8px, 1vw, 18px);
+}
+
+.profile-trend-bars span {
+  display: block;
+  width: 100%;
+  min-height: 8px;
+  border-radius: 2px 2px 0 0;
+  background: linear-gradient(180deg, var(--profile-purple), rgba(132, 54, 254, 0.22));
 }

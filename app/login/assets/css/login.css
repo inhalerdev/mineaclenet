@@ -598,3 +598,32 @@ body.mineacle-auth-page a {
     animation: none;
   }
 }
+
+
+/* Home-shell alignment: Login uses the exact Home frame and navigation coordinates. */
+.auth-page {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding:
+    var(--mineacle-shell-frame-top)
+    var(--mineacle-shell-frame-right)
+    var(--mineacle-shell-frame-bottom)
+    var(--mineacle-shell-frame-left);
+}
+
+.auth-layout {
+  width: 100%;
+  min-height: calc(100vh - var(--mineacle-shell-frame-top) - var(--mineacle-shell-frame-bottom));
+  margin: 0;
+  gap: var(--mineacle-shell-gap);
+}
+
+.auth-layout > .site-header {
+  width: calc(100% - (var(--mineacle-shell-inner) * 2));
+  margin: var(--mineacle-shell-inner) var(--mineacle-shell-inner) 0;
+}
+
+.auth-stage {
+  padding-block: var(--mineacle-shell-gap);
+}

@@ -407,3 +407,16 @@ body.mineacle-home .join-dialog__copy span {
     min-width: 0;
   }
 }
+
+
+/* Canonical page shell: every route uses the Home page frame and inner padding. */
+:root {
+  --mineacle-shell-frame: clamp(16px, min(3.333333vw, 5.925926vh), 128px);
+  --mineacle-shell-frame-top: max(var(--mineacle-shell-frame), env(safe-area-inset-top, 0px));
+  --mineacle-shell-frame-right: max(var(--mineacle-shell-frame), env(safe-area-inset-right, 0px));
+  --mineacle-shell-frame-bottom: max(var(--mineacle-shell-frame), env(safe-area-inset-bottom, 0px));
+  --mineacle-shell-frame-left: max(var(--mineacle-shell-frame), env(safe-area-inset-left, 0px));
+  --mineacle-shell-inner: clamp(16px, min(1.666667vw, 2.962963vh), 64px);
+  --mineacle-shell-gap: clamp(16px, min(1.666667vw, 2.962963vh), 64px);
+  --mineacle-shell-radius: 3px;
+}

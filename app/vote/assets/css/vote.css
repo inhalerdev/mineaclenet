@@ -750,3 +750,54 @@ body.mineacle-vote-page {
   text-align: justify;
   text-align-last: left;
 }
+
+
+/* Home-shell alignment: Vote shares Home width, frame, spacing, and nav placement. */
+.vote-page {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding:
+    var(--mineacle-shell-frame-top)
+    var(--mineacle-shell-frame-right)
+    var(--mineacle-shell-frame-bottom)
+    var(--mineacle-shell-frame-left);
+  gap: var(--mineacle-shell-gap);
+}
+
+.vote-hero {
+  margin-top: 0;
+  overflow: hidden;
+  border-radius: var(--mineacle-shell-radius);
+}
+
+.vote-hero__surface {
+  display: flex;
+  flex-direction: column;
+  padding: var(--mineacle-shell-inner);
+}
+
+.vote-hero .site-header {
+  position: relative;
+  top: auto;
+  left: auto;
+  width: 100%;
+  flex: none;
+}
+
+.vote-hero__copy {
+  margin-top: auto;
+}
+
+.vote-hero__metrics {
+  margin-top: clamp(18px, min(1.25vw, 2.222222vh), 48px);
+}
+
+.vote-summary,
+.vote-sites,
+.vote-milestones,
+.vote-user-note,
+body.mineacle-vote-page .compact-footer {
+  width: 100%;
+  min-width: 0;
+}

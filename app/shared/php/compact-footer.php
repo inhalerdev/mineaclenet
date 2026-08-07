@@ -97,7 +97,7 @@ function mineacle_compact_footer(array $site): void
                 <h2 class="compact-footer__heading" id="compact-footer-support-title">Support</h2>
                 <p>Reach us directly or open a ticket on our contact page.</p>
                 <address class="compact-footer__support-address"><?php echo h($supportEmail); ?></address>
-                <a class="compact-footer__support-button" href="<?php echo h($contactUrl); ?>">Go to Contact Page →</a>
+                <a class="compact-footer__support-button" href="<?php echo h($contactUrl); ?>">Go to Contact Page</a>
             </section>
         </div>
 

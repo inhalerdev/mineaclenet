@@ -271,3 +271,10 @@ body.mineacle-vote-page {
     justify-content: flex-start;
   }
 }
+
+
+/* Shared non-Home footer follows the same section width/radius as the Home shell. */
+.compact-footer {
+  width: 100%;
+  border-radius: var(--mineacle-shell-radius);
+}

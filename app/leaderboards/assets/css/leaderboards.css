@@ -692,3 +692,60 @@ body.leaderboards-page summary {
   text-align: justify;
   text-align-last: left;
 }
+
+
+/* Home-shell alignment: Leaderboards shares Home width, frame, spacing, and nav placement. */
+.leaderboards-site {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding:
+    var(--mineacle-shell-frame-top)
+    var(--mineacle-shell-frame-right)
+    var(--mineacle-shell-frame-bottom)
+    var(--mineacle-shell-frame-left);
+  gap: var(--mineacle-shell-gap);
+}
+
+.leaderboards-hero {
+  margin-top: 0;
+  overflow: hidden;
+  border-radius: var(--mineacle-shell-radius);
+}
+
+.leaderboards-hero__surface {
+  display: flex;
+  flex-direction: column;
+  padding: var(--mineacle-shell-inner);
+}
+
+.leaderboards-hero .site-header {
+  position: relative;
+  top: auto;
+  left: auto;
+  width: 100%;
+  flex: none;
+}
+
+.leaderboards-hero__copy {
+  margin-top: auto;
+}
+
+.leaderboards-hero__stats {
+  margin-top: clamp(18px, min(1.25vw, 2.222222vh), 48px);
+}
+
+.leaderboard-panel,
+body.leaderboards-page .compact-footer {
+  width: 100%;
+  min-width: 0;
+}
+
+/* Search is text-only; no synthetic or inline icon. */
+.leaderboard-search {
+  display: block;
+}
+
+.leaderboard-search > span[aria-hidden="true"] {
+  display: none;
+}

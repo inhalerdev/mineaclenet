@@ -140,8 +140,8 @@ mineacle_page_head('Login', [
                 <?php else: ?>
                     <?php $status = (string) ($registration['status'] ?? 'none'); ?>
                     <ol class="auth-steps" aria-label="Account creation progress">
-                        <li class="<?php echo $status === 'none' || $status === 'expired' ? 'is-active' : 'is-complete'; ?>"><span><?php echo $status === 'none' || $status === 'expired' ? '1' : '✓'; ?></span><strong>Username</strong></li>
-                        <li class="<?php echo in_array($status, ['pending', 'unavailable'], true) ? 'is-active' : ($status === 'verified' ? 'is-complete' : ''); ?>"><span><?php echo $status === 'verified' ? '✓' : '2'; ?></span><strong>Verify In-Game</strong></li>
+                        <li class="<?php echo $status === 'none' || $status === 'expired' ? 'is-active' : 'is-complete'; ?>"><span>1</span><strong>Username</strong></li>
+                        <li class="<?php echo in_array($status, ['pending', 'unavailable'], true) ? 'is-active' : ($status === 'verified' ? 'is-complete' : ''); ?>"><span>2</span><strong>Verify In-Game</strong></li>
                         <li class="<?php echo $status === 'verified' ? 'is-active' : ''; ?>"><span>3</span><strong>Set Password</strong></li>
                     </ol>
 
@@ -165,7 +165,7 @@ mineacle_page_head('Login', [
                                 <p class="auth-form__note auth-form__note--warning">The previous code expired. Generate a new one below.</p>
                             <?php endif; ?>
 
-                            <button class="auth-primary" type="submit">Generate Verification Code →</button>
+                            <button class="auth-primary" type="submit">Generate Verification Code</button>
                         </form>
                     <?php elseif ($status === 'pending' || $status === 'unavailable'): ?>
                         <section class="verification" data-verification-poll data-status-url="/login/status.php">
