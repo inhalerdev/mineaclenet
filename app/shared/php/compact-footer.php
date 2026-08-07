@@ -28,7 +28,7 @@ function mineacle_compact_footer(array $site): void
         ['label' => 'Store', 'url' => $storeUrl, 'external' => true],
         ['label' => 'Discord', 'url' => $discordUrl, 'external' => true],
         ['label' => 'Vote', 'url' => '/vote', 'external' => false],
-        ['label' => 'Leaderboard', 'url' => '/leaderboards', 'external' => false],
+        ['label' => 'Leaderboards', 'url' => '/leaderboards', 'external' => false],
         ['label' => 'Wiki', 'url' => $wikiUrl, 'external' => true],
         ['label' => 'Ban Appeals', 'url' => $appealsUrl, 'external' => true],
     ];
@@ -103,7 +103,7 @@ function mineacle_compact_footer(array $site): void
 
         <div class="compact-footer__bottom">
             <div class="compact-footer__copyright">
-                <img src="/home/assets/images/logo-small.png?v=<?php echo h($assetVersion); ?>" alt="" aria-hidden="true" draggable="false">
+                <img src="/home/assets/images/static-logo.png?v=<?php echo h($assetVersion); ?>" alt="" aria-hidden="true" draggable="false">
                 <span>© 2026 Mineacle Studios · Not affiliated with Mojang Studios or Microsoft</span>
             </div>
 

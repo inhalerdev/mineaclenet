@@ -1,0 +1,40 @@
+/*
+ * Canonical public-document scrolling.
+ *
+ * The browser/document element owns vertical scrolling. Public pages must not
+ * create their own viewport-height scroll containers or lock body scrolling.
+ */
+
+html {
+  width: 100%;
+  height: auto !important;
+  min-height: 100% !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  scrollbar-gutter: stable both-edges;
+}
+
+body {
+  width: 100%;
+  height: auto !important;
+  min-height: 100% !important;
+  overflow-x: hidden !important;
+  overflow-y: visible !important;
+  overscroll-behavior: auto !important;
+}
+
+.home-page,
+.leaderboards-site,
+.player-site,
+.vote-page,
+.contact-site,
+.auth-page,
+.auth-layout {
+  height: auto !important;
+  overflow: visible !important;
+}
+
+dialog {
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+}

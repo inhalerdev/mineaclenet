@@ -173,84 +173,8 @@ function mineacle_page_search_header(array $site): void
 
 function mineacle_page_footer(array $site): void
 {
-    $assetVersion = rawurlencode(mineacle_page_asset_version());
-    $resolveSocialUrl = static function (mixed $value, string $fallback): string {
-        $resolved = mineacle_page_public_link($value);
-
-        return $resolved === '#' ? $fallback : $resolved;
-    };
-    $quickLinks = [
-        ['key' => 'home', 'label' => 'Home', 'url' => '/'],
-        ['key' => 'vote', 'label' => 'Vote', 'url' => '/vote'],
-        ['key' => 'bans', 'label' => 'Bans', 'url' => '/bans'],
-        ['key' => 'leaderboards', 'label' => 'Leaderboards', 'url' => '/leaderboards'],
-        ['key' => 'store', 'label' => 'Store', 'url' => (string) ($site['store_url'] ?? '#')],
-    ];
-    $socialLinks = [
-        ['key' => 'x', 'label' => 'Mineacle on X', 'url' => $resolveSocialUrl($site['x_url'] ?? '', 'https://x.com/mineaclenetwork')],
-        ['key' => 'discord', 'label' => 'Mineacle Discord', 'url' => $resolveSocialUrl($site['discord_url'] ?? '', 'https://discord.gg/qmpJ4xMguT')],
-        ['key' => 'youtube', 'label' => 'Mineacle on YouTube', 'url' => $resolveSocialUrl($site['youtube_url'] ?? '', 'https://www.youtube.com/@mineaclenetwork')],
-    ];
-    $legalLinks = [
-        ['label' => 'Terms of Service', 'url' => (string) ($site['terms_url'] ?? '#')],
-        ['label' => 'Privacy Policy', 'url' => (string) ($site['privacy_url'] ?? '#')],
-        ['label' => 'Refund Policy', 'url' => (string) ($site['refund_url'] ?? '#')],
-        ['label' => 'Contact Us', 'url' => '/contact'],
-    ];
-
-    echo '<footer class="site-footer" aria-label="Mineacle footer">';
-    echo '<div class="site-footer__main">';
-    echo '<section class="site-footer__studio" aria-label="Mineacle Studios">';
-    echo '<div class="site-footer__studio-logo"><img src="/shared/assets/images/footer/studios-logo.webp?v=' . h($assetVersion) . '" alt="Mineacle Studios" draggable="false"></div>';
-    echo '<p><strong>Mineacle Studios</strong> is a small team of Minecraft developers building the custom systems behind Mineacle. After over a year of trial, error, and refinement, we are creating a smooth, polished, community-driven survival experience while staying true to the Minecraft everyone already loves.</p>';
-    echo '</section>';
-
-    echo '<section class="site-footer__middle" aria-label="Mineacle links and updates">';
-    echo '<nav class="site-footer__links" aria-label="Quick links"><h3>Quick Links</h3><div>';
-    foreach ($quickLinks as $link) {
-        $url = mineacle_page_public_link($link['url']);
-
-        if ($url === '#') {
-            continue;
-        }
-
-        echo '<a href="' . h($url) . '"><span class="site-footer__link-icon site-footer__link-icon--' . h($link['key']) . '" aria-hidden="true"></span><span>' . h($link['label']) . '</span></a>';
-    }
-    echo '</div></nav>';
-    echo '<div class="site-footer__connect"><h2>How do I stay up to date?</h2>';
-    echo '<p>With our “no player left behind” policy, we make sure visitors near and far are up to date.</p>';
-    echo '<nav class="site-footer__socials" aria-label="Mineacle social links">';
-    foreach ($socialLinks as $link) {
-        $key = (string) $link['key'];
-        $url = mineacle_page_public_link($link['url']);
-
-        echo '<a class="social-link social-link--footer social-link--' . h($key) . '" href="' . h($url) . '" target="_blank" rel="noopener noreferrer" aria-label="' . h($link['label']) . '"><span class="social-logo social-logo--' . h($key) . '" aria-hidden="true"></span></a>';
-    }
-    echo '</nav></div>';
-    echo '</section>';
-
-    echo '<section class="site-footer__report" aria-label="Mineacle support">';
-    echo '<a class="site-footer__bug-link" href="/contact" aria-label="Contact Mineacle Studios to report a bug">';
-    echo '<img class="site-footer__bug" src="/shared/assets/images/footer/slime-static.webp?v=' . h($assetVersion) . '" data-footer-slime data-static-src="/shared/assets/images/footer/slime-static.webp?v=' . h($assetVersion) . '" data-animated-src="/shared/assets/images/footer/slime.webp?v=' . h($assetVersion) . '" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false">';
-    echo '<span><strong>Found a Bug?</strong><span>You’re playing a huge part in keeping our community safe! We encourage all reports.</span></span></a>';
-    echo '</section>';
-    echo '</div>';
-
-    echo '<div class="site-footer__bottom"><p>© 2026 Mineacle Studios. All Rights Reserved. Mineacle is not affiliated with or endorsed by Mojang Studios or Microsoft.</p>';
-    echo '<nav aria-label="Legal links">';
-    foreach ($legalLinks as $link) {
-        $url = mineacle_page_public_link($link['url']);
-
-        if ($url === '#') {
-            echo '<span class="site-footer__legal-label">' . h($link['label']) . '</span>';
-            continue;
-        }
-
-        echo '<a href="' . h($url) . '">' . h($link['label']) . '</a>';
-    }
-    echo '</nav>';
-    echo '</div>';
-    echo '</footer>';
+    require_once __DIR__ . '/compact-footer.php';
+    mineacle_compact_footer($site);
 }
 
 function mineacle_page_head(string $title = 'Home', array $options = []): void
@@ -293,6 +217,7 @@ function mineacle_page_head(string $title = 'Home', array $options = []): void
     $assetVersion = mineacle_page_asset_version();
 
     echo '<link rel="icon" type="image/png" href="/shared/assets/images/favicon.png?v=' . h($assetVersion) . '">';
+
     if (($options['external_fonts'] ?? true) === true) {
         echo '<link rel="preconnect" href="https://fonts.googleapis.com">';
         echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>';
@@ -314,6 +239,21 @@ function mineacle_page_head(string $title = 'Home', array $options = []): void
 
         $separator = str_contains($stylesheetUrl, '?') ? '&' : '?';
         echo '<link rel="stylesheet" href="' . h($stylesheetUrl . $separator . 'v=' . $assetVersion) . '">';
+    }
+
+    if (!$isAdmin) {
+        $documentCssPath = __DIR__ . '/../assets/css/document.css';
+        $documentCssVersion = (string) (
+            is_file($documentCssPath)
+                ? (filemtime($documentCssPath) ?: 1)
+                : 1
+        );
+
+        echo '<link rel="stylesheet" href="/shared/assets/css/document.css?rev='
+            . h(rawurlencode($documentCssVersion))
+            . '&v='
+            . h($assetVersion)
+            . '">';
     }
 
     echo '</head>';

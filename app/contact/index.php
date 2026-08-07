@@ -10,6 +10,8 @@ if (in_array($directContactPath, ['/contact.php', '/contact/index.php'], true)) 
 }
 
 require_once __DIR__ . '/../shared/php/layout.php';
+require_once __DIR__ . '/../shared/php/navigation.php';
+require_once __DIR__ . '/../shared/php/compact-footer.php';
 require_once __DIR__ . '/../shared/php/stats-lib.php';
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
@@ -89,46 +91,9 @@ function mineacle_contact_rate_limit(string $scope, int $cooldown = 60, int $max
 }
 
 $config = mineacle_config();
-$site = $config['site'] ?? [];
-$contactConfig = $config['contact'] ?? [];
-$assetVersion = mineacle_page_asset_version();
-$homeStylesheetVersion = (string) (filemtime(__DIR__ . '/../shared/assets/css/site.css') ?: $assetVersion);
-$pagesStylesheetVersion = (string) (filemtime(__DIR__ . '/../shared/assets/css/pages.css') ?: $assetVersion);
-$contactStylesheetVersion = (string) (filemtime(__DIR__ . '/assets/css/contact.css') ?: $assetVersion);
-$contactScriptVersion = (string) (filemtime(__DIR__ . '/assets/js/contact.js') ?: $assetVersion);
-$minecraftIp = trim((string) ($site['minecraft_ip'] ?? 'mineacle.net')) ?: 'mineacle.net';
-$uniquePlayerCount = 0;
+$site = is_array($config['site'] ?? null) ? $config['site'] : [];
+$contactConfig = is_array($config['contact'] ?? null) ? $config['contact'] : [];
 
-try {
-    $uniquePlayerCount = mineacle_stats_unique_players_count();
-} catch (Throwable) {
-    // The contact page remains visible while aggregate statistics are unavailable.
-}
-
-$searchPlaceholder = $uniquePlayerCount > 0
-    ? 'Search ' . number_format($uniquePlayerCount) . ' players across all dimensions'
-    : 'Search players across all dimensions';
-$searchLabel = $uniquePlayerCount > 0
-    ? 'Search ' . number_format($uniquePlayerCount) . ' players across all Mineacle dimensions'
-    : 'Search players across all Mineacle dimensions';
-
-$siteUrl = static function (mixed $value, string $fallback): string {
-    $resolved = mineacle_page_public_link($value);
-
-    return $resolved === '#' ? $fallback : $resolved;
-};
-
-$navLinks = [
-    ['key' => 'home', 'label' => 'Home', 'url' => '/', 'external' => false],
-    ['key' => 'vote', 'label' => 'Vote', 'url' => '/vote', 'external' => false],
-    ['key' => 'leaderboards', 'label' => 'Leaderboards', 'url' => '/leaderboards', 'external' => false],
-    ['key' => 'bans', 'label' => 'Bans', 'url' => '/bans', 'external' => false],
-    ['key' => 'store', 'label' => 'Store', 'url' => $siteUrl($site['store_url'] ?? '', 'https://store.mineacle.net/'), 'external' => true],
-];
-$socialLinks = [
-    ['key' => 'x', 'label' => 'Mineacle on X', 'title' => 'X', 'url' => $siteUrl($site['x_url'] ?? '', 'https://x.com/mineaclenetwork')],
-    ['key' => 'discord', 'label' => 'Mineacle Discord', 'title' => 'Discord', 'url' => $siteUrl($site['discord_url'] ?? '', 'https://discord.gg/qmpJ4xMguT')],
-];
 $categories = [
     'bug' => 'Bug Report',
     'website' => 'Website Issue',
@@ -136,6 +101,7 @@ $categories = [
     'store' => 'Store Support',
     'other' => 'Other Support',
 ];
+
 $form = [
     'player_name' => '',
     'player_uuid' => '',
@@ -144,6 +110,7 @@ $form = [
     'subject' => '',
     'message' => '',
 ];
+
 $errors = [];
 $sent = false;
 $selectedPlayer = null;
@@ -269,6 +236,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'Report:',
                 $form['message'],
             ]);
+
             $headers = [
                 'From: Mineacle Website <' . $fromEmail . '>',
                 'Reply-To: ' . $form['email'],
@@ -304,215 +272,185 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+$assetVersion = (string) max(
+    (int) (is_file(__DIR__ . '/assets/css/contact.css') ? filemtime(__DIR__ . '/assets/css/contact.css') : 1),
+    (int) (is_file(__DIR__ . '/assets/js/contact.js') ? filemtime(__DIR__ . '/assets/js/contact.js') : 1)
+);
+
+$siteCss = __DIR__ . '/../shared/assets/css/site.css';
+$navigationCss = __DIR__ . '/../shared/assets/css/navigation.css';
+$secondaryCss = __DIR__ . '/../shared/assets/css/secondary-pages.css';
+$navigationJs = __DIR__ . '/../shared/assets/js/navigation.js';
+
 mineacle_page_head('Contact', [
     'meta_title' => 'Contact | Mineacle',
     'meta_description' => 'Contact Mineacle Studios, report a bug, or request account and store support.',
     'canonical_url' => 'https://mineacle.net/contact',
     'stylesheets' => [
-        '/shared/assets/css/site.css?rev=' . rawurlencode($homeStylesheetVersion),
-        '/shared/assets/css/pages.css?rev=' . rawurlencode($pagesStylesheetVersion),
-        '/contact/assets/css/contact.css?rev=' . rawurlencode($contactStylesheetVersion),
+        '/shared/assets/css/site.css?rev=' . rawurlencode((string) (is_file($siteCss) ? filemtime($siteCss) : 1)),
+        '/shared/assets/css/navigation.css?rev=' . rawurlencode((string) (is_file($navigationCss) ? filemtime($navigationCss) : 1)),
+        '/shared/assets/css/secondary-pages.css?rev=' . rawurlencode((string) (is_file($secondaryCss) ? filemtime($secondaryCss) : 1)),
+        '/contact/assets/css/contact.css?rev=' . rawurlencode($assetVersion),
     ],
     'body_class' => 'secondary-page contact-page',
     'external_fonts' => false,
     'theme_color' => '#111111',
 ]);
 ?>
-<div class="canvas">
-    <div class="interface-stage">
-        <section class="interface" aria-label="Contact Mineacle">
-            <aside class="sidebar" aria-label="Sidebar navigation">
-                <a class="brand-link" href="/" aria-label="Mineacle home">
-                    <img class="brand-mark" src="/shared/assets/images/navigation/logo.png?v=<?php echo h(rawurlencode($assetVersion)); ?>" alt="" width="64" height="64" draggable="false">
-                </a>
+<main class="contact-site">
+    <section class="contact-hero" aria-labelledby="contact-title">
+        <div class="contact-hero__surface">
+            <?php mineacle_site_navigation($site, ['current_key' => '']); ?>
 
-                <nav class="nav-stack nav-stack--upper" aria-label="Main">
-                    <?php foreach ($navLinks as $link): ?>
-                        <a class="square-button" href="<?php echo h((string) $link['url']); ?>" aria-label="<?php echo h((string) $link['label']); ?>" title="<?php echo h((string) $link['label']); ?>" <?php echo $link['external'] ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>>
-                            <img class="nav-icon" src="/shared/assets/images/navigation/<?php echo h((string) $link['key']); ?>.png?v=<?php echo h(rawurlencode($assetVersion)); ?>" alt="" aria-hidden="true" draggable="false">
-                        </a>
-                    <?php endforeach; ?>
-                </nav>
+            <div class="contact-hero__copy">
+                <span>Mineacle Support</span>
+                <h1 id="contact-title">Contact Us</h1>
+                <p>Connect a verified Mineacle profile and give the team the details needed to investigate quickly.</p>
+            </div>
+        </div>
+    </section>
 
-                <nav class="nav-stack nav-stack--lower" aria-label="Social links">
-                    <?php foreach ($socialLinks as $link): ?>
-                        <a class="social-link social-link--rail social-link--<?php echo h((string) $link['key']); ?>" href="<?php echo h((string) $link['url']); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php echo h((string) $link['label']); ?>" title="<?php echo h((string) $link['title']); ?>">
-                            <span class="social-logo social-logo--<?php echo h((string) $link['key']); ?>" aria-hidden="true"></span>
-                        </a>
-                    <?php endforeach; ?>
-                </nav>
-            </aside>
+    <section class="contact-layout" aria-label="Mineacle contact form">
+        <section class="contact-intro">
+            <div class="contact-intro__copy">
+                <span class="contact-intro__eyebrow">Before you submit</span>
+                <h2>Send a useful report</h2>
+                <p>Verified reports give us the exact player context needed to reproduce account, website, store, and gameplay issues.</p>
+            </div>
 
-            <div class="content">
-                <div class="page-stack">
-                    <header class="topbar secondary-topbar">
-                        <div class="search-shell">
-                            <form class="search-control" id="player-search" role="search" action="/player" method="get">
-                                <div class="search-field">
-                                    <img class="search-user-icon" src="/shared/assets/images/search/user.png?v=<?php echo h(rawurlencode($assetVersion)); ?>" alt="" aria-hidden="true" draggable="false">
-                                    <label class="visually-hidden" for="site-search"><?php echo h($searchLabel); ?></label>
-                                    <input id="site-search" name="username" type="search" placeholder="<?php echo h($searchPlaceholder); ?>" maxlength="64" autocomplete="off" autocapitalize="none" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="home-player-suggestions">
-                                </div>
-                                <button class="search-submit" type="submit" aria-label="Search player" title="Search">
-                                    <img class="search-arrow-icon" src="/shared/assets/images/search/submit.png?v=<?php echo h(rawurlencode($assetVersion)); ?>" alt="" aria-hidden="true" draggable="false">
-                                </button>
-                            </form>
-                            <div class="search-suggestions" id="home-player-suggestions" role="listbox" aria-label="Player suggestions" hidden></div>
-                        </div>
-
-                        <nav class="top-actions" aria-label="Header actions">
-                            <div class="header-status is-loading" id="home-server-status" data-server-ip="<?php echo h($minecraftIp); ?>" role="status" aria-live="polite" aria-label="Checking Mineacle server status" title="Checking server status">
-                                <span class="header-status__dot" aria-hidden="true"></span>
-                                <span class="header-status__copy">
-                                    <span class="header-status__count" id="home-server-status-count">--</span>
-                                    <span class="header-status__label" id="home-server-status-label">Currently Playing</span>
-                                </span>
-                            </div>
-                            <button class="top-action top-action--play" id="play-button" type="button" data-copy-value="<?php echo h($minecraftIp); ?>" aria-label="Copy Mineacle server address" title="Copy <?php echo h($minecraftIp); ?>">
-                                <span class="play-label" aria-live="polite">PLAY</span>
-                            </button>
-                        </nav>
-                    </header>
-
-                    <main class="contact-layout" aria-labelledby="contact-title">
-                        <section class="contact-intro">
-                            <div class="contact-intro__copy">
-                                <span class="contact-intro__eyebrow">Mineacle Support</span>
-                                <h1 id="contact-title">Contact Us</h1>
-                                <p>Connect a verified Mineacle profile, choose the right report type, and give the team the details needed to investigate quickly.</p>
-                            </div>
-
-                            <div class="contact-reward">
-                                <div>
-                                    <strong>Verified reports earn rewards</strong>
-                                    <p>Confirmed bug reports can receive an in-game reward within 72 hours. Rewards scale with the report type, reproducibility, and player impact.</p>
-                                </div>
-                                <img src="/shared/assets/images/footer/slime-static.webp?v=<?php echo h(rawurlencode($assetVersion)); ?>" alt="" aria-hidden="true" draggable="false">
-                            </div>
-
-                            <div class="contact-guidance-block">
-                                <h2>Send a useful report</h2>
-                                <ul class="contact-guidance">
-                                    <li>Include the exact command, page, or world involved.</li>
-                                    <li>Explain what happened and what you expected.</li>
-                                    <li>Never include passwords, recovery codes, or payment details.</li>
-                                </ul>
-                            </div>
-                        </section>
-
-                        <section class="contact-form-panel" aria-label="Contact form">
-                            <header class="contact-form-heading">
-                                <h2>Send a Report</h2>
-                                <p>Every report must be attached to a player who has joined Mineacle.</p>
-                            </header>
-
-                            <?php if ($sent): ?>
-                                <div class="contact-notice is-success" role="status">
-                                    <strong>Report sent</strong>
-                                    <span>Mineacle Studios received your message.</span>
-                                </div>
-                            <?php elseif ($errors !== []): ?>
-                                <div class="contact-notice is-error" role="alert">
-                                    <strong>Check your report</strong>
-                                    <ul>
-                                        <?php foreach (array_unique($errors) as $error): ?>
-                                            <li><?php echo h($error); ?></li>
-                                        <?php endforeach; ?>
-                                    </ul>
-                                </div>
-                            <?php endif; ?>
-
-                            <form class="contact-form" action="/contact" method="post" data-contact-form>
-                                <input type="hidden" name="contact_token" value="<?php echo h((string) $_SESSION['mineacle_contact_token']); ?>">
-                                <input type="hidden" name="player_uuid" value="<?php echo h($form['player_uuid']); ?>" data-contact-player-uuid>
-                                <div class="contact-honeypot" aria-hidden="true">
-                                    <label for="website">Website</label>
-                                    <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
-                                </div>
-
-                                <div class="contact-player-field" data-contact-player-picker>
-                                    <label for="contact-player">
-                                        <span>In-game name</span>
-                                    </label>
-                                    <div class="contact-player-input">
-                                        <img src="/shared/assets/images/search/user.png?v=<?php echo h(rawurlencode($assetVersion)); ?>" alt="" aria-hidden="true" draggable="false">
-                                        <input
-                                            id="contact-player"
-                                            name="player_name"
-                                            type="text"
-                                            maxlength="16"
-                                            autocomplete="off"
-                                            autocapitalize="none"
-                                            spellcheck="false"
-                                            placeholder="Search your Mineacle profile"
-                                            value="<?php echo h($form['player_name']); ?>"
-                                            role="combobox"
-                                            aria-autocomplete="list"
-                                            aria-expanded="false"
-                                            aria-controls="contact-player-results"
-                                            data-contact-player-input
-                                            <?php echo is_array($selectedPlayer) ? 'readonly' : ''; ?>
-                                            required
-                                        >
-                                    </div>
-                                    <div class="contact-player-results" id="contact-player-results" role="listbox" data-contact-player-results hidden></div>
-                                    <div class="contact-player-selected" data-contact-player-selected<?php echo is_array($selectedPlayer) ? '' : ' hidden'; ?>>
-                                        <span class="contact-player-selected__head">
-                                            <?php if (is_array($selectedPlayer) && $selectedPlayer['head'] !== ''): ?>
-                                                <img src="<?php echo h((string) $selectedPlayer['head']); ?>" alt="" aria-hidden="true" draggable="false" data-contact-player-selected-head>
-                                            <?php else: ?>
-                                                <img src="" alt="" aria-hidden="true" draggable="false" data-contact-player-selected-head hidden>
-                                            <?php endif; ?>
-                                        </span>
-                                        <span>
-                                            <strong data-contact-player-selected-name><?php echo is_array($selectedPlayer) ? h((string) $selectedPlayer['name']) : ''; ?></strong>
-                                            <span>Verified Mineacle player</span>
-                                        </span>
-                                        <button type="button" data-contact-player-clear>Change</button>
-                                    </div>
-                                    <p>Select a profile from the results. Only players who have joined Mineacle can send a report.</p>
-                                </div>
-
-                                <div class="contact-form__row">
-                                    <label>
-                                        <span>Category</span>
-                                        <select name="category" required>
-                                            <?php foreach ($categories as $value => $label): ?>
-                                                <option value="<?php echo h($value); ?>"<?php echo $form['category'] === $value ? ' selected' : ''; ?>><?php echo h($label); ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </label>
-
-                                    <label>
-                                        <span>Reply email</span>
-                                        <input name="email" type="email" maxlength="254" autocomplete="email" value="<?php echo h($form['email']); ?>" placeholder="you@example.com" required>
-                                    </label>
-                                </div>
-
-                                <label>
-                                    <span>Subject</span>
-                                    <input name="subject" type="text" minlength="4" maxlength="120" value="<?php echo h($form['subject']); ?>" placeholder="Short summary" required>
-                                </label>
-
-                                <label>
-                                    <span>Report details</span>
-                                    <textarea name="message" minlength="20" maxlength="4000" rows="8" placeholder="What happened, what did you expect, and how can we reproduce it?" required><?php echo h($form['message']); ?></textarea>
-                                </label>
-
-                                <button class="contact-submit" type="submit" data-contact-submit>Send Report</button>
-                            </form>
-                        </section>
-                    </main>
-
-                    <?php mineacle_page_footer($site); ?>
+            <div class="contact-reward">
+                <div>
+                    <strong>Verified reports earn rewards</strong>
+                    <p>Confirmed bug reports can receive an in-game reward within 72 hours. Rewards scale with the report type, reproducibility, and player impact.</p>
                 </div>
+                <img src="/shared/assets/images/footer/slime-static.webp?v=<?php echo h(rawurlencode(mineacle_page_asset_version())); ?>" alt="" aria-hidden="true" draggable="false">
+            </div>
+
+            <div class="contact-guidance-block">
+                <h2>Include these details</h2>
+                <ul class="contact-guidance">
+                    <li>Include the exact command, page, or world involved.</li>
+                    <li>Explain what happened and what you expected.</li>
+                    <li>Never include passwords, recovery codes, or payment details.</li>
+                </ul>
             </div>
         </section>
-    </div>
-</div>
+
+        <section class="contact-form-panel" aria-label="Contact form">
+            <header class="contact-form-heading">
+                <h2>Send a Report</h2>
+                <p>Every report must be attached to a player who has joined Mineacle.</p>
+            </header>
+
+            <?php if ($sent): ?>
+                <div class="contact-notice is-success" role="status">
+                    <strong>Report sent</strong>
+                    <span>Mineacle Studios received your message.</span>
+                </div>
+            <?php elseif ($errors !== []): ?>
+                <div class="contact-notice is-error" role="alert">
+                    <strong>Check your report</strong>
+                    <ul>
+                        <?php foreach (array_unique($errors) as $error): ?>
+                            <li><?php echo h($error); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
+
+            <form class="contact-form" action="/contact" method="post" data-contact-form>
+                <input type="hidden" name="contact_token" value="<?php echo h((string) $_SESSION['mineacle_contact_token']); ?>">
+                <input type="hidden" name="player_uuid" value="<?php echo h($form['player_uuid']); ?>" data-contact-player-uuid>
+
+                <div class="contact-honeypot" aria-hidden="true">
+                    <label for="website">Website</label>
+                    <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+                </div>
+
+                <div class="contact-player-field" data-contact-player-picker>
+                    <label for="contact-player"><span>In-game name</span></label>
+
+                    <div class="contact-player-input">
+                        <img src="/shared/assets/images/search/user.png" alt="" aria-hidden="true" draggable="false">
+                        <input
+                            id="contact-player"
+                            name="player_name"
+                            type="text"
+                            maxlength="16"
+                            autocomplete="off"
+                            autocapitalize="none"
+                            spellcheck="false"
+                            placeholder="Search your Mineacle profile"
+                            value="<?php echo h($form['player_name']); ?>"
+                            role="combobox"
+                            aria-autocomplete="list"
+                            aria-expanded="false"
+                            aria-controls="contact-player-results"
+                            data-contact-player-input
+                            <?php echo is_array($selectedPlayer) ? 'readonly' : ''; ?>
+                            required
+                        >
+                    </div>
+
+                    <div class="contact-player-results" id="contact-player-results" role="listbox" data-contact-player-results hidden></div>
+
+                    <div class="contact-player-selected" data-contact-player-selected<?php echo is_array($selectedPlayer) ? '' : ' hidden'; ?>>
+                        <span class="contact-player-selected__head">
+                            <?php if (is_array($selectedPlayer) && $selectedPlayer['head'] !== ''): ?>
+                                <img src="<?php echo h((string) $selectedPlayer['head']); ?>" alt="" aria-hidden="true" draggable="false" data-contact-player-selected-head>
+                            <?php else: ?>
+                                <img src="" alt="" aria-hidden="true" draggable="false" data-contact-player-selected-head hidden>
+                            <?php endif; ?>
+                        </span>
+
+                        <span>
+                            <strong data-contact-player-selected-name><?php echo is_array($selectedPlayer) ? h((string) $selectedPlayer['name']) : ''; ?></strong>
+                            <span>Verified Mineacle player</span>
+                        </span>
+
+                        <button type="button" data-contact-player-clear>Change</button>
+                    </div>
+
+                    <p>Select a profile from the results. Only players who have joined Mineacle can send a report.</p>
+                </div>
+
+                <div class="contact-form__row">
+                    <label>
+                        <span>Category</span>
+                        <select name="category" required>
+                            <?php foreach ($categories as $value => $label): ?>
+                                <option value="<?php echo h($value); ?>"<?php echo $form['category'] === $value ? ' selected' : ''; ?>><?php echo h($label); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </label>
+
+                    <label>
+                        <span>Reply email</span>
+                        <input name="email" type="email" maxlength="254" autocomplete="email" value="<?php echo h($form['email']); ?>" placeholder="you@example.com" required>
+                    </label>
+                </div>
+
+                <label>
+                    <span>Subject</span>
+                    <input name="subject" type="text" minlength="4" maxlength="120" value="<?php echo h($form['subject']); ?>" placeholder="Short summary" required>
+                </label>
+
+                <label>
+                    <span>Report details</span>
+                    <textarea name="message" minlength="20" maxlength="4000" rows="8" placeholder="What happened, what did you expect, and how can we reproduce it?" required><?php echo h($form['message']); ?></textarea>
+                </label>
+
+                <button class="contact-submit" type="submit" data-contact-submit>Send Report</button>
+            </form>
+        </section>
+    </section>
+
+    <?php mineacle_compact_footer($site); ?>
+</main>
+
 <?php mineacle_page_end([
     'scripts' => [
-        '/shared/assets/js/site.js',
-        '/contact/assets/js/contact.js?rev=' . rawurlencode($contactScriptVersion),
+        '/shared/assets/js/navigation.js?rev=' . rawurlencode((string) (is_file($navigationJs) ? filemtime($navigationJs) : 1)),
+        '/contact/assets/js/contact.js?rev=' . rawurlencode($assetVersion),
     ],
 ]); ?>

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../shared/php/layout.php';
 require_once __DIR__ . '/../shared/php/navigation.php';
+require_once __DIR__ . '/../shared/php/compact-footer.php';
 require_once __DIR__ . '/../shared/php/auth.php';
 
 mineacle_auth_private_headers();
@@ -75,7 +76,9 @@ $assetVersion = (string) max(
     (int) (is_file(__DIR__ . '/assets/css/login.css') ? filemtime(__DIR__ . '/assets/css/login.css') : 1),
     (int) (is_file(__DIR__ . '/assets/js/login.js') ? filemtime(__DIR__ . '/assets/js/login.js') : 1)
 );
+
 $navigationCss = __DIR__ . '/../shared/assets/css/navigation.css';
+$secondaryCss = __DIR__ . '/../shared/assets/css/secondary-pages.css';
 $navigationJs = __DIR__ . '/../shared/assets/js/navigation.js';
 
 mineacle_page_head('Login', [
@@ -84,6 +87,7 @@ mineacle_page_head('Login', [
     'canonical_url' => 'https://mineacle.net/login',
     'stylesheets' => [
         '/shared/assets/css/navigation.css?rev=' . rawurlencode((string) (is_file($navigationCss) ? filemtime($navigationCss) : 1)),
+        '/shared/assets/css/secondary-pages.css?rev=' . rawurlencode((string) (is_file($secondaryCss) ? filemtime($secondaryCss) : 1)),
         '/login/assets/css/login.css?rev=' . rawurlencode($assetVersion),
     ],
     'body_class' => 'mineacle-auth-page',
@@ -99,7 +103,7 @@ mineacle_page_head('Login', [
         <div class="auth-stage">
             <section class="auth-card" data-auth-card>
                 <div class="auth-card__heading">
-                    <img class="auth-card__logo" src="/home/assets/images/logo-small.png" alt="" aria-hidden="true" draggable="false">
+                    <img class="auth-card__logo" src="/home/assets/images/static-logo.png" alt="" aria-hidden="true" draggable="false">
                     <h1 id="auth-title"><?php echo $mode === 'create' ? 'Create your account' : 'Welcome back'; ?></h1>
                     <p><?php echo $mode === 'create'
                         ? 'Verify your Minecraft account to get started'
@@ -139,6 +143,7 @@ mineacle_page_head('Login', [
                     <p class="auth-card__switch">Don’t have an account? <a href="/login?mode=create&amp;return=<?php echo h(rawurlencode($returnPath)); ?>">Create account</a></p>
                 <?php else: ?>
                     <?php $status = (string) ($registration['status'] ?? 'none'); ?>
+
                     <ol class="auth-steps" aria-label="Account creation progress">
                         <li class="<?php echo $status === 'none' || $status === 'expired' ? 'is-active' : 'is-complete'; ?>"><span>1</span><strong>Username</strong></li>
                         <li class="<?php echo in_array($status, ['pending', 'unavailable'], true) ? 'is-active' : ($status === 'verified' ? 'is-complete' : ''); ?>"><span>2</span><strong>Verify In-Game</strong></li>
@@ -241,13 +246,11 @@ mineacle_page_head('Login', [
                 <?php endif; ?>
             </section>
         </div>
-
-        <footer class="auth-footer">
-            <div><img src="/home/assets/images/logo-small.png" alt="" aria-hidden="true" draggable="false"><span>© 2026 Mineacle Studios</span></div>
-            <nav aria-label="Legal links"><a href="/terms">Terms of Service</a><a href="/privacy">Privacy Policy</a><a href="/rules">Server Rules</a></nav>
-        </footer>
     </section>
+
+    <?php mineacle_compact_footer($site); ?>
 </main>
+
 <?php mineacle_page_end([
     'scripts' => [
         '/shared/assets/js/navigation.js?rev=' . rawurlencode((string) (is_file($navigationJs) ? filemtime($navigationJs) : 1)),

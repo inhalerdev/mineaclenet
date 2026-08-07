@@ -547,3 +547,31 @@
   --mineacle-shell-gap: clamp(16px, min(1.666667vw, 2.962963vh), 64px);
   --mineacle-shell-radius: 3px;
 }
+
+/* ==========================================================================
+   AUTH PAGE — SAME NAVIGATION PLACEMENT AS EVERY OTHER PUBLIC PAGE
+   ========================================================================== */
+
+body.mineacle-auth-page .auth-page {
+  width: 100%;
+  margin: 0;
+  padding:
+    var(--mineacle-shell-frame-top)
+    var(--mineacle-shell-frame-right)
+    var(--mineacle-shell-frame-bottom)
+    var(--mineacle-shell-frame-left);
+}
+
+body.mineacle-auth-page .auth-layout {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
+body.mineacle-auth-page .auth-layout > .site-header {
+  width: calc(100% - (var(--mineacle-shell-inner) * 2));
+  margin:
+    var(--mineacle-shell-inner)
+    var(--mineacle-shell-inner)
+    0;
+}
