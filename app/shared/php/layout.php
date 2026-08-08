@@ -217,6 +217,7 @@ function mineacle_page_head(string $title = 'Home', array $options = []): void
     $assetVersion = mineacle_page_asset_version();
 
     echo '<link rel="icon" type="image/png" href="/shared/assets/images/favicon.png?v=' . h($assetVersion) . '">';
+    echo '<link rel="preload" href="/home/assets/fonts/rubik-500.woff2" as="font" type="font/woff2" crossorigin>';
 
     if (($options['external_fonts'] ?? true) === true) {
         echo '<link rel="preconnect" href="https://fonts.googleapis.com">';

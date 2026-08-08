@@ -11,7 +11,7 @@ html {
   min-height: 100% !important;
   overflow-x: hidden !important;
   overflow-y: auto !important;
-  scrollbar-gutter: stable both-edges;
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -38,3 +38,64 @@ dialog {
   max-height: calc(100dvh - 32px);
   overflow: auto;
 }
+
+/* ==========================================================================
+   CANONICAL NAVIGATION GEOMETRY
+   This stylesheet is loaded after every route stylesheet.
+   ========================================================================== */
+
+.site-header {
+  height: var(--site-nav-logo-height) !important;
+  min-height: var(--site-nav-logo-height) !important;
+  max-height: var(--site-nav-logo-height) !important;
+}
+
+.home-hero__surface,
+.leaderboards-hero__surface,
+.profile-hero__surface,
+.vote-hero__surface,
+.contact-hero__surface {
+  padding-top: var(--mineacle-shell-inner) !important;
+  padding-right: var(--mineacle-shell-inner) !important;
+  padding-left: var(--mineacle-shell-inner) !important;
+}
+
+.home-hero .site-header,
+.leaderboards-hero .site-header,
+.profile-hero .site-header,
+.vote-hero .site-header,
+.contact-hero .site-header {
+  position: relative !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  transform: none !important;
+}
+
+body.mineacle-auth-page .auth-layout > .site-header {
+  position: relative !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  width: calc(100% - ((var(--mineacle-shell-inner) + 1px) * 2)) !important;
+  min-width: 0 !important;
+  margin:
+    calc(var(--mineacle-shell-inner) + 1px)
+    calc(var(--mineacle-shell-inner) + 1px)
+    0 !important;
+  transform: none !important;
+}
+
+.site-navigation__account-form {
+  width: var(--site-nav-login-width) !important;
+  min-width: var(--site-nav-login-width) !important;
+  height: var(--site-nav-control-height) !important;
+  min-height: var(--site-nav-control-height) !important;
+  flex: 0 0 var(--site-nav-login-width) !important;
+}
+

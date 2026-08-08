@@ -31,7 +31,7 @@
   --home-hover: #f8f8f8;
   --home-link-hover: #f8f8f8;
   --home-accent: #8436fe;
-  --home-play: #62c249;
+  --home-play: #389222;
   --join-close-hover: #ff5555;
 
   /* Canonical 64px website frame. */
@@ -146,7 +146,7 @@ body.mineacle-home img {
   height: calc(var(--home-viewport-height) - var(--home-frame-top) - var(--home-frame-bottom));
   min-height: 600px;
   overflow: hidden;
-  border: 0;
+  border: 1px solid rgba(248, 248, 248, 0.14);
   border-radius: var(--home-radius);
   background: var(--home-background) url("../images/hero.webp") center / cover no-repeat;
 }

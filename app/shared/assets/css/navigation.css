@@ -1,3 +1,27 @@
+@font-face {
+  font-family: "Rubik";
+  src: url("../../../home/assets/fonts/rubik-400.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Rubik";
+  src: url("../../../home/assets/fonts/rubik-500.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Rubik";
+  src: url("../../../home/assets/fonts/rubik-600.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+
 :root {
   --mineacle-content-width: 1648px;
   --mineacle-page-edge: 64px;
@@ -48,9 +72,10 @@
   justify-content: space-between;
   width: 100%;
   min-width: 0;
+  height: var(--site-nav-logo-height);
   min-height: var(--site-nav-logo-height);
+  max-height: var(--site-nav-logo-height);
   gap: var(--site-nav-gap);
-  view-transition-name: mineacle-site-header;
 }
 
 /* ==========================================================================
@@ -133,6 +158,7 @@
   align-items: center;
   justify-content: flex-end;
   min-width: 0;
+  flex: 1 1 auto;
   min-height: var(--site-nav-logo-height);
   gap: var(--site-nav-gap);
 }
@@ -477,30 +503,6 @@
 }
 
 /* ==========================================================================
-   PAGE TRANSITIONS
-   ========================================================================== */
-
-@view-transition {
-  navigation: auto;
-}
-
-::view-transition-old(root) {
-  animation: mineacle-page-out 90ms ease-in both;
-}
-
-::view-transition-new(root) {
-  animation: mineacle-page-in 150ms ease-out both;
-}
-
-@keyframes mineacle-page-out {
-  to { opacity: 0; }
-}
-
-@keyframes mineacle-page-in {
-  from { opacity: 0; }
-}
-
-/* ==========================================================================
    RESPONSIVE NAVIGATION
    ========================================================================== */
 
@@ -533,11 +535,6 @@
   .site-menu__link,
   .site-menu__label {
     transition: none;
-  }
-
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation: none;
   }
 }
 
