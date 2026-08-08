@@ -99,3 +99,20 @@ body.mineacle-auth-page .auth-layout > .site-header {
   flex: 0 0 var(--site-nav-login-width) !important;
 }
 
+/* ==========================================================================
+   PLAYER PROFILE SKIN FIT
+   Keep the API body render clear of the shared navigation and hero ceiling.
+   The render is intentionally ~10% smaller than the previous 110% sizing.
+   ========================================================================== */
+
+body.player-page .profile-skin-stage__render {
+  width: min(99%, 558px) !important;
+  max-width: none;
+}
+
+@media (min-width: 901px) {
+  body.player-page .profile-skin-stage {
+    height: 100% !important;
+  }
+}
+
