@@ -675,53 +675,151 @@ body.contact-page a {
   gap: 18px;
 }
 
-.contact-totem-anchor {
-  position: absolute;
-  right: 36px;
-  bottom: calc(100% + 8px);
-  z-index: 10;
-  width: 0;
-  height: 0;
+
+/* --------------------------------------------------------------------------
+   SUBMIT TOTEM BURST
+   The effect is fixed to the viewport so its origin is the exact point the
+   player clicked on the Send Message button, not the button center/container.
+   -------------------------------------------------------------------------- */
+
+.contact-submit-burst {
+  --burst-x: 50vw;
+  --burst-y: 50vh;
+
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  overflow: hidden;
   pointer-events: none;
+  contain: layout style paint;
 }
 
-.contact-totem-pop {
+.contact-submit-burst__totem {
   position: absolute;
-  right: -34px;
-  bottom: 0;
+  left: var(--burst-x);
+  top: var(--burst-y);
   display: block;
-  width: 78px;
-  height: 78px;
+  width: clamp(104px, 8vw, 150px);
+  height: auto;
   max-width: none;
+  transform: translate(-50%, -54%) scale(0.72);
+  transform-origin: center;
   object-fit: contain;
   image-rendering: pixelated;
-  pointer-events: none;
+  opacity: 0;
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.46));
+  animation: contact-submit-totem 1120ms cubic-bezier(0.18, 0.88, 0.24, 1) both;
   user-select: none;
-  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.42));
-  animation: contact-totem-pop 680ms cubic-bezier(0.2, 0.9, 0.2, 1) both;
 }
 
-@keyframes contact-totem-pop {
+.contact-submit-particle {
+  --particle-size: 8px;
+  --particle-color: #55ff55;
+  --particle-life: 1200ms;
+  --particle-delay: 0ms;
+  --particle-burst-x: 0px;
+  --particle-burst-y: -72px;
+  --particle-fall-x: 0px;
+  --particle-fall-y: 220px;
+  --particle-rotation-mid: 180deg;
+  --particle-rotation-end: 360deg;
+
+  position: absolute;
+  left: var(--burst-x);
+  top: var(--burst-y);
+  display: block;
+  width: var(--particle-size);
+  height: var(--particle-size);
+  background: var(--particle-color);
+  box-shadow:
+    calc(var(--particle-size) * 0.45) calc(var(--particle-size) * -0.45) 0
+    color-mix(in srgb, var(--particle-color) 74%, #f8f8f8 26%);
+  opacity: 0;
+  transform: translate(-50%, -50%) rotate(0deg) scale(0.4);
+  transform-origin: center;
+  animation:
+    contact-submit-particle
+    var(--particle-life)
+    cubic-bezier(0.18, 0.74, 0.24, 1)
+    var(--particle-delay)
+    both;
+}
+
+.contact-submit-particle.is-diamond {
+  transform: translate(-50%, -50%) rotate(45deg) scale(0.4);
+}
+
+.contact-submit-particle.is-orb {
+  border-radius: 2px;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--particle-color) 62%, #111111 38%),
+    0 0 10px color-mix(in srgb, var(--particle-color) 52%, transparent);
+}
+
+@keyframes contact-submit-totem {
   0% {
     opacity: 0;
-    transform: translateY(12px) scale(0.56);
+    transform: translate(-50%, -44%) scale(0.52);
   }
 
-  30% {
+  19% {
     opacity: 1;
-    transform: translateY(-9px) scale(1.12);
+    transform: translate(-50%, -62%) scale(1.14);
   }
 
-  68% {
+  47% {
     opacity: 1;
-    transform: translateY(-14px) scale(1);
+    transform: translate(-50%, -68%) scale(1);
+  }
+
+  74% {
+    opacity: 0.95;
+    transform: translate(-50%, -72%) scale(0.98);
   }
 
   100% {
     opacity: 0;
-    transform: translateY(-28px) scale(0.9);
+    transform: translate(-50%, -84%) scale(0.84);
   }
 }
+
+@keyframes contact-submit-particle {
+  0% {
+    opacity: 0;
+    transform:
+      translate(-50%, -50%)
+      translate(0, 0)
+      rotate(0deg)
+      scale(0.3);
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  31% {
+    opacity: 1;
+    transform:
+      translate(-50%, -50%)
+      translate(var(--particle-burst-x), var(--particle-burst-y))
+      rotate(var(--particle-rotation-mid))
+      scale(1);
+  }
+
+  68% {
+    opacity: 0.88;
+  }
+
+  100% {
+    opacity: 0;
+    transform:
+      translate(-50%, -50%)
+      translate(var(--particle-fall-x), var(--particle-fall-y))
+      rotate(var(--particle-rotation-end))
+      scale(0.58);
+  }
+}
+
 
 .contact-form__actions > a {
   color: var(--contact-muted);
@@ -844,13 +942,6 @@ body.contact-page a {
   line-height: 1.5;
 }
 
-.contact-honeypot {
-  position: absolute;
-  left: -10000px;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-}
 
 body.contact-page .compact-footer {
   width: 100%;
@@ -995,5 +1086,14 @@ body.contact-page .compact-footer {
   .contact-success > a {
     grid-column: 1 / -1;
     justify-self: start;
+  }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-submit-burst__totem,
+  .contact-submit-particle {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
   }
 }

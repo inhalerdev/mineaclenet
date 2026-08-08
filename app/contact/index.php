@@ -155,29 +155,18 @@ $errors = [];
 $sent = !empty($_SESSION['mineacle_contact_success']);
 unset($_SESSION['mineacle_contact_success']);
 
-if (!isset($_SESSION['mineacle_contact_started_at'])) {
-    $_SESSION['mineacle_contact_started_at'] = time();
-}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     foreach ($form as $key => $default) {
         $form[$key] = trim((string) ($_POST[$key] ?? $default));
     }
 
-    $honeypot = trim((string) ($_POST['website'] ?? ''));
-    $startedAt = (int) ($_SESSION['mineacle_contact_started_at'] ?? 0);
 
     if (!mineacle_auth_verify_csrf($_POST['csrf'] ?? null)) {
         $errors[] = 'Your form session expired. Refresh the page and try again.';
     }
 
-    if ($honeypot !== '') {
-        $errors[] = 'The message could not be submitted.';
-    }
 
-    if ($startedAt > 0 && time() - $startedAt < 2) {
-        $errors[] = 'Please review your message before sending it.';
-    }
 
     if (!isset($categories[$form['category']])) {
         $errors[] = 'Choose a valid contact type.';
@@ -202,7 +191,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $configuredRecipient = trim((string) ($contactConfig['recipient'] ?? ''));
     $recipientCandidate = $configuredRecipient !== '' ? $configuredRecipient : $publicContactEmail;
     $recipient = filter_var($recipientCandidate, FILTER_VALIDATE_EMAIL);
-    $fromEmail = filter_var((string) ($contactConfig['from_email'] ?? ''), FILTER_VALIDATE_EMAIL);
+    $configuredFromEmail = trim((string) ($contactConfig['from_email'] ?? ''));
+    $fromEmailCandidate = $configuredFromEmail !== '' ? $configuredFromEmail : $publicContactEmail;
+    $fromEmail = filter_var($fromEmailCandidate, FILTER_VALIDATE_EMAIL);
 
     if ($errors === [] && ($recipient === false || $fromEmail === false)) {
         $errors[] = 'Contact delivery is temporarily unavailable. You can email hello@mineacle.net directly.';
@@ -257,7 +248,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($delivered) {
             $_SESSION['mineacle_contact_success'] = true;
-            $_SESSION['mineacle_contact_started_at'] = time();
 
             header('Location: /contact', true, 303);
             exit;
@@ -385,7 +375,7 @@ mineacle_page_head('Contact', [
 
         <?php if ($errors !== []): ?>
             <div class="contact-notice" role="alert">
-                <strong>Something needs your attention</strong>
+                <strong>We couldn't send that yet</strong>
                 <ul>
                     <?php foreach (array_unique($errors) as $error): ?>
                         <li><?php echo h($error); ?></li>
@@ -403,10 +393,6 @@ mineacle_page_head('Contact', [
         >
             <input type="hidden" name="csrf" value="<?php echo h(mineacle_auth_csrf_token()); ?>">
 
-            <div class="contact-honeypot" aria-hidden="true">
-                <label for="website">Website</label>
-                <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
-            </div>
 
             <fieldset class="contact-type-grid">
                 <legend>Contact type</legend>
@@ -478,7 +464,6 @@ mineacle_page_head('Contact', [
                 </div>
 
                 <div class="contact-form__actions">
-                    <span class="contact-totem-anchor" data-contact-totem-anchor aria-hidden="true"></span>
                     <a href="mailto:<?php echo h($publicContactEmail); ?>">Email instead</a>
                     <button type="submit" data-contact-submit>
                         <span data-contact-submit-label>Send Message</span>
