@@ -73,15 +73,61 @@
     });
   });
 
+  /*
+   * Following is only available to authenticated viewers.
+   *
+   * The shared navigation renders a real logout form only when a Mineacle
+   * account is signed in. Use that server-rendered state instead of treating
+   * browser storage itself as authentication.
+   */
+  const accountForm = document.querySelector(".site-navigation__account-form");
+  const logoutButton = accountForm?.querySelector(
+    'button[aria-label^="Log out "]',
+  );
+  const logoutLabel = logoutButton?.getAttribute("aria-label")?.trim() ?? "";
+  const viewerKey = logoutLabel
+    .replace(/^Log out\s+/i, "")
+    .trim()
+    .toLowerCase();
+  const viewerIsLoggedIn =
+    accountForm instanceof HTMLFormElement && viewerKey !== "";
+
   document.querySelectorAll("[data-follow-profile]").forEach((button) => {
     const label = button.querySelector("[data-follow-label]");
     const playerKey = button.dataset.followKey?.trim().toLowerCase() ?? "";
 
-    if (!(label instanceof HTMLElement) || playerKey === "") {
+    if (!(button instanceof HTMLButtonElement) ||
+        !(label instanceof HTMLElement) ||
+        playerKey === "") {
       return;
     }
 
-    const storageKey = `mineacle:followed-player:${playerKey}`;
+    /*
+     * Remove the old anonymous/unscoped key introduced by the earlier player
+     * page. It must never be allowed to make a logged-out or different account
+     * appear to follow a player.
+     */
+    const legacyStorageKey = `mineacle:followed-player:${playerKey}`;
+
+    try {
+      window.localStorage.removeItem(legacyStorageKey);
+    } catch {
+      // Storage may be unavailable; no follow state is needed anonymously.
+    }
+
+    if (!viewerIsLoggedIn) {
+      button.hidden = true;
+      button.setAttribute("aria-hidden", "true");
+      button.tabIndex = -1;
+      return;
+    }
+
+    /*
+     * Follow state is namespaced to the signed-in Mineacle account. A different
+     * account using the same browser therefore gets an independent state.
+     */
+    const storageKey =
+      `mineacle:followed-player:${encodeURIComponent(viewerKey)}:${playerKey}`;
     let following = false;
 
     try {
@@ -106,7 +152,7 @@
           window.localStorage.removeItem(storageKey);
         }
       } catch {
-        // Keep the current-tab state if browser storage is unavailable.
+        // Keep only current-tab state if storage is unavailable.
       }
 
       render();
@@ -114,4 +160,30 @@
 
     render();
   });
+
+  /*
+   * The server rank label can legitimately be "Unranked". That word is much
+   * wider than a numeric rank, so mark the state and remove the meaningless
+   * fake progress bar rather than allowing the text to escape the hero.
+   */
+  const globalRank = document.querySelector(".profile-global-rank");
+  const globalRankValue = globalRank?.querySelector(":scope > strong");
+  const globalRankCaption = globalRank?.querySelector(":scope > small");
+  const globalRankProgress = globalRank?.querySelector(":scope > div");
+
+  if (
+    globalRank instanceof HTMLElement &&
+    globalRankValue instanceof HTMLElement &&
+    globalRankValue.textContent?.trim().toLowerCase() === "unranked"
+  ) {
+    globalRank.classList.add("is-unranked");
+
+    if (globalRankCaption instanceof HTMLElement) {
+      globalRankCaption.textContent = "Not yet ranked";
+    }
+
+    if (globalRankProgress instanceof HTMLElement) {
+      globalRankProgress.setAttribute("aria-hidden", "true");
+    }
+  }
 })();

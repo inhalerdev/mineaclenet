@@ -116,3 +116,63 @@ body.player-page .profile-skin-stage__render {
   }
 }
 
+/* ==========================================================================
+   PLAYER PROFILE AUTH + GLOBAL RANK FIT
+   ========================================================================== */
+
+/*
+ * Following is an account feature. Keep the control out of anonymous profile
+ * views at the CSS layer as well as in player.js so it cannot flash before the
+ * script runs.
+ */
+body.player-page:not(:has(.site-navigation__account-form)) .profile-action--follow {
+  display: none !important;
+}
+
+/*
+ * The hero surface already owns the canonical inner padding. Keep every grid
+ * child constrained to that content box so long labels can never cross the
+ * hero's right-side inner spacing.
+ */
+body.player-page .profile-hero__layout {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+body.player-page .profile-global-rank {
+  justify-self: end;
+  width: 100%;
+  max-width: 260px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+body.player-page .profile-global-rank > strong {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  font-size: clamp(42px, 3.35vw, 64px);
+  line-height: 0.95;
+  white-space: nowrap;
+}
+
+/*
+ * "Unranked" is substantially wider than a numeric rank. Scale that state
+ * independently instead of allowing it to overflow the hero content box.
+ */
+body.player-page .profile-global-rank.is-unranked > strong {
+  font-size: clamp(36px, 2.65vw, 50px);
+  letter-spacing: -0.03em;
+}
+
+body.player-page .profile-global-rank.is-unranked > div {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  body.player-page .profile-global-rank {
+    justify-self: start;
+    max-width: min(100%, 260px);
+  }
+}
+
