@@ -299,9 +299,9 @@
 }
 
 .site-navigation__account-form .site-navigation__login {
-  width: auto;
-  min-width: 100px;
-  padding-inline: 14px;
+  width: var(--site-nav-login-width);
+  min-width: var(--site-nav-login-width);
+  padding-inline: 0;
   color: #f8f8f8;
 }
 
@@ -461,6 +461,10 @@
 }
 
 .site-menu__account-form .site-menu__login {
+  width: var(--site-nav-login-width);
+  min-width: var(--site-nav-login-width);
+  justify-self: end;
+  padding-inline: 0;
   border: 0;
   background: var(--mineacle-red);
   color: #f8f8f8;
