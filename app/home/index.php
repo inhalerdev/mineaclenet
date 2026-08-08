@@ -61,6 +61,7 @@ $assetFiles = [
     $assetDirectory . '/images/social-discord.png',
     $assetDirectory . '/images/social-x.png',
     $assetDirectory . '/images/social-youtube.png',
+    $assetDirectory . '/images/clear.png',
 ];
 $assetVersion = 1;
 
@@ -167,7 +168,9 @@ mineacle_page_head('Home', [
 
     <dialog class="join-dialog" data-join-dialog aria-labelledby="join-dialog-title">
         <div class="join-dialog__content">
-            <button class="join-dialog__close" type="button" data-close-join-help aria-label="Close">×</button>
+            <button class="join-dialog__close" type="button" data-close-join-help aria-label="Close">
+                <span class="join-dialog__close-icon" aria-hidden="true"></span>
+            </button>
             <p class="join-dialog__eyebrow">Java Edition</p>
             <h2 id="join-dialog-title">Join Mineacle</h2>
             <ol>

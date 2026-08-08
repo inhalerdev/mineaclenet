@@ -378,17 +378,29 @@ body.mineacle-home img {
   padding: 0;
   border: 0;
   background: transparent;
-  color: var(--home-white);
-  font-size: 28px;
-  font-weight: 400;
-  line-height: 1;
+  color: #f8f8f8;
   cursor: pointer;
   transition: color 120ms ease-out, transform 120ms ease-out;
 }
 
-.join-dialog__close:hover {
+.join-dialog__close-icon {
+  display: block;
+  width: 22px;
+  height: 22px;
+  background: currentColor;
+  mask: url("../../../shared/assets/images/search/clear.svg") center / contain no-repeat;
+  -webkit-mask: url("../../../shared/assets/images/search/clear.svg") center / contain no-repeat;
+  pointer-events: none;
+}
+
+.join-dialog__close:hover,
+.join-dialog__close:focus-visible {
   color: var(--join-close-hover);
   transform: translateY(-2px);
+}
+
+.join-dialog__close:active {
+  transform: translateY(0);
 }
 
 .join-dialog__eyebrow {
