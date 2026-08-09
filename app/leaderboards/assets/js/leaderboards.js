@@ -49,6 +49,14 @@
       };
     }
 
+    if (has("media", "media+", "mediaplus", "creator", "contentcreator")) {
+      return {
+        key: "media",
+        label: "Media +",
+        color: "#55ffff",
+      };
+    }
+
     if (
       tokens.length === 0 ||
       has(
@@ -93,6 +101,7 @@
         "is-rank-ready",
         "is-rank-plus",
         "is-rank-admin",
+        "is-rank-media",
       );
 
       if (!rank) {
@@ -124,6 +133,8 @@
         wrapper.classList.add("is-rank-plus");
       } else if (rank.key === "admin") {
         wrapper.classList.add("is-rank-admin");
+      } else if (rank.key === "media") {
+        wrapper.classList.add("is-rank-media");
       }
 
       wrapper.classList.add("is-rank-ready");

@@ -215,6 +215,12 @@ body.player-page .profile-rank-badge.is-rank-admin {
   background: #ff5555;
 }
 
+body.player-page .profile-rank-badge.is-rank-media {
+  border-color: rgba(85, 255, 255, 0.42);
+  background: #55ffff;
+  color: #111111;
+}
+
 /*
  * Leaderboard ranked-name output is rendered by stats-lib.php with rank data
  * attributes. Keep the name readable and turn the raw prefix into a compact,
@@ -232,20 +238,20 @@ body.leaderboards-page .mineacle-ranked-name__rank {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 34px;
-  padding: 0 14px;
+  min-height: 26px;
+  padding: 0 9px;
   flex: none;
   border: 1px solid transparent;
   border-radius: 2px;
   background: var(--rank-color, #8436fe);
   color: #ffffff;
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 600;
   line-height: 1;
   letter-spacing: 0;
   text-transform: none;
   white-space: nowrap;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.14);
 }
 
 body.leaderboards-page .mineacle-ranked-name.has-rank:not(.is-rank-ready) .mineacle-ranked-name__rank {
@@ -258,6 +264,10 @@ body.leaderboards-page .mineacle-ranked-name.is-rank-plus {
 
 body.leaderboards-page .mineacle-ranked-name.is-rank-admin {
   --rank-color: #ff5555 !important;
+}
+
+body.leaderboards-page .mineacle-ranked-name.is-rank-media {
+  --rank-color: #55ffff !important;
 }
 
 body.leaderboards-page .mineacle-ranked-name__name {
@@ -396,6 +406,12 @@ body.leaderboards-page .mineacle-ranked-name.is-rank-admin .mineacle-ranked-name
   border-color: rgba(255, 119, 119, 0.42);
   background: #ff5555;
   color: #ffffff;
+}
+
+body.leaderboards-page .mineacle-ranked-name.is-rank-media .mineacle-ranked-name__rank {
+  border-color: rgba(85, 255, 255, 0.42);
+  background: #55ffff;
+  color: #111111;
 }
 
 @media (max-width: 700px) {

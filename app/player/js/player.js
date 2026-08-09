@@ -187,6 +187,7 @@
     const token = normalizeRankToken(playerRankBadge.textContent);
     const plusRanks = new Set(["+", "plus", "mineacle+", "mineacleplus"]);
     const adminRanks = new Set(["admin", "administrator"]);
+    const mediaRanks = new Set(["media", "media+", "mediaplus", "creator", "contentcreator"]);
     const hiddenRanks = new Set([
       "",
       "default",
@@ -203,6 +204,7 @@
     playerRankBadge.classList.remove(
       "is-rank-plus",
       "is-rank-admin",
+      "is-rank-media",
       "is-rank-ready",
     );
 
@@ -212,6 +214,9 @@
     } else if (adminRanks.has(token)) {
       playerRankBadge.textContent = "Admin";
       playerRankBadge.classList.add("is-rank-admin", "is-rank-ready");
+    } else if (mediaRanks.has(token)) {
+      playerRankBadge.textContent = "Media +";
+      playerRankBadge.classList.add("is-rank-media", "is-rank-ready");
     } else if (hiddenRanks.has(token)) {
       playerRankBadge.remove();
     } else {

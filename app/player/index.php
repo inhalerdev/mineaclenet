@@ -68,8 +68,9 @@ function mineacle_profile_view_model(array $player, ?array $team): array
     $rankKey = strtolower(trim((string) ($rankView['key'] ?? 'default')));
 
     $rankName = match ($rankKey) {
-        'plus' => 'Mineacle +',
         'admin' => 'Admin',
+        'media' => 'Media +',
+        'plus' => 'Mineacle +',
         default => '',
     };
 
