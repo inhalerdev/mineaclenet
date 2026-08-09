@@ -112,7 +112,12 @@ body.player-page .profile-skin-stage__render {
 
 @media (min-width: 901px) {
   body.player-page .profile-skin-stage {
-    height: 100% !important;
+    height: calc(100% + var(--mineacle-shell-inner)) !important;
+    margin-bottom: calc(-1 * var(--mineacle-shell-inner));
+  }
+
+  body.player-page .profile-skin-stage__render {
+    bottom: 0 !important;
   }
 }
 

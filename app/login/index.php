@@ -11,7 +11,53 @@ mineacle_auth_private_headers();
 
 $config = mineacle_config();
 $site = is_array($config['site'] ?? null) ? $config['site'] : [];
-$returnPath = mineacle_auth_safe_return_path($_GET['return'] ?? $_POST['return'] ?? '/', '/');
+
+$resolveReturnPath = static function (mixed $explicit, string $fallback = '/'): string {
+    $explicitPath = trim((string) $explicit);
+
+    if ($explicitPath !== '') {
+        return mineacle_auth_safe_return_path($explicitPath, $fallback);
+    }
+
+    $referrer = trim((string) ($_SERVER['HTTP_REFERER'] ?? ''));
+
+    if ($referrer === '') {
+        return $fallback;
+    }
+
+    $parts = parse_url($referrer);
+
+    if (!is_array($parts)) {
+        return $fallback;
+    }
+
+    $referrerHost = strtolower(trim((string) ($parts['host'] ?? '')));
+    $requestHost = strtolower(trim((string) ($_SERVER['HTTP_HOST'] ?? '')));
+    $requestHost = (string) preg_replace('/:\d+$/', '', $requestHost);
+
+    if (
+        $referrerHost !== ''
+        && ($requestHost === '' || !hash_equals($requestHost, $referrerHost))
+    ) {
+        return $fallback;
+    }
+
+    $candidate = (string) ($parts['path'] ?? '/');
+
+    if (isset($parts['query']) && trim((string) $parts['query']) !== '') {
+        $candidate .= '?' . (string) $parts['query'];
+    }
+
+    $candidatePath = (string) (parse_url($candidate, PHP_URL_PATH) ?? '/');
+
+    if (in_array($candidatePath, ['/login', '/logout'], true)) {
+        return $fallback;
+    }
+
+    return mineacle_auth_safe_return_path($candidate, $fallback);
+};
+
+$returnPath = $resolveReturnPath($_GET['return'] ?? $_POST['return'] ?? '');
 
 if (mineacle_auth_is_logged_in()) {
     header('Location: ' . $returnPath, true, 302);

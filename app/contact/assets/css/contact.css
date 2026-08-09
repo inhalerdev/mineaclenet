@@ -836,6 +836,8 @@ body.contact-page a {
 }
 
 .contact-form__actions > button {
+  position: relative;
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -844,33 +846,74 @@ body.contact-page a {
   padding: 0 18px;
   border: 0;
   border-radius: 2px;
-  background: var(--contact-purple);
+  background: transparent;
   color: #f8f8f8;
   font-size: 14px;
   font-weight: 500;
   text-transform: uppercase;
   cursor: pointer;
+}
+
+.contact-form__actions > button::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: 2px;
+  background: var(--contact-purple);
+  content: "";
+  transform: translateY(0);
   transition:
-    background-color 120ms ease,
-    color 120ms ease,
-    transform 120ms ease;
+    background-color 120ms ease-out,
+    filter 120ms ease-out,
+    transform 120ms ease-out;
+  will-change: transform;
+}
+
+.contact-form__actions > button > span {
+  position: relative;
+  z-index: 1;
+  display: block;
+  pointer-events: none;
+  transform: translateY(0);
+  transition: transform 120ms ease-out;
+  will-change: transform;
 }
 
 .contact-form__actions > button:hover,
 .contact-form__actions > button:focus-visible {
-  background: var(--contact-purple-soft);
   color: #ffffff;
-  transform: translateY(-1px);
 }
 
-.contact-form__actions > button:active {
+.contact-form__actions > button:hover::before,
+.contact-form__actions > button:focus-visible::before {
+  background: var(--contact-purple-soft);
+  transform: translateY(-2px);
+}
+
+.contact-form__actions > button:hover > span,
+.contact-form__actions > button:focus-visible > span {
+  transform: translateY(-2px);
+}
+
+.contact-form__actions > button:active::before,
+.contact-form__actions > button:active > span {
   transform: translateY(0);
+}
+
+.contact-form__actions > button:active::before {
+  filter: brightness(0.96);
 }
 
 .contact-form__actions > button:disabled,
 .contact-form__actions > button[aria-disabled="true"] {
   cursor: default;
   opacity: 0.82;
+}
+
+.contact-form__actions > button:disabled::before,
+.contact-form__actions > button[aria-disabled="true"]::before,
+.contact-form__actions > button:disabled > span,
+.contact-form__actions > button[aria-disabled="true"] > span {
   transform: none;
 }
 
