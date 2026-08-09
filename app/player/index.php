@@ -64,13 +64,21 @@ function mineacle_profile_view_model(array $player, ?array $team): array
     }
 
     $hasTeam = $teamName !== '' && strcasecmp($teamName, 'No Team') !== 0;
-    $rankName = trim(mineacle_stats_rank_name($player));
+    $rankView = mineacle_stats_rank_view($player);
+    $rankKey = strtolower(trim((string) ($rankView['key'] ?? 'default')));
+
+    $rankName = match ($rankKey) {
+        'plus' => 'Mineacle +',
+        'admin' => 'Admin',
+        default => '',
+    };
 
     return [
         'uuid' => $uuid,
         'username' => $username,
         'display_name' => mineacle_stats_display_name($player),
-        'rank_name' => $rankName !== '' ? $rankName : 'Member',
+        'rank_key' => $rankKey,
+        'rank_name' => $rankName,
         'skin_body' => $bustRender,
         'online' => (bool) $statusView['online'],
         'status_label' => (string) $statusView['label'],
@@ -246,7 +254,15 @@ mineacle_page_head($pageTitle, $metaOptions);
                 ?>
                 <div class="profile-hero__layout">
                     <div class="profile-identity">
-                        <div class="profile-identity__topline"><span class="profile-rank-badge"><?php echo h((string) $viewModel['rank_name']); ?></span><span class="profile-presence <?php echo $viewModel['online'] ? 'is-online' : 'is-offline'; ?>"><i aria-hidden="true"></i><?php echo h((string) $viewModel['status_label']); ?></span></div>
+                        <div class="profile-identity__topline">
+                            <?php if ((string) $viewModel['rank_name'] !== ''): ?>
+                                <span class="profile-rank-badge is-rank-ready is-rank-<?php echo h((string) $viewModel['rank_key']); ?>"><?php echo h((string) $viewModel['rank_name']); ?></span>
+                            <?php endif; ?>
+                            <span class="profile-presence <?php echo $viewModel['online'] ? 'is-online' : 'is-offline'; ?>"><i aria-hidden="true"></i><?php echo h((string) $viewModel['status_label']); ?></span>
+                            <?php if (!$viewModel['online']): ?>
+                                <span class="profile-last-seen"><?php echo h((string) $viewModel['location_label']); ?></span>
+                            <?php endif; ?>
+                        </div>
                         <h1 id="profile-player-name"><?php echo h((string) $viewModel['display_name']); ?></h1>
                         <div class="profile-identity__meta"><span><?php echo h((string) ($viewModel['team_role'] !== '' ? $viewModel['team_role'] . ' · ' : '') . (string) $viewModel['team_name']); ?></span><span>Member since <?php echo h((string) $viewModel['first_joined']); ?></span></div>
                         <div class="profile-actions">
@@ -288,8 +304,6 @@ mineacle_page_head($pageTitle, $metaOptions);
             <article class="is-playtime"><span>Playtime</span><strong><?php echo h((string) $viewModel['playtime']); ?></strong></article>
             <article class="is-fights"><span>Fights Won</span><strong><?php echo h($fightWins . '/' . max(0, $fightTotal)); ?></strong></article>
         </section>
-
-        <nav class="profile-tabs" aria-label="Profile sections"><a class="is-active" href="#overview">Overview</a><a href="#fights">Fights &amp; Duels</a></nav>
 
         <?php
         $balanceAmount = max(0.0, ((int) $viewModel['balance_cents']) / 100);

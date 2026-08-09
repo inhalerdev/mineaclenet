@@ -232,19 +232,20 @@ body.leaderboards-page .mineacle-ranked-name__rank {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 22px;
-  padding: 0 8px;
+  min-height: 34px;
+  padding: 0 14px;
   flex: none;
-  border: 1px solid color-mix(in srgb, var(--rank-color, #b078ff) 46%, transparent);
+  border: 1px solid transparent;
   border-radius: 2px;
-  background: color-mix(in srgb, var(--rank-color, #b078ff) 14%, #181818 86%);
-  color: var(--rank-color, #b078ff);
-  font-size: 10px;
+  background: var(--rank-color, #8436fe);
+  color: #ffffff;
+  font-size: 14px;
   font-weight: 600;
   line-height: 1;
   letter-spacing: 0;
   text-transform: none;
   white-space: nowrap;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
 }
 
 body.leaderboards-page .mineacle-ranked-name.has-rank:not(.is-rank-ready) .mineacle-ranked-name__rank {
@@ -349,3 +350,58 @@ body.leaderboards-page .leaderboard-search input[type="search"]::-webkit-search-
     flex: 1 1 100%;
   }
 }
+
+/* ==========================================================================
+   PLAYER / LEADERBOARD POLISH V31
+   ========================================================================== */
+
+/* Offline state: keep the useful relative last-seen text beside Offline. */
+body.player-page .profile-last-seen {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  color: rgba(248, 248, 248, 0.58);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* Player heads on Leaderboards are raw Minecraft heads: no card stroke/glow. */
+body.leaderboards-page .leaderboard-row__avatar.has-image {
+  overflow: hidden;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body.leaderboards-page .leaderboard-row__avatar.has-image img {
+  border: 0 !important;
+  border-radius: 0;
+  outline: 0;
+  box-shadow: none !important;
+}
+
+/*
+ * Match Leaderboards rank presentation to the profile badge:
+ * solid rank color, white label, same radius/height/padding.
+ */
+body.leaderboards-page .mineacle-ranked-name.is-rank-plus .mineacle-ranked-name__rank {
+  border-color: rgba(255, 136, 255, 0.42);
+  background: #ff55ff;
+  color: #ffffff;
+}
+
+body.leaderboards-page .mineacle-ranked-name.is-rank-admin .mineacle-ranked-name__rank {
+  border-color: rgba(255, 119, 119, 0.42);
+  background: #ff5555;
+  color: #ffffff;
+}
+
+@media (max-width: 700px) {
+  body.player-page .profile-last-seen {
+    width: 100%;
+    min-height: 0;
+  }
+}
+
