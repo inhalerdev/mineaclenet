@@ -17,6 +17,145 @@
     }
   };
 
+  const normalizeRankToken = (value) =>
+    String(value ?? "")
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, "")
+      .replace(/[^a-z0-9+]/g, "");
+
+  const canonicalRank = (keyValue, labelValue) => {
+    const tokens = [
+      normalizeRankToken(keyValue),
+      normalizeRankToken(labelValue),
+    ].filter(Boolean);
+
+    const has = (...values) =>
+      tokens.some((token) => values.includes(token));
+
+    if (has("+", "plus", "mineacle+", "mineacleplus")) {
+      return {
+        key: "plus",
+        label: "Mineacle +",
+        color: "#ff55ff",
+      };
+    }
+
+    if (has("admin", "administrator")) {
+      return {
+        key: "admin",
+        label: "Admin",
+        color: "#ff5555",
+      };
+    }
+
+    if (
+      tokens.length === 0 ||
+      has(
+        "default",
+        "member",
+        "unranked",
+        "none",
+        "normal",
+        "player",
+        "user",
+        "developer",
+        "dev",
+      )
+    ) {
+      return null;
+    }
+
+    return {
+      key: normalizeRankToken(keyValue) || "custom",
+      label: String(labelValue ?? "").trim(),
+      color: "",
+    };
+  };
+
+  const decorateRankedNames = (scope = document) => {
+    scope.querySelectorAll(".mineacle-ranked-name").forEach((wrapper) => {
+      if (!(wrapper instanceof HTMLElement)) {
+        return;
+      }
+
+      const rankElement = wrapper.querySelector(
+        ".mineacle-ranked-name__rank",
+      );
+      const rawKey = wrapper.dataset.rankKey ?? "";
+      const rawLabel =
+        wrapper.dataset.rankLabel ??
+        (rankElement instanceof HTMLElement ? rankElement.textContent : "") ??
+        "";
+      const rank = canonicalRank(rawKey, rawLabel);
+
+      wrapper.classList.remove(
+        "is-rank-ready",
+        "is-rank-plus",
+        "is-rank-admin",
+      );
+
+      if (!rank) {
+        rankElement?.remove();
+        wrapper.classList.remove(
+          "has-rank",
+          "is-compact-rank",
+          "is-plus-rank",
+        );
+        wrapper.removeAttribute("data-rank-key");
+        wrapper.removeAttribute("data-rank-label");
+        wrapper.style.removeProperty("--rank-color");
+        return;
+      }
+
+      if (!(rankElement instanceof HTMLElement)) {
+        return;
+      }
+
+      rankElement.textContent = rank.label;
+      wrapper.dataset.rankKey = rank.key;
+      wrapper.dataset.rankLabel = rank.label;
+
+      if (rank.color !== "") {
+        wrapper.style.setProperty("--rank-color", rank.color);
+      }
+
+      if (rank.key === "plus") {
+        wrapper.classList.add("is-rank-plus");
+      } else if (rank.key === "admin") {
+        wrapper.classList.add("is-rank-admin");
+      }
+
+      wrapper.classList.add("is-rank-ready");
+    });
+  };
+
+  const polishSearch = (scope, category) => {
+    const input = scope.querySelector("[data-leaderboard-search]");
+
+    if (!(input instanceof HTMLInputElement)) {
+      return;
+    }
+
+    input.placeholder =
+      category === "teams" ? "Search for a team" : "Search for a player";
+    input.setAttribute(
+      "aria-label",
+      category === "teams"
+        ? "Search team leaderboard"
+        : "Search player leaderboard",
+    );
+  };
+
+  const polishLeaderboard = (root) => {
+    if (!(root instanceof HTMLElement)) {
+      return;
+    }
+
+    decorateRankedNames(root);
+    polishSearch(root, root.dataset.category ?? "players");
+  };
+
   const normalizeRequestUrl = (value) => {
     const url = new URL(value, window.location.href);
 
@@ -96,6 +235,7 @@
     currentHeader.replaceWith(nextHeader);
     currentDynamic.replaceWith(nextDynamic);
     syncRootState(currentRoot, nextRoot);
+    polishLeaderboard(currentRoot);
 
     const nextScrollRegion = nextDynamic.querySelector("[data-leaderboard-scroll]");
 
@@ -344,4 +484,10 @@
       }
     });
   });
+
+  const initialRoot = leaderboardRoot();
+
+  if (initialRoot instanceof HTMLElement) {
+    polishLeaderboard(initialRoot);
+  }
 })();

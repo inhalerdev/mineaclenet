@@ -181,3 +181,171 @@ body.player-page .profile-global-rank.is-unranked > div {
   }
 }
 
+/* ==========================================================================
+   CANONICAL PUBLIC RANK PRESENTATION
+   DB/Core values may use legacy aliases. Page JS normalizes the display into:
+   Mineacle +, Admin, or no badge for default/retired ranks.
+   ========================================================================== */
+
+body.player-page .profile-rank-badge:not(.is-rank-ready) {
+  visibility: hidden;
+}
+
+body.player-page .profile-rank-badge.is-rank-ready {
+  min-height: 34px;
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: nowrap;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
+}
+
+body.player-page .profile-rank-badge.is-rank-plus {
+  border-color: rgba(255, 136, 255, 0.42);
+  background: #ff55ff;
+}
+
+body.player-page .profile-rank-badge.is-rank-admin {
+  border-color: rgba(255, 119, 119, 0.42);
+  background: #ff5555;
+}
+
+/*
+ * Leaderboard ranked-name output is rendered by stats-lib.php with rank data
+ * attributes. Keep the name readable and turn the raw prefix into a compact,
+ * consistent badge.
+ */
+body.leaderboards-page .mineacle-ranked-name {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  max-width: 100%;
+  gap: 8px;
+}
+
+body.leaderboards-page .mineacle-ranked-name__rank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 22px;
+  padding: 0 8px;
+  flex: none;
+  border: 1px solid color-mix(in srgb, var(--rank-color, #b078ff) 46%, transparent);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--rank-color, #b078ff) 14%, #181818 86%);
+  color: var(--rank-color, #b078ff);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+body.leaderboards-page .mineacle-ranked-name.has-rank:not(.is-rank-ready) .mineacle-ranked-name__rank {
+  visibility: hidden;
+}
+
+body.leaderboards-page .mineacle-ranked-name.is-rank-plus {
+  --rank-color: #ff55ff !important;
+}
+
+body.leaderboards-page .mineacle-ranked-name.is-rank-admin {
+  --rank-color: #ff5555 !important;
+}
+
+body.leaderboards-page .mineacle-ranked-name__name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   LEADERBOARDS SEARCH CONTROL
+   One authoritative layout overrides the conflicting grid/block rules in the
+   route stylesheet without changing the working AJAX search behavior.
+   ========================================================================== */
+
+body.leaderboards-page .leaderboard-toolbar {
+  min-width: 0;
+}
+
+body.leaderboards-page .leaderboard-metric {
+  flex: 0 0 auto;
+}
+
+body.leaderboards-page .leaderboard-search {
+  position: relative;
+  display: flex !important;
+  align-items: center;
+  width: clamp(240px, 18vw, 320px) !important;
+  height: 46px;
+  min-width: 220px;
+  min-height: 46px;
+  flex: 0 1 320px;
+  padding: 0 !important;
+  overflow: hidden;
+  border: 1px solid rgba(248, 248, 248, 0.14);
+  border-radius: 3px;
+  background: #181818;
+  gap: 0 !important;
+}
+
+body.leaderboards-page .leaderboard-search:focus-within {
+  border-color: #b078ff;
+  box-shadow: 0 0 0 2px rgba(176, 120, 255, 0.12);
+}
+
+body.leaderboards-page .leaderboard-search input[type="search"] {
+  display: block;
+  width: 100%;
+  height: 44px;
+  min-width: 0;
+  min-height: 44px;
+  margin: 0;
+  padding: 0 14px !important;
+  border: 0;
+  border-radius: 2px;
+  outline: 0;
+  background: transparent;
+  color: #f8f8f8;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: normal;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+body.leaderboards-page .leaderboard-search input[type="search"]::placeholder {
+  color: rgba(248, 248, 248, 0.32);
+  opacity: 1;
+}
+
+body.leaderboards-page .leaderboard-search input[type="search"]::-webkit-search-decoration,
+body.leaderboards-page .leaderboard-search input[type="search"]::-webkit-search-cancel-button,
+body.leaderboards-page .leaderboard-search input[type="search"]::-webkit-search-results-button,
+body.leaderboards-page .leaderboard-search input[type="search"]::-webkit-search-results-decoration {
+  display: none;
+  -webkit-appearance: none;
+}
+
+@media (max-width: 1180px) {
+  body.leaderboards-page .leaderboard-search {
+    width: min(100%, 360px) !important;
+    min-width: 0;
+    flex: 1 1 260px;
+  }
+}
+
+@media (max-width: 560px) {
+  body.leaderboards-page .leaderboard-search {
+    width: 100% !important;
+    flex: 1 1 100%;
+  }
+}

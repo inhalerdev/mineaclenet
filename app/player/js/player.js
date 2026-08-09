@@ -161,6 +161,68 @@
     render();
   });
 
+
+  /*
+   * Canonical public rank display.
+   *
+   * Core/DB rows can contain legacy or presentation-oriented values such as
+   * "+", "Mineacle+", "ADMIN", "Member", or an old Developer rank. The
+   * profile page exposes only the public labels that Mineacle currently uses:
+   *
+   *   Mineacle+ -> Mineacle +
+   *   Admin     -> Admin
+   *   Default   -> no badge
+   *   Dev       -> no badge (retired)
+   */
+  const normalizeRankToken = (value) =>
+    String(value ?? "")
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, "")
+      .replace(/[^a-z0-9+]/g, "");
+
+  const playerRankBadge = document.querySelector(".profile-rank-badge");
+
+  if (playerRankBadge instanceof HTMLElement) {
+    const token = normalizeRankToken(playerRankBadge.textContent);
+    const plusRanks = new Set(["+", "plus", "mineacle+", "mineacleplus"]);
+    const adminRanks = new Set(["admin", "administrator"]);
+    const hiddenRanks = new Set([
+      "",
+      "default",
+      "member",
+      "unranked",
+      "none",
+      "normal",
+      "player",
+      "user",
+      "developer",
+      "dev",
+    ]);
+
+    playerRankBadge.classList.remove(
+      "is-rank-plus",
+      "is-rank-admin",
+      "is-rank-ready",
+    );
+
+    if (plusRanks.has(token)) {
+      playerRankBadge.textContent = "Mineacle +";
+      playerRankBadge.classList.add("is-rank-plus", "is-rank-ready");
+    } else if (adminRanks.has(token)) {
+      playerRankBadge.textContent = "Admin";
+      playerRankBadge.classList.add("is-rank-admin", "is-rank-ready");
+    } else if (hiddenRanks.has(token)) {
+      playerRankBadge.remove();
+    } else {
+      /*
+       * Unknown future/custom ranks are left readable instead of being
+       * silently discarded. They do not inherit Mineacle+/Admin colors.
+       */
+      playerRankBadge.classList.add("is-rank-ready");
+    }
+  }
+
   /*
    * The server rank label can legitimately be "Unranked". That word is much
    * wider than a numeric rank, so mark the state and remove the meaningless
