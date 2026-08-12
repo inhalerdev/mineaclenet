@@ -303,7 +303,7 @@ mineacle_page_head($pageTitle, $metaOptions);
             <article class="is-deaths"><span>Deaths</span><strong><?php echo h(number_format((int) $viewModel['deaths'])); ?></strong></article>
             <article class="is-kd"><span>K/D Ratio</span><strong><?php echo h((string) $viewModel['kd']); ?></strong></article>
             <article class="is-playtime"><span>Playtime</span><strong><?php echo h((string) $viewModel['playtime']); ?></strong></article>
-            <article class="is-fights"><span>Fights Won</span><strong><?php echo h($fightWins . '/' . max(0, $fightTotal)); ?></strong></article>
+            <article class="is-fights"><span>Fights Won</span><strong><span class="profile-fight-wins"><?php echo h(number_format($fightWins)); ?></span><span class="profile-fight-separator">/</span><span class="profile-fight-total"><?php echo h(number_format(max(0, $fightTotal))); ?></span></strong></article>
         </section>
 
         <?php

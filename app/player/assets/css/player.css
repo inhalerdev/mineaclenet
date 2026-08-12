@@ -448,12 +448,36 @@ body.player-page a {
   white-space: nowrap;
 }
 
-.profile-stats-strip .is-balance { color: var(--profile-green); }
-.profile-stats-strip .is-kills { color: var(--profile-mint); }
-.profile-stats-strip .is-deaths { color: var(--profile-red); }
-.profile-stats-strip .is-kd { color: var(--profile-purple-soft); }
-.profile-stats-strip .is-playtime { color: var(--profile-text); }
-.profile-stats-strip .is-fights { color: var(--profile-yellow); }
+.profile-stats-strip .is-balance { color: #11fc7b; }
+.profile-stats-strip .is-kills { color: #fc1111; }
+.profile-stats-strip .is-deaths { color: #fc8611; }
+.profile-stats-strip .is-kd { color: #b078ff; }
+.profile-stats-strip .is-playtime { color: #fcd511; }
+.profile-stats-strip .is-fights { color: #11fc7b; }
+
+.profile-stats-strip .is-fights::before {
+  background: linear-gradient(
+    180deg,
+    #11fc7b 0 50%,
+    #fc1111 50% 100%
+  );
+}
+
+.profile-stats-strip .is-fights > strong {
+  color: inherit;
+}
+
+.profile-stats-strip .is-fights .profile-fight-wins {
+  color: #11fc7b;
+}
+
+.profile-stats-strip .is-fights .profile-fight-separator {
+  color: var(--profile-muted);
+}
+
+.profile-stats-strip .is-fights .profile-fight-total {
+  color: #fc1111;
+}
 
 .profile-tabs {
   display: flex;
@@ -538,8 +562,6 @@ body.player-page a {
   margin-top: 22px;
   overflow: visible;
 }
-
-
 
 .profile-balance-card__value {
   display: flex;
