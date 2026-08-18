@@ -12,6 +12,7 @@
   );
   const primaryPlayLabel = primaryPlayButton?.querySelector("[data-play-label]");
   const resetTimers = new WeakMap();
+
   let onlineCount = 0;
   let serverOnline = false;
   let statusResolved = false;
@@ -42,31 +43,38 @@
 
     if (playback instanceof Promise) {
       playback.catch(() => {
-        // Some browsers defer autoplay until the page is visible or receives input.
+        // Autoplay may wait for page visibility or the first user interaction.
       });
     }
   };
 
   if (heroVideo instanceof HTMLVideoElement) {
-    heroVideo.addEventListener("loadeddata", () => {
-      useHeroVideo();
-      requestHeroPlayback();
-    }, { once: true });
+    heroVideo.addEventListener(
+      "loadeddata",
+      () => {
+        useHeroVideo();
+        requestHeroPlayback();
+      },
+      { once: true },
+    );
+
     heroVideo.addEventListener("canplay", requestHeroPlayback);
     heroVideo.addEventListener("playing", useHeroVideo);
     heroVideo.addEventListener("error", useHeroFallback, { once: true });
-
     heroSource?.addEventListener("error", useHeroFallback, { once: true });
 
     if (heroVideo.error) {
       useHeroFallback();
     } else {
-      heroVideo.load();
       requestHeroPlayback();
     }
 
     window.addEventListener("pageshow", requestHeroPlayback);
-    document.addEventListener("pointerdown", requestHeroPlayback, { once: true, passive: true });
+    document.addEventListener("pointerdown", requestHeroPlayback, {
+      once: true,
+      passive: true,
+    });
+
     document.addEventListener("visibilitychange", () => {
       if (!document.hidden && heroVideo.paused) {
         requestHeroPlayback();
@@ -96,12 +104,11 @@
     return String(count);
   };
 
-  const primaryPlayIsActive = () => {
-    return Boolean(
+  const primaryPlayIsActive = () =>
+    Boolean(
       primaryPlayButton?.matches(":hover") ||
         document.activeElement === primaryPlayButton,
     );
-  };
 
   const syncPrimaryPlayLabel = () => {
     if (!(primaryPlayButton instanceof HTMLButtonElement) || !primaryPlayLabel) {
@@ -143,7 +150,7 @@
         await navigator.clipboard.writeText(value);
         return true;
       } catch {
-        // Use the local fallback when clipboard permission is unavailable.
+        // Fall through to the local copy method.
       }
     }
 
@@ -156,6 +163,7 @@
     textArea.style.position = "fixed";
     textArea.style.left = "-9999px";
     textArea.style.opacity = "0";
+
     document.body.append(textArea);
     textArea.select();
 
@@ -199,16 +207,23 @@
     button.classList.toggle("is-copied", copied);
     button.classList.toggle("is-copy-error", !copied);
 
-    const timer = window.setTimeout(() => {
-      button.classList.remove("has-copy-feedback", "is-copied", "is-copy-error");
-      resetTimers.delete(button);
+    const timer = window.setTimeout(
+      () => {
+        button.classList.remove(
+          "has-copy-feedback",
+          "is-copied",
+          "is-copy-error",
+        );
+        resetTimers.delete(button);
 
-      if (button === primaryPlayButton) {
-        syncPrimaryPlayLabel();
-      } else {
-        label.textContent = button.dataset.defaultLabel || "Play";
-      }
-    }, copied ? 1800 : 2400);
+        if (button === primaryPlayButton) {
+          syncPrimaryPlayLabel();
+        } else {
+          label.textContent = button.dataset.defaultLabel || "Play";
+        }
+      },
+      copied ? 1800 : 2400,
+    );
 
     resetTimers.set(button, timer);
   };
@@ -222,16 +237,15 @@
         return;
       }
 
-      const copied = await copyText(serverAddress);
-      setCopyFeedback(button, copied);
+      setCopyFeedback(button, await copyText(serverAddress));
     });
   });
 
-
   const statusServerIp =
     primaryPlayButton?.dataset.serverAddress?.trim() || "mineacle.net";
+
   const statusCacheKey = `mineacle:home-status:${statusServerIp}`;
-  const statusCacheMaxAge = 15000;
+  const statusCacheMaxAge = 60_000;
 
   const statusNumber = (value) => {
     const number = Number(value);
@@ -255,7 +269,6 @@
         payload.players_online ?? payload.online_players ?? players.online,
       ),
       checked: payload.checked !== false,
-      source: typeof payload.source === "string" ? payload.source : "",
     };
   };
 
@@ -267,12 +280,14 @@
     statusResolved = true;
     serverOnline = Boolean(status.online);
     onlineCount = serverOnline ? status.onlineCount : 0;
+
     primaryPlayButton?.setAttribute(
       "aria-label",
       status.online
         ? `Copy the Mineacle server address. ${onlineCount} online.`
         : "Copy the Mineacle server address. Server offline.",
     );
+
     syncPrimaryPlayLabel();
   };
 
@@ -306,7 +321,7 @@
         }),
       );
     } catch {
-      // Storage may be unavailable in private or restricted browsing.
+      // localStorage can be unavailable in restricted/private browsing.
     }
   };
 
@@ -329,32 +344,6 @@
     }
   };
 
-  const loadExternalStatus = async () => {
-    const encodedIp = encodeURIComponent(statusServerIp);
-    const providers = [
-      `https://api.mcsrvstat.us/3/${encodedIp}`,
-      `https://api.mcstatus.io/v2/status/java/${encodedIp}`,
-    ];
-    let confirmedOffline = null;
-
-    for (const provider of providers) {
-      const payload = await fetchStatus(`${provider}?t=${Date.now()}`, 2600);
-      const status = normalizeStatus(payload);
-
-      if (!status) {
-        continue;
-      }
-
-      if (status.online) {
-        return status;
-      }
-
-      confirmedOffline ??= status;
-    }
-
-    return confirmedOffline;
-  };
-
   const loadServerStatus = async () => {
     if (!primaryPlayButton || statusRequestActive) {
       return;
@@ -363,27 +352,12 @@
     statusRequestActive = true;
 
     try {
-      const localPayload = await fetchStatus(
+      const payload = await fetchStatus(
         `/api/server-status.php?mode=home&t=${Date.now()}`,
       );
-      const localStatus = normalizeStatus(localPayload);
-      let status = localStatus?.checked ? localStatus : null;
+      const status = normalizeStatus(payload);
 
-      if (!status) {
-        const externalStatus = await loadExternalStatus();
-
-        if (externalStatus) {
-          status = {
-            ...externalStatus,
-            onlineCount:
-              localStatus?.source === "web_profiles"
-                ? localStatus.onlineCount
-                : externalStatus.onlineCount,
-          };
-        }
-      }
-
-      if (status) {
+      if (status?.checked) {
         applyServerStatus(status);
         writeStatusCache(status);
       }
@@ -400,17 +374,12 @@
 
   syncPrimaryPlayLabel();
   loadServerStatus();
+
   window.setInterval(() => {
     if (!document.hidden) {
       loadServerStatus();
     }
-  }, 15000);
-  window.addEventListener("focus", loadServerStatus);
-  document.addEventListener("visibilitychange", () => {
-    if (!document.hidden) {
-      loadServerStatus();
-    }
-  });
+  }, 60_000);
 
   const openJoinDialog = () => {
     if (!(dialog instanceof HTMLElement)) {
@@ -446,5 +415,4 @@
       closeJoinDialog();
     }
   });
-
 })();

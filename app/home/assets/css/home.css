@@ -24,44 +24,29 @@
 
 :root {
   --home-background: #111111;
-  --home-white: #f8f8f8;
-  --home-white-hover: #ffffff;
-  --home-nav-current: #b078ff;
-  --home-nav-static: #bbbbbb;
-  --home-hover: #f8f8f8;
-  --home-link-hover: #f8f8f8;
-  --home-accent: #8436fe;
-  --home-play: #389222;
-  --join-close-hover: #ff5555;
+  --home-rail: #202020;
+  --home-rail-hover: #252525;
+  --home-border: rgba(248, 248, 248, 0.08);
+  --home-border-strong: rgba(248, 248, 248, 0.14);
+  --home-text: #f8f8f8;
+  --home-muted: #bbbbbb;
+  --home-muted-soft: #787878;
+  --home-primary: #8436fe;
+  --home-secondary: #b078ff;
+  --home-tertiary: #d0afff;
+  --home-play: #62c249;
+  --home-play-hover: #74d15c;
+  --home-danger: #fc1111;
 
-  /* Canonical 64px website frame. */
-  --home-frame: var(--mineacle-shell-frame, 64px);
-  --home-frame-top: var(--mineacle-shell-frame-top, max(64px, env(safe-area-inset-top, 0px)));
-  --home-frame-right: var(--mineacle-shell-frame-right, max(64px, env(safe-area-inset-right, 0px)));
-  --home-frame-bottom: var(--mineacle-shell-frame-bottom, max(64px, env(safe-area-inset-bottom, 0px)));
-  --home-frame-left: var(--mineacle-shell-frame-left, max(64px, env(safe-area-inset-left, 0px)));
-
-  --home-hero-padding: var(--mineacle-shell-inner, clamp(16px, min(1.666667vw, 2.962963vh), 64px));
-  --home-gap: clamp(16px, min(1.666667vw, 2.962963vh), 64px);
-  --home-small-gap: clamp(12px, min(0.833333vw, 1.481481vh), 32px);
-  --home-viewport-height: 100vh;
+  /*
+   * Desktop geometry mirrors the supplied 2048px reference:
+   * ~34px outer frame, ~275px rail, ~34px gap.
+   */
+  --home-frame: clamp(24px, 1.66vw, 34px);
+  --home-gap: var(--home-frame);
+  --home-rail-width: clamp(236px, 13.45vw, 276px);
   --home-radius: 3px;
-  --home-control-size: clamp(48px, min(3.333333vw, 5.925926vh), 128px);
-  --home-play-width: clamp(208px, min(13.333333vw, 23.703704vh), 512px);
-  --home-nav-size: clamp(18px, min(1.041667vw, 1.851852vh), 40px);
-  --home-heading-size: clamp(24px, min(1.666667vw, 2.962963vh), 64px);
-  --home-copy-size: clamp(15px, min(1.041667vw, 1.851852vh), 40px);
-  --home-button-size: clamp(24px, min(1.666667vw, 2.962963vh), 64px);
-  --home-story-width: clamp(600px, min(41.666667vw, 74.074074vh), 1600px);
-
-  /* Compact Home scale moved here from shared navigation.css. */
-  --home-compact-title-size: clamp(18px, min(1.25vw, 2.222222vh), 48px);
-  --home-compact-copy-size: clamp(12px, min(0.78125vw, 1.388889vh), 30px);
-  --home-compact-control-size: clamp(36px, min(2.5vw, 4.444444vh), 96px);
-  --home-compact-play-width: clamp(156px, min(10vw, 17.777778vh), 384px);
-  --home-compact-button-size: clamp(16px, min(1.041667vw, 1.851852vh), 40px);
-  --home-compact-small-gap: clamp(9px, min(0.625vw, 1.111111vh), 24px);
-  --home-story-section-gap: clamp(14px, min(0.9375vw, 1.666667vh), 36px);
+  --home-viewport-height: 100vh;
 }
 
 @supports (height: 100svh) {
@@ -92,9 +77,9 @@ body.mineacle-home {
   min-width: 320px;
   min-height: 100%;
   margin: 0;
-  overflow-x: hidden;
+  overflow: hidden;
   background: var(--home-background);
-  color: var(--home-white);
+  color: var(--home-text);
   color-scheme: dark;
   font-family: "Rubik", Arial, sans-serif;
   font-size: 16px;
@@ -132,202 +117,276 @@ body.mineacle-home img {
   border: 0 !important;
 }
 
+/* ==========================================================================
+   PAGE SHELL
+   ========================================================================== */
+
 .home-page {
   width: 100%;
-  min-height: var(--home-viewport-height);
-  padding: var(--home-frame-top) var(--home-frame-right) var(--home-frame-bottom) var(--home-frame-left);
+  height: var(--home-viewport-height);
+  padding: var(--home-frame);
   background: var(--home-background);
 }
 
-.home-hero {
-  position: relative;
-  isolation: isolate;
-  width: 100%;
-  height: calc(var(--home-viewport-height) - var(--home-frame-top) - var(--home-frame-bottom));
-  min-height: 600px;
-  overflow: hidden;
-  border: 1px solid rgba(248, 248, 248, 0.14);
-  border-radius: var(--home-radius);
-  background: var(--home-background) url("../images/hero.webp") center / cover no-repeat;
-}
-
-.home-hero::after {
-  position: absolute;
-  z-index: 0;
-  inset: 0;
-  background: rgba(17, 17, 17, 0.3);
-  content: "";
-  pointer-events: none;
-}
-
-.home-hero__image {
-  position: absolute;
-  z-index: -1;
-  inset: 0;
+.home-shell {
+  display: grid;
+  grid-template-columns: var(--home-rail-width) minmax(0, 1fr);
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center;
-  pointer-events: none;
+  min-height: 0;
+  gap: var(--home-gap);
 }
 
-.home-hero.is-video-fallback .home-hero__image {
-  display: none;
+.home-rail,
+.home-hero {
+  min-width: 0;
+  min-height: 0;
+  border-radius: var(--home-radius);
 }
 
-.home-hero__surface {
+.home-rail {
   position: relative;
-  z-index: 1;
+  z-index: 5;
+  overflow: visible;
+  border: 1px solid rgba(248, 248, 248, 0.025);
+  background: var(--home-rail);
+}
+
+.home-rail__surface {
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
-  padding: var(--home-hero-padding);
+  min-height: 0;
+  padding: clamp(22px, 1.55vw, 32px);
 }
 
-.home-story {
+.home-rail__spacer {
+  flex: 1 1 auto;
+  min-height: 28px;
+}
+
+/* ==========================================================================
+   SHARED NAVIGATION -> DESKTOP RAIL
+   Uses the existing shared PHP navigation rather than duplicating routes,
+   auth state, or logo behavior.
+   ========================================================================== */
+
+.home-rail__navigation.site-header {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
   width: 100%;
-  margin-top: auto;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  gap: clamp(26px, 2.2vw, 44px);
 }
 
-.home-story__copy {
+.home-rail__navigation .site-brand {
+  width: clamp(72px, 5vw, 96px);
+  height: clamp(62px, 4.25vw, 82px);
+  flex: 0 0 auto;
+  align-self: flex-start;
+}
+
+.home-rail__navigation .site-navigation {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 0;
+  gap: 12px;
+}
+
+.home-rail__navigation .site-navigation__links {
   display: grid;
-  width: min(var(--home-story-width), 100%);
-  gap: var(--home-story-section-gap);
-}
-
-.home-story__copy h2 {
-  margin: 0;
-  color: var(--home-white);
-  font-size: var(--home-compact-title-size);
-  font-weight: 600;
-  line-height: 1.2;
-  text-transform: uppercase;
-}
-
-.home-story__copy p {
-  margin: 0;
-  color: var(--home-white);
-  font-size: var(--home-compact-copy-size);
-  font-weight: 400;
-  line-height: 1.2;
-  text-align: justify;
-  text-align-last: left;
-}
-
-.home-actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: stretch;
+  justify-content: stretch;
   width: 100%;
-  margin-top: var(--home-story-section-gap);
-  gap: var(--home-gap);
+  min-height: 0;
+  gap: 4px;
 }
 
-.home-actions__primary,
-.home-socials {
+.home-rail__navigation .site-navigation__link {
+  justify-content: flex-start;
+  width: 100%;
+  height: 42px;
+  min-height: 42px;
+  padding: 0 12px;
+  border-radius: 2px;
+  color: #bbbbbb;
+  font-size: 14px;
+  font-weight: 500;
+  transition:
+    background-color 120ms ease-out,
+    color 120ms ease-out;
+}
+
+.home-rail__navigation .site-navigation__link::before {
+  inset: 0;
+  border-radius: inherit;
+}
+
+.home-rail__navigation .site-navigation__link.is-current {
+  background: rgba(132, 54, 254, 0.14);
+  color: var(--home-secondary);
+}
+
+.home-rail__navigation .site-navigation__link:not(.is-current):hover,
+.home-rail__navigation .site-navigation__link:not(.is-current):focus-visible {
+  background: rgba(248, 248, 248, 0.045);
+  color: var(--home-text);
+}
+
+.home-rail__navigation .site-navigation__label {
+  transform: none;
+}
+
+.home-rail__navigation .site-navigation__link:hover .site-navigation__label,
+.home-rail__navigation .site-navigation__link:focus-visible .site-navigation__label {
+  transform: translateX(3px);
+}
+
+.home-rail__navigation .site-navigation > .site-navigation__login,
+.home-rail__navigation .site-navigation > .site-navigation__account-form {
   display: flex;
-  align-items: center;
-  gap: var(--home-compact-small-gap);
+  width: 100%;
+}
+
+.home-rail__navigation .site-navigation__login,
+.home-rail__navigation .site-navigation__account-form .site-navigation__login {
+  width: 100%;
+  min-width: 0;
+  height: 42px;
+  min-height: 42px;
+}
+
+.home-rail__navigation .site-navigation__login::before {
+  background: var(--home-primary);
+}
+
+.home-rail__navigation .site-navigation__login:hover::before,
+.home-rail__navigation .site-navigation__login:focus-visible::before {
+  background: var(--home-secondary);
+}
+
+.home-rail__navigation .site-menu {
+  display: none;
+}
+
+/* ==========================================================================
+   RAIL CONTROLS
+   ========================================================================== */
+
+.home-rail__actions {
+  display: grid;
+  width: 100%;
+  gap: 10px;
+}
+
+.home-rail__play-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 46px;
+  gap: 10px;
 }
 
 .home-action,
 .home-social {
+  position: relative;
   display: grid;
   place-items: center;
-  height: var(--home-compact-control-size);
+  height: 46px;
+  min-width: 0;
   padding: 0;
   border: 0;
   border-radius: 2px;
-  background-color: transparent;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
   text-decoration: none;
   cursor: pointer;
   appearance: none;
-  transition: filter 120ms ease-out, transform 120ms ease-out;
-  will-change: filter, transform;
+  transition:
+    background-color 120ms ease-out,
+    filter 120ms ease-out,
+    transform 120ms ease-out;
+  will-change: transform;
 }
 
 .home-action:hover,
 .home-action:focus-visible,
 .home-social:hover,
 .home-social:focus-visible {
-  filter: brightness(1.07);
   transform: translateY(-2px);
 }
 
 .home-action:active,
 .home-social:active {
-  filter: brightness(0.96);
   transform: translateY(0);
 }
 
 .home-action--play {
-  width: max-content;
-  min-width: var(--home-compact-play-width);
-  padding-inline: clamp(12px, min(1.25vw, 2.222222vh), 48px);
+  width: 100%;
+  padding: 0 16px;
   background: var(--home-play);
   color: #f8f8f8;
-  font-size: var(--home-compact-button-size);
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.025em;
   line-height: 1;
-  letter-spacing: 0.015em;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
-.home-action--play [data-play-label] {
-  display: block;
-  color: inherit;
-  font-weight: 500;
-  opacity: 1;
-}
-
 .home-action--play:hover,
 .home-action--play:focus-visible {
-  background: var(--home-play);
-  color: #ffffff;
+  background: var(--home-play-hover);
 }
 
-.home-action--play.has-copy-feedback,
-.home-action--play.is-status-preview {
+.home-action--play.is-status-preview,
+.home-action--play.has-copy-feedback {
   background: var(--home-play);
-  color: #ffffff;
 }
 
 .home-action--play.is-copy-error {
   background: #b63d3d;
-  color: #ffffff;
 }
 
 .home-action--help {
-  width: var(--home-compact-control-size);
-  overflow: hidden;
-  background: var(--home-play);
-  color: #f8f8f8;
-  font-size: var(--home-compact-button-size);
-  font-weight: 500;
-  line-height: 1;
+  width: 46px;
+  background: #2b2b2b;
+  color: var(--home-text);
+  font-size: 18px;
+  font-weight: 600;
 }
 
 .home-action--help:hover,
 .home-action--help:focus-visible {
-  background: var(--home-play);
-  color: #ffffff;
+  background: #343434;
+}
+
+.home-socials {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
 }
 
 .home-social {
-  position: relative;
-  width: var(--home-compact-control-size);
   overflow: hidden;
+  border: 1px solid rgba(248, 248, 248, 0.045);
+  background: #252525;
+}
+
+.home-social:hover,
+.home-social:focus-visible {
+  background: #2c2c2c;
 }
 
 .home-social__icon {
-  position: absolute;
-  inset: 0;
   display: block;
+  width: 100%;
+  height: 100%;
   background-position: center;
   background-repeat: no-repeat;
   background-size: 100% 100%;
@@ -345,21 +404,157 @@ body.mineacle-home img {
   background-image: url("../images/social-youtube.png");
 }
 
+/* ==========================================================================
+   HERO
+   ========================================================================== */
+
+.home-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(248, 248, 248, 0.025);
+  background:
+    #151515
+    url("../images/hero.webp")
+    center / cover
+    no-repeat;
+  outline: 0;
+}
+
+.home-hero::before,
+.home-hero::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+}
+
+.home-hero::before {
+  z-index: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(17, 17, 17, 0.12) 0%,
+      rgba(17, 17, 17, 0.12) 58%,
+      rgba(17, 17, 17, 0.54) 100%
+    ),
+    rgba(17, 17, 17, 0.3);
+}
+
+.home-hero::after {
+  z-index: 1;
+  box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.18);
+}
+
+.home-hero__image {
+  position: absolute;
+  z-index: -1;
+  inset: -1%;
+  display: block;
+  width: 102%;
+  height: 102%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+  transform: scale(1.01);
+  transition:
+    filter 420ms ease,
+    transform 900ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  will-change: transform;
+}
+
+.home-hero:hover .home-hero__image,
+.home-hero:focus-visible .home-hero__image,
+.home-hero:focus-within .home-hero__image {
+  transform: scale(1.025);
+}
+
+.home-hero.is-video-fallback .home-hero__image {
+  display: none;
+}
+
+.home-hero__surface {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  height: 100%;
+  padding: clamp(28px, 2.3vw, 48px);
+}
+
+/*
+ * Keep the default hero clean like the supplied mockup. The existing
+ * Merchant feature appears as a deliberate reveal when the hero is engaged.
+ */
+.home-story {
+  width: min(690px, 72%);
+  padding: 24px 26px;
+  border: 1px solid rgba(248, 248, 248, 0.08);
+  border-radius: 3px;
+  background: rgba(17, 17, 17, 0.72);
+  opacity: 0;
+  transform: translateY(14px);
+  backdrop-filter: blur(10px);
+  transition:
+    opacity 180ms ease-out,
+    transform 180ms ease-out;
+  pointer-events: none;
+}
+
+.home-hero:hover .home-story,
+.home-hero:focus-visible .home-story,
+.home-hero:focus-within .home-story {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.home-story__eyebrow {
+  margin: 0 0 8px;
+  color: var(--home-tertiary);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.home-story h2 {
+  margin: 0;
+  color: var(--home-text);
+  font-size: clamp(24px, 1.65vw, 34px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.home-story p:last-child {
+  margin: 14px 0 0;
+  color: #bbbbbb;
+  font-size: clamp(12px, 0.72vw, 15px);
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   JOIN DIALOG
+   ========================================================================== */
+
 .join-dialog {
   width: min(512px, calc(100vw - 32px));
   max-width: none;
   padding: 0;
-  border: 0;
+  border: 1px solid var(--home-border-strong);
   border-radius: var(--home-radius);
-  background: var(--home-background);
-  color: var(--home-white);
+  background: #181818;
+  color: var(--home-text);
   font-family: "Rubik", Arial, sans-serif;
   box-shadow: 0 32px 64px rgba(0, 0, 0, 0.52);
 }
 
 .join-dialog::backdrop {
   background: rgba(0, 0, 0, 0.72);
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(5px);
 }
 
 .join-dialog__content {
@@ -378,9 +573,11 @@ body.mineacle-home img {
   padding: 0;
   border: 0;
   background: transparent;
-  color: #f8f8f8;
+  color: var(--home-text);
   cursor: pointer;
-  transition: color 120ms ease-out, transform 120ms ease-out;
+  transition:
+    color 120ms ease-out,
+    transform 120ms ease-out;
 }
 
 .join-dialog__close-icon {
@@ -395,7 +592,7 @@ body.mineacle-home img {
 
 .join-dialog__close:hover,
 .join-dialog__close:focus-visible {
-  color: var(--join-close-hover);
+  color: #fc1111;
   transform: translateY(-2px);
 }
 
@@ -405,15 +602,16 @@ body.mineacle-home img {
 
 .join-dialog__eyebrow {
   margin: 0 0 8px;
-  color: var(--home-accent);
-  font-size: 14px;
+  color: var(--home-secondary);
+  font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
 }
 
 .join-dialog h2 {
   margin: 0 48px 24px 0;
+  color: var(--home-text);
   font-size: 32px;
   font-weight: 600;
   line-height: 1.15;
@@ -423,170 +621,211 @@ body.mineacle-home img {
   display: grid;
   margin: 0;
   padding-left: 24px;
-  gap: var(--home-small-gap);
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.45;
+  color: #bbbbbb;
+  gap: 14px;
+  font-size: 15px;
+  line-height: 1.5;
 }
 
-.join-dialog strong,
-.join-dialog li span {
-  font-weight: 500;
+.join-dialog strong {
+  color: var(--home-text);
+  font-weight: 600;
 }
 
 .join-dialog li span {
-  color: var(--home-accent);
+  color: var(--home-secondary);
+  font-weight: 600;
 }
 
 .join-dialog__copy {
   display: grid;
   place-items: center;
   width: 100%;
-  height: 64px;
-  margin-top: 32px;
+  height: 52px;
+  margin-top: 28px;
+  padding: 0 18px;
   border: 0;
   border-radius: 2px;
   background: var(--home-play);
-  color: var(--home-white);
-  font-size: clamp(15px, min(0.833333vw, 1.481481vh), 16px);
+  color: #f8f8f8;
+  font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
   cursor: pointer;
-  transition: filter 120ms ease-out, transform 120ms ease-out;
+  transition:
+    background-color 120ms ease-out,
+    transform 120ms ease-out;
 }
 
 .join-dialog__copy:hover,
 .join-dialog__copy:focus-visible {
-  color: var(--home-white-hover);
-  filter: brightness(1.07);
+  background: var(--home-play-hover);
   transform: translateY(-2px);
 }
 
 .join-dialog__copy:active {
-  filter: brightness(0.96);
   transform: translateY(0);
 }
 
-@media (max-width: 1240px) {
-  .home-story__copy p {
-    line-height: 1.3;
-  }
+.home-action:focus-visible,
+.home-social:focus-visible,
+.home-hero:focus-visible,
+.join-dialog__copy:focus-visible,
+.join-dialog__close:focus-visible {
+  outline: 2px solid var(--home-secondary);
+  outline-offset: 3px;
 }
 
-@media (max-width: 960px) {
-  .home-story__copy {
-    width: min(600px, 100%);
-  }
-}
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
 
-@media (max-width: 640px) {
+@media (max-width: 1050px) {
   :root {
-    --home-control-size: 48px;
-    --home-compact-title-size: 16px;
-    --home-compact-copy-size: 11px;
-    --home-compact-control-size: 36px;
-    --home-compact-button-size: 18px;
-    --home-compact-small-gap: 9px;
-    --home-story-section-gap: 14px;
-  }
-
-  .home-hero {
-    height: auto;
-    min-height: calc(var(--home-viewport-height) - var(--home-frame-top) - var(--home-frame-bottom));
-  }
-
-  .home-hero__image {
-    object-position: center;
-  }
-
-  .home-hero__surface {
-    min-height: calc(var(--home-viewport-height) - var(--home-frame-top) - var(--home-frame-bottom));
+    --home-rail-width: clamp(220px, 23vw, 250px);
   }
 
   .home-story {
-    padding-top: 96px;
+    width: min(620px, 82%);
+  }
+}
+
+@media (max-width: 760px) {
+  body.mineacle-home {
+    overflow-y: auto;
   }
 
-  .home-story__copy h2 {
-    font-size: 16px;
+  .home-page {
+    height: auto;
+    min-height: var(--home-viewport-height);
+    padding: 16px;
   }
 
-  .home-story__copy p {
-    font-size: 11px;
-    line-height: 1.4;
+  .home-shell {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: calc(var(--home-viewport-height) - 32px);
+    gap: 16px;
   }
 
-  .home-actions {
-    flex-direction: column;
-    align-items: stretch;
-    margin-top: 14px;
-    gap: 12px;
+  .home-rail {
+    min-height: 82px;
   }
 
-  .home-actions__primary {
-    width: 100%;
+  .home-rail__surface {
+    display: block;
+    padding: 16px;
   }
 
-  .home-action--play {
+  .home-rail__navigation.site-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .home-rail__navigation .site-brand {
+    width: 56px;
+    height: 48px;
+    flex: 0 0 56px;
+  }
+
+  .home-rail__navigation .site-navigation {
     width: auto;
-    min-width: 0;
-    flex: 1;
-    font-size: 18px;
+    flex: 1 1 auto;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  .home-rail__navigation .site-navigation__links,
+  .home-rail__navigation .site-navigation > .site-navigation__login,
+  .home-rail__navigation .site-navigation > .site-navigation__account-form {
+    display: none;
+  }
+
+  .home-rail__navigation .site-menu {
+    display: block;
+  }
+
+  .home-rail__navigation .site-menu__panel {
+    z-index: 120;
+  }
+
+  .home-rail__spacer {
+    display: none;
+  }
+
+  .home-rail__actions {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    margin-top: 14px;
+  }
+
+  .home-rail__play-row {
+    grid-template-columns: minmax(0, 1fr) 44px;
+  }
+
+  .home-action,
+  .home-social {
+    height: 44px;
+  }
+
+  .home-action--help {
+    width: 44px;
   }
 
   .home-socials {
-    justify-content: flex-end;
+    grid-template-columns: repeat(3, 44px);
   }
-}
 
-@media (max-width: 420px) {
-  .home-action,
   .home-social {
-    height: 36px;
+    width: 44px;
   }
 
-  .home-action--help,
-  .home-social {
-    width: 36px;
-  }
-}
-
-@media (max-height: 760px) and (min-width: 641px) {
   .home-hero {
+    height: min(760px, calc(var(--home-viewport-height) - 150px));
     min-height: 520px;
   }
 
-  .home-story__copy {
-    width: min(600px, 100%);
-  }
-
-  .home-story__copy h2 {
-    font-size: 24px;
-  }
-
-  .home-story__copy p {
-    font-size: 15px;
-    line-height: 1.3;
-  }
-
-  .home-actions {
-    margin-top: 12px;
+  .home-story {
+    width: min(100%, 620px);
+    opacity: 1;
+    transform: none;
   }
 }
 
-@media (max-width: 960px) and (orientation: landscape) {
-  .home-hero {
-    height: auto;
-    min-height: calc(var(--home-viewport-height) - var(--home-frame-top) - var(--home-frame-bottom));
+@media (max-width: 520px) {
+  .home-rail__actions {
+    grid-template-columns: 1fr;
   }
 
-  .home-hero__image {
-    object-fit: cover;
-    object-position: center;
+  .home-socials {
+    justify-content: end;
+  }
+
+  .home-hero {
+    min-height: 560px;
   }
 
   .home-hero__surface {
-    min-height: calc(var(--home-viewport-height) - var(--home-frame-top) - var(--home-frame-bottom));
+    padding: 18px;
+  }
+
+  .home-story {
+    padding: 18px;
+    background: rgba(17, 17, 17, 0.78);
+  }
+
+  .home-story p:last-child {
+    font-size: 12px;
+    line-height: 1.45;
+  }
+}
+
+@media (hover: none) {
+  .home-story {
+    opacity: 1;
+    transform: none;
   }
 }
 
@@ -598,5 +837,9 @@ body.mineacle-home img {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+  }
+
+  .home-hero__image {
+    transform: none !important;
   }
 }

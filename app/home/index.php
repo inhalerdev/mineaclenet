@@ -26,6 +26,7 @@ $publicUrl = static function (mixed $value, string $fallback): string {
 $discordUrl = $publicUrl($site['discord_url'] ?? '', 'https://discord.gg/qmpJ4xMguT');
 $xUrl = $publicUrl($site['x_url'] ?? '', 'https://x.com/mineaclenetwork');
 $youtubeUrl = $publicUrl($site['youtube_url'] ?? '', 'https://www.youtube.com/@mineaclenetwork');
+
 $heroVideoBaseUrl = 'https://pub-a87f1944ab6f4788a1974177e59cf562.r2.dev';
 $defaultHeroVideoUrl = $heroVideoBaseUrl . '/hero-bg.mp4';
 $heroVideoUrl = trim((string) ($home['hero_video_url'] ?? $defaultHeroVideoUrl));
@@ -57,12 +58,13 @@ $assetFiles = [
     $assetDirectory . '/css/home.css',
     $assetDirectory . '/js/home.js',
     $assetDirectory . '/images/hero.webp',
-    $assetDirectory . '/images/logo-small.png',
+    $assetDirectory . '/images/static-logo.png',
+    $assetDirectory . '/images/hover-logo.png',
     $assetDirectory . '/images/social-discord.png',
     $assetDirectory . '/images/social-x.png',
     $assetDirectory . '/images/social-youtube.png',
-    $assetDirectory . '/images/clear.png',
 ];
+
 $assetVersion = 1;
 
 foreach ($assetFiles as $assetFile) {
@@ -74,8 +76,18 @@ foreach ($assetFiles as $assetFile) {
 $assetRevision = rawurlencode((string) $assetVersion);
 $navigationStylesheetPath = __DIR__ . '/../shared/assets/css/navigation.css';
 $navigationScriptPath = __DIR__ . '/../shared/assets/js/navigation.js';
-$navigationStylesheetVersion = (string) (is_file($navigationStylesheetPath) ? (filemtime($navigationStylesheetPath) ?: $assetVersion) : $assetVersion);
-$navigationScriptVersion = (string) (is_file($navigationScriptPath) ? (filemtime($navigationScriptPath) ?: $assetVersion) : $assetVersion);
+
+$navigationStylesheetVersion = (string) (
+    is_file($navigationStylesheetPath)
+        ? (filemtime($navigationStylesheetPath) ?: $assetVersion)
+        : $assetVersion
+);
+
+$navigationScriptVersion = (string) (
+    is_file($navigationScriptPath)
+        ? (filemtime($navigationScriptPath) ?: $assetVersion)
+        : $assetVersion
+);
 
 mineacle_page_head('Home', [
     'meta_title' => 'Home | Mineacle',
@@ -93,40 +105,21 @@ mineacle_page_head('Home', [
 <main class="home-page" aria-labelledby="home-page-title">
     <h1 id="home-page-title" class="visually-hidden">Mineacle</h1>
 
-    <section class="home-hero" aria-labelledby="merchant-title" data-home-hero>
-        <?php if ($heroVideoUrl !== ''): ?>
-            <video
-                class="home-hero__image"
-                poster="/home/assets/images/hero.webp?rev=<?php echo h($assetRevision); ?>"
-                width="2048"
-                height="863"
-                autoplay
-                muted
-                loop
-                playsinline
-                preload="auto"
-                disablepictureinpicture
-                disableremoteplayback
-                controlslist="nodownload nofullscreen noremoteplayback"
-                aria-hidden="true"
-                tabindex="-1"
-                data-home-hero-video
-            >
-                <source src="<?php echo h($heroVideoUrl); ?>" type="video/mp4" data-home-hero-source>
-            </video>
-        <?php endif; ?>
+    <div class="home-shell">
+        <aside class="home-rail" aria-label="Mineacle navigation and server controls">
+            <div class="home-rail__surface">
+                <?php
+                mineacle_site_navigation($site, [
+                    'current_key' => 'home',
+                    'header_class' => 'home-rail__navigation',
+                    'aria_label' => 'Mineacle navigation',
+                ]);
+                ?>
 
-        <div class="home-hero__surface">
-            <?php mineacle_site_navigation($site, ['current_key' => 'home']); ?>
+                <div class="home-rail__spacer" aria-hidden="true"></div>
 
-            <div class="home-story">
-                <div class="home-story__copy">
-                    <h2 id="merchant-title">The Merchant</h2>
-                    <p>In a silent world stripped of color, a nameless wanderer found a portal hidden behind layers of unbreakable stone. It opened into a vibrant land filled with crowded markets, growing settlements, and Merchants who valued every block gathered and every item crafted. They claimed the realm’s prosperity came from an ancient source buried beneath the first village. With nothing left to lose, the wanderer began searching for it before the gray world consumed itself completely.</p>
-                </div>
-
-                <div class="home-actions" aria-label="Play and community links">
-                    <div class="home-actions__primary">
+                <div class="home-rail__actions" aria-label="Play and community links">
+                    <div class="home-rail__play-row">
                         <button
                             class="home-action home-action--play"
                             type="button"
@@ -163,30 +156,91 @@ mineacle_page_head('Home', [
                     </nav>
                 </div>
             </div>
-        </div>
-    </section>
+        </aside>
+
+        <section
+            class="home-hero"
+            aria-labelledby="merchant-title"
+            data-home-hero
+            tabindex="0"
+        >
+            <?php if ($heroVideoUrl !== ''): ?>
+                <video
+                    class="home-hero__image"
+                    poster="/home/assets/images/hero.webp?rev=<?php echo h($assetRevision); ?>"
+                    width="2048"
+                    height="863"
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                    preload="metadata"
+                    disablepictureinpicture
+                    disableremoteplayback
+                    controlslist="nodownload nofullscreen noremoteplayback"
+                    aria-hidden="true"
+                    tabindex="-1"
+                    data-home-hero-video
+                >
+                    <source
+                        src="<?php echo h($heroVideoUrl); ?>"
+                        type="video/mp4"
+                        data-home-hero-source
+                    >
+                </video>
+            <?php endif; ?>
+
+            <div class="home-hero__surface">
+                <div class="home-story">
+                    <p class="home-story__eyebrow">Mineacle SMP</p>
+                    <h2 id="merchant-title">The Merchant</h2>
+                    <p>
+                        In a silent world stripped of color, a nameless wanderer found a portal hidden behind layers of unbreakable stone.
+                        It opened into a vibrant land filled with crowded markets, growing settlements, and Merchants who valued every block
+                        gathered and every item crafted. They claimed the realm's prosperity came from an ancient source buried beneath the
+                        first village. With nothing left to lose, the wanderer began searching for it before the gray world consumed itself completely.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
 
     <dialog class="join-dialog" data-join-dialog aria-labelledby="join-dialog-title">
         <div class="join-dialog__content">
-            <button class="join-dialog__close" type="button" data-close-join-help aria-label="Close">
+            <button
+                class="join-dialog__close"
+                type="button"
+                data-close-join-help
+                aria-label="Close"
+            >
                 <span class="join-dialog__close-icon" aria-hidden="true"></span>
             </button>
+
             <p class="join-dialog__eyebrow">Java Edition</p>
             <h2 id="join-dialog-title">Join Mineacle</h2>
+
             <ol>
                 <li>Press <strong>Play</strong> to copy <span><?php echo h($minecraftIp); ?></span></li>
-                <li>Open Minecraft, select <strong>Multiplayer</strong>, then <strong>Add Server</strong>.</li>
-                <li>Paste the address, save the server, and join the world.</li>
+                <li>Open Minecraft, select <strong>Multiplayer</strong>, then <strong>Add Server</strong></li>
+                <li>Paste the address, save the server, and join the world</li>
             </ol>
-            <button class="join-dialog__copy" type="button" data-copy-server data-server-address="<?php echo h($minecraftIp); ?>">
+
+            <button
+                class="join-dialog__copy"
+                type="button"
+                data-copy-server
+                data-server-address="<?php echo h($minecraftIp); ?>"
+            >
                 <span data-play-label aria-live="polite">Copy server address</span>
             </button>
         </div>
     </dialog>
 </main>
-<?php mineacle_page_end([
+<?php
+mineacle_page_end([
     'scripts' => [
         '/shared/assets/js/navigation.js?rev=' . rawurlencode($navigationScriptVersion),
         '/home/assets/js/home.js?rev=' . $assetRevision,
     ],
-]); ?>
+]);
+?>
