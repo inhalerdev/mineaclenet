@@ -23,41 +23,33 @@
 }
 
 :root {
-  --home-background: #111111;
+  --home-bg: #111111;
   --home-rail: #202020;
-  --home-rail-hover: #252525;
-  --home-border: rgba(248, 248, 248, 0.08);
-  --home-border-strong: rgba(248, 248, 248, 0.14);
   --home-text: #f8f8f8;
   --home-muted: #bbbbbb;
-  --home-muted-soft: #787878;
   --home-primary: #8436fe;
   --home-secondary: #b078ff;
   --home-tertiary: #d0afff;
-  --home-play: #62c249;
-  --home-play-hover: #74d15c;
-  --home-danger: #fc1111;
+  --home-green: #62c249;
+  --home-green-hover: #72ce59;
+  --home-red: #fc1111;
 
-  /*
-   * Desktop geometry mirrors the supplied 2048px reference:
-   * ~34px outer frame, ~275px rail, ~34px gap.
-   */
   --home-frame: clamp(24px, 1.66vw, 34px);
   --home-gap: var(--home-frame);
   --home-rail-width: clamp(236px, 13.45vw, 276px);
   --home-radius: 3px;
-  --home-viewport-height: 100vh;
+  --home-viewport: 100vh;
 }
 
 @supports (height: 100svh) {
   :root {
-    --home-viewport-height: 100svh;
+    --home-viewport: 100svh;
   }
 }
 
 @supports (height: 100dvh) {
   :root {
-    --home-viewport-height: 100dvh;
+    --home-viewport: 100dvh;
   }
 }
 
@@ -69,16 +61,21 @@
 
 html {
   min-width: 320px;
-  min-height: 100%;
-  background: var(--home-background);
+  background: var(--home-bg);
 }
 
+/*
+ * document.css is intentionally loaded after route CSS and sets body/home-page
+ * back to auto height. These higher-specificity !important rules keep Home as
+ * the one intentional viewport composition.
+ */
 body.mineacle-home {
-  min-width: 320px;
-  min-height: 100%;
+  width: 100%;
+  height: var(--home-viewport) !important;
+  min-height: var(--home-viewport) !important;
   margin: 0;
-  overflow: hidden;
-  background: var(--home-background);
+  overflow: hidden !important;
+  background: var(--home-bg);
   color: var(--home-text);
   color-scheme: dark;
   font-family: "Rubik", Arial, sans-serif;
@@ -89,20 +86,19 @@ body.mineacle-home {
   -webkit-font-smoothing: antialiased;
 }
 
+body.mineacle-home main.home-page {
+  width: 100%;
+  height: var(--home-viewport) !important;
+  min-height: var(--home-viewport) !important;
+  padding: var(--home-frame);
+  overflow: hidden !important;
+  background: var(--home-bg);
+}
+
 body.mineacle-home button,
 body.mineacle-home a {
   font-family: inherit;
   -webkit-tap-highlight-color: transparent;
-}
-
-body.mineacle-home button {
-  color: inherit;
-}
-
-body.mineacle-home img {
-  display: block;
-  max-width: 100%;
-  user-select: none;
 }
 
 .visually-hidden {
@@ -118,275 +114,211 @@ body.mineacle-home img {
 }
 
 /* ==========================================================================
-   PAGE SHELL
+   TWO-PANEL HOME
    ========================================================================== */
 
-.home-page {
-  width: 100%;
-  height: var(--home-viewport-height);
-  padding: var(--home-frame);
-  background: var(--home-background);
-}
-
-.home-shell {
+.home-layout {
   display: grid;
   grid-template-columns: var(--home-rail-width) minmax(0, 1fr);
   width: 100%;
   height: 100%;
+  min-width: 0;
   min-height: 0;
   gap: var(--home-gap);
 }
 
-.home-rail,
-.home-hero {
+.home-nav-rail,
+.home-stage {
   min-width: 0;
   min-height: 0;
   border-radius: var(--home-radius);
 }
 
-.home-rail {
-  position: relative;
-  z-index: 5;
-  overflow: visible;
+.home-nav-rail {
+  overflow: hidden;
   border: 1px solid rgba(248, 248, 248, 0.025);
   background: var(--home-rail);
 }
 
-.home-rail__surface {
+.home-nav-rail__inner {
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
-  min-height: 0;
-  padding: clamp(22px, 1.55vw, 32px);
-}
-
-.home-rail__spacer {
-  flex: 1 1 auto;
-  min-height: 28px;
+  padding:
+    clamp(24px, 1.65vw, 34px)
+    clamp(22px, 1.45vw, 30px)
+    clamp(18px, 1.25vw, 26px);
 }
 
 /* ==========================================================================
-   SHARED NAVIGATION -> DESKTOP RAIL
-   Uses the existing shared PHP navigation rather than duplicating routes,
-   auth state, or logo behavior.
+   BRAND
    ========================================================================== */
 
-.home-rail__navigation.site-header {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: flex-start;
-  width: 100%;
-  height: auto;
-  min-height: 0;
-  max-height: none;
-  gap: clamp(26px, 2.2vw, 44px);
-}
-
-.home-rail__navigation .site-brand {
+.home-nav-brand {
+  position: relative;
+  display: block;
   width: clamp(72px, 5vw, 96px);
   height: clamp(62px, 4.25vw, 82px);
-  flex: 0 0 auto;
-  align-self: flex-start;
+  flex: none;
+  text-decoration: none;
 }
 
-.home-rail__navigation .site-navigation {
-  display: flex;
-  flex: 0 0 auto;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: flex-start;
+.home-nav-brand__visual {
+  position: absolute;
+  inset: 0;
+  display: block;
+  transform: translateY(0);
+  transition:
+    filter 120ms ease-out,
+    transform 120ms ease-out;
+}
+
+.home-nav-brand__image {
+  position: absolute;
+  inset: 0;
+  display: block;
   width: 100%;
-  min-height: 0;
-  gap: 12px;
+  height: 100%;
+  object-fit: contain;
+  transition: opacity 90ms ease-out;
+  user-select: none;
+  pointer-events: none;
 }
 
-.home-rail__navigation .site-navigation__links {
+.home-nav-brand__image--hover {
+  opacity: 0;
+}
+
+.home-nav-brand:hover .home-nav-brand__visual,
+.home-nav-brand:focus-visible .home-nav-brand__visual {
+  filter: brightness(1.05);
+  transform: translateY(-2px);
+}
+
+.home-nav-brand:hover .home-nav-brand__image--static,
+.home-nav-brand:focus-visible .home-nav-brand__image--static {
+  opacity: 0;
+}
+
+.home-nav-brand:hover .home-nav-brand__image--hover,
+.home-nav-brand:focus-visible .home-nav-brand__image--hover {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   NAV RAIL
+   ========================================================================== */
+
+.home-nav-links {
   display: grid;
-  align-items: stretch;
-  justify-content: stretch;
   width: 100%;
-  min-height: 0;
-  gap: 4px;
+  margin-top: clamp(34px, 4.5vh, 58px);
+  gap: 6px;
 }
 
-.home-rail__navigation .site-navigation__link {
-  justify-content: flex-start;
+.home-nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
   width: 100%;
-  height: 42px;
-  min-height: 42px;
-  padding: 0 12px;
+  height: 48px;
+  padding: 0 14px;
+  overflow: hidden;
   border-radius: 2px;
-  color: #bbbbbb;
-  font-size: 14px;
+  background: transparent;
+  color: var(--home-muted);
+  font-size: 15px;
   font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  text-transform: uppercase;
   transition:
     background-color 120ms ease-out,
-    color 120ms ease-out;
+    color 120ms ease-out,
+    transform 120ms ease-out;
 }
 
-.home-rail__navigation .site-navigation__link::before {
-  inset: 0;
-  border-radius: inherit;
+.home-nav-link::before {
+  position: absolute;
+  top: 9px;
+  bottom: 9px;
+  left: 0;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  background: transparent;
+  content: "";
+  transition: background-color 120ms ease-out;
 }
 
-.home-rail__navigation .site-navigation__link.is-current {
-  background: rgba(132, 54, 254, 0.14);
+.home-nav-link span {
+  display: block;
+  transform: translateX(0);
+  transition: transform 120ms ease-out;
+}
+
+.home-nav-link.is-current {
+  background: rgba(132, 54, 254, 0.13);
   color: var(--home-secondary);
 }
 
-.home-rail__navigation .site-navigation__link:not(.is-current):hover,
-.home-rail__navigation .site-navigation__link:not(.is-current):focus-visible {
+.home-nav-link.is-current::before {
+  background: var(--home-primary);
+}
+
+.home-nav-link:not(.is-current):hover,
+.home-nav-link:not(.is-current):focus-visible {
   background: rgba(248, 248, 248, 0.045);
   color: var(--home-text);
 }
 
-.home-rail__navigation .site-navigation__label {
-  transform: none;
-}
-
-.home-rail__navigation .site-navigation__link:hover .site-navigation__label,
-.home-rail__navigation .site-navigation__link:focus-visible .site-navigation__label {
-  transform: translateX(3px);
-}
-
-.home-rail__navigation .site-navigation > .site-navigation__login,
-.home-rail__navigation .site-navigation > .site-navigation__account-form {
-  display: flex;
-  width: 100%;
-}
-
-.home-rail__navigation .site-navigation__login,
-.home-rail__navigation .site-navigation__account-form .site-navigation__login {
-  width: 100%;
-  min-width: 0;
-  height: 42px;
-  min-height: 42px;
-}
-
-.home-rail__navigation .site-navigation__login::before {
-  background: var(--home-primary);
-}
-
-.home-rail__navigation .site-navigation__login:hover::before,
-.home-rail__navigation .site-navigation__login:focus-visible::before {
-  background: var(--home-secondary);
-}
-
-.home-rail__navigation .site-menu {
-  display: none;
+.home-nav-link:hover span,
+.home-nav-link:focus-visible span {
+  transform: translateX(4px);
 }
 
 /* ==========================================================================
-   RAIL CONTROLS
+   SOCIALS PINNED TO BOTTOM
    ========================================================================== */
-
-.home-rail__actions {
-  display: grid;
-  width: 100%;
-  gap: 10px;
-}
-
-.home-rail__play-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 46px;
-  gap: 10px;
-}
-
-.home-action,
-.home-social {
-  position: relative;
-  display: grid;
-  place-items: center;
-  height: 46px;
-  min-width: 0;
-  padding: 0;
-  border: 0;
-  border-radius: 2px;
-  text-decoration: none;
-  cursor: pointer;
-  appearance: none;
-  transition:
-    background-color 120ms ease-out,
-    filter 120ms ease-out,
-    transform 120ms ease-out;
-  will-change: transform;
-}
-
-.home-action:hover,
-.home-action:focus-visible,
-.home-social:hover,
-.home-social:focus-visible {
-  transform: translateY(-2px);
-}
-
-.home-action:active,
-.home-social:active {
-  transform: translateY(0);
-}
-
-.home-action--play {
-  width: 100%;
-  padding: 0 16px;
-  background: var(--home-play);
-  color: #f8f8f8;
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 0.025em;
-  line-height: 1;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.home-action--play:hover,
-.home-action--play:focus-visible {
-  background: var(--home-play-hover);
-}
-
-.home-action--play.is-status-preview,
-.home-action--play.has-copy-feedback {
-  background: var(--home-play);
-}
-
-.home-action--play.is-copy-error {
-  background: #b63d3d;
-}
-
-.home-action--help {
-  width: 46px;
-  background: #2b2b2b;
-  color: var(--home-text);
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.home-action--help:hover,
-.home-action--help:focus-visible {
-  background: #343434;
-}
 
 .home-socials {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: 100%;
+  margin-top: auto;
   gap: 10px;
 }
 
 .home-social {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  max-height: 58px;
   overflow: hidden;
-  border: 1px solid rgba(248, 248, 248, 0.045);
-  background: #252525;
+  border-radius: 2px;
+  text-decoration: none;
+  transform: translateY(0);
+  transition:
+    filter 120ms ease-out,
+    transform 120ms ease-out;
 }
 
 .home-social:hover,
 .home-social:focus-visible {
-  background: #2c2c2c;
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+}
+
+.home-social:active {
+  filter: brightness(0.96);
+  transform: translateY(0);
 }
 
 .home-social__icon {
+  position: absolute;
+  inset: 0;
   display: block;
-  width: 100%;
-  height: 100%;
   background-position: center;
   background-repeat: no-repeat;
   background-size: 100% 100%;
@@ -405,10 +337,10 @@ body.mineacle-home img {
 }
 
 /* ==========================================================================
-   HERO
+   HERO STAGE
    ========================================================================== */
 
-.home-hero {
+.home-stage {
   position: relative;
   isolation: isolate;
   overflow: hidden;
@@ -421,32 +353,7 @@ body.mineacle-home img {
   outline: 0;
 }
 
-.home-hero::before,
-.home-hero::after {
-  position: absolute;
-  inset: 0;
-  content: "";
-  pointer-events: none;
-}
-
-.home-hero::before {
-  z-index: 0;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(17, 17, 17, 0.12) 0%,
-      rgba(17, 17, 17, 0.12) 58%,
-      rgba(17, 17, 17, 0.54) 100%
-    ),
-    rgba(17, 17, 17, 0.3);
-}
-
-.home-hero::after {
-  z-index: 1;
-  box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.18);
-}
-
-.home-hero__image {
+.home-stage__media {
   position: absolute;
   z-index: -1;
   inset: -1%;
@@ -458,59 +365,126 @@ body.mineacle-home img {
   pointer-events: none;
   transform: scale(1.01);
   transition:
-    filter 420ms ease,
+    filter 420ms ease-out,
     transform 900ms cubic-bezier(0.2, 0.7, 0.2, 1);
   will-change: transform;
 }
 
-.home-hero:hover .home-hero__image,
-.home-hero:focus-visible .home-hero__image,
-.home-hero:focus-within .home-hero__image {
+.home-stage:hover .home-stage__media,
+.home-stage:focus-visible .home-stage__media,
+.home-stage:focus-within .home-stage__media {
   transform: scale(1.025);
 }
 
-.home-hero.is-video-fallback .home-hero__image {
+.home-stage.is-video-fallback .home-stage__media {
   display: none;
 }
 
-.home-hero__surface {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: flex-end;
-  width: 100%;
-  height: 100%;
-  padding: clamp(28px, 2.3vw, 48px);
+.home-stage__veil {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(17, 17, 17, 0.12) 0%,
+      rgba(17, 17, 17, 0.12) 54%,
+      rgba(17, 17, 17, 0.44) 100%
+    ),
+    rgba(17, 17, 17, 0.30);
+  box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.18);
+  pointer-events: none;
 }
 
-/*
- * Keep the default hero clean like the supplied mockup. The existing
- * Merchant feature appears as a deliberate reveal when the hero is engaged.
- */
+.home-stage__content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+/* ==========================================================================
+   PLAY
+   ========================================================================== */
+
+.home-play {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(16px, 1.65vw, 28px);
+  display: grid;
+  place-items: center;
+  width: clamp(220px, 17vw, 310px);
+  height: clamp(60px, 4.3vw, 78px);
+  padding: 0 22px;
+  border: 0;
+  border-radius: 2px;
+  background: var(--home-green);
+  color: #f8f8f8;
+  font-size: clamp(20px, 1.55vw, 28px);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  text-transform: uppercase;
+  cursor: pointer;
+  transform: translateX(-50%);
+  transition:
+    background-color 120ms ease-out,
+    filter 120ms ease-out,
+    transform 120ms ease-out;
+}
+
+.home-play:hover,
+.home-play:focus-visible {
+  background: var(--home-green-hover);
+  transform: translateX(-50%) translateY(-2px);
+}
+
+.home-play:active {
+  filter: brightness(0.96);
+  transform: translateX(-50%);
+}
+
+.home-play.is-status-preview,
+.home-play.has-copy-feedback {
+  background: var(--home-green);
+}
+
+.home-play.is-copy-error {
+  background: #b63d3d;
+}
+
+/* ==========================================================================
+   EXISTING MERCHANT FEATURE AS A CLEAN HOVER REVEAL
+   ========================================================================== */
+
 .home-story {
-  width: min(690px, 72%);
-  padding: 24px 26px;
+  position: absolute;
+  left: clamp(24px, 2vw, 42px);
+  bottom: clamp(108px, 8vw, 146px);
+  width: min(650px, 54%);
+  padding: 22px 24px;
   border: 1px solid rgba(248, 248, 248, 0.08);
   border-radius: 3px;
   background: rgba(17, 17, 17, 0.72);
   opacity: 0;
-  transform: translateY(14px);
+  transform: translateY(12px);
   backdrop-filter: blur(10px);
+  pointer-events: none;
   transition:
     opacity 180ms ease-out,
     transform 180ms ease-out;
-  pointer-events: none;
 }
 
-.home-hero:hover .home-story,
-.home-hero:focus-visible .home-story,
-.home-hero:focus-within .home-story {
+.home-stage:hover .home-story,
+.home-stage:focus-visible .home-story,
+.home-stage:focus-within .home-story {
   opacity: 1;
   transform: translateY(0);
 }
 
 .home-story__eyebrow {
-  margin: 0 0 8px;
+  display: block;
+  margin-bottom: 8px;
   color: var(--home-tertiary);
   font-size: 11px;
   font-weight: 600;
@@ -528,150 +502,22 @@ body.mineacle-home img {
   text-transform: uppercase;
 }
 
-.home-story p:last-child {
+.home-story p {
   margin: 14px 0 0;
   color: #bbbbbb;
   font-size: clamp(12px, 0.72vw, 15px);
-  font-weight: 400;
   line-height: 1.5;
 }
 
 /* ==========================================================================
-   JOIN DIALOG
+   FOCUS
    ========================================================================== */
 
-.join-dialog {
-  width: min(512px, calc(100vw - 32px));
-  max-width: none;
-  padding: 0;
-  border: 1px solid var(--home-border-strong);
-  border-radius: var(--home-radius);
-  background: #181818;
-  color: var(--home-text);
-  font-family: "Rubik", Arial, sans-serif;
-  box-shadow: 0 32px 64px rgba(0, 0, 0, 0.52);
-}
-
-.join-dialog::backdrop {
-  background: rgba(0, 0, 0, 0.72);
-  backdrop-filter: blur(5px);
-}
-
-.join-dialog__content {
-  position: relative;
-  padding: 32px;
-}
-
-.join-dialog__close {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  display: grid;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--home-text);
-  cursor: pointer;
-  transition:
-    color 120ms ease-out,
-    transform 120ms ease-out;
-}
-
-.join-dialog__close-icon {
-  display: block;
-  width: 22px;
-  height: 22px;
-  background: currentColor;
-  mask: url("../../../shared/assets/images/search/clear.svg") center / contain no-repeat;
-  -webkit-mask: url("../../../shared/assets/images/search/clear.svg") center / contain no-repeat;
-  pointer-events: none;
-}
-
-.join-dialog__close:hover,
-.join-dialog__close:focus-visible {
-  color: #fc1111;
-  transform: translateY(-2px);
-}
-
-.join-dialog__close:active {
-  transform: translateY(0);
-}
-
-.join-dialog__eyebrow {
-  margin: 0 0 8px;
-  color: var(--home-secondary);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-}
-
-.join-dialog h2 {
-  margin: 0 48px 24px 0;
-  color: var(--home-text);
-  font-size: 32px;
-  font-weight: 600;
-  line-height: 1.15;
-}
-
-.join-dialog ol {
-  display: grid;
-  margin: 0;
-  padding-left: 24px;
-  color: #bbbbbb;
-  gap: 14px;
-  font-size: 15px;
-  line-height: 1.5;
-}
-
-.join-dialog strong {
-  color: var(--home-text);
-  font-weight: 600;
-}
-
-.join-dialog li span {
-  color: var(--home-secondary);
-  font-weight: 600;
-}
-
-.join-dialog__copy {
-  display: grid;
-  place-items: center;
-  width: 100%;
-  height: 52px;
-  margin-top: 28px;
-  padding: 0 18px;
-  border: 0;
-  border-radius: 2px;
-  background: var(--home-play);
-  color: #f8f8f8;
-  font-size: 14px;
-  font-weight: 600;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition:
-    background-color 120ms ease-out,
-    transform 120ms ease-out;
-}
-
-.join-dialog__copy:hover,
-.join-dialog__copy:focus-visible {
-  background: var(--home-play-hover);
-  transform: translateY(-2px);
-}
-
-.join-dialog__copy:active {
-  transform: translateY(0);
-}
-
-.home-action:focus-visible,
+.home-nav-brand:focus-visible,
+.home-nav-link:focus-visible,
 .home-social:focus-visible,
-.home-hero:focus-visible,
-.join-dialog__copy:focus-visible,
-.join-dialog__close:focus-visible {
+.home-stage:focus-visible,
+.home-play:focus-visible {
   outline: 2px solid var(--home-secondary);
   outline-offset: 3px;
 }
@@ -680,145 +526,141 @@ body.mineacle-home img {
    RESPONSIVE
    ========================================================================== */
 
-@media (max-width: 1050px) {
+@media (max-width: 1000px) {
   :root {
-    --home-rail-width: clamp(220px, 23vw, 250px);
+    --home-rail-width: 220px;
+  }
+
+  .home-nav-link {
+    font-size: 14px;
   }
 
   .home-story {
-    width: min(620px, 82%);
+    width: min(580px, 68%);
   }
 }
 
 @media (max-width: 760px) {
   body.mineacle-home {
-    overflow-y: auto;
+    height: auto !important;
+    min-height: var(--home-viewport) !important;
+    overflow-y: auto !important;
   }
 
-  .home-page {
-    height: auto;
-    min-height: var(--home-viewport-height);
+  body.mineacle-home main.home-page {
+    height: auto !important;
+    min-height: var(--home-viewport) !important;
     padding: 16px;
+    overflow: visible !important;
   }
 
-  .home-shell {
+  .home-layout {
     grid-template-columns: 1fr;
     height: auto;
-    min-height: calc(var(--home-viewport-height) - 32px);
+    min-height: calc(var(--home-viewport) - 32px);
     gap: 16px;
   }
 
-  .home-rail {
-    min-height: 82px;
+  .home-nav-rail {
+    min-height: 250px;
   }
 
-  .home-rail__surface {
-    display: block;
-    padding: 16px;
+  .home-nav-rail__inner {
+    padding: 18px;
   }
 
-  .home-rail__navigation.site-header {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
+  .home-nav-brand {
+    width: 58px;
+    height: 50px;
   }
 
-  .home-rail__navigation .site-brand {
-    width: 56px;
-    height: 48px;
-    flex: 0 0 56px;
+  .home-nav-links {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    margin-top: 16px;
+    gap: 4px;
   }
 
-  .home-rail__navigation .site-navigation {
+  .home-nav-link {
+    justify-content: center;
+    height: 42px;
+    padding: 0 6px;
+    font-size: 11px;
+    text-align: center;
+  }
+
+  .home-nav-link::before {
+    top: auto;
+    right: 10px;
+    bottom: 0;
+    left: 10px;
     width: auto;
-    flex: 1 1 auto;
-    flex-direction: row;
-    justify-content: flex-end;
+    height: 2px;
   }
 
-  .home-rail__navigation .site-navigation__links,
-  .home-rail__navigation .site-navigation > .site-navigation__login,
-  .home-rail__navigation .site-navigation > .site-navigation__account-form {
-    display: none;
-  }
-
-  .home-rail__navigation .site-menu {
-    display: block;
-  }
-
-  .home-rail__navigation .site-menu__panel {
-    z-index: 120;
-  }
-
-  .home-rail__spacer {
-    display: none;
-  }
-
-  .home-rail__actions {
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    margin-top: 14px;
-  }
-
-  .home-rail__play-row {
-    grid-template-columns: minmax(0, 1fr) 44px;
-  }
-
-  .home-action,
-  .home-social {
-    height: 44px;
-  }
-
-  .home-action--help {
-    width: 44px;
+  .home-nav-link:hover span,
+  .home-nav-link:focus-visible span {
+    transform: translateY(-1px);
   }
 
   .home-socials {
-    grid-template-columns: repeat(3, 44px);
+    grid-template-columns: repeat(3, 48px);
+    justify-content: end;
+    margin-top: 18px;
   }
 
   .home-social {
-    width: 44px;
+    width: 48px;
+    height: 48px;
   }
 
-  .home-hero {
-    height: min(760px, calc(var(--home-viewport-height) - 150px));
-    min-height: 520px;
+  .home-stage {
+    height: min(760px, calc(var(--home-viewport) - 220px));
+    min-height: 540px;
   }
 
   .home-story {
-    width: min(100%, 620px);
+    left: 18px;
+    right: 18px;
+    bottom: 110px;
+    width: auto;
     opacity: 1;
     transform: none;
+  }
+
+  .home-play {
+    width: min(280px, calc(100% - 36px));
   }
 }
 
 @media (max-width: 520px) {
-  .home-rail__actions {
-    grid-template-columns: 1fr;
+  .home-nav-rail {
+    min-height: 330px;
   }
 
-  .home-socials {
-    justify-content: end;
+  .home-nav-links {
+    grid-template-columns: 1fr 1fr;
   }
 
-  .home-hero {
-    min-height: 560px;
+  .home-nav-link:last-child {
+    grid-column: 1 / -1;
   }
 
-  .home-hero__surface {
-    padding: 18px;
+  .home-stage {
+    min-height: 580px;
   }
 
   .home-story {
     padding: 18px;
-    background: rgba(17, 17, 17, 0.78);
   }
 
-  .home-story p:last-child {
+  .home-story p {
     font-size: 12px;
     line-height: 1.45;
+  }
+
+  .home-play {
+    height: 58px;
+    font-size: 19px;
   }
 }
 
@@ -833,13 +675,12 @@ body.mineacle-home img {
   *,
   *::before,
   *::after {
-    scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
   }
 
-  .home-hero__image {
+  .home-stage__media {
     transform: none !important;
   }
 }

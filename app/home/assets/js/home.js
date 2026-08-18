@@ -1,16 +1,12 @@
 (() => {
   "use strict";
 
-  const dialog = document.querySelector("[data-join-dialog]");
-  const openHelpButton = document.querySelector("[data-open-join-help]");
-  const closeHelpButton = document.querySelector("[data-close-join-help]");
   const hero = document.querySelector("[data-home-hero]");
   const heroVideo = document.querySelector("[data-home-hero-video]");
   const heroSource = document.querySelector("[data-home-hero-source]");
-  const primaryPlayButton = document.querySelector(
-    ".home-action--play[data-copy-server]",
-  );
-  const primaryPlayLabel = primaryPlayButton?.querySelector("[data-play-label]");
+  const playButton = document.querySelector(".home-play[data-copy-server]");
+  const playLabel = playButton?.querySelector("[data-play-label]");
+
   const resetTimers = new WeakMap();
 
   let onlineCount = 0;
@@ -43,7 +39,7 @@
 
     if (playback instanceof Promise) {
       playback.catch(() => {
-        // Autoplay may wait for page visibility or the first user interaction.
+        // Autoplay can wait for visibility or the first user gesture.
       });
     }
   };
@@ -70,10 +66,12 @@
     }
 
     window.addEventListener("pageshow", requestHeroPlayback);
-    document.addEventListener("pointerdown", requestHeroPlayback, {
-      once: true,
-      passive: true,
-    });
+
+    document.addEventListener(
+      "pointerdown",
+      requestHeroPlayback,
+      { once: true, passive: true },
+    );
 
     document.addEventListener("visibilitychange", () => {
       if (!document.hidden && heroVideo.paused) {
@@ -82,75 +80,13 @@
     });
   }
 
-  const formatCompactCount = (value) => {
-    const count = Math.max(0, Math.floor(Number(value) || 0));
-    const units = [
-      { threshold: 1_000_000_000, divisor: 1_000_000_000, suffix: "B" },
-      { threshold: 1_000_000, divisor: 1_000_000, suffix: "M" },
-      { threshold: 1_000, divisor: 1_000, suffix: "K" },
-    ];
-
-    for (const unit of units) {
-      if (count < unit.threshold) {
-        continue;
-      }
-
-      const compact = count / unit.divisor;
-      const decimals = compact < 10 && !Number.isInteger(compact) ? 1 : 0;
-
-      return `${compact.toFixed(decimals).replace(/\.0$/, "")}${unit.suffix}`;
-    }
-
-    return String(count);
-  };
-
-  const primaryPlayIsActive = () =>
-    Boolean(
-      primaryPlayButton?.matches(":hover") ||
-        document.activeElement === primaryPlayButton,
-    );
-
-  const syncPrimaryPlayLabel = () => {
-    if (!(primaryPlayButton instanceof HTMLButtonElement) || !primaryPlayLabel) {
-      return;
-    }
-
-    if (primaryPlayButton.classList.contains("has-copy-feedback")) {
-      return;
-    }
-
-    const showStatus = primaryPlayIsActive();
-    const defaultLabel = primaryPlayButton.dataset.defaultLabel || "Play";
-
-    primaryPlayButton.classList.toggle("is-status-preview", showStatus);
-
-    if (!showStatus) {
-      primaryPlayLabel.textContent = defaultLabel;
-      return;
-    }
-
-    if (!statusResolved) {
-      primaryPlayLabel.textContent = "… ONLINE";
-      return;
-    }
-
-    primaryPlayLabel.textContent = serverOnline
-      ? `${formatCompactCount(onlineCount)} ONLINE`
-      : "OFFLINE";
-  };
-
-  primaryPlayButton?.addEventListener("pointerenter", syncPrimaryPlayLabel);
-  primaryPlayButton?.addEventListener("pointerleave", syncPrimaryPlayLabel);
-  primaryPlayButton?.addEventListener("focus", syncPrimaryPlayLabel);
-  primaryPlayButton?.addEventListener("blur", syncPrimaryPlayLabel);
-
   const copyText = async (value) => {
     if (navigator.clipboard && window.isSecureContext) {
       try {
         await navigator.clipboard.writeText(value);
         return true;
       } catch {
-        // Fall through to the local copy method.
+        // Continue to fallback.
       }
     }
 
@@ -184,6 +120,60 @@
     return copied;
   };
 
+  const formatCompactCount = (value) => {
+    const count = Math.max(0, Math.floor(Number(value) || 0));
+
+    if (count >= 1_000_000) {
+      return `${(count / 1_000_000).toFixed(count < 10_000_000 ? 1 : 0).replace(/\.0$/, "")}M`;
+    }
+
+    if (count >= 1_000) {
+      return `${(count / 1_000).toFixed(count < 10_000 ? 1 : 0).replace(/\.0$/, "")}K`;
+    }
+
+    return String(count);
+  };
+
+  const playIsActive = () =>
+    Boolean(
+      playButton?.matches(":hover")
+      || document.activeElement === playButton
+    );
+
+  const syncPlayLabel = () => {
+    if (!(playButton instanceof HTMLButtonElement) || !playLabel) {
+      return;
+    }
+
+    if (playButton.classList.contains("has-copy-feedback")) {
+      return;
+    }
+
+    const defaultLabel = playButton.dataset.defaultLabel || "Play";
+    const previewStatus = playIsActive();
+
+    playButton.classList.toggle("is-status-preview", previewStatus);
+
+    if (!previewStatus) {
+      playLabel.textContent = defaultLabel;
+      return;
+    }
+
+    if (!statusResolved) {
+      playLabel.textContent = "… ONLINE";
+      return;
+    }
+
+    playLabel.textContent = serverOnline
+      ? `${formatCompactCount(onlineCount)} ONLINE`
+      : "OFFLINE";
+  };
+
+  playButton?.addEventListener("pointerenter", syncPlayLabel);
+  playButton?.addEventListener("pointerleave", syncPlayLabel);
+  playButton?.addEventListener("focus", syncPlayLabel);
+  playButton?.addEventListener("blur", syncPlayLabel);
+
   const setCopyFeedback = (button, copied) => {
     const label = button.querySelector("[data-play-label]");
 
@@ -191,10 +181,10 @@
       return;
     }
 
-    const previousTimer = resetTimers.get(button);
+    const oldTimer = resetTimers.get(button);
 
-    if (previousTimer) {
-      window.clearTimeout(previousTimer);
+    if (oldTimer) {
+      window.clearTimeout(oldTimer);
     }
 
     if (!button.dataset.defaultLabel) {
@@ -202,22 +192,22 @@
     }
 
     button.classList.remove("is-status-preview");
-    label.textContent = copied ? "Copied" : "Copy failed";
     button.classList.add("has-copy-feedback");
-    button.classList.toggle("is-copied", copied);
     button.classList.toggle("is-copy-error", !copied);
+
+    label.textContent = copied ? "Copied" : "Copy failed";
 
     const timer = window.setTimeout(
       () => {
         button.classList.remove(
           "has-copy-feedback",
-          "is-copied",
-          "is-copy-error",
+          "is-copy-error"
         );
+
         resetTimers.delete(button);
 
-        if (button === primaryPlayButton) {
-          syncPrimaryPlayLabel();
+        if (button === playButton) {
+          syncPlayLabel();
         } else {
           label.textContent = button.dataset.defaultLabel || "Play";
         }
@@ -237,20 +227,28 @@
         return;
       }
 
-      setCopyFeedback(button, await copyText(serverAddress));
+      setCopyFeedback(
+        button,
+        await copyText(serverAddress),
+      );
     });
   });
 
   const statusServerIp =
-    primaryPlayButton?.dataset.serverAddress?.trim() || "mineacle.net";
+    playButton?.dataset.serverAddress?.trim()
+    || "mineacle.net";
 
-  const statusCacheKey = `mineacle:home-status:${statusServerIp}`;
+  const statusCacheKey =
+    `mineacle:home-status:${statusServerIp}`;
+
   const statusCacheMaxAge = 60_000;
 
   const statusNumber = (value) => {
     const number = Number(value);
 
-    return Number.isFinite(number) && number > 0 ? Math.floor(number) : 0;
+    return Number.isFinite(number) && number > 0
+      ? Math.floor(number)
+      : 0;
   };
 
   const normalizeStatus = (payload) => {
@@ -266,7 +264,9 @@
     return {
       online: Boolean(payload.online),
       onlineCount: statusNumber(
-        payload.players_online ?? payload.online_players ?? players.online,
+        payload.players_online
+        ?? payload.online_players
+        ?? players.online,
       ),
       checked: payload.checked !== false,
     };
@@ -279,25 +279,30 @@
 
     statusResolved = true;
     serverOnline = Boolean(status.online);
-    onlineCount = serverOnline ? status.onlineCount : 0;
+    onlineCount = serverOnline
+      ? status.onlineCount
+      : 0;
 
-    primaryPlayButton?.setAttribute(
+    playButton?.setAttribute(
       "aria-label",
       status.online
         ? `Copy the Mineacle server address. ${onlineCount} online.`
         : "Copy the Mineacle server address. Server offline.",
     );
 
-    syncPrimaryPlayLabel();
+    syncPlayLabel();
   };
 
   const readStatusCache = () => {
     try {
       const cached = JSON.parse(
-        window.localStorage.getItem(statusCacheKey) || "null",
+        localStorage.getItem(statusCacheKey) || "null",
       );
 
-      if (!cached || Date.now() - cached.updatedAt > statusCacheMaxAge) {
+      if (
+        !cached
+        || Date.now() - cached.updatedAt > statusCacheMaxAge
+      ) {
         return null;
       }
 
@@ -312,7 +317,7 @@
 
   const writeStatusCache = (status) => {
     try {
-      window.localStorage.setItem(
+      localStorage.setItem(
         statusCacheKey,
         JSON.stringify({
           online: status.online,
@@ -321,13 +326,17 @@
         }),
       );
     } catch {
-      // localStorage can be unavailable in restricted/private browsing.
+      // Storage can be unavailable in restricted/private browsing.
     }
   };
 
   const fetchStatus = async (url, timeout = 4200) => {
     const controller = new AbortController();
-    const timer = window.setTimeout(() => controller.abort(), timeout);
+
+    const timer = window.setTimeout(
+      () => controller.abort(),
+      timeout,
+    );
 
     try {
       const response = await fetch(url, {
@@ -336,7 +345,9 @@
         signal: controller.signal,
       });
 
-      return response.ok ? await response.json() : null;
+      return response.ok
+        ? await response.json()
+        : null;
     } catch {
       return null;
     } finally {
@@ -345,7 +356,7 @@
   };
 
   const loadServerStatus = async () => {
-    if (!primaryPlayButton || statusRequestActive) {
+    if (!playButton || statusRequestActive) {
       return;
     }
 
@@ -355,6 +366,7 @@
       const payload = await fetchStatus(
         `/api/server-status.php?mode=home&t=${Date.now()}`,
       );
+
       const status = normalizeStatus(payload);
 
       if (status?.checked) {
@@ -372,7 +384,7 @@
     applyServerStatus(cachedStatus);
   }
 
-  syncPrimaryPlayLabel();
+  syncPlayLabel();
   loadServerStatus();
 
   window.setInterval(() => {
@@ -380,39 +392,4 @@
       loadServerStatus();
     }
   }, 60_000);
-
-  const openJoinDialog = () => {
-    if (!(dialog instanceof HTMLElement)) {
-      return;
-    }
-
-    if (typeof dialog.showModal === "function") {
-      dialog.showModal();
-      return;
-    }
-
-    dialog.setAttribute("open", "");
-  };
-
-  const closeJoinDialog = () => {
-    if (!(dialog instanceof HTMLElement)) {
-      return;
-    }
-
-    if (typeof dialog.close === "function") {
-      dialog.close();
-      return;
-    }
-
-    dialog.removeAttribute("open");
-  };
-
-  openHelpButton?.addEventListener("click", openJoinDialog);
-  closeHelpButton?.addEventListener("click", closeJoinDialog);
-
-  dialog?.addEventListener("click", (event) => {
-    if (event.target === dialog) {
-      closeJoinDialog();
-    }
-  });
 })();
