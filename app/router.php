@@ -4,28 +4,26 @@ declare(strict_types=1);
 
 $requestPath = parse_url((string) ($_SERVER['REQUEST_URI'] ?? '/'), PHP_URL_PATH);
 $requestPath = is_string($requestPath) ? rawurldecode($requestPath) : '/';
-$isPrivatePath = preg_match(
-    '#(?:^|/)\.|^/(?:shared/php|database|secrets)(?:/|$)#i',
-    $requestPath
-) === 1;
 
-if ($isPrivatePath) {
+if (
+    preg_match('#(?:^|/)\.#', $requestPath) === 1
+    || preg_match('#^/shared/(?:php|components)(?:/|$)#i', $requestPath) === 1
+) {
     http_response_code(404);
     header('Content-Type: text/plain; charset=utf-8');
-    header('X-Content-Type-Options: nosniff');
     echo 'Not Found';
     exit;
 }
 
-$requestedFile = realpath(__DIR__ . $requestPath);
 $documentRoot = realpath(__DIR__);
+$requested = realpath(__DIR__ . $requestPath);
 
 if (
     $requestPath !== '/'
-    && $requestedFile !== false
     && $documentRoot !== false
-    && str_starts_with($requestedFile, $documentRoot . DIRECTORY_SEPARATOR)
-    && is_file($requestedFile)
+    && $requested !== false
+    && str_starts_with($requested, $documentRoot . DIRECTORY_SEPARATOR)
+    && is_file($requested)
 ) {
     return false;
 }
