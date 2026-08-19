@@ -23,15 +23,15 @@
 }
 
 :root {
-  --home-bg: #111111;
+  --home-bg: #222222;
   --home-rail: #202020;
-  --home-text: #f8f8f8;
+  --home-text: #ffffff;
   --home-muted: #bbbbbb;
-  --home-primary: #8436fe;
-  --home-secondary: #b078ff;
-  --home-tertiary: #d0afff;
-  --home-green: #62c249;
-  --home-green-hover: #72ce59;
+  --home-primary: #b078ff;
+  --home-secondary: #d0afff;
+  --home-accent: #11fc7b;
+  --home-green: #389222;
+  --home-green-hover: #389222;
   --home-red: #fc1111;
 
   --home-frame: clamp(24px, 1.66vw, 34px);
@@ -64,11 +64,6 @@ html {
   background: var(--home-bg);
 }
 
-/*
- * document.css is intentionally loaded after route CSS and sets body/home-page
- * back to auto height. These higher-specificity !important rules keep Home as
- * the one intentional viewport composition.
- */
 body.mineacle-home {
   width: 100%;
   height: var(--home-viewport) !important;
@@ -113,10 +108,6 @@ body.mineacle-home a {
   border: 0 !important;
 }
 
-/* ==========================================================================
-   TWO-PANEL HOME
-   ========================================================================== */
-
 .home-layout {
   display: grid;
   grid-template-columns: var(--home-rail-width) minmax(0, 1fr);
@@ -136,7 +127,7 @@ body.mineacle-home a {
 
 .home-nav-rail {
   overflow: hidden;
-  border: 1px solid rgba(248, 248, 248, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.025);
   background: var(--home-rail);
 }
 
@@ -150,10 +141,6 @@ body.mineacle-home a {
     clamp(22px, 1.45vw, 30px)
     clamp(18px, 1.25vw, 26px);
 }
-
-/* ==========================================================================
-   BRAND
-   ========================================================================== */
 
 .home-nav-brand {
   position: relative;
@@ -206,10 +193,6 @@ body.mineacle-home a {
   opacity: 1;
 }
 
-/* ==========================================================================
-   NAV RAIL
-   ========================================================================== */
-
 .home-nav-links {
   display: grid;
   width: 100%;
@@ -224,6 +207,7 @@ body.mineacle-home a {
   width: 100%;
   height: 48px;
   padding: 0 14px;
+  gap: 11px;
   overflow: hidden;
   border-radius: 2px;
   background: transparent;
@@ -235,8 +219,7 @@ body.mineacle-home a {
   text-transform: uppercase;
   transition:
     background-color 120ms ease-out,
-    color 120ms ease-out,
-    transform 120ms ease-out;
+    color 120ms ease-out;
 }
 
 .home-nav-link::before {
@@ -251,14 +234,53 @@ body.mineacle-home a {
   transition: background-color 120ms ease-out;
 }
 
-.home-nav-link span {
+.home-nav-link__icon {
+  display: block;
+  width: 19px;
+  height: 19px;
+  flex: 0 0 19px;
+  background: currentColor;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.home-nav-link--home .home-nav-link__icon {
+  -webkit-mask-image: url("../../../shared/assets/icons/home.png");
+  mask-image: url("../../../shared/assets/icons/home.png");
+}
+
+.home-nav-link--vote .home-nav-link__icon {
+  -webkit-mask-image: url("../../../shared/assets/icons/vote.png");
+  mask-image: url("../../../shared/assets/icons/vote.png");
+}
+
+.home-nav-link--leaderboards .home-nav-link__icon {
+  -webkit-mask-image: url("../../../shared/assets/icons/leaderboards.png");
+  mask-image: url("../../../shared/assets/icons/leaderboards.png");
+}
+
+.home-nav-link--bans .home-nav-link__icon {
+  -webkit-mask-image: url("../../../shared/assets/icons/bans.png");
+  mask-image: url("../../../shared/assets/icons/bans.png");
+}
+
+.home-nav-link--store .home-nav-link__icon {
+  -webkit-mask-image: url("../../../shared/assets/icons/store.png");
+  mask-image: url("../../../shared/assets/icons/store.png");
+}
+
+.home-nav-link__label {
   display: block;
   transform: translateX(0);
   transition: transform 120ms ease-out;
 }
 
 .home-nav-link.is-current {
-  background: rgba(132, 54, 254, 0.13);
+  background: rgba(176, 120, 255, 0.14);
   color: var(--home-secondary);
 }
 
@@ -268,23 +290,19 @@ body.mineacle-home a {
 
 .home-nav-link:not(.is-current):hover,
 .home-nav-link:not(.is-current):focus-visible {
-  background: rgba(248, 248, 248, 0.045);
+  background: rgba(255, 255, 255, 0.045);
   color: var(--home-text);
 }
 
-.home-nav-link:hover span,
-.home-nav-link:focus-visible span {
-  transform: translateX(4px);
+.home-nav-link:hover .home-nav-link__label,
+.home-nav-link:focus-visible .home-nav-link__label {
+  transform: translateX(3px);
 }
-
-/* ==========================================================================
-   SOCIALS PINNED TO BOTTOM
-   ========================================================================== */
 
 .home-socials {
   display: grid;
   grid-template-columns: repeat(3, 42px);
-  justify-content: start;
+  justify-content: center;
   width: 100%;
   margin-top: auto;
   gap: 10px;
@@ -336,15 +354,11 @@ body.mineacle-home a {
   background-image: url("../images/social-youtube.png");
 }
 
-/* ==========================================================================
-   HERO STAGE
-   ========================================================================== */
-
 .home-stage {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  border: 1px solid rgba(248, 248, 248, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.025);
   background:
     #151515
     url("../images/hero.webp")
@@ -356,24 +370,14 @@ body.mineacle-home a {
 .home-stage__media {
   position: absolute;
   z-index: -1;
-  inset: -1%;
+  inset: 0;
   display: block;
-  width: 102%;
-  height: 102%;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   object-position: center;
   pointer-events: none;
-  transform: scale(1.01);
-  transition:
-    filter 420ms ease-out,
-    transform 900ms cubic-bezier(0.2, 0.7, 0.2, 1);
-  will-change: transform;
-}
-
-.home-stage:hover .home-stage__media,
-.home-stage:focus-visible .home-stage__media,
-.home-stage:focus-within .home-stage__media {
-  transform: scale(1.025);
+  transform: none;
 }
 
 .home-stage.is-video-fallback .home-stage__media {
@@ -403,10 +407,6 @@ body.mineacle-home a {
   height: 100%;
 }
 
-/* ==========================================================================
-   PLAY
-   ========================================================================== */
-
 .home-play {
   position: absolute;
   left: 50%;
@@ -418,8 +418,8 @@ body.mineacle-home a {
   padding: 0 18px;
   border: 0;
   border-radius: 2px;
-  background: var(--home-green);
-  color: #f8f8f8;
+  background: #389222;
+  color: #ffffff;
   font-size: clamp(16px, 1.1vw, 20px);
   font-weight: 600;
   letter-spacing: 0.01em;
@@ -427,104 +427,38 @@ body.mineacle-home a {
   text-transform: uppercase;
   cursor: pointer;
   transform: translateX(-50%);
-  transition:
-    background-color 120ms ease-out,
-    filter 120ms ease-out,
-    transform 120ms ease-out;
+  transition: transform 120ms ease-out;
+}
+
+.home-play:hover,
+.home-play:focus-visible,
+.home-play:active,
+.home-play.is-status-preview,
+.home-play.has-copy-feedback {
+  background: #389222;
 }
 
 .home-play:hover,
 .home-play:focus-visible {
-  background: var(--home-green-hover);
   transform: translateX(-50%) translateY(-2px);
 }
 
 .home-play:active {
-  filter: brightness(0.96);
+  filter: none;
   transform: translateX(-50%);
-}
-
-.home-play.is-status-preview,
-.home-play.has-copy-feedback {
-  background: var(--home-green);
 }
 
 .home-play.is-copy-error {
   background: #b63d3d;
 }
 
-/* ==========================================================================
-   EXISTING MERCHANT FEATURE AS A CLEAN HOVER REVEAL
-   ========================================================================== */
-
-.home-story {
-  position: absolute;
-  left: clamp(24px, 2vw, 42px);
-  bottom: clamp(108px, 8vw, 146px);
-  width: min(650px, 54%);
-  padding: 22px 24px;
-  border: 1px solid rgba(248, 248, 248, 0.08);
-  border-radius: 3px;
-  background: rgba(17, 17, 17, 0.72);
-  opacity: 0;
-  transform: translateY(12px);
-  backdrop-filter: blur(10px);
-  pointer-events: none;
-  transition:
-    opacity 180ms ease-out,
-    transform 180ms ease-out;
-}
-
-.home-stage:hover .home-story,
-.home-stage:focus-visible .home-story,
-.home-stage:focus-within .home-story {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.home-story__eyebrow {
-  display: block;
-  margin-bottom: 8px;
-  color: var(--home-tertiary);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
-}
-
-.home-story h2 {
-  margin: 0;
-  color: var(--home-text);
-  font-size: clamp(24px, 1.65vw, 34px);
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.05;
-  text-transform: uppercase;
-}
-
-.home-story p {
-  margin: 14px 0 0;
-  color: #bbbbbb;
-  font-size: clamp(12px, 0.72vw, 15px);
-  line-height: 1.5;
-}
-
-/* ==========================================================================
-   FOCUS
-   ========================================================================== */
-
 .home-nav-brand:focus-visible,
 .home-nav-link:focus-visible,
 .home-social:focus-visible,
-.home-stage:focus-visible,
 .home-play:focus-visible {
   outline: 2px solid var(--home-secondary);
   outline-offset: 3px;
 }
-
-/* ==========================================================================
-   RESPONSIVE
-   ========================================================================== */
 
 @media (max-width: 1000px) {
   :root {
@@ -533,10 +467,6 @@ body.mineacle-home a {
 
   .home-nav-link {
     font-size: 14px;
-  }
-
-  .home-story {
-    width: min(580px, 68%);
   }
 }
 
@@ -582,10 +512,17 @@ body.mineacle-home a {
 
   .home-nav-link {
     justify-content: center;
-    height: 42px;
+    height: 46px;
     padding: 0 6px;
+    gap: 6px;
     font-size: 11px;
     text-align: center;
+  }
+
+  .home-nav-link__icon {
+    width: 16px;
+    height: 16px;
+    flex-basis: 16px;
   }
 
   .home-nav-link::before {
@@ -597,14 +534,14 @@ body.mineacle-home a {
     height: 2px;
   }
 
-  .home-nav-link:hover span,
-  .home-nav-link:focus-visible span {
+  .home-nav-link:hover .home-nav-link__label,
+  .home-nav-link:focus-visible .home-nav-link__label {
     transform: translateY(-1px);
   }
 
   .home-socials {
     grid-template-columns: repeat(3, 40px);
-    justify-content: end;
+    justify-content: center;
     margin-top: 18px;
   }
 
@@ -616,15 +553,6 @@ body.mineacle-home a {
   .home-stage {
     height: min(760px, calc(var(--home-viewport) - 220px));
     min-height: 540px;
-  }
-
-  .home-story {
-    left: 18px;
-    right: 18px;
-    bottom: 110px;
-    width: auto;
-    opacity: 1;
-    transform: none;
   }
 
   .home-play {
@@ -649,25 +577,9 @@ body.mineacle-home a {
     min-height: 580px;
   }
 
-  .home-story {
-    padding: 18px;
-  }
-
-  .home-story p {
-    font-size: 12px;
-    line-height: 1.45;
-  }
-
   .home-play {
     height: 50px;
     font-size: 17px;
-  }
-}
-
-@media (hover: none) {
-  .home-story {
-    opacity: 1;
-    transform: none;
   }
 }
 
@@ -678,9 +590,5 @@ body.mineacle-home a {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-  }
-
-  .home-stage__media {
-    transform: none !important;
   }
 }

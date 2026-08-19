@@ -119,6 +119,7 @@ if (
 }
 
 $assetDirectory = __DIR__ . '/assets';
+$sharedIconDirectory = dirname(__DIR__) . '/shared/assets/icons';
 
 $assetFiles = [
     $assetDirectory . '/css/home.css',
@@ -129,6 +130,11 @@ $assetFiles = [
     $assetDirectory . '/images/social-discord.png',
     $assetDirectory . '/images/social-x.png',
     $assetDirectory . '/images/social-youtube.png',
+    $sharedIconDirectory . '/home.png',
+    $sharedIconDirectory . '/vote.png',
+    $sharedIconDirectory . '/leaderboards.png',
+    $sharedIconDirectory . '/bans.png',
+    $sharedIconDirectory . '/store.png',
 ];
 
 $assetVersion = 1;
@@ -153,7 +159,7 @@ mineacle_page_head('Home', [
     ],
     'body_class' => 'mineacle-home',
     'external_fonts' => false,
-    'theme_color' => '#111111',
+    'theme_color' => '#222222',
 ]);
 ?>
 <main class="home-page" aria-labelledby="home-page-title">
@@ -191,12 +197,13 @@ mineacle_page_head('Home', [
                     <?php foreach ($navigationLinks as $link): ?>
                         <?php $isCurrent = $link['key'] === 'home'; ?>
                         <a
-                            class="home-nav-link<?php echo $isCurrent ? ' is-current' : ''; ?>"
+                            class="home-nav-link home-nav-link--<?php echo h((string) $link['key']); ?><?php echo $isCurrent ? ' is-current' : ''; ?>"
                             href="<?php echo h((string) $link['url']); ?>"
                             <?php echo $isCurrent ? 'aria-current="page"' : ''; ?>
                             <?php echo $link['external'] ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>
                         >
-                            <span><?php echo h((string) $link['label']); ?></span>
+                            <span class="home-nav-link__icon" aria-hidden="true"></span>
+                            <span class="home-nav-link__label"><?php echo h((string) $link['label']); ?></span>
                         </a>
                     <?php endforeach; ?>
                 </nav>
@@ -220,9 +227,8 @@ mineacle_page_head('Home', [
 
         <section
             class="home-stage"
-            aria-labelledby="merchant-title"
+            aria-label="Mineacle server"
             data-home-hero
-            tabindex="0"
         >
             <?php if ($heroVideoUrl !== ''): ?>
                 <video
@@ -253,18 +259,6 @@ mineacle_page_head('Home', [
             <div class="home-stage__veil" aria-hidden="true"></div>
 
             <div class="home-stage__content">
-                <article class="home-story">
-                    <span class="home-story__eyebrow">Mineacle SMP</span>
-                    <h2 id="merchant-title">The Merchant</h2>
-                    <p>
-                        In a silent world stripped of color, a nameless wanderer found a portal
-                        hidden behind layers of unbreakable stone. It opened into a vibrant land
-                        filled with crowded markets, growing settlements, and Merchants who valued
-                        every block gathered and every item crafted. They claimed the realm's
-                        prosperity came from an ancient source buried beneath the first village.
-                    </p>
-                </article>
-
                 <button
                     class="home-play"
                     type="button"
