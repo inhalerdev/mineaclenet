@@ -6,25 +6,33 @@ require_once __DIR__ . '/../shared/components/page-start.php';
 require_once __DIR__ . '/../shared/components/page-end.php';
 
 $player = current_player();
-$displayName = $player['username'] ?? config('default_player', 'Explorer');
+$isLoggedIn = $player !== null;
+$displayName = $isLoggedIn ? (string) $player['username'] : 'Explorer';
 $serverAddress = (string) config('server_address', 'play.mineacle.net');
 
 render_page_start('Home', 'home', ['/home/assets/css/home.css'], 'page-home');
 ?>
 <section class="home-layout" aria-label="Mineacle home">
-    <div class="hero-panel">
+    <div class="hero-panel<?= $isLoggedIn ? ' is-authenticated' : ' is-guest' ?>">
         <div class="hero-copy">
             <div class="hero-eyebrow">
                 <span class="status-dot" aria-hidden="true"></span>
-                Mineacle Network Online
+                <?= $isLoggedIn ? 'Profile connected' : 'Mineacle Network online' ?>
             </div>
 
-            <h1 class="hero-title">Your world.<br><span class="accent-word">Built better.</span></h1>
-
-            <p>
-                A focused Minecraft network built around progression, competition and quality-of-life systems.
-                Jump in fast, track your profile and keep everything that matters one click away.
-            </p>
+            <?php if ($isLoggedIn): ?>
+                <h1 class="hero-title">Welcome back,<br><span class="accent-word"><?= e($displayName) ?></span></h1>
+                <p>
+                    Your Mineacle tools stay in the same place every visit. Open your profile, vote for rewards,
+                    compare rankings or jump straight back into the server.
+                </p>
+            <?php else: ?>
+                <h1 class="hero-title">Everything Mineacle.<br><span class="accent-word">One place.</span></h1>
+                <p>
+                    Join the server, track player progress, vote for rewards, review rankings and keep the most
+                    useful Mineacle actions one click away.
+                </p>
+            <?php endif; ?>
 
             <div class="hero-actions">
                 <button
@@ -36,9 +44,21 @@ render_page_start('Home', 'home', ['/home/assets/css/home.css'], 'page-home');
                     <span data-copy-label>Play now</span>
                 </button>
 
+                <?php if ($isLoggedIn): ?>
+                    <a class="button button-primary" href="<?= e(player_profile_url($displayName)) ?>">
+                        <?php render_icon('player.svg'); ?>
+                        View my profile
+                    </a>
+                <?php else: ?>
+                    <button class="button button-primary" type="button" data-login-open>
+                        <?php render_icon('player.svg'); ?>
+                        Player login
+                    </button>
+                <?php endif; ?>
+
                 <a class="button button-secondary" href="/store">
                     <?php render_icon('store.png'); ?>
-                    Upgrade rank
+                    Store
                 </a>
             </div>
 
@@ -52,22 +72,32 @@ render_page_start('Home', 'home', ['/home/assets/css/home.css'], 'page-home');
                     <span>Modern Minecraft support</span>
                 </div>
                 <div class="meta-stat">
-                    <strong>Mineacle+</strong>
-                    <span>Extra in-game benefits</span>
+                    <strong><?= $isLoggedIn ? 'Connected' : 'Public' ?></strong>
+                    <span><?= $isLoggedIn ? 'Player session active' : 'Stats and moderation data' ?></span>
                 </div>
             </div>
         </div>
 
         <div class="player-stage" data-skin-stage>
-            <div class="skin-halo" aria-hidden="true"></div>
             <div class="skin-card">
+                <div class="skin-toolbar">
+                    <span class="skin-state"><span class="status-dot" aria-hidden="true"></span><?= $isLoggedIn ? 'Your profile' : 'Player preview' ?></span>
+                    <span class="skin-badge"><?= $isLoggedIn ? 'SIGNED IN' : 'GUEST' ?></span>
+                </div>
+
                 <img src="/shared/assets/images/mock-skin.svg" alt="Mock Minecraft player skin">
+
                 <div class="skin-label">
+                    <span class="skin-avatar" aria-hidden="true"><?php render_icon('player.svg'); ?></span>
                     <span class="skin-label-copy">
-                        <strong><?= e((string) $displayName) ?></strong>
-                        <small><?= $player ? 'Signed in player' : 'Preview profile' ?></small>
+                        <strong><?= e($displayName) ?></strong>
+                        <small><?= $isLoggedIn ? 'Open your stats from here anytime' : 'Sign in to connect your player profile' ?></small>
                     </span>
-                    <span class="skin-label-badge"><?= $player ? 'PROFILE' : 'MOCKUP' ?></span>
+                    <?php if ($isLoggedIn): ?>
+                        <a class="skin-action" href="<?= e(player_profile_url($displayName)) ?>" aria-label="View <?= e($displayName) ?> profile">View</a>
+                    <?php else: ?>
+                        <button class="skin-action" type="button" data-login-open>Sign in</button>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -77,22 +107,31 @@ render_page_start('Home', 'home', ['/home/assets/css/home.css'], 'page-home');
         <a class="quick-card" href="/vote">
             <span class="card-arrow" aria-hidden="true">↗</span>
             <span class="card-icon"><?php render_icon('vote.png'); ?></span>
-            <h2>Vote & earn</h2>
-            <p>Support the network and collect in-game vote rewards from one clean page.</p>
+            <div class="quick-copy">
+                <span class="quick-kicker">REWARDS</span>
+                <h2>Vote & earn</h2>
+                <p>Support Mineacle and collect in-game rewards from a predictable daily flow.</p>
+            </div>
         </a>
 
         <a class="quick-card" href="/leaderboard">
             <span class="card-arrow" aria-hidden="true">↗</span>
             <span class="card-icon"><?php render_icon('leaderboard.png'); ?></span>
-            <h2>Climb the leaderboard</h2>
-            <p>Compare player progress, economy, combat and server-wide rankings.</p>
+            <div class="quick-copy">
+                <span class="quick-kicker">RANKINGS</span>
+                <h2>Leaderboard</h2>
+                <p>Search players, compare progress and open any public player profile directly from rankings.</p>
+            </div>
         </a>
 
         <a class="quick-card is-accent" href="/store">
             <span class="card-arrow" aria-hidden="true">↗</span>
             <span class="card-icon"><?php render_icon('store.png'); ?></span>
-            <h2>Upgrade to Mineacle+</h2>
-            <p>Unlock premium quality-of-life perks and help support continued development.</p>
+            <div class="quick-copy">
+                <span class="quick-kicker">MINEACLE+</span>
+                <h2>Upgrade your rank</h2>
+                <p>Unlock premium quality-of-life perks while supporting continued server development.</p>
+            </div>
         </a>
     </div>
 </section>

@@ -18,19 +18,29 @@ render_page_start('Leaderboard', 'leaderboard');
 <section class="section-page">
     <p class="section-kicker">Global rankings</p>
     <h1 class="section-title">See who is leading Mineacle.</h1>
-    <p class="section-copy">This is a layout-ready mock leaderboard. The data layer can later be wired to the same player statistics source used by the server.</p>
+    <p class="section-copy">Search from the bar above or select any player below to open their public profile. The current values are mock data for the foundation build.</p>
 
-    <table class="mock-table">
-        <thead>
-            <tr><th>Rank</th><th>Player</th><th>Balance</th><th>Playtime</th></tr>
-        </thead>
-        <tbody>
-        <?php foreach ($rows as $row): ?>
-            <tr>
-                <?php foreach ($row as $cell): ?><td><?= e($cell) ?></td><?php endforeach; ?>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
+    <div class="table-wrap">
+        <table class="mock-table">
+            <thead>
+                <tr><th>Rank</th><th>Player</th><th>Balance</th><th>Playtime</th></tr>
+            </thead>
+            <tbody>
+            <?php foreach ($rows as [$rank, $username, $balance, $playtime]): ?>
+                <tr>
+                    <td><?= e($rank) ?></td>
+                    <td>
+                        <a class="player-link" href="<?= e(player_profile_url($username)) ?>">
+                            <?php render_icon('player.svg'); ?>
+                            <?= e($username) ?>
+                        </a>
+                    </td>
+                    <td><?= e($balance) ?></td>
+                    <td><?= e($playtime) ?></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
 </section>
 <?php render_page_end(); ?>

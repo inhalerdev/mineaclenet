@@ -44,6 +44,28 @@
         if (outside) loginDialog.close();
     });
 
+    document.querySelectorAll('[data-player-search]').forEach((form) => {
+        form.addEventListener('submit', (event) => {
+            const input = form.querySelector('[data-player-search-input]');
+            const username = input?.value.trim() || '';
+
+            if (!/^[A-Za-z0-9_]{3,16}$/.test(username)) {
+                event.preventDefault();
+                input?.setCustomValidity('Enter a valid Minecraft username');
+                input?.reportValidity();
+                return;
+            }
+
+            input?.setCustomValidity('');
+            event.preventDefault();
+            window.location.assign(`/player/${encodeURIComponent(username)}`);
+        });
+    });
+
+    document.querySelectorAll('[data-player-search-input]').forEach((input) => {
+        input.addEventListener('input', () => input.setCustomValidity(''));
+    });
+
     document.querySelectorAll('[data-copy-server]').forEach((button) => {
         button.addEventListener('click', async () => {
             const address = button.getAttribute('data-copy-server') || '';

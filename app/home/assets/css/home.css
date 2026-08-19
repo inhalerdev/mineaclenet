@@ -1,7 +1,7 @@
 .home-layout {
-    min-height: calc(100svh - (var(--page-pad) * 2));
+    min-height: calc(100svh - (var(--page-pad) * 2) - 66px);
     display: grid;
-    grid-template-rows: minmax(520px, 1fr) auto;
+    grid-template-rows: minmax(470px, 1fr) auto;
     gap: var(--page-gap);
 }
 
@@ -10,17 +10,17 @@
     position: relative;
     overflow: hidden;
     border: 1px solid var(--line);
-    background: rgba(255,255,255,.035);
+    background: var(--surface);
     box-shadow: var(--shadow);
 }
 
 .hero-panel {
-    min-height: clamp(520px, 68svh, 820px);
-    padding: clamp(28px, 4.5vw, 76px);
-    border-radius: var(--radius-lg);
+    min-height: clamp(470px, 66svh, 730px);
+    padding: clamp(28px, 4vw, 64px);
+    border-radius: var(--radius-xl);
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(340px, .72fr);
-    gap: clamp(24px, 3vw, 64px);
+    grid-template-columns: minmax(0, 1fr) minmax(320px, .68fr);
+    gap: clamp(26px, 3vw, 54px);
     align-items: center;
     isolation: isolate;
 }
@@ -28,13 +28,12 @@
 .hero-panel::before {
     content: "";
     position: absolute;
-    width: min(56vw, 780px);
+    width: min(46vw, 650px);
     aspect-ratio: 1;
-    right: -11%;
-    top: -28%;
+    right: -10%;
+    top: -34%;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(176,120,255,.32), rgba(176,120,255,.10) 34%, transparent 68%);
-    filter: blur(8px);
+    background: radial-gradient(circle, rgba(176,120,255,.20), rgba(176,120,255,.055) 42%, transparent 69%);
     z-index: -2;
 }
 
@@ -42,12 +41,12 @@
     content: "";
     position: absolute;
     inset: 0;
-    opacity: .18;
+    opacity: .08;
     background-image:
-        linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
-    background-size: 42px 42px;
-    mask-image: linear-gradient(to right, transparent 4%, black 48%, black 100%);
+        linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+    background-size: 36px 36px;
+    mask-image: linear-gradient(to right, transparent 0%, black 56%, black 100%);
     z-index: -3;
 }
 
@@ -59,37 +58,29 @@
 
 .hero-eyebrow {
     width: fit-content;
-    margin-bottom: 18px;
-    padding: 8px 11px;
-    border: 1px solid rgba(17,252,123,.24);
-    border-radius: 999px;
+    margin-bottom: 16px;
+    padding: 6px 8px;
+    border: 1px solid rgba(17,252,123,.20);
+    border-radius: var(--radius-sm);
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 7px;
     color: var(--accent);
-    background: rgba(17,252,123,.065);
-    font-size: 11px;
-    font-weight: 850;
-    letter-spacing: .10em;
+    background: rgba(17,252,123,.055);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: .09em;
     text-transform: uppercase;
-}
-
-.status-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 16px rgba(17,252,123,.72);
 }
 
 .hero-title {
     margin: 0;
     max-width: 760px;
     color: var(--white);
-    font-size: clamp(52px, 6.2vw, 108px);
-    font-weight: 900;
-    line-height: .88;
-    letter-spacing: -.075em;
+    font-size: clamp(48px, 5.7vw, 96px);
+    font-weight: 700;
+    line-height: .9;
+    letter-spacing: -.065em;
 }
 
 .hero-title .accent-word {
@@ -97,38 +88,39 @@
 }
 
 .hero-copy > p {
-    max-width: 630px;
-    margin: 24px 0 0;
+    max-width: 620px;
+    margin: 20px 0 0;
     color: var(--sub-white);
-    font-size: clamp(15px, 1.2vw, 19px);
-    line-height: 1.65;
+    font-size: clamp(13px, 1vw, 16px);
+    line-height: 1.62;
 }
 
 .hero-actions {
-    margin-top: 30px;
+    margin-top: 24px;
     display: flex;
     flex-wrap: wrap;
-    gap: 11px;
+    gap: 8px;
 }
 
 .play-button {
-    min-width: 184px;
+    min-width: 142px;
 }
 
-.play-button .ui-icon {
-    width: 17px;
-    height: 17px;
+.play-button .ui-icon,
+.hero-actions .ui-icon {
+    width: 15px;
+    height: 15px;
 }
 
 .play-button.is-copied {
-    filter: saturate(.92) brightness(1.03);
+    filter: saturate(.92) brightness(1.02);
 }
 
 .hero-meta {
-    margin-top: 26px;
+    margin-top: 22px;
     display: flex;
     flex-wrap: wrap;
-    gap: 16px 24px;
+    gap: 15px 22px;
 }
 
 .meta-stat {
@@ -138,101 +130,150 @@
 
 .meta-stat strong {
     color: var(--white);
-    font-size: 13px;
+    font-size: 11px;
+    font-weight: 600;
 }
 
 .meta-stat span {
     color: var(--sub-white);
-    font-size: 11px;
+    font-size: 9px;
 }
 
 .player-stage {
-    min-height: 430px;
+    min-height: 390px;
     position: relative;
     display: grid;
     place-items: center;
-}
-
-.skin-halo {
-    width: min(100%, 430px);
-    aspect-ratio: 1;
-    position: absolute;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(208,175,255,.20), rgba(176,120,255,.075) 46%, transparent 70%);
-    filter: blur(2px);
 }
 
 .skin-card {
-    width: min(100%, 420px);
-    min-height: 440px;
+    width: min(100%, 380px);
+    min-height: 400px;
     position: relative;
     display: grid;
+    grid-template-rows: auto 1fr auto;
     place-items: center;
-    border: 1px solid rgba(255,255,255,.09);
-    border-radius: 26px;
-    background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.018));
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
-    transform: perspective(1000px) rotateY(-4deg);
-    transition: transform 260ms var(--ease), border-color 260ms var(--ease);
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: var(--radius-xl);
+    background: rgba(255,255,255,.035);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+    transition: border-color 180ms var(--ease), transform 180ms var(--ease), background-color 180ms var(--ease);
 }
 
 .hero-panel:hover .skin-card {
-    transform: perspective(1000px) rotateY(-1deg) translateY(-3px);
+    transform: translateY(-2px);
     border-color: rgba(208,175,255,.18);
+    background: rgba(255,255,255,.045);
 }
 
-.skin-card img {
-    width: min(78%, 310px);
-    max-height: 420px;
-    object-fit: contain;
-    filter: drop-shadow(0 26px 24px rgba(0,0,0,.22));
-    image-rendering: pixelated;
-    transition: transform 160ms linear;
-}
-
-.skin-label {
-    position: absolute;
-    left: 16px;
-    right: 16px;
-    bottom: 16px;
-    min-height: 58px;
-    padding: 12px 14px;
-    border: 1px solid var(--line);
-    border-radius: 14px;
+.skin-toolbar {
+    width: 100%;
+    min-height: 38px;
+    padding: 0 11px;
+    border-bottom: 1px solid var(--line);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 14px;
-    background: rgba(51,51,51,.86);
-    backdrop-filter: blur(14px);
+    gap: 10px;
+}
+
+.skin-state {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--sub-white);
+    font-size: 9px;
+}
+
+.skin-badge {
+    padding: 4px 6px;
+    border-radius: var(--radius-sm);
+    color: var(--secondary);
+    background: rgba(176,120,255,.10);
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: .07em;
+}
+
+.skin-card > img {
+    width: min(68%, 245px);
+    max-height: 305px;
+    object-fit: contain;
+    filter: drop-shadow(0 18px 18px rgba(0,0,0,.20));
+    image-rendering: pixelated;
+    transition: transform 150ms linear;
+}
+
+.skin-label {
+    width: calc(100% - 16px);
+    min-height: 54px;
+    margin: 0 8px 8px;
+    padding: 8px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,0,0,.12);
+}
+
+.skin-avatar {
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(176,120,255,.24);
+    border-radius: var(--radius-md);
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    color: var(--secondary);
+    background: rgba(176,120,255,.08);
+}
+
+.skin-avatar .ui-icon {
+    width: 15px;
+    height: 15px;
 }
 
 .skin-label-copy {
     min-width: 0;
     display: grid;
-    gap: 3px;
+    gap: 2px;
 }
 
 .skin-label-copy strong {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: 13px;
+    font-size: 11px;
+    font-weight: 600;
 }
 
 .skin-label-copy small {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     color: var(--sub-white);
-    font-size: 11px;
+    font-size: 9px;
 }
 
-.skin-label-badge {
-    padding: 7px 9px;
-    border-radius: 9px;
+.skin-action {
+    min-height: 28px;
+    margin-left: auto;
+    padding: 0 8px;
+    border: 1px solid rgba(176,120,255,.24);
+    border-radius: var(--radius-sm);
+    display: inline-flex;
+    align-items: center;
     color: var(--secondary);
-    background: rgba(176,120,255,.10);
-    font-size: 10px;
-    font-weight: 850;
-    letter-spacing: .08em;
+    background: rgba(176,120,255,.08);
+    cursor: pointer;
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.skin-action:hover {
+    color: var(--white);
+    background: rgba(176,120,255,.15);
 }
 
 .quick-grid {
@@ -242,113 +283,128 @@
 }
 
 .quick-card {
-    min-height: 210px;
-    padding: 24px;
-    border-radius: 22px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    transition:
-        transform 200ms var(--ease),
-        border-color 200ms var(--ease),
-        background-color 200ms var(--ease);
+    min-height: 176px;
+    padding: 16px;
+    border-radius: var(--radius-xl);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1fr auto;
+    column-gap: 14px;
+    transition: border-color 160ms var(--ease), background-color 160ms var(--ease), transform 160ms var(--ease);
 }
 
 .quick-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(208,175,255,.25);
-    background: rgba(255,255,255,.055);
+    transform: translateY(-2px);
+    border-color: rgba(208,175,255,.22);
+    background: var(--surface-strong);
 }
 
 .quick-card .card-icon {
-    width: 46px;
-    height: 46px;
-    margin-bottom: auto;
-    padding: 12px;
+    width: 38px;
+    height: 38px;
+    padding: 9px;
     border: 1px solid var(--line);
-    border-radius: 14px;
+    border-radius: var(--radius-md);
     display: grid;
     place-items: center;
     color: var(--secondary);
-    background: rgba(176,120,255,.08);
+    background: rgba(176,120,255,.075);
+    grid-row: 1;
 }
 
 .quick-card .card-icon .ui-icon {
-    width: 21px;
-    height: 21px;
+    width: 18px;
+    height: 18px;
+}
+
+.quick-copy {
+    grid-column: 1 / -1;
+    align-self: end;
+}
+
+.quick-kicker {
+    color: var(--secondary);
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: .09em;
 }
 
 .quick-card h2 {
-    margin: 28px 0 7px;
-    font-size: clamp(19px, 1.6vw, 25px);
+    margin: 5px 0 5px;
+    font-size: clamp(17px, 1.35vw, 22px);
+    font-weight: 600;
     letter-spacing: -.035em;
 }
 
 .quick-card p {
-    max-width: 420px;
+    max-width: 440px;
     margin: 0;
     color: var(--sub-white);
-    font-size: 13px;
-    line-height: 1.55;
+    font-size: 11px;
+    line-height: 1.5;
 }
 
 .quick-card .card-arrow {
     position: absolute;
-    top: 22px;
-    right: 22px;
+    top: 14px;
+    right: 14px;
     color: var(--sub-white);
-    font-size: 22px;
-    transition: transform 180ms var(--ease), color 180ms var(--ease);
+    font-size: 17px;
+    transition: transform 150ms var(--ease), color 150ms var(--ease);
 }
 
 .quick-card:hover .card-arrow {
     color: var(--white);
-    transform: translate(2px, -2px);
+    transform: translate(1px, -1px);
 }
 
 .quick-card.is-accent {
-    border-color: rgba(17,252,123,.18);
-    background: linear-gradient(135deg, rgba(17,252,123,.065), rgba(255,255,255,.025));
+    border-color: rgba(17,252,123,.16);
+    background: linear-gradient(135deg, rgba(17,252,123,.045), rgba(255,255,255,.045));
+}
+
+.quick-card.is-accent .card-icon,
+.quick-card.is-accent .quick-kicker {
+    color: var(--accent);
 }
 
 .quick-card.is-accent .card-icon {
-    color: var(--accent);
-    border-color: rgba(17,252,123,.18);
-    background: rgba(17,252,123,.06);
+    border-color: rgba(17,252,123,.16);
+    background: rgba(17,252,123,.05);
 }
 
 @media (min-width: 1800px) {
     .hero-panel {
-        grid-template-columns: minmax(0, 1fr) 520px;
+        grid-template-columns: minmax(0, 1fr) 450px;
     }
 
     .skin-card {
-        width: 460px;
-        min-height: 500px;
+        width: 410px;
+        min-height: 440px;
     }
 
-    .skin-card img {
-        width: 330px;
-        max-height: 470px;
+    .skin-card > img {
+        width: 260px;
+        max-height: 335px;
     }
 
     .quick-card {
-        min-height: 230px;
+        min-height: 188px;
     }
 }
 
 @media (max-width: 1180px) {
     .hero-panel {
-        grid-template-columns: minmax(0, 1fr) 320px;
-        padding: 38px;
+        grid-template-columns: minmax(0, 1fr) 300px;
+        padding: 34px;
     }
 
     .skin-card {
-        min-height: 390px;
+        min-height: 360px;
     }
 
     .player-stage {
-        min-height: 390px;
+        min-height: 360px;
     }
 }
 
@@ -360,21 +416,16 @@
     .hero-panel {
         min-height: auto;
         grid-template-columns: 1fr;
-        gap: 32px;
+        gap: 28px;
     }
 
     .player-stage {
-        min-height: 360px;
+        min-height: 340px;
     }
 
     .skin-card {
-        width: min(100%, 420px);
-        min-height: 370px;
-        transform: none;
-    }
-
-    .hero-panel:hover .skin-card {
-        transform: translateY(-2px);
+        width: min(100%, 400px);
+        min-height: 350px;
     }
 
     .quick-grid {
@@ -382,18 +433,17 @@
     }
 
     .quick-card {
-        min-height: 170px;
+        min-height: 146px;
     }
 }
 
 @media (max-width: 620px) {
     .hero-panel {
-        padding: 24px 19px;
-        border-radius: 22px;
+        padding: 22px 16px;
     }
 
     .hero-title {
-        font-size: clamp(48px, 15vw, 76px);
+        font-size: clamp(44px, 14vw, 68px);
     }
 
     .hero-actions {
@@ -405,24 +455,18 @@
     }
 
     .player-stage {
-        min-height: 320px;
+        min-height: 310px;
     }
 
     .skin-card {
-        min-height: 320px;
-        border-radius: 20px;
+        min-height: 315px;
     }
 
-    .skin-card img {
-        max-height: 300px;
+    .skin-card > img {
+        max-height: 245px;
     }
 
     .quick-grid {
-        gap: 12px;
-    }
-
-    .quick-card {
-        min-height: 160px;
-        border-radius: 20px;
+        gap: 10px;
     }
 }

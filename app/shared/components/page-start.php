@@ -20,9 +20,12 @@ function render_page_start(
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#333333">
+    <meta name="theme-color" content="#222222">
     <meta name="color-scheme" content="dark">
     <title><?= e($fullTitle) ?></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/shared/assets/css/base.css">
     <?php foreach ($extraCss as $sheet): ?>
         <link rel="stylesheet" href="<?= e($sheet) ?>">
@@ -58,13 +61,13 @@ function render_page_start(
 
         <?php if ($player): ?>
             <div class="account-card">
-                <a class="account-main" href="/player/<?= rawurlencode((string) $player['username']) ?>">
+                <a class="account-main" href="<?= e(player_profile_url((string) $player['username'])) ?>">
                     <span class="pixel-head" aria-hidden="true">
-                        <span><?= e(strtoupper(substr((string) $player['username'], 0, 1))) ?></span>
+                        <?php render_icon('player.svg'); ?>
                     </span>
                     <span class="account-copy">
                         <strong><?= e((string) $player['username']) ?></strong>
-                        <small>View player stats</small>
+                        <small>View your profile</small>
                     </span>
                     <?php render_icon('chevron-down.png', 'account-chevron'); ?>
                 </a>
@@ -75,7 +78,7 @@ function render_page_start(
             </div>
         <?php else: ?>
             <button class="login-rail-button" type="button" data-login-open>
-                <span class="pixel-head is-guest" aria-hidden="true">?</span>
+                <span class="pixel-head is-guest" aria-hidden="true"><?php render_icon('player.svg'); ?></span>
                 <span class="account-copy">
                     <strong>Player login</strong>
                     <small>Link your profile</small>
@@ -95,5 +98,32 @@ function render_page_start(
     </div>
 
     <main class="page-canvas">
+        <div class="page-toolbar">
+            <div class="toolbar-context">
+                <span class="toolbar-label"><?= e($title === '' ? $siteName : $title) ?></span>
+                <?php if ($player): ?>
+                    <span class="toolbar-state"><span class="status-dot" aria-hidden="true"></span> Signed in</span>
+                <?php else: ?>
+                    <button class="toolbar-login" type="button" data-login-open>Sign in</button>
+                <?php endif; ?>
+            </div>
+
+            <form class="player-search" action="/player" method="get" role="search" data-player-search>
+                <span class="search-icon" aria-hidden="true"><?php render_icon('player.svg'); ?></span>
+                <input
+                    type="search"
+                    name="username"
+                    minlength="3"
+                    maxlength="16"
+                    pattern="[A-Za-z0-9_]{3,16}"
+                    autocomplete="off"
+                    placeholder="Search player"
+                    aria-label="Search for a player"
+                    data-player-search-input
+                    required
+                >
+                <button type="submit" aria-label="Open player profile">Go</button>
+            </form>
+        </div>
 <?php
 }

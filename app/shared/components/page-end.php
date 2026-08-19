@@ -11,8 +11,8 @@ function render_login_dialog(): void
     <dialog class="login-dialog" data-login-dialog>
         <button class="dialog-close" type="button" data-login-close aria-label="Close login">×</button>
         <div class="dialog-kicker">PLAYER ACCESS</div>
-        <h2>Sign in to Mineacle</h2>
-        <p>This local prototype uses a username-only mock login. Production authentication should be linked to the game server.</p>
+        <h2>Connect your player</h2>
+        <p>Use your Minecraft username to personalize this prototype. Production authentication will verify ownership through the game server.</p>
 
         <form class="login-form" action="/login" method="post" novalidate>
             <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">

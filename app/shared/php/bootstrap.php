@@ -62,13 +62,22 @@ function safe_return_path(?string $path, string $fallback = '/'): string
     return $path;
 }
 
+function valid_player_name(?string $username): bool
+{
+    return is_string($username) && preg_match('/^[A-Za-z0-9_]{3,16}$/', $username) === 1;
+}
+
+function player_profile_url(string $username): string
+{
+    return '/player/' . rawurlencode($username);
+}
+
 function nav_items(): array
 {
     return [
         ['key' => 'home', 'label' => 'Home', 'href' => '/', 'icon' => 'home.png'],
         ['key' => 'vote', 'label' => 'Vote', 'href' => '/vote', 'icon' => 'vote.png'],
         ['key' => 'leaderboard', 'label' => 'Leaderboard', 'href' => '/leaderboard', 'icon' => 'leaderboard.png'],
-        ['key' => 'player', 'label' => 'Player stats', 'href' => '/player', 'icon' => 'player.svg'],
         ['key' => 'bans', 'label' => 'Bans', 'href' => '/bans', 'icon' => 'bans.png'],
         ['key' => 'store', 'label' => 'Store', 'href' => '/store', 'icon' => 'store.png'],
     ];

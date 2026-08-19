@@ -6,9 +6,15 @@ require_once __DIR__ . '/../shared/components/page-start.php';
 require_once __DIR__ . '/../shared/components/page-end.php';
 
 $loggedIn = current_player();
-$username = (string) ($_GET['username'] ?? ($loggedIn['username'] ?? 'Explorer'));
-if (preg_match('/^[A-Za-z0-9_]{3,16}$/', $username) !== 1) {
-    $username = 'Explorer';
+$username = trim((string) ($_GET['username'] ?? ''));
+
+if ($username === '' && isset($loggedIn['username']) && is_string($loggedIn['username'])) {
+    $username = $loggedIn['username'];
+}
+
+if (!valid_player_name($username)) {
+    header('Location: /leaderboard', true, 302);
+    exit;
 }
 
 $stats = [
@@ -20,12 +26,12 @@ $stats = [
     ['Rank', 'Mineacle+'],
 ];
 
-render_page_start($username, 'player');
+render_page_start($username);
 ?>
 <section class="section-page">
     <p class="section-kicker">Player profile</p>
     <h1 class="section-title"><?= e($username) ?></h1>
-    <p class="section-copy">This profile is intentionally mocked for the foundation build. It is structured to accept real stats without changing the page shell.</p>
+    <p class="section-copy">Opened from player search, leaderboard results, bans entries or your signed-in account. The values below are mock data until the production statistics adapter is connected.</p>
 
     <div class="content-grid">
         <?php foreach ($stats as [$label, $value]): ?>
