@@ -64,8 +64,8 @@ $navigationLinks = [
     ],
     [
         'key' => 'bans',
-        'label' => 'Bans',
-        'url' => 'https://bans.mineacle.net/',
+        'label' => 'Public Bans',
+        'url' => 'https://mineacle.net/bans',
         'external' => true,
     ],
     [
