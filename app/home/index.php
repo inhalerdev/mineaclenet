@@ -2,137 +2,287 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../shared/components/page-start.php';
-require_once __DIR__ . '/../shared/components/page-end.php';
+$requestPath = parse_url((string) ($_SERVER['REQUEST_URI'] ?? '/'), PHP_URL_PATH);
 
-$player = current_player();
-$isLoggedIn = $player !== null;
-$displayName = $isLoggedIn ? (string) $player['username'] : 'Explorer';
-$serverAddress = (string) config('server_address', 'play.mineacle.net');
+if (in_array($requestPath, ['/home', '/home.php', '/home/index.php'], true)) {
+    header('Location: /', true, 302);
+    exit;
+}
 
-render_page_start('Home', 'home', ['/home/assets/css/home.css'], 'page-home');
+require_once __DIR__ . '/../shared/php/layout.php';
+
+$config = mineacle_config();
+$site = is_array($config['site'] ?? null) ? $config['site'] : [];
+$home = is_array($config['home'] ?? null) ? $config['home'] : [];
+
+$minecraftIp = trim((string) ($site['minecraft_ip'] ?? 'mineacle.net')) ?: 'mineacle.net';
+
+$publicUrl = static function (mixed $value, string $fallback): string {
+    $url = mineacle_page_public_link($value);
+
+    return $url === '#' ? $fallback : $url;
+};
+
+$storeUrl = $publicUrl(
+    $site['store_url'] ?? '',
+    'https://store.mineacle.net/'
+);
+
+$discordUrl = $publicUrl(
+    $site['discord_url'] ?? '',
+    'https://discord.gg/qmpJ4xMguT'
+);
+
+$xUrl = $publicUrl(
+    $site['x_url'] ?? '',
+    'https://x.com/mineaclenetwork'
+);
+
+$youtubeUrl = $publicUrl(
+    $site['youtube_url'] ?? '',
+    'https://www.youtube.com/@mineaclenetwork'
+);
+
+$navigationLinks = [
+    [
+        'key' => 'home',
+        'label' => 'Home',
+        'url' => '/',
+        'external' => false,
+    ],
+    [
+        'key' => 'vote',
+        'label' => 'Vote',
+        'url' => '/vote',
+        'external' => false,
+    ],
+    [
+        'key' => 'leaderboards',
+        'label' => 'Leaderboards',
+        'url' => '/leaderboards',
+        'external' => false,
+    ],
+    [
+        'key' => 'bans',
+        'label' => 'Bans',
+        'url' => 'https://bans.mineacle.net/',
+        'external' => true,
+    ],
+    [
+        'key' => 'store',
+        'label' => 'Store',
+        'url' => $storeUrl,
+        'external' => true,
+    ],
+];
+
+$socialLinks = [
+    [
+        'key' => 'discord',
+        'label' => 'Join Mineacle on Discord',
+        'url' => $discordUrl,
+    ],
+    [
+        'key' => 'x',
+        'label' => 'Follow Mineacle on X',
+        'url' => $xUrl,
+    ],
+    [
+        'key' => 'youtube',
+        'label' => 'Watch Mineacle on YouTube',
+        'url' => $youtubeUrl,
+    ],
+];
+
+$heroVideoBaseUrl = 'https://pub-a87f1944ab6f4788a1974177e59cf562.r2.dev';
+$defaultHeroVideoUrl = $heroVideoBaseUrl . '/hero-bg.mp4';
+
+$heroVideoUrl = trim(
+    (string) ($home['hero_video_url'] ?? $defaultHeroVideoUrl)
+);
+
+$normalizedHeroVideoUrl = rtrim($heroVideoUrl, '/');
+
+if (
+    $normalizedHeroVideoUrl === $heroVideoBaseUrl
+    || $normalizedHeroVideoUrl === $heroVideoBaseUrl . '/Video%20Project%202.mp4'
+    || $normalizedHeroVideoUrl === $heroVideoBaseUrl . '/Video Project 2.mp4'
+) {
+    $heroVideoUrl = $defaultHeroVideoUrl;
+}
+
+if (
+    filter_var($heroVideoUrl, FILTER_VALIDATE_URL) === false
+    || strtolower((string) parse_url($heroVideoUrl, PHP_URL_SCHEME)) !== 'https'
+) {
+    $heroVideoUrl = '';
+}
+
+$assetDirectory = __DIR__ . '/assets';
+
+$assetFiles = [
+    $assetDirectory . '/css/home.css',
+    $assetDirectory . '/js/home.js',
+    $assetDirectory . '/images/hero.webp',
+    $assetDirectory . '/images/static-logo.png',
+    $assetDirectory . '/images/hover-logo.png',
+    $assetDirectory . '/images/social-discord.png',
+    $assetDirectory . '/images/social-x.png',
+    $assetDirectory . '/images/social-youtube.png',
+];
+
+$assetVersion = 1;
+
+foreach ($assetFiles as $assetFile) {
+    if (is_file($assetFile)) {
+        $assetVersion = max(
+            $assetVersion,
+            (int) filemtime($assetFile)
+        );
+    }
+}
+
+$assetRevision = rawurlencode((string) $assetVersion);
+
+mineacle_page_head('Home', [
+    'meta_title' => 'Home | Mineacle',
+    'meta_description' => 'Enter the world of Mineacle, join the Minecraft server, vote, view leaderboards, and connect with the community.',
+    'canonical_url' => 'https://mineacle.net/',
+    'stylesheets' => [
+        '/home/assets/css/home.css?rev=' . $assetRevision,
+    ],
+    'body_class' => 'mineacle-home',
+    'external_fonts' => false,
+    'theme_color' => '#111111',
+]);
 ?>
-<section class="home-layout" aria-label="Mineacle home">
-    <div class="hero-panel<?= $isLoggedIn ? ' is-authenticated' : ' is-guest' ?>">
-        <div class="hero-copy">
-            <div class="hero-eyebrow">
-                <span class="status-dot" aria-hidden="true"></span>
-                <?= $isLoggedIn ? 'Profile connected' : 'Mineacle Network online' ?>
-            </div>
+<main class="home-page" aria-labelledby="home-page-title">
+    <h1 id="home-page-title" class="visually-hidden">Mineacle</h1>
 
-            <?php if ($isLoggedIn): ?>
-                <h1 class="hero-title">Welcome back,<br><span class="accent-word"><?= e($displayName) ?></span></h1>
-                <p>
-                    Your Mineacle tools stay in the same place every visit. Open your profile, vote for rewards,
-                    compare rankings or jump straight back into the server.
-                </p>
-            <?php else: ?>
-                <h1 class="hero-title">Everything Mineacle.<br><span class="accent-word">One place.</span></h1>
-                <p>
-                    Join the server, track player progress, vote for rewards, review rankings and keep the most
-                    useful Mineacle actions one click away.
-                </p>
+    <div class="home-layout">
+        <aside class="home-nav-rail" aria-label="Mineacle navigation">
+            <div class="home-nav-rail__inner">
+                <a
+                    class="home-nav-brand"
+                    href="/"
+                    aria-label="Mineacle home"
+                >
+                    <span class="home-nav-brand__visual" aria-hidden="true">
+                        <img
+                            class="home-nav-brand__image home-nav-brand__image--static"
+                            src="/home/assets/images/static-logo.png?rev=<?php echo h($assetRevision); ?>"
+                            alt=""
+                            width="512"
+                            height="436"
+                            draggable="false"
+                        >
+                        <img
+                            class="home-nav-brand__image home-nav-brand__image--hover"
+                            src="/home/assets/images/hover-logo.png?rev=<?php echo h($assetRevision); ?>"
+                            alt=""
+                            width="512"
+                            height="436"
+                            draggable="false"
+                        >
+                    </span>
+                </a>
+
+                <nav class="home-nav-links" aria-label="Main navigation">
+                    <?php foreach ($navigationLinks as $link): ?>
+                        <?php $isCurrent = $link['key'] === 'home'; ?>
+                        <a
+                            class="home-nav-link<?php echo $isCurrent ? ' is-current' : ''; ?>"
+                            href="<?php echo h((string) $link['url']); ?>"
+                            <?php echo $isCurrent ? 'aria-current="page"' : ''; ?>
+                            <?php echo $link['external'] ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>
+                        >
+                            <span><?php echo h((string) $link['label']); ?></span>
+                        </a>
+                    <?php endforeach; ?>
+                </nav>
+
+                <nav class="home-socials" aria-label="Mineacle social links">
+                    <?php foreach ($socialLinks as $social): ?>
+                        <a
+                            class="home-social home-social--<?php echo h((string) $social['key']); ?>"
+                            href="<?php echo h((string) $social['url']); ?>"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="<?php echo h((string) $social['label']); ?>"
+                            title="<?php echo h((string) $social['label']); ?>"
+                        >
+                            <span class="home-social__icon" aria-hidden="true"></span>
+                        </a>
+                    <?php endforeach; ?>
+                </nav>
+            </div>
+        </aside>
+
+        <section
+            class="home-stage"
+            aria-labelledby="merchant-title"
+            data-home-hero
+            tabindex="0"
+        >
+            <?php if ($heroVideoUrl !== ''): ?>
+                <video
+                    class="home-stage__media"
+                    poster="/home/assets/images/hero.webp?rev=<?php echo h($assetRevision); ?>"
+                    width="2048"
+                    height="863"
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                    preload="metadata"
+                    disablepictureinpicture
+                    disableremoteplayback
+                    controlslist="nodownload nofullscreen noremoteplayback"
+                    aria-hidden="true"
+                    tabindex="-1"
+                    data-home-hero-video
+                >
+                    <source
+                        src="<?php echo h($heroVideoUrl); ?>"
+                        type="video/mp4"
+                        data-home-hero-source
+                    >
+                </video>
             <?php endif; ?>
 
-            <div class="hero-actions">
+            <div class="home-stage__veil" aria-hidden="true"></div>
+
+            <div class="home-stage__content">
+                <article class="home-story">
+                    <span class="home-story__eyebrow">Mineacle SMP</span>
+                    <h2 id="merchant-title">The Merchant</h2>
+                    <p>
+                        In a silent world stripped of color, a nameless wanderer found a portal
+                        hidden behind layers of unbreakable stone. It opened into a vibrant land
+                        filled with crowded markets, growing settlements, and Merchants who valued
+                        every block gathered and every item crafted. They claimed the realm's
+                        prosperity came from an ancient source buried beneath the first village.
+                    </p>
+                </article>
+
                 <button
-                    class="button button-accent play-button"
+                    class="home-play"
                     type="button"
-                    data-copy-server="<?= e($serverAddress) ?>"
+                    data-copy-server
+                    data-server-address="<?php echo h($minecraftIp); ?>"
+                    aria-label="Copy the Mineacle server address"
+                    title="Copy <?php echo h($minecraftIp); ?>"
                 >
-                    <?php render_icon('copy.png'); ?>
-                    <span data-copy-label>Play now</span>
+                    <span data-play-label aria-live="polite">Play</span>
                 </button>
-
-                <?php if ($isLoggedIn): ?>
-                    <a class="button button-primary" href="<?= e(player_profile_url($displayName)) ?>">
-                        <?php render_icon('player.svg'); ?>
-                        View my profile
-                    </a>
-                <?php else: ?>
-                    <button class="button button-primary" type="button" data-login-open>
-                        <?php render_icon('player.svg'); ?>
-                        Player login
-                    </button>
-                <?php endif; ?>
-
-                <a class="button button-secondary" href="/store">
-                    <?php render_icon('store.png'); ?>
-                    Store
-                </a>
             </div>
-
-            <div class="hero-meta" aria-label="Server information">
-                <div class="meta-stat">
-                    <strong><?= e($serverAddress) ?></strong>
-                    <span>Java server address</span>
-                </div>
-                <div class="meta-stat">
-                    <strong>1.21+</strong>
-                    <span>Modern Minecraft support</span>
-                </div>
-                <div class="meta-stat">
-                    <strong><?= $isLoggedIn ? 'Connected' : 'Public' ?></strong>
-                    <span><?= $isLoggedIn ? 'Player session active' : 'Stats and moderation data' ?></span>
-                </div>
-            </div>
-        </div>
-
-        <div class="player-stage" data-skin-stage>
-            <div class="skin-card">
-                <div class="skin-toolbar">
-                    <span class="skin-state"><span class="status-dot" aria-hidden="true"></span><?= $isLoggedIn ? 'Your profile' : 'Player preview' ?></span>
-                    <span class="skin-badge"><?= $isLoggedIn ? 'SIGNED IN' : 'GUEST' ?></span>
-                </div>
-
-                <img src="/shared/assets/images/mock-skin.svg" alt="Mock Minecraft player skin">
-
-                <div class="skin-label">
-                    <span class="skin-avatar" aria-hidden="true"><?php render_icon('player.svg'); ?></span>
-                    <span class="skin-label-copy">
-                        <strong><?= e($displayName) ?></strong>
-                        <small><?= $isLoggedIn ? 'Open your stats from here anytime' : 'Sign in to connect your player profile' ?></small>
-                    </span>
-                    <?php if ($isLoggedIn): ?>
-                        <a class="skin-action" href="<?= e(player_profile_url($displayName)) ?>" aria-label="View <?= e($displayName) ?> profile">View</a>
-                    <?php else: ?>
-                        <button class="skin-action" type="button" data-login-open>Sign in</button>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
+        </section>
     </div>
-
-    <div class="quick-grid" aria-label="Featured links">
-        <a class="quick-card" href="/vote">
-            <span class="card-arrow" aria-hidden="true">↗</span>
-            <span class="card-icon"><?php render_icon('vote.png'); ?></span>
-            <div class="quick-copy">
-                <span class="quick-kicker">REWARDS</span>
-                <h2>Vote & earn</h2>
-                <p>Support Mineacle and collect in-game rewards from a predictable daily flow.</p>
-            </div>
-        </a>
-
-        <a class="quick-card" href="/leaderboard">
-            <span class="card-arrow" aria-hidden="true">↗</span>
-            <span class="card-icon"><?php render_icon('leaderboard.png'); ?></span>
-            <div class="quick-copy">
-                <span class="quick-kicker">RANKINGS</span>
-                <h2>Leaderboard</h2>
-                <p>Search players, compare progress and open any public player profile directly from rankings.</p>
-            </div>
-        </a>
-
-        <a class="quick-card is-accent" href="/store">
-            <span class="card-arrow" aria-hidden="true">↗</span>
-            <span class="card-icon"><?php render_icon('store.png'); ?></span>
-            <div class="quick-copy">
-                <span class="quick-kicker">MINEACLE+</span>
-                <h2>Upgrade your rank</h2>
-                <p>Unlock premium quality-of-life perks while supporting continued server development.</p>
-            </div>
-        </a>
-    </div>
-</section>
-<?php render_page_end(['/home/assets/js/home.js']); ?>
+</main>
+<?php
+mineacle_page_end([
+    'scripts' => [
+        '/home/assets/js/home.js?rev=' . $assetRevision,
+    ],
+]);
+?>
