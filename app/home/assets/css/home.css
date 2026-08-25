@@ -150,9 +150,11 @@ body.mineacle-home main.home-page {
 
 /* Tall center card with the original Mineacle campfire video. */
 .home-panel--primary {
+  position: relative;
   isolation: isolate;
   grid-column: 2;
   grid-row: 2;
+  overflow: hidden;
   background:
     var(--home-panel)
     url("../images/hero.webp")
@@ -160,15 +162,36 @@ body.mineacle-home main.home-page {
     no-repeat;
 }
 
+/*
+ * Hard clipping boundary for the video.
+ * The media wrapper is sized from the center card, never the page.
+ */
+.home-panel__media {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/*
+ * Fit and center the campfire footage inside the tall center card only.
+ */
 .home-panel__video {
   position: absolute;
-  z-index: -2;
   inset: 0;
   display: block;
   width: 100%;
   height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  border: 0;
   object-fit: cover;
-  object-position: center;
+  object-position: 50% 50%;
   pointer-events: none;
   user-select: none;
 }
@@ -176,8 +199,10 @@ body.mineacle-home main.home-page {
 /* 75% black at the bottom, fading to transparent at the top. */
 .home-panel__video-overlay {
   position: absolute;
-  z-index: -1;
+  z-index: 1;
   inset: 0;
+  width: 100%;
+  height: 100%;
   background: linear-gradient(
     to top,
     rgba(0, 0, 0, 0.75) 0%,
@@ -188,10 +213,11 @@ body.mineacle-home main.home-page {
   pointer-events: none;
 }
 
-/* Empty bottom-aligned layer reserved for future copy/buttons. */
+/* Reserved bottom layer for future text/buttons. */
 .home-panel__future-content {
-  position: relative;
-  z-index: 1;
+  position: absolute;
+  z-index: 2;
+  inset: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;

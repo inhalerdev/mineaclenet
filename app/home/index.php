@@ -47,25 +47,26 @@ mineacle_page_head('Home', [
             class="home-panel home-panel--primary"
             aria-label="Featured panel"
         >
-            <video
-                class="home-panel__video"
-                poster="/home/assets/images/hero.webp"
-                autoplay
-                muted
-                loop
-                playsinline
-                preload="metadata"
-                disablepictureinpicture
-                disableremoteplayback
-                controlslist="nodownload nofullscreen noremoteplayback"
-                aria-hidden="true"
-                tabindex="-1"
-            >
-                <source
-                    src="https://pub-a87f1944ab6f4788a1974177e59cf562.r2.dev/hero-bg.mp4"
-                    type="video/mp4"
+            <div class="home-panel__media" aria-hidden="true">
+                <video
+                    class="home-panel__video"
+                    poster="/home/assets/images/hero.webp"
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                    preload="metadata"
+                    disablepictureinpicture
+                    disableremoteplayback
+                    controlslist="nodownload nofullscreen noremoteplayback"
+                    tabindex="-1"
                 >
-            </video>
+                    <source
+                        src="https://pub-a87f1944ab6f4788a1974177e59cf562.r2.dev/hero-bg.mp4"
+                        type="video/mp4"
+                    >
+                </video>
+            </div>
 
             <div class="home-panel__video-overlay" aria-hidden="true"></div>
             <div class="home-panel__future-content"></div>
