@@ -45,8 +45,31 @@ mineacle_page_head('Home', [
 
         <section
             class="home-panel home-panel--primary"
-            aria-label="Primary panel"
-        ></section>
+            aria-label="Featured panel"
+        >
+            <video
+                class="home-panel__video"
+                poster="/home/assets/images/hero.webp"
+                autoplay
+                muted
+                loop
+                playsinline
+                preload="metadata"
+                disablepictureinpicture
+                disableremoteplayback
+                controlslist="nodownload nofullscreen noremoteplayback"
+                aria-hidden="true"
+                tabindex="-1"
+            >
+                <source
+                    src="https://pub-a87f1944ab6f4788a1974177e59cf562.r2.dev/hero-bg.mp4"
+                    type="video/mp4"
+                >
+            </video>
+
+            <div class="home-panel__video-overlay" aria-hidden="true"></div>
+            <div class="home-panel__future-content"></div>
+        </section>
 
         <div class="home-panel-stack" aria-label="Secondary panels">
             <section
