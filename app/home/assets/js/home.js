@@ -1,25 +1,11 @@
 (() => {
   "use strict";
 
-  const playButton = document.querySelector(
-    "[data-copy-server]",
-  );
-
-  const playLabel = playButton?.querySelector(
-    "[data-play-label]",
-  );
-
-  const statusElement = document.querySelector(
-    "[data-home-status]",
-  );
-
-  const statusLabel = document.querySelector(
-    "[data-home-status-label]",
-  );
-
-  const video = document.querySelector(
-    ".home-feature-card__video",
-  );
+  const playButton = document.querySelector("[data-copy-server]");
+  const playLabel = playButton?.querySelector("[data-play-label]");
+  const statusElement = document.querySelector("[data-home-status]");
+  const statusLabel = document.querySelector("[data-home-status-label]");
+  const video = document.querySelector(".home-promo-card__video");
 
   const copyText = async (value) => {
     if (navigator.clipboard && window.isSecureContext) {
@@ -27,12 +13,11 @@
         await navigator.clipboard.writeText(value);
         return true;
       } catch {
-        // Fall through to the local copy method.
+        // Continue to local fallback.
       }
     }
 
     const textArea = document.createElement("textarea");
-
     textArea.value = value;
     textArea.readOnly = true;
     textArea.tabIndex = -1;
@@ -56,15 +41,6 @@
     return copied;
   };
 
-  const resetPlayLabel = () => {
-    if (!playButton || !playLabel) {
-      return;
-    }
-
-    playButton.classList.remove("is-copy-error");
-    playLabel.textContent = "Play Mineacle";
-  };
-
   playButton?.addEventListener("click", async () => {
     const address = playButton.dataset.serverAddress?.trim();
 
@@ -74,44 +50,21 @@
 
     const copied = await copyText(address);
 
-    playButton.classList.toggle(
-      "is-copy-error",
-      !copied,
-    );
+    playButton.classList.toggle("is-copy-error", !copied);
+    playLabel.textContent = copied ? "Copied" : "Copy failed";
 
-    playLabel.textContent = copied
-      ? "IP Copied"
-      : "Copy Failed";
-
-    window.setTimeout(resetPlayLabel, copied ? 1600 : 2200);
+    window.setTimeout(() => {
+      playButton.classList.remove("is-copy-error");
+      playLabel.textContent = "Play";
+    }, copied ? 1600 : 2200);
   });
-
-  const normalizeStatus = (payload) => {
-    if (!payload || typeof payload !== "object") {
-      return null;
-    }
-
-    return {
-      online: Boolean(payload.online),
-      players: Math.max(
-        0,
-        Math.floor(Number(payload.players_online) || 0),
-      ),
-      checked: payload.checked !== false,
-    };
-  };
 
   const setStatusUnavailable = () => {
     if (!statusElement || !statusLabel) {
       return;
     }
 
-    statusElement.classList.remove(
-      "is-loading",
-      "is-online",
-    );
-
-    statusElement.classList.add("is-offline");
+    statusElement.classList.remove("is-loading");
     statusLabel.textContent = "Status unavailable";
   };
 
@@ -134,26 +87,20 @@
         return;
       }
 
-      const status = normalizeStatus(await response.json());
+      const payload = await response.json();
 
-      if (!status?.checked) {
+      if (!payload || payload.checked === false) {
         setStatusUnavailable();
         return;
       }
 
-      statusElement.classList.remove(
-        "is-loading",
-        "is-online",
-        "is-offline",
+      const players = Math.max(
+        0,
+        Math.floor(Number(payload.players_online) || 0),
       );
 
-      statusElement.classList.add(
-        status.online ? "is-online" : "is-offline",
-      );
-
-      statusLabel.textContent = status.online
-        ? `${status.players} online`
-        : "Server offline";
+      statusElement.classList.remove("is-loading");
+      statusLabel.textContent = `${players.toLocaleString()} Current Playing`;
     } catch {
       setStatusUnavailable();
     }
@@ -171,28 +118,18 @@
     const playback = video.play();
 
     if (playback instanceof Promise) {
-      playback.catch(() => {
-        // Browser may wait for interaction.
-      });
+      playback.catch(() => {});
     }
   };
 
-  if (video instanceof HTMLVideoElement) {
-    video.addEventListener(
-      "canplay",
-      requestVideoPlayback,
-    );
-
-    document.addEventListener(
-      "pointerdown",
-      requestVideoPlayback,
-      { once: true, passive: true },
-    );
-
-    requestVideoPlayback();
-  }
-
+  requestVideoPlayback();
   loadStatus();
+
+  document.addEventListener(
+    "pointerdown",
+    requestVideoPlayback,
+    { once: true, passive: true },
+  );
 
   window.setInterval(() => {
     if (!document.hidden) {

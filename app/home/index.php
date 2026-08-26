@@ -23,7 +23,6 @@ $minecraftIp = trim(
 
 $publicUrl = static function (mixed $value, string $fallback): string {
     $url = mineacle_page_public_link($value);
-
     return $url === '#' ? $fallback : $url;
 };
 
@@ -47,29 +46,14 @@ $youtubeUrl = $publicUrl(
     'https://www.youtube.com/@mineaclenetwork'
 );
 
-$navigationLinks = [
-    ['label' => 'Home', 'url' => '/', 'current' => true, 'external' => false],
-    ['label' => 'Vote', 'url' => '/vote', 'current' => false, 'external' => false],
-    ['label' => 'Leaderboards', 'url' => '/leaderboards', 'current' => false, 'external' => false],
-    ['label' => 'Bans', 'url' => 'https://bans.mineacle.net/', 'current' => false, 'external' => true],
-    ['label' => 'Store', 'url' => $storeUrl, 'current' => false, 'external' => true],
-];
-
-$socialLinks = [
-    ['key' => 'discord', 'label' => 'Discord', 'url' => $discordUrl],
-    ['key' => 'x', 'label' => 'X', 'url' => $xUrl],
-    ['key' => 'youtube', 'label' => 'YouTube', 'url' => $youtubeUrl],
-];
-
 $heroVideoUrl =
     'https://pub-a87f1944ab6f4788a1974177e59cf562.r2.dev/hero-bg.mp4';
 
 $assetFiles = [
     __DIR__ . '/assets/css/home.css',
     __DIR__ . '/assets/js/home.js',
+    __DIR__ . '/assets/images/mineacle-logo.png',
     __DIR__ . '/assets/images/hero.webp',
-    __DIR__ . '/assets/images/static-logo.png',
-    __DIR__ . '/assets/images/hover-logo.png',
     __DIR__ . '/assets/images/social-discord.png',
     __DIR__ . '/assets/images/social-x.png',
     __DIR__ . '/assets/images/social-youtube.png',
@@ -91,122 +75,185 @@ $rev = rawurlencode((string) $assetVersion);
 mineacle_page_head('Home', [
     'meta_title' => 'Home | Mineacle',
     'meta_description' =>
-        'Play Mineacle, view leaderboards, vote for the server, and explore the community.',
+        'Join Mineacle, view leaderboards, vote, and explore the network.',
     'canonical_url' => 'https://mineacle.net/',
     'stylesheets' => [
         '/home/assets/css/home.css?rev=' . $rev,
     ],
     'body_class' => 'mineacle-home',
     'external_fonts' => false,
-    'theme_color' => '#111111',
+    'theme_color' => '#0d0f10',
 ]);
 ?>
 <main class="home-page" aria-label="Mineacle home">
-    <div class="home-dashboard">
+    <div class="home-layout">
 
-        <aside class="home-rail" aria-label="Mineacle navigation">
-            <div class="home-rail__inner">
-                <a class="home-brand" href="/" aria-label="Mineacle home">
-                    <span class="home-brand__visual" aria-hidden="true">
-                        <img
-                            class="home-brand__image home-brand__image--static"
-                            src="/home/assets/images/static-logo.png?rev=<?php echo h($rev); ?>"
-                            alt=""
-                            width="512"
-                            height="436"
-                            draggable="false"
-                        >
-                        <img
-                            class="home-brand__image home-brand__image--hover"
-                            src="/home/assets/images/hover-logo.png?rev=<?php echo h($rev); ?>"
-                            alt=""
-                            width="512"
-                            height="436"
-                            draggable="false"
-                        >
-                    </span>
-                </a>
+        <a class="home-logo" href="/" aria-label="Mineacle home">
+            <img
+                src="/home/assets/images/mineacle-logo.png?rev=<?php echo h($rev); ?>"
+                alt="Mineacle"
+                width="1840"
+                height="766"
+                draggable="false"
+            >
+        </a>
 
-                <nav class="home-nav" aria-label="Primary navigation">
-                    <?php foreach ($navigationLinks as $link): ?>
-                        <a
-                            class="home-nav__link<?php echo $link['current'] ? ' is-current' : ''; ?>"
-                            href="<?php echo h((string) $link['url']); ?>"
-                            <?php echo $link['current'] ? 'aria-current="page"' : ''; ?>
-                            <?php echo $link['external'] ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>
-                        >
-                            <span><?php echo h((string) $link['label']); ?></span>
-                        </a>
-                    <?php endforeach; ?>
-                </nav>
+        <header class="home-topbar" aria-label="Mineacle utility bar">
+            <div class="home-topbar__spacer" aria-hidden="true"></div>
+            <a class="home-topbar__login" href="/login">Login</a>
+        </header>
 
+        <aside class="home-rail">
+            <div class="home-rail__social-column">
                 <nav class="home-socials" aria-label="Mineacle social links">
-                    <?php foreach ($socialLinks as $social): ?>
-                        <a
-                            class="home-social home-social--<?php echo h((string) $social['key']); ?>"
-                            href="<?php echo h((string) $social['url']); ?>"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="<?php echo h((string) $social['label']); ?>"
-                            title="<?php echo h((string) $social['label']); ?>"
-                        >
-                            <span class="home-social__icon" aria-hidden="true"></span>
-                        </a>
-                    <?php endforeach; ?>
+                    <a
+                        class="home-social home-social--x"
+                        href="<?php echo h($xUrl); ?>"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Follow Mineacle on X"
+                    >
+                        <span aria-hidden="true"></span>
+                    </a>
+
+                    <a
+                        class="home-social home-social--discord"
+                        href="<?php echo h($discordUrl); ?>"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Join Mineacle on Discord"
+                    >
+                        <span aria-hidden="true"></span>
+                    </a>
+
+                    <a
+                        class="home-social home-social--youtube"
+                        href="<?php echo h($youtubeUrl); ?>"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Watch Mineacle on YouTube"
+                    >
+                        <span aria-hidden="true"></span>
+                    </a>
                 </nav>
+
+                <div class="home-rail__utility">
+                    <a
+                        class="home-utility-button"
+                        href="/login"
+                        aria-label="Login"
+                        title="Login"
+                    >
+                        <span aria-hidden="true">↗</span>
+                    </a>
+
+                    <a
+                        class="home-utility-button"
+                        href="/contact"
+                        aria-label="Contact Mineacle"
+                        title="Contact"
+                    >
+                        <span aria-hidden="true">?</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="home-rail__menu-column">
+                <div class="home-menu-heading">Menu</div>
+
+                <nav class="home-menu" aria-label="Main navigation">
+                    <a class="home-menu__link is-current" href="/" aria-current="page">
+                        <span class="home-menu__icon" aria-hidden="true">⌂</span>
+                        <span>Home</span>
+                    </a>
+
+                    <a class="home-menu__link" href="/leaderboards">
+                        <span class="home-menu__icon" aria-hidden="true">▥</span>
+                        <span>Leaderboard</span>
+                    </a>
+
+                    <a class="home-menu__link" href="/vote">
+                        <span class="home-menu__icon" aria-hidden="true">★</span>
+                        <span>Earn a Reward</span>
+                    </a>
+
+                    <a
+                        class="home-menu__link"
+                        href="https://bans.mineacle.net/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <span class="home-menu__icon" aria-hidden="true">◆</span>
+                        <span>Public Bans</span>
+                    </a>
+
+                    <a
+                        class="home-menu__link"
+                        href="<?php echo h($storeUrl); ?>"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <span class="home-menu__icon" aria-hidden="true">▰</span>
+                        <span>Visit our Store</span>
+                    </a>
+                </nav>
+
+                <div class="home-menu-divider"></div>
+
+                <div class="home-menu-heading home-menu-heading--quick">
+                    Quick Links
+                </div>
+
+                <nav class="home-menu home-menu--quick" aria-label="Quick links">
+                    <a class="home-menu__link" href="/leaderboards?type=players">
+                        <span class="home-menu__icon" aria-hidden="true">▥</span>
+                        <span>Top 10 (Global)</span>
+                    </a>
+
+                    <a class="home-menu__link" href="/leaderboards?type=teams">
+                        <span class="home-menu__icon" aria-hidden="true">★</span>
+                        <span>Top Teams</span>
+                    </a>
+
+                    <a class="home-menu__link" href="/leaderboards?metric=balance">
+                        <span class="home-menu__icon" aria-hidden="true">★</span>
+                        <span>Top Balance</span>
+                    </a>
+
+                    <a class="home-menu__link" href="/leaderboards?metric=kd">
+                        <span class="home-menu__icon" aria-hidden="true">★</span>
+                        <span>Top K/D</span>
+                    </a>
+                </nav>
+
+                <div class="home-play-area">
+                    <div
+                        class="home-current-playing is-loading"
+                        data-home-status
+                        aria-live="polite"
+                    >
+                        <span data-home-status-label>Checking server</span>
+                    </div>
+
+                    <button
+                        class="home-play-button"
+                        type="button"
+                        data-copy-server
+                        data-server-address="<?php echo h($minecraftIp); ?>"
+                    >
+                        <span data-play-label>Play</span>
+                    </button>
+                </div>
             </div>
         </aside>
 
-        <header class="home-topbar">
-            <form
-                class="home-search"
-                action="/player"
-                method="get"
-                role="search"
-                aria-label="Search for a Mineacle player"
-            >
-                <img
-                    src="/shared/assets/images/search/search.png"
-                    alt=""
-                    width="18"
-                    height="18"
-                    aria-hidden="true"
-                    draggable="false"
-                >
-                <input
-                    type="search"
-                    name="name"
-                    placeholder="Search for a player..."
-                    autocomplete="off"
-                    aria-label="Search for a player"
-                >
-            </form>
-
-            <div class="home-topbar__right">
-                <div
-                    class="home-server-status is-loading"
-                    data-home-status
-                    aria-live="polite"
-                >
-                    <span
-                        class="home-server-status__dot"
-                        aria-hidden="true"
-                    ></span>
-                    <span data-home-status-label>Checking server</span>
-                </div>
-
-                <a class="home-login" href="/login">Login</a>
-            </div>
-        </header>
-
         <section
-            class="home-feature-card"
-            aria-labelledby="home-feature-title"
-            data-home-feature
+            class="home-promo-card"
+            aria-labelledby="home-promo-title"
         >
-            <div class="home-feature-card__media" aria-hidden="true">
+            <div class="home-promo-card__media" aria-hidden="true">
                 <video
-                    class="home-feature-card__video"
+                    class="home-promo-card__video"
                     poster="/home/assets/images/hero.webp?rev=<?php echo h($rev); ?>"
                     autoplay
                     muted
@@ -225,132 +272,69 @@ mineacle_page_head('Home', [
                 </video>
             </div>
 
-            <div
-                class="home-feature-card__overlay"
-                aria-hidden="true"
-            ></div>
+            <div class="home-promo-card__overlay" aria-hidden="true"></div>
 
-            <div class="home-feature-card__content">
-                <span class="home-card-eyebrow">
-                    Mineacle SMP
-                </span>
-
-                <h1 id="home-feature-title">
-                    Your world.<br>Your economy.
-                </h1>
-
+            <div class="home-promo-card__content">
+                <h1 id="home-promo-title">Mineacle+ Membership</h1>
                 <p>
-                    Build, trade, fight, and progress in a survival world
-                    shaped by its players.
+                    Premium Mineacle perks, cosmetics, convenience features,
+                    and member benefits without changing the core survival experience.
                 </p>
 
-                <div class="home-feature-card__actions">
-                    <button
-                        class="home-button home-button--play"
-                        type="button"
-                        data-copy-server
-                        data-server-address="<?php echo h($minecraftIp); ?>"
-                    >
-                        <span data-play-label>Play Mineacle</span>
-                    </button>
-
-                    <a
-                        class="home-button home-button--secondary"
-                        href="/leaderboards"
-                    >
-                        Explore
-                    </a>
-                </div>
+                <a
+                    class="home-card-button"
+                    href="<?php echo h($storeUrl); ?>"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <span aria-hidden="true">▶</span>
+                    Learn More
+                </a>
             </div>
         </section>
 
-        <div class="home-side-stack">
+        <div class="home-feature-stack">
             <article
-                class="home-action-card home-action-card--leaderboards"
-                aria-labelledby="home-leaderboards-title"
+                class="home-feature-card"
+                aria-labelledby="home-duels-title"
             >
-                <div
-                    class="home-podium"
-                    aria-hidden="true"
-                >
-                    <span class="home-podium__bar home-podium__bar--second">
-                        <b>2</b>
-                    </span>
-                    <span class="home-podium__bar home-podium__bar--first">
-                        <b>1</b>
-                    </span>
-                    <span class="home-podium__bar home-podium__bar--third">
-                        <b>3</b>
-                    </span>
-                </div>
-
-                <div class="home-action-card__content">
-                    <span class="home-card-eyebrow">
-                        Competition
-                    </span>
-
-                    <h2 id="home-leaderboards-title">
-                        Leaderboards
-                    </h2>
-
+                <div class="home-feature-card__content">
+                    <h2 id="home-duels-title">Mineacle Duels</h2>
                     <p>
-                        See who is leading Mineacle across balance,
-                        combat, playtime, and team rankings.
+                        Fight other players, compete for wins, and climb
+                        Mineacle's combat rankings.
                     </p>
 
                     <a
-                        class="home-button home-button--purple"
+                        class="home-card-button"
                         href="/leaderboards"
                     >
-                        View Rankings
+                        <span aria-hidden="true">▶</span>
+                        Learn More
                     </a>
                 </div>
             </article>
 
             <article
-                class="home-action-card home-action-card--community"
-                aria-labelledby="home-community-title"
+                class="home-feature-card"
+                aria-labelledby="home-membership-title"
             >
-                <div
-                    class="home-community-mark"
-                    aria-hidden="true"
-                >
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-
-                <div class="home-action-card__content">
-                    <span class="home-card-eyebrow">
-                        Support Mineacle
-                    </span>
-
-                    <h2 id="home-community-title">
-                        Vote. Earn. Grow.
-                    </h2>
-
+                <div class="home-feature-card__content">
+                    <h2 id="home-membership-title">Mineacle+ Membership</h2>
                     <p>
-                        Support the server, earn voting rewards, or
-                        explore optional Mineacle perks.
+                        Additional perks and gameplay enhancements for players
+                        who want more from Mineacle.
                     </p>
 
-                    <div class="home-action-card__buttons">
-                        <a
-                            class="home-button home-button--green"
-                            href="/vote"
-                        >
-                            Vote Now
-                        </a>
-
-                        <a
-                            class="home-button home-button--secondary"
-                            href="<?php echo h($storeUrl); ?>"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            Store
-                        </a>
-                    </div>
+                    <a
+                        class="home-card-button"
+                        href="<?php echo h($storeUrl); ?>"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <span aria-hidden="true">▶</span>
+                        Learn More
+                    </a>
                 </div>
             </article>
         </div>
