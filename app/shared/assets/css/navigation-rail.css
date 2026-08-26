@@ -124,7 +124,7 @@
 
 .site-rail__link.is-current {
   background: var(--site-rail-current);
-  color: #dce4f6;
+  color: #D4E0FF;
 }
 
 .site-rail__link-icon {
@@ -132,23 +132,73 @@
   width: 19px;
   height: 19px;
   flex: 0 0 19px;
-  object-fit: contain;
+  background: #8f97aa;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
   opacity: 0.68;
-  filter: invert(68%);
   transition:
-    filter 100ms ease-out,
+    background-color 100ms ease-out,
     opacity 100ms ease-out;
+}
+
+.site-rail__link-icon--home {
+  -webkit-mask-image: url("../images/navigation/home.png");
+  mask-image: url("../images/navigation/home.png");
+}
+
+.site-rail__link-icon--leaderboard {
+  -webkit-mask-image: url("../images/navigation/leaderboard.png");
+  mask-image: url("../images/navigation/leaderboard.png");
+}
+
+.site-rail__link-icon--vote {
+  -webkit-mask-image: url("../images/navigation/vote.png");
+  mask-image: url("../images/navigation/vote.png");
+}
+
+.site-rail__link-icon--bans {
+  -webkit-mask-image: url("../images/navigation/bans.png");
+  mask-image: url("../images/navigation/bans.png");
+}
+
+.site-rail__link-icon--store {
+  -webkit-mask-image: url("../images/navigation/store.png");
+  mask-image: url("../images/navigation/store.png");
+}
+
+.site-rail__link-icon--top {
+  -webkit-mask-image: url("../images/navigation/top.png");
+  mask-image: url("../images/navigation/top.png");
+}
+
+.site-rail__link-icon--team {
+  -webkit-mask-image: url("../images/navigation/team.png");
+  mask-image: url("../images/navigation/team.png");
+}
+
+.site-rail__link-icon--balance {
+  -webkit-mask-image: url("../images/navigation/balance.png");
+  mask-image: url("../images/navigation/balance.png");
+}
+
+.site-rail__link-icon--kills {
+  -webkit-mask-image: url("../images/navigation/kills.png");
+  mask-image: url("../images/navigation/kills.png");
 }
 
 .site-rail__link:hover .site-rail__link-icon,
 .site-rail__link:focus-visible .site-rail__link-icon {
+  background: #c8cfdd;
   opacity: 0.90;
-  filter: invert(82%);
 }
 
 .site-rail__link.is-current .site-rail__link-icon {
+  background: #B078FF;
   opacity: 1;
-  filter: invert(92%);
 }
 
 .site-rail__link > span {

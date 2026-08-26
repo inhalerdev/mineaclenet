@@ -202,12 +202,10 @@ function mineacle_navigation_rail(array $site, array $options = []): void
                                 <?php echo $isCurrent ? 'aria-current="page"' : ''; ?>
                                 <?php echo $link['external'] ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>
                             >
-                                <img
-                                    class="site-rail__link-icon"
-                                    src="<?php echo h($assetBase . '/' . (string) $link['icon'] . '?rev=' . $rev); ?>"
-                                    alt=""
+                                <span
+                                    class="site-rail__link-icon site-rail__link-icon--<?php echo h((string) pathinfo((string) $link['icon'], PATHINFO_FILENAME)); ?>"
                                     aria-hidden="true"
-                                >
+                                ></span>
                                 <span>
                                     <?php echo h((string) $link['label']); ?>
                                 </span>
@@ -237,12 +235,10 @@ function mineacle_navigation_rail(array $site, array $options = []): void
                                 class="site-rail__link"
                                 href="<?php echo h((string) $link['url']); ?>"
                             >
-                                <img
-                                    class="site-rail__link-icon"
-                                    src="<?php echo h($assetBase . '/' . (string) $link['icon'] . '?rev=' . $rev); ?>"
-                                    alt=""
+                                <span
+                                    class="site-rail__link-icon site-rail__link-icon--<?php echo h((string) pathinfo((string) $link['icon'], PATHINFO_FILENAME)); ?>"
                                     aria-hidden="true"
-                                >
+                                ></span>
                                 <span>
                                     <?php echo h((string) $link['label']); ?>
                                 </span>
