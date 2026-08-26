@@ -23,6 +23,7 @@ $minecraftIp = trim(
 
 $publicUrl = static function (mixed $value, string $fallback): string {
     $url = mineacle_page_public_link($value);
+
     return $url === '#' ? $fallback : $url;
 };
 
@@ -57,6 +58,11 @@ $assetFiles = [
     __DIR__ . '/assets/images/social-discord.png',
     __DIR__ . '/assets/images/social-x.png',
     __DIR__ . '/assets/images/social-youtube.png',
+    __DIR__ . '/assets/images/nav/home.png',
+    __DIR__ . '/assets/images/nav/leaderboard.png',
+    __DIR__ . '/assets/images/nav/vote.png',
+    __DIR__ . '/assets/images/nav/bans.png',
+    __DIR__ . '/assets/images/nav/store.png',
 ];
 
 $assetVersion = 1;
@@ -100,10 +106,18 @@ mineacle_page_head('Home', [
 
         <header class="home-topbar" aria-label="Mineacle utility bar">
             <div class="home-topbar__spacer" aria-hidden="true"></div>
-            <a class="home-topbar__login" href="/login">Login</a>
+
+            <a class="home-topbar__login" href="/login">
+                <img
+                    src="/home/assets/images/nav/user.png?rev=<?php echo h($rev); ?>"
+                    alt=""
+                    aria-hidden="true"
+                >
+                <span>Login</span>
+            </a>
         </header>
 
-        <aside class="home-rail">
+        <aside class="home-rail" aria-label="Mineacle navigation">
             <div class="home-rail__social-column">
                 <nav class="home-socials" aria-label="Mineacle social links">
                     <a
@@ -144,7 +158,11 @@ mineacle_page_head('Home', [
                         aria-label="Login"
                         title="Login"
                     >
-                        <span aria-hidden="true">↗</span>
+                        <img
+                            src="/home/assets/images/nav/user.png?rev=<?php echo h($rev); ?>"
+                            alt=""
+                            aria-hidden="true"
+                        >
                     </a>
 
                     <a
@@ -153,78 +171,145 @@ mineacle_page_head('Home', [
                         aria-label="Contact Mineacle"
                         title="Contact"
                     >
-                        <span aria-hidden="true">?</span>
+                        <img
+                            src="/home/assets/images/nav/email.png?rev=<?php echo h($rev); ?>"
+                            alt=""
+                            aria-hidden="true"
+                        >
                     </a>
                 </div>
             </div>
 
             <div class="home-rail__menu-column">
-                <div class="home-menu-heading">Menu</div>
+                <section class="home-menu-section">
+                    <div class="home-menu-heading">Menu</div>
 
-                <nav class="home-menu" aria-label="Main navigation">
-                    <a class="home-menu__link is-current" href="/" aria-current="page">
-                        <span class="home-menu__icon" aria-hidden="true">⌂</span>
-                        <span>Home</span>
-                    </a>
+                    <nav class="home-menu" aria-label="Main navigation">
+                        <a
+                            class="home-menu__link is-current"
+                            href="/"
+                            aria-current="page"
+                        >
+                            <img
+                                class="home-menu__icon"
+                                src="/home/assets/images/nav/home.png?rev=<?php echo h($rev); ?>"
+                                alt=""
+                                aria-hidden="true"
+                            >
+                            <span>Home</span>
+                        </a>
 
-                    <a class="home-menu__link" href="/leaderboards">
-                        <span class="home-menu__icon" aria-hidden="true">▥</span>
-                        <span>Leaderboard</span>
-                    </a>
+                        <a class="home-menu__link" href="/leaderboards">
+                            <img
+                                class="home-menu__icon"
+                                src="/home/assets/images/nav/leaderboard.png?rev=<?php echo h($rev); ?>"
+                                alt=""
+                                aria-hidden="true"
+                            >
+                            <span>Leaderboard</span>
+                        </a>
 
-                    <a class="home-menu__link" href="/vote">
-                        <span class="home-menu__icon" aria-hidden="true">★</span>
-                        <span>Earn a Reward</span>
-                    </a>
+                        <a class="home-menu__link" href="/vote">
+                            <img
+                                class="home-menu__icon"
+                                src="/home/assets/images/nav/vote.png?rev=<?php echo h($rev); ?>"
+                                alt=""
+                                aria-hidden="true"
+                            >
+                            <span>Earn a Reward</span>
+                        </a>
 
-                    <a
-                        class="home-menu__link"
-                        href="https://bans.mineacle.net/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        <span class="home-menu__icon" aria-hidden="true">◆</span>
-                        <span>Public Bans</span>
-                    </a>
+                        <a
+                            class="home-menu__link"
+                            href="https://bans.mineacle.net/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <img
+                                class="home-menu__icon"
+                                src="/home/assets/images/nav/bans.png?rev=<?php echo h($rev); ?>"
+                                alt=""
+                                aria-hidden="true"
+                            >
+                            <span>Public Bans</span>
+                        </a>
 
-                    <a
-                        class="home-menu__link"
-                        href="<?php echo h($storeUrl); ?>"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        <span class="home-menu__icon" aria-hidden="true">▰</span>
-                        <span>Visit our Store</span>
-                    </a>
-                </nav>
+                        <a
+                            class="home-menu__link"
+                            href="<?php echo h($storeUrl); ?>"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <img
+                                class="home-menu__icon"
+                                src="/home/assets/images/nav/store.png?rev=<?php echo h($rev); ?>"
+                                alt=""
+                                aria-hidden="true"
+                            >
+                            <span>Visit our Store</span>
+                        </a>
+                    </nav>
+                </section>
 
                 <div class="home-menu-divider"></div>
 
-                <div class="home-menu-heading home-menu-heading--quick">
-                    Quick Links
-                </div>
+                <section class="home-menu-section home-menu-section--quick">
+                    <div class="home-menu-heading">Quick Links</div>
 
-                <nav class="home-menu home-menu--quick" aria-label="Quick links">
-                    <a class="home-menu__link" href="/leaderboards?type=players">
-                        <span class="home-menu__icon" aria-hidden="true">▥</span>
-                        <span>Top 10 (Global)</span>
-                    </a>
+                    <nav class="home-menu" aria-label="Quick links">
+                        <a
+                            class="home-menu__link"
+                            href="/leaderboards?type=players"
+                        >
+                            <img
+                                class="home-menu__icon"
+                                src="/home/assets/images/nav/top.png?rev=<?php echo h($rev); ?>"
+                                alt=""
+                                aria-hidden="true"
+                            >
+                            <span>Top 10 (Global)</span>
+                        </a>
 
-                    <a class="home-menu__link" href="/leaderboards?type=teams">
-                        <span class="home-menu__icon" aria-hidden="true">★</span>
-                        <span>Top Teams</span>
-                    </a>
+                        <a
+                            class="home-menu__link"
+                            href="/leaderboards?type=teams"
+                        >
+                            <img
+                                class="home-menu__icon"
+                                src="/home/assets/images/nav/team.png?rev=<?php echo h($rev); ?>"
+                                alt=""
+                                aria-hidden="true"
+                            >
+                            <span>Top Teams</span>
+                        </a>
 
-                    <a class="home-menu__link" href="/leaderboards?metric=balance">
-                        <span class="home-menu__icon" aria-hidden="true">★</span>
-                        <span>Top Balance</span>
-                    </a>
+                        <a
+                            class="home-menu__link"
+                            href="/leaderboards?metric=balance"
+                        >
+                            <img
+                                class="home-menu__icon"
+                                src="/home/assets/images/nav/top.png?rev=<?php echo h($rev); ?>"
+                                alt=""
+                                aria-hidden="true"
+                            >
+                            <span>Top Balance</span>
+                        </a>
 
-                    <a class="home-menu__link" href="/leaderboards?metric=kd">
-                        <span class="home-menu__icon" aria-hidden="true">★</span>
-                        <span>Top K/D</span>
-                    </a>
-                </nav>
+                        <a
+                            class="home-menu__link"
+                            href="/leaderboards?metric=kd"
+                        >
+                            <img
+                                class="home-menu__icon"
+                                src="/home/assets/images/nav/kills.png?rev=<?php echo h($rev); ?>"
+                                alt=""
+                                aria-hidden="true"
+                            >
+                            <span>Top K/D</span>
+                        </a>
+                    </nav>
+                </section>
 
                 <div class="home-play-area">
                     <div
@@ -241,6 +326,11 @@ mineacle_page_head('Home', [
                         data-copy-server
                         data-server-address="<?php echo h($minecraftIp); ?>"
                     >
+                        <img
+                            src="/home/assets/images/nav/play.png?rev=<?php echo h($rev); ?>"
+                            alt=""
+                            aria-hidden="true"
+                        >
                         <span data-play-label>Play</span>
                     </button>
                 </div>
@@ -276,6 +366,7 @@ mineacle_page_head('Home', [
 
             <div class="home-promo-card__content">
                 <h1 id="home-promo-title">Mineacle+ Membership</h1>
+
                 <p>
                     Premium Mineacle perks, cosmetics, convenience features,
                     and member benefits without changing the core survival experience.
@@ -287,7 +378,6 @@ mineacle_page_head('Home', [
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    <span aria-hidden="true">▶</span>
                     Learn More
                 </a>
             </div>
@@ -300,6 +390,7 @@ mineacle_page_head('Home', [
             >
                 <div class="home-feature-card__content">
                     <h2 id="home-duels-title">Mineacle Duels</h2>
+
                     <p>
                         Fight other players, compete for wins, and climb
                         Mineacle's combat rankings.
@@ -309,7 +400,6 @@ mineacle_page_head('Home', [
                         class="home-card-button"
                         href="/leaderboards"
                     >
-                        <span aria-hidden="true">▶</span>
                         Learn More
                     </a>
                 </div>
@@ -321,6 +411,7 @@ mineacle_page_head('Home', [
             >
                 <div class="home-feature-card__content">
                     <h2 id="home-membership-title">Mineacle+ Membership</h2>
+
                     <p>
                         Additional perks and gameplay enhancements for players
                         who want more from Mineacle.
@@ -332,7 +423,6 @@ mineacle_page_head('Home', [
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        <span aria-hidden="true">▶</span>
                         Learn More
                     </a>
                 </div>
