@@ -25,26 +25,15 @@
 :root {
   --home-bg: #0d0f10;
   --home-surface: #181a1e;
-  --home-surface-2: #1e2127;
-  --home-surface-3: #252933;
-  --home-surface-hover: #292e39;
-
+  --home-surface-2: #20232a;
   --home-border: rgba(248, 248, 248, 0.055);
-  --home-border-strong: rgba(248, 248, 248, 0.10);
-
   --home-text: #f8f8f8;
-  --home-muted: #9299aa;
-  --home-muted-light: #bbc1cf;
-
   --home-purple: #8436fe;
   --home-purple-light: #b078ff;
   --home-green: #62c249;
   --home-green-hover: #74d25c;
-
-  /* One spacing system for the whole desktop composition. */
   --home-space: 16px;
-  --home-top-height: 104px;
-  --home-rail-width: 240px;
+  --home-top-row: 96px;
   --home-radius: 4px;
   --home-viewport: 100vh;
 }
@@ -81,8 +70,6 @@ body.mineacle-home {
   color: var(--home-text);
   color-scheme: dark;
   font-family: "Rubik", Arial, sans-serif;
-  font-size: 16px;
-  font-weight: 400;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -97,27 +84,14 @@ body.mineacle-home main.home-page {
   background: var(--home-bg);
 }
 
-body.mineacle-home a,
-body.mineacle-home button {
-  font: inherit;
-}
-
-body.mineacle-home button {
-  color: inherit;
-}
-
-/* ==========================================================================
-   LAYOUT
-   ========================================================================== */
-
 .home-layout {
   display: grid;
   grid-template-columns:
-    var(--home-rail-width)
-    minmax(0, 0.64fr)
-    minmax(0, 1.04fr);
+    var(--site-rail-width)
+    minmax(360px, 0.62fr)
+    minmax(0, 1fr);
   grid-template-rows:
-    var(--home-top-height)
+    var(--home-top-row)
     minmax(0, 1fr);
   width: 100%;
   height: 100%;
@@ -126,381 +100,135 @@ body.mineacle-home button {
   gap: var(--home-space);
 }
 
+.home-layout > .site-rail-shell {
+  grid-column: 1;
+  grid-row: 1 / 3;
+}
+
 .home-topbar,
-.home-rail,
 .home-promo-card,
 .home-feature-card {
   border: 1px solid var(--home-border);
   border-radius: var(--home-radius);
 }
 
-/* ==========================================================================
-   LOGO
-   ========================================================================== */
-
-.home-logo {
-  display: flex;
-  grid-column: 1;
-  grid-row: 1;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  min-width: 0;
-  height: 100%;
-  padding: 0;
-  background: transparent;
-  text-decoration: none;
-}
-
-.home-logo img {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-width: var(--home-rail-width);
-  max-height: 100px;
-  object-fit: contain;
-  object-position: center;
-  filter: none;
-  transform: none;
-  transition: filter 100ms ease;
-}
-
-.home-logo:hover img,
-.home-logo:focus-visible img {
-  filter: brightness(1.05);
-}
-
-/* ==========================================================================
-   TOP BAR
-   ========================================================================== */
+/* Top utility bar */
 
 .home-topbar {
   display: flex;
   grid-column: 2 / 4;
   grid-row: 1;
-  align-self: end;
   align-items: center;
-  justify-content: flex-end;
-  width: 100%;
-  height: 72px;
+  justify-content: space-between;
   min-width: 0;
-  padding: 12px;
-  background: var(--home-surface);
-}
-
-.home-topbar__spacer {
-  flex: 1 1 auto;
-}
-
-.home-topbar__login {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 40px;
-  padding: 0 14px;
-  border-radius: 3px;
-  background: var(--home-purple);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 600;
-  text-decoration: none;
-  text-transform: uppercase;
-  gap: 7px;
-  transition:
-    background-color 120ms ease,
-    transform 120ms ease;
-}
-
-.home-topbar__login img {
-  width: 15px;
-  height: 15px;
-  object-fit: contain;
-  filter: brightness(0) invert(1);
-}
-
-.home-topbar__login:hover,
-.home-topbar__login:focus-visible {
-  background: var(--home-purple-light);
-  transform: translateY(-1px);
-}
-
-/* ==========================================================================
-   NAVIGATION RAIL
-   Flat 2D hierarchy: one surface, one row system, one active treatment.
-   ========================================================================== */
-
-.home-rail {
-  grid-column: 1;
-  grid-row: 2;
-  min-width: 0;
-  min-height: 0;
-  overflow: hidden;
-  background: var(--home-surface);
-}
-
-.home-rail__inner {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  min-height: 0;
   padding: 16px;
+  background: var(--home-surface);
+  gap: 16px;
 }
 
-.home-menu-section {
-  min-width: 0;
-}
-
-.home-menu-heading {
-  margin: 0 8px 8px;
-  color: var(--home-muted-light);
-  font-size: 11px;
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.home-menu {
-  display: grid;
-  gap: 4px;
-}
-
-.home-menu__link {
-  position: relative;
+.home-player-search {
   display: flex;
   align-items: center;
-  min-width: 0;
-  height: 40px;
-  padding: 0 11px;
-  overflow: hidden;
+  width: min(520px, 56%);
+  min-width: 220px;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--home-border);
   border-radius: 3px;
-  background: transparent;
-  color: var(--home-muted);
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1;
-  text-decoration: none;
-  gap: 10px;
+  background: #131518;
+  gap: 9px;
   transition:
-    background-color 100ms ease,
-    color 100ms ease;
+    border-color 100ms ease-out,
+    background-color 100ms ease-out;
 }
 
-.home-menu__link:hover,
-.home-menu__link:focus-visible {
-  background: #202329;
-  color: var(--home-text);
+.home-player-search:focus-within {
+  border-color: rgba(176, 120, 255, 0.50);
+  background: #15171b;
 }
 
-.home-menu__link.is-current {
-  background: #25282f;
-  color: var(--home-text);
-}
-
-.home-menu__icon {
-  display: block;
+.home-player-search img {
   width: 17px;
   height: 17px;
   flex: 0 0 17px;
   object-fit: contain;
-  opacity: 0.58;
-  filter: brightness(0) invert(1);
-  transition: opacity 100ms ease;
+  opacity: 0.55;
 }
 
-.home-menu__link:hover .home-menu__icon,
-.home-menu__link:focus-visible .home-menu__icon,
-.home-menu__link.is-current .home-menu__icon {
-  opacity: 1;
-}
-
-.home-menu__link > span {
+.home-player-search input {
+  width: 100%;
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.home-menu--quick .home-menu__link {
-  height: 36px;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--home-text);
+  font-family: inherit;
   font-size: 13px;
   font-weight: 400;
+  appearance: none;
 }
 
-.home-menu--quick .home-menu__icon {
-  width: 15px;
-  height: 15px;
-  flex-basis: 15px;
-  opacity: 0.48;
+.home-player-search input::placeholder {
+  color: #737985;
 }
 
-.home-menu-divider {
-  height: 1px;
-  margin: 14px 0;
-  background: var(--home-border);
+.home-player-search input::-webkit-search-cancel-button {
+  display: none;
 }
 
-.home-rail__footer {
-  display: grid;
-  margin-top: auto;
-  padding-top: 14px;
-  border-top: 1px solid var(--home-border);
-  gap: 10px;
-}
-
-.home-socials {
+.home-account,
+.home-account form {
   display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.home-account__button {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  gap: 22px;
-}
-
-.home-social {
-  display: grid;
-  place-items: center;
-  width: 24px;
-  height: 24px;
-  flex: 0 0 24px;
-  color: #a7adb9;
-  text-decoration: none;
-  opacity: 0.72;
-  transform: translateY(0);
-  transition:
-    color 100ms ease,
-    opacity 100ms ease,
-    transform 100ms ease;
-}
-
-.home-social img {
-  display: block;
-  width: 21px;
-  height: 21px;
-  object-fit: contain;
-  filter: brightness(0) invert(1);
-  opacity: 0.86;
-  pointer-events: none;
-}
-
-.home-social:hover,
-.home-social:focus-visible {
-  color: #f8f8f8;
-  opacity: 1;
-  transform: translateY(-1px);
-}
-
-.home-social:hover img,
-.home-social:focus-visible img {
-  opacity: 1;
-}
-
-.home-server-block {
-  display: grid;
-  padding: 10px;
-  border: 1px solid var(--home-border);
-  border-radius: 3px;
-  background: #15171a;
-  gap: 9px;
-}
-
-.home-current-playing {
-  display: flex;
-  align-items: center;
-  min-height: 24px;
-  padding: 0 2px;
-  overflow: hidden;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  color: var(--home-muted-light);
-  font-size: 11px;
-  font-weight: 500;
-  line-height: 1;
-  gap: 8px;
-}
-
-.home-current-playing__dot {
-  display: block;
-  width: 7px;
-  height: 7px;
-  flex: 0 0 7px;
-  border-radius: 50%;
-  background: var(--home-green);
-}
-
-.home-current-playing.is-loading .home-current-playing__dot {
-  background: #747982;
-}
-
-.home-current-playing [data-home-status-label] {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.home-play-button {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-  min-height: 48px;
-  padding: 8px 12px;
+  height: 40px;
+  min-width: 82px;
+  padding: 0 13px;
   border: 0;
   border-radius: 3px;
-  background: var(--home-green);
+  background: var(--home-purple);
   color: #fff;
-  cursor: pointer;
-  gap: 10px;
-  transition: background-color 100ms ease;
-}
-
-.home-play-button img {
-  width: 18px;
-  height: 18px;
-  flex: 0 0 18px;
-  object-fit: contain;
-  filter: brightness(0) invert(1);
-}
-
-.home-play-button__copy {
-  display: grid;
-  min-width: 0;
-  text-align: left;
-  gap: 2px;
-}
-
-.home-play-button__copy strong {
-  color: #fff;
-  font-size: 14px;
+  font-family: inherit;
+  font-size: 12px;
   font-weight: 600;
   line-height: 1;
+  text-decoration: none;
   text-transform: uppercase;
+  cursor: pointer;
+  gap: 7px;
+  transition: background-color 100ms ease-out;
 }
 
-.home-play-button__copy small {
-  overflow: hidden;
-  color: rgba(255, 255, 255, 0.72);
-  font-size: 10px;
-  font-weight: 400;
-  line-height: 1;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.home-account__button img {
+  width: 15px;
+  height: 15px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
 }
 
-.home-play-button:hover,
-.home-play-button:focus-visible {
-  background: var(--home-green-hover);
+.home-account__button:hover,
+.home-account__button:focus-visible {
+  background: var(--home-purple-light);
 }
 
-.home-play-button.is-copy-error {
-  background: #b63d3d;
+.home-account__button--logout {
+  background: #b64444;
 }
 
-/* ==========================================================================
-   CENTER PROMO
-   ========================================================================== */
+.home-account__button--logout:hover,
+.home-account__button--logout:focus-visible {
+  background: #cf5656;
+}
+
+/* Cards */
 
 .home-promo-card {
   position: relative;
@@ -532,8 +260,11 @@ body.mineacle-home button {
   width: 100%;
   height: 100%;
   max-width: none;
+  max-height: none;
   object-fit: cover;
   object-position: 56% 50%;
+  pointer-events: none;
+  user-select: none;
 }
 
 .home-promo-card__overlay {
@@ -542,20 +273,35 @@ body.mineacle-home button {
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(0, 0, 0, 0.82) 0%,
-    rgba(0, 0, 0, 0.62) 26%,
-    rgba(0, 0, 0, 0.18) 58%,
+    rgba(0, 0, 0, 0.84) 0%,
+    rgba(0, 0, 0, 0.64) 25%,
+    rgba(0, 0, 0, 0.24) 56%,
     rgba(0, 0, 0, 0) 100%
   );
+  pointer-events: none;
 }
 
-.home-promo-card__content {
+.home-promo-card__content,
+.home-feature-card__content {
   position: absolute;
   z-index: 2;
   right: 0;
   bottom: 0;
   left: 0;
-  padding: 20px 126px 20px 20px;
+}
+
+.home-promo-card__content {
+  padding: 22px 136px 22px 22px;
+}
+
+.home-card-eyebrow {
+  margin: 0 0 7px;
+  color: #d0afff;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
 }
 
 .home-promo-card h1,
@@ -567,26 +313,25 @@ body.mineacle-home button {
 }
 
 .home-promo-card h1 {
-  font-size: clamp(27px, 2vw, 35px);
+  font-size: clamp(28px, 2.15vw, 38px);
+  line-height: 1.02;
 }
 
-.home-promo-card p,
-.home-feature-card p {
-  margin: 7px 0 0;
-  color: rgba(255, 255, 255, 0.86);
+.home-card-copy {
+  max-width: 48ch;
+  margin: 8px 0 0;
+  color: rgba(255, 255, 255, 0.82);
   font-size: 13px;
+  font-weight: 400;
   line-height: 1.45;
 }
 
-.home-promo-card__content .home-card-button {
+.home-promo-card__content .home-card-button,
+.home-feature-card__content .home-card-button {
   position: absolute;
   right: 16px;
   bottom: 16px;
 }
-
-/* ==========================================================================
-   RIGHT FEATURE CARDS
-   ========================================================================== */
 
 .home-feature-stack {
   display: grid;
@@ -606,43 +351,29 @@ body.mineacle-home button {
   background: var(--home-surface-2);
 }
 
-/* Backgrounds intentionally blank until the final artwork is supplied. */
+/* Final artwork for these two cards can be added later. */
 .home-feature-card__content {
-  position: absolute;
-  z-index: 1;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  min-height: 112px;
-  padding: 18px 146px 16px 18px;
+  min-height: 122px;
+  padding: 22px 146px 18px 20px;
   background: linear-gradient(
     to top,
     rgba(13, 15, 16, 0.94),
-    rgba(13, 15, 16, 0.70) 72%,
-    rgba(13, 15, 16, 0)
+    rgba(13, 15, 16, 0.68) 70%,
+    rgba(13, 15, 16, 0) 100%
   );
 }
 
 .home-feature-card h2 {
-  font-size: clamp(23px, 1.7vw, 32px);
+  font-size: clamp(24px, 1.8vw, 34px);
+  line-height: 1.02;
 }
-
-.home-feature-card__content .home-card-button {
-  position: absolute;
-  right: 16px;
-  bottom: 16px;
-}
-
-/* ==========================================================================
-   CARD BUTTONS
-   ========================================================================== */
 
 .home-card-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 106px;
-  height: 34px;
+  min-width: 108px;
+  height: 36px;
   padding: 0 12px;
   border-radius: 3px;
   background: var(--home-green);
@@ -651,46 +382,45 @@ body.mineacle-home button {
   font-weight: 600;
   line-height: 1;
   text-decoration: none;
-  transition:
-    background-color 120ms ease,
-    transform 120ms ease;
+  text-transform: uppercase;
+  transition: background-color 100ms ease-out;
 }
 
 .home-card-button:hover,
 .home-card-button:focus-visible {
   background: var(--home-green-hover);
-  transform: translateY(-1px);
 }
 
-/* ==========================================================================
-   FOCUS
-   ========================================================================== */
-
-.home-logo:focus-visible,
-.home-topbar__login:focus-visible,
-.home-menu__link:focus-visible,
-.home-social:focus-visible,
-.home-utility-button:focus-visible,
-.home-play-button:focus-visible,
+.home-player-search:focus-visible,
+.home-account__button:focus-visible,
 .home-card-button:focus-visible {
   outline: 2px solid var(--home-purple-light);
   outline-offset: 2px;
 }
 
-/* ==========================================================================
-   RESPONSIVE
-   ========================================================================== */
+/* Responsive */
 
 @media (max-width: 1180px) {
   :root {
-    --home-rail-width: 218px;
+    --site-rail-width: 220px;
   }
 
   .home-layout {
     grid-template-columns:
-      var(--home-rail-width)
-      minmax(0, 0.78fr)
-      minmax(0, 1.12fr);
+      var(--site-rail-width)
+      minmax(330px, 0.72fr)
+      minmax(0, 1fr);
+  }
+
+  .home-promo-card__content {
+    padding-right: 22px;
+    padding-bottom: 68px;
+  }
+
+  .home-promo-card__content .home-card-button {
+    right: 22px;
+    bottom: 18px;
+    left: 22px;
   }
 }
 
@@ -716,57 +446,26 @@ body.mineacle-home button {
   .home-layout {
     grid-template-columns: 1fr;
     grid-template-rows:
-      88px
       auto
-      540px
+      80px
+      560px
       auto;
     height: auto;
   }
 
-  .home-logo {
+  .home-layout > .site-rail-shell {
     grid-column: 1;
     grid-row: 1;
-    width: min(240px, 100%);
-    height: 88px;
-    padding: 0;
   }
 
-  .home-logo img {
-    width: 100%;
-    max-width: 240px;
-    max-height: 88px;
-    margin-right: auto;
-  }
-
-  .home-topbar {
-    position: absolute;
-    top: var(--home-space);
-    right: var(--home-space);
-    width: auto;
-    min-width: 0;
-    height: 44px;
-    padding: 2px;
-    border: 0;
-    background: transparent;
-  }
-
-  .home-topbar__spacer {
-    display: none;
-  }
-
-  .home-rail,
+  .home-topbar,
   .home-promo-card,
   .home-feature-stack {
     grid-column: 1;
   }
 
-  .home-rail {
+  .home-topbar {
     grid-row: 2;
-    min-height: 500px;
-  }
-
-  .home-rail__inner {
-    padding: 16px;
   }
 
   .home-promo-card {
@@ -776,24 +475,43 @@ body.mineacle-home button {
   .home-feature-stack {
     grid-row: 4;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: 310px;
+    grid-template-rows: 320px;
   }
 }
 
-@media (max-width: 620px) {
-  :root {
-    --home-space: 12px;
+@media (max-width: 680px) {
+  .home-topbar {
+    align-items: stretch;
+    flex-direction: column;
+    height: auto;
+  }
+
+  .home-player-search {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .home-account {
+    justify-content: flex-end;
+  }
+
+  .home-layout {
+    grid-template-rows:
+      auto
+      auto
+      540px
+      auto;
   }
 
   .home-feature-stack {
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(2, 290px);
+    grid-template-rows: repeat(2, 300px);
   }
 
   .home-promo-card__content,
   .home-feature-card__content {
     padding-right: 18px;
-    padding-bottom: 62px;
+    padding-bottom: 66px;
     padding-left: 18px;
   }
 
@@ -803,5 +521,31 @@ body.mineacle-home button {
     bottom: 16px;
     left: 18px;
     width: auto;
+  }
+}
+
+@media (max-width: 460px) {
+  :root {
+    --home-space: 12px;
+  }
+
+  body.mineacle-home main.home-page {
+    padding: var(--home-space);
+  }
+
+  .home-promo-card {
+    min-height: 500px;
+  }
+
+  .home-feature-card h2 {
+    font-size: 26px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-account__button,
+  .home-card-button,
+  .home-player-search {
+    transition: none;
   }
 }
