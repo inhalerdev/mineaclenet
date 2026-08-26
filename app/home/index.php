@@ -7,7 +7,13 @@ $requestPath = parse_url(
     PHP_URL_PATH
 );
 
-if (in_array($requestPath, ['/home', '/home.php', '/home/index.php'], true)) {
+if (
+    in_array(
+        $requestPath,
+        ['/home', '/home.php', '/home/index.php'],
+        true
+    )
+) {
     header('Location: /', true, 302);
     exit;
 }
@@ -17,27 +23,15 @@ require_once __DIR__ . '/../shared/php/auth.php';
 require_once __DIR__ . '/../shared/php/navigation-rail.php';
 
 $config = mineacle_config();
-$site = is_array($config['site'] ?? null) ? $config['site'] : [];
+$site = is_array($config['site'] ?? null)
+    ? $config['site']
+    : [];
+
 $user = mineacle_auth_current_user();
-
-$publicUrl = static function (mixed $value, string $fallback): string {
-    $resolved = mineacle_page_public_link($value);
-
-    return $resolved === '#' ? $fallback : $resolved;
-};
-
-$storeUrl = $publicUrl(
-    $site['store_url'] ?? '',
-    'https://store.mineacle.net/'
-);
-
-$heroVideoUrl =
-    'https://pub-a87f1944ab6f4788a1974177e59cf562.r2.dev/hero-bg.mp4';
 
 $assetFiles = [
     __DIR__ . '/assets/css/home.css',
     __DIR__ . '/assets/js/home.js',
-    __DIR__ . '/assets/images/hero.webp',
     __DIR__ . '/../shared/assets/css/navigation-rail.css',
     __DIR__ . '/../shared/assets/js/navigation-rail.js',
 ];
@@ -55,10 +49,13 @@ foreach ($assetFiles as $assetFile) {
 
 $rev = rawurlencode((string) $assetVersion);
 
+$heroVideoUrl =
+    'https://pub-a87f1944ab6f4788a1974177e59cf562.r2.dev/hero-bg.mp4';
+
 mineacle_page_head('Home', [
     'meta_title' => 'Home | Mineacle',
     'meta_description' =>
-        'Join Mineacle, view leaderboards, vote, and explore the network.',
+        'Play Mineacle, find players, view rankings, vote, and explore the network.',
     'canonical_url' => 'https://mineacle.net/',
     'stylesheets' => [
         '/shared/assets/css/navigation-rail.css?rev=' . $rev,
@@ -69,38 +66,63 @@ mineacle_page_head('Home', [
     'theme_color' => '#0d0f10',
 ]);
 ?>
-<main class="home-page" aria-label="Mineacle home">
+<main
+    class="home-page"
+    aria-label="Mineacle home"
+>
     <div class="home-layout">
-        <?php mineacle_navigation_rail($site, ['current_key' => 'home']); ?>
+        <?php
+        mineacle_navigation_rail(
+            $site,
+            ['current_key' => 'home']
+        );
+        ?>
 
         <header class="home-topbar">
-            <form
-                class="home-player-search"
-                action="/player"
-                method="get"
-                role="search"
-                aria-label="Search Mineacle players"
+            <div
+                class="home-search-shell"
+                data-home-player-search
             >
-                <img
-                    src="/shared/assets/images/search/search.png"
-                    alt=""
-                    aria-hidden="true"
-                    width="18"
-                    height="18"
-                >
-                <input
-                    type="search"
-                    name="username"
-                    placeholder="Search for a player"
+                <form
+                    class="home-player-search"
+                    action="/player"
+                    method="get"
+                    role="search"
                     autocomplete="off"
-                    spellcheck="false"
-                    aria-label="Search for a player"
                 >
-            </form>
+                    <img
+                        src="/shared/assets/images/search/search.png"
+                        alt=""
+                        aria-hidden="true"
+                        width="18"
+                        height="18"
+                    >
+
+                    <input
+                        type="search"
+                        name="q"
+                        placeholder="Search for a player"
+                        autocomplete="off"
+                        autocapitalize="off"
+                        spellcheck="false"
+                        aria-label="Search for a player"
+                        data-home-search-input
+                    >
+                </form>
+
+                <div
+                    class="home-search-results"
+                    data-home-search-results
+                    hidden
+                ></div>
+            </div>
 
             <div class="home-account">
                 <?php if ($user === null): ?>
-                    <a class="home-account__button" href="/login">
+                    <a
+                        class="home-account__button"
+                        href="/login"
+                    >
                         <img
                             src="/shared/assets/images/navigation/user.png?rev=<?php echo h($rev); ?>"
                             alt=""
@@ -109,16 +131,19 @@ mineacle_page_head('Home', [
                         <span>Login</span>
                     </a>
                 <?php else: ?>
-                    <form action="/logout" method="post">
+                    <form
+                        action="/logout"
+                        method="post"
+                    >
                         <input
                             type="hidden"
                             name="csrf"
                             value="<?php echo h(mineacle_auth_csrf_token()); ?>"
                         >
+
                         <button
                             class="home-account__button home-account__button--logout"
                             type="submit"
-                            aria-label="Log out <?php echo h((string) $user['username']); ?>"
                         >
                             <img
                                 src="/shared/assets/images/navigation/user.png?rev=<?php echo h($rev); ?>"
@@ -134,12 +159,14 @@ mineacle_page_head('Home', [
 
         <section
             class="home-promo-card"
-            aria-labelledby="home-promo-title"
+            aria-label="Mineacle featured content"
         >
-            <div class="home-promo-card__media" aria-hidden="true">
+            <div
+                class="home-promo-card__media"
+                aria-hidden="true"
+            >
                 <video
                     class="home-promo-card__video"
-                    poster="/home/assets/images/hero.webp?rev=<?php echo h($rev); ?>"
                     autoplay
                     muted
                     loop
@@ -157,71 +184,26 @@ mineacle_page_head('Home', [
                 </video>
             </div>
 
-            <div class="home-promo-card__overlay" aria-hidden="true"></div>
-
-            <div class="home-promo-card__content">
-                <p class="home-card-eyebrow">Featured</p>
-                <h1 id="home-promo-title">Mineacle+ Membership</h1>
-                <p class="home-card-copy">
-                    Unlock premium Mineacle perks, cosmetics, and quality-of-life
-                    features while keeping the survival experience competitive.
-                </p>
-
-                <a
-                    class="home-card-button"
-                    href="<?php echo h($storeUrl); ?>"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Learn More
-                </a>
-            </div>
+            <div
+                class="home-promo-card__overlay"
+                aria-hidden="true"
+            ></div>
         </section>
 
         <div class="home-feature-stack">
-            <article
+            <section
                 class="home-feature-card"
-                aria-labelledby="home-duels-title"
-            >
-                <div class="home-feature-card__content">
-                    <p class="home-card-eyebrow">Combat</p>
-                    <h2 id="home-duels-title">Mineacle Duels</h2>
-                    <p class="home-card-copy">
-                        Challenge other players, record fight history, and
-                        compete across Mineacle's combat rankings.
-                    </p>
+                aria-label="Mineacle feature slot one"
+            ></section>
 
-                    <a class="home-card-button" href="/leaderboards">
-                        Learn More
-                    </a>
-                </div>
-            </article>
-
-            <article
+            <section
                 class="home-feature-card"
-                aria-labelledby="home-membership-title"
-            >
-                <div class="home-feature-card__content">
-                    <p class="home-card-eyebrow">Mineacle+</p>
-                    <h2 id="home-membership-title">More ways to play</h2>
-                    <p class="home-card-copy">
-                        Optional perks and member features designed around
-                        convenience, customization, and progression.
-                    </p>
-
-                    <a
-                        class="home-card-button"
-                        href="<?php echo h($storeUrl); ?>"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Learn More
-                    </a>
-                </div>
-            </article>
+                aria-label="Mineacle feature slot two"
+            ></section>
         </div>
     </div>
 </main>
+
 <?php
 mineacle_page_end([
     'scripts' => [

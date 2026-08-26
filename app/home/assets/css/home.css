@@ -25,15 +25,17 @@
 :root {
   --home-bg: #0d0f10;
   --home-surface: #181a1e;
-  --home-surface-2: #20232a;
+  --home-surface-raised: #20232a;
   --home-border: rgba(248, 248, 248, 0.055);
+
   --home-text: #f8f8f8;
+  --home-muted: #8f97a8;
+
   --home-purple: #8436fe;
   --home-purple-light: #b078ff;
-  --home-green: #62c249;
-  --home-green-hover: #74d25c;
+
   --home-space: 16px;
-  --home-top-row: 96px;
+  --home-top-height: 68px;
   --home-radius: 4px;
   --home-viewport: 100vh;
 }
@@ -84,14 +86,27 @@ body.mineacle-home main.home-page {
   background: var(--home-bg);
 }
 
+/*
+ * The left rail shell spans both rows.
+ *
+ * Desktop geometry:
+ * - page edge: 16px
+ * - rail width: 226px
+ * - gap: 16px
+ * - top utility bar: 68px
+ * - content starts 16px below the top bar
+ *
+ * The shared rail itself begins after a 96px logo row + 16px gap,
+ * so it intentionally starts 28px lower than the main content cards.
+ */
 .home-layout {
   display: grid;
   grid-template-columns:
     var(--site-rail-width)
-    minmax(360px, 0.62fr)
+    minmax(340px, 0.61fr)
     minmax(0, 1fr);
   grid-template-rows:
-    var(--home-top-row)
+    var(--home-top-height)
     minmax(0, 1fr);
   width: 100%;
   height: 100%;
@@ -112,30 +127,39 @@ body.mineacle-home main.home-page {
   border-radius: var(--home-radius);
 }
 
-/* Top utility bar */
+/* ==========================================================================
+   TOP UTILITY BAR
+   ========================================================================== */
 
 .home-topbar {
+  position: relative;
+  z-index: 20;
   display: flex;
   grid-column: 2 / 4;
   grid-row: 1;
   align-items: center;
   justify-content: space-between;
   min-width: 0;
-  padding: 16px;
+  padding: 14px;
   background: var(--home-surface);
   gap: 16px;
+}
+
+.home-search-shell {
+  position: relative;
+  width: min(680px, 62%);
+  min-width: 260px;
 }
 
 .home-player-search {
   display: flex;
   align-items: center;
-  width: min(520px, 56%);
-  min-width: 220px;
-  height: 42px;
+  width: 100%;
+  height: 40px;
   padding: 0 12px;
-  border: 1px solid var(--home-border);
-  border-radius: 3px;
-  background: #131518;
+  border: 1px solid #313641;
+  border-radius: 4px;
+  background: var(--home-surface-raised);
   gap: 9px;
   transition:
     border-color 100ms ease-out,
@@ -143,16 +167,17 @@ body.mineacle-home main.home-page {
 }
 
 .home-player-search:focus-within {
-  border-color: rgba(176, 120, 255, 0.50);
-  background: #15171b;
+  border-color: rgba(176, 120, 255, 0.58);
+  background: #222631;
 }
 
 .home-player-search img {
+  display: block;
   width: 17px;
   height: 17px;
   flex: 0 0 17px;
   object-fit: contain;
-  opacity: 0.55;
+  opacity: 0.52;
 }
 
 .home-player-search input {
@@ -171,11 +196,71 @@ body.mineacle-home main.home-page {
 }
 
 .home-player-search input::placeholder {
-  color: #737985;
+  color: #737b8c;
 }
 
 .home-player-search input::-webkit-search-cancel-button {
   display: none;
+}
+
+.home-search-results {
+  position: absolute;
+  z-index: 80;
+  top: calc(100% + 8px);
+  right: 0;
+  left: 0;
+  display: grid;
+  padding: 6px;
+  border: 1px solid var(--home-border);
+  border-radius: 4px;
+  background: #181b20;
+}
+
+.home-search-results[hidden] {
+  display: none;
+}
+
+.home-search-result {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  height: 38px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: #aeb6c7;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 400;
+  text-align: left;
+  cursor: pointer;
+  gap: 8px;
+}
+
+.home-search-result:hover,
+.home-search-result:focus-visible,
+.home-search-result.is-active {
+  outline: 0;
+  background: #232731;
+  color: #f8f8f8;
+}
+
+.home-search-result strong {
+  overflow: hidden;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-search-result small {
+  overflow: hidden;
+  margin-left: auto;
+  color: #727a8b;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .home-account,
@@ -190,45 +275,47 @@ body.mineacle-home main.home-page {
   align-items: center;
   justify-content: center;
   height: 40px;
-  min-width: 82px;
-  padding: 0 13px;
+  min-width: 116px;
+  padding: 0 14px;
   border: 0;
-  border-radius: 3px;
-  background: var(--home-purple);
-  color: #fff;
+  border-radius: 4px;
+  background: var(--home-surface-raised);
+  color: #c8cfdd;
   font-family: inherit;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1;
   text-decoration: none;
   text-transform: uppercase;
   cursor: pointer;
-  gap: 7px;
-  transition: background-color 100ms ease-out;
+  gap: 8px;
+  transition:
+    background-color 100ms ease-out,
+    color 100ms ease-out;
 }
 
 .home-account__button img {
-  width: 15px;
-  height: 15px;
+  display: block;
+  width: 16px;
+  height: 16px;
   object-fit: contain;
-  filter: brightness(0) invert(1);
+  opacity: 0.72;
+  filter: invert(80%);
 }
 
 .home-account__button:hover,
 .home-account__button:focus-visible {
-  background: var(--home-purple-light);
+  background: #282c35;
+  color: #f8f8f8;
 }
 
 .home-account__button--logout {
-  background: #b64444;
+  color: #ff9999;
 }
 
-.home-account__button--logout:hover,
-.home-account__button--logout:focus-visible {
-  background: #cf5656;
-}
-
-/* Cards */
+/* ==========================================================================
+   MAIN CONTENT CONTAINERS
+   ========================================================================== */
 
 .home-promo-card {
   position: relative;
@@ -238,11 +325,7 @@ body.mineacle-home main.home-page {
   min-width: 0;
   min-height: 0;
   overflow: hidden;
-  background:
-    #171719
-    url("../images/hero.webp")
-    56% 50% / cover
-    no-repeat;
+  background: var(--home-surface);
 }
 
 .home-promo-card__media {
@@ -251,6 +334,7 @@ body.mineacle-home main.home-page {
   inset: 0;
   overflow: hidden;
   border-radius: inherit;
+  pointer-events: none;
 }
 
 .home-promo-card__video {
@@ -261,6 +345,8 @@ body.mineacle-home main.home-page {
   height: 100%;
   max-width: none;
   max-height: none;
+  margin: 0;
+  border: 0;
   object-fit: cover;
   object-position: 56% 50%;
   pointer-events: none;
@@ -273,154 +359,50 @@ body.mineacle-home main.home-page {
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(0, 0, 0, 0.84) 0%,
-    rgba(0, 0, 0, 0.64) 25%,
-    rgba(0, 0, 0, 0.24) 56%,
+    rgba(0, 0, 0, 0.78) 0%,
+    rgba(0, 0, 0, 0.58) 25%,
+    rgba(0, 0, 0, 0.20) 57%,
     rgba(0, 0, 0, 0) 100%
   );
   pointer-events: none;
-}
-
-.home-promo-card__content,
-.home-feature-card__content {
-  position: absolute;
-  z-index: 2;
-  right: 0;
-  bottom: 0;
-  left: 0;
-}
-
-.home-promo-card__content {
-  padding: 22px 136px 22px 22px;
-}
-
-.home-card-eyebrow {
-  margin: 0 0 7px;
-  color: #d0afff;
-  font-size: 10px;
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: 0.10em;
-  text-transform: uppercase;
-}
-
-.home-promo-card h1,
-.home-feature-card h2 {
-  margin: 0;
-  color: #fff;
-  font-weight: 600;
-  letter-spacing: -0.03em;
-}
-
-.home-promo-card h1 {
-  font-size: clamp(28px, 2.15vw, 38px);
-  line-height: 1.02;
-}
-
-.home-card-copy {
-  max-width: 48ch;
-  margin: 8px 0 0;
-  color: rgba(255, 255, 255, 0.82);
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 1.45;
-}
-
-.home-promo-card__content .home-card-button,
-.home-feature-card__content .home-card-button {
-  position: absolute;
-  right: 16px;
-  bottom: 16px;
 }
 
 .home-feature-stack {
   display: grid;
   grid-column: 3;
   grid-row: 2;
-  grid-template-rows: repeat(2, minmax(0, 1fr));
+  grid-template-rows:
+    repeat(2, minmax(0, 1fr));
   min-width: 0;
   min-height: 0;
   gap: var(--home-space);
 }
 
 .home-feature-card {
-  position: relative;
   min-width: 0;
   min-height: 0;
   overflow: hidden;
-  background: var(--home-surface-2);
+  background: var(--home-surface);
 }
 
-/* Final artwork for these two cards can be added later. */
-.home-feature-card__content {
-  min-height: 122px;
-  padding: 22px 146px 18px 20px;
-  background: linear-gradient(
-    to top,
-    rgba(13, 15, 16, 0.94),
-    rgba(13, 15, 16, 0.68) 70%,
-    rgba(13, 15, 16, 0) 100%
-  );
-}
-
-.home-feature-card h2 {
-  font-size: clamp(24px, 1.8vw, 34px);
-  line-height: 1.02;
-}
-
-.home-card-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 108px;
-  height: 36px;
-  padding: 0 12px;
-  border-radius: 3px;
-  background: var(--home-green);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 600;
-  line-height: 1;
-  text-decoration: none;
-  text-transform: uppercase;
-  transition: background-color 100ms ease-out;
-}
-
-.home-card-button:hover,
-.home-card-button:focus-visible {
-  background: var(--home-green-hover);
-}
-
-.home-player-search:focus-visible,
-.home-account__button:focus-visible,
-.home-card-button:focus-visible {
-  outline: 2px solid var(--home-purple-light);
-  outline-offset: 2px;
-}
-
-/* Responsive */
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
 
 @media (max-width: 1180px) {
   :root {
-    --site-rail-width: 220px;
+    --site-rail-width: 214px;
   }
 
   .home-layout {
     grid-template-columns:
       var(--site-rail-width)
-      minmax(330px, 0.72fr)
+      minmax(320px, 0.68fr)
       minmax(0, 1fr);
   }
 
-  .home-promo-card__content {
-    padding-right: 22px;
-    padding-bottom: 68px;
-  }
-
-  .home-promo-card__content .home-card-button {
-    right: 22px;
-    bottom: 18px;
-    left: 22px;
+  .home-search-shell {
+    width: min(560px, 64%);
   }
 }
 
@@ -447,7 +429,7 @@ body.mineacle-home main.home-page {
     grid-template-columns: 1fr;
     grid-template-rows:
       auto
-      80px
+      auto
       560px
       auto;
     height: auto;
@@ -474,8 +456,13 @@ body.mineacle-home main.home-page {
 
   .home-feature-stack {
     grid-row: 4;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
     grid-template-rows: 320px;
+  }
+
+  .home-search-shell {
+    width: min(620px, 72%);
   }
 }
 
@@ -483,10 +470,9 @@ body.mineacle-home main.home-page {
   .home-topbar {
     align-items: stretch;
     flex-direction: column;
-    height: auto;
   }
 
-  .home-player-search {
+  .home-search-shell {
     width: 100%;
     min-width: 0;
   }
@@ -495,32 +481,22 @@ body.mineacle-home main.home-page {
     justify-content: flex-end;
   }
 
+  .home-account__button {
+    min-width: 108px;
+  }
+
   .home-layout {
     grid-template-rows:
       auto
       auto
-      540px
+      520px
       auto;
   }
 
   .home-feature-stack {
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(2, 300px);
-  }
-
-  .home-promo-card__content,
-  .home-feature-card__content {
-    padding-right: 18px;
-    padding-bottom: 66px;
-    padding-left: 18px;
-  }
-
-  .home-promo-card__content .home-card-button,
-  .home-feature-card__content .home-card-button {
-    right: 18px;
-    bottom: 16px;
-    left: 18px;
-    width: auto;
+    grid-template-rows:
+      repeat(2, 300px);
   }
 }
 
@@ -534,18 +510,13 @@ body.mineacle-home main.home-page {
   }
 
   .home-promo-card {
-    min-height: 500px;
-  }
-
-  .home-feature-card h2 {
-    font-size: 26px;
+    min-height: 480px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .home-account__button,
-  .home-card-button,
-  .home-player-search {
+  .home-player-search,
+  .home-account__button {
     transition: none;
   }
 }

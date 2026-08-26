@@ -7,11 +7,23 @@
     return;
   }
 
-  const playButton = rail.querySelector("[data-rail-copy-server]");
-  const playLabel = rail.querySelector("[data-rail-play-label]");
-  const statusElement = rail.querySelector("[data-rail-status]");
-  const statusLabel = rail.querySelector("[data-rail-status-label]");
-  let resetTimer = 0;
+  const playButton = rail.querySelector(
+    "[data-rail-copy-server]",
+  );
+
+  const playLabel = rail.querySelector(
+    "[data-rail-play-label]",
+  );
+
+  const statusElement = rail.querySelector(
+    "[data-rail-status]",
+  );
+
+  const statusLabel = rail.querySelector(
+    "[data-rail-status-label]",
+  );
+
+  let playResetTimer = 0;
 
   const copyText = async (value) => {
     if (navigator.clipboard && window.isSecureContext) {
@@ -24,6 +36,7 @@
     }
 
     const textArea = document.createElement("textarea");
+
     textArea.value = value;
     textArea.readOnly = true;
     textArea.tabIndex = -1;
@@ -54,16 +67,22 @@
       return;
     }
 
-    window.clearTimeout(resetTimer);
+    window.clearTimeout(playResetTimer);
 
     const copied = await copyText(address);
 
-    playButton.classList.toggle("is-copy-error", !copied);
-    playLabel.textContent = copied ? "Copied" : "Copy failed";
+    playButton.classList.toggle(
+      "is-copy-error",
+      !copied,
+    );
 
-    resetTimer = window.setTimeout(() => {
+    playLabel.textContent = copied
+      ? "Copied"
+      : "Copy failed";
+
+    playResetTimer = window.setTimeout(() => {
       playButton.classList.remove("is-copy-error");
-      playLabel.textContent = "Play";
+      playLabel.textContent = "Play Mineacle";
     }, copied ? 1600 : 2200);
   });
 
@@ -78,23 +97,36 @@
   };
 
   const applyStatus = (payload) => {
-    if (!statusElement || !statusLabel || !payload || payload.checked === false) {
+    if (
+      !statusElement
+      || !statusLabel
+      || !payload
+      || payload.checked === false
+    ) {
       setUnavailable();
       return;
     }
 
     const online = Boolean(payload.online);
+
     const players = Math.max(
       0,
       Math.floor(Number(payload.players_online) || 0),
     );
 
-    statusElement.classList.remove("is-loading", "is-offline");
-    statusElement.classList.toggle("is-offline", !online);
+    statusElement.classList.remove(
+      "is-loading",
+      "is-offline",
+    );
+
+    statusElement.classList.toggle(
+      "is-offline",
+      !online,
+    );
 
     statusLabel.textContent = online
-      ? `${players.toLocaleString()} playing`
-      : "Server offline";
+      ? `${players.toLocaleString()} Currently Playing`
+      : "Server Offline";
   };
 
   const loadStatus = async () => {
@@ -102,7 +134,9 @@
       const response = await fetch(
         `/api/server-status.php?mode=home&t=${Date.now()}`,
         {
-          headers: { Accept: "application/json" },
+          headers: {
+            Accept: "application/json",
+          },
           cache: "no-store",
         },
       );

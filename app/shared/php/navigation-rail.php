@@ -5,7 +5,10 @@ declare(strict_types=1);
 require_once __DIR__ . '/layout.php';
 
 /**
- * Shared left-side navigation rail.
+ * Shared Mineacle navigation rail.
+ *
+ * Pages include navigation-rail.css + navigation-rail.js, then render this
+ * component in their page grid.
  *
  * @param array<string,mixed> $site
  * @param array<string,mixed> $options
@@ -13,22 +16,37 @@ require_once __DIR__ . '/layout.php';
 function mineacle_navigation_rail(array $site, array $options = []): void
 {
     $currentKey = strtolower(trim((string) ($options['current_key'] ?? '')));
-    $requestPath = (string) (
-        parse_url((string) ($_SERVER['REQUEST_URI'] ?? '/'), PHP_URL_PATH) ?? '/'
-    );
-    $requestPath = '/' . ltrim($requestPath, '/');
-    $firstSegment = strtolower((string) strtok(trim($requestPath, '/'), '/'));
 
     if ($currentKey === '') {
-        $currentKey = ($requestPath === '/' || $firstSegment === 'home')
+        $requestPath = (string) (
+            parse_url(
+                (string) ($_SERVER['REQUEST_URI'] ?? '/'),
+                PHP_URL_PATH
+            ) ?? '/'
+        );
+
+        $requestPath = '/' . ltrim($requestPath, '/');
+        $firstSegment = strtolower(
+            (string) strtok(trim($requestPath, '/'), '/')
+        );
+
+        $currentKey = (
+            $requestPath === '/'
+            || $firstSegment === 'home'
+        )
             ? 'home'
             : $firstSegment;
     }
 
-    $publicUrl = static function (mixed $value, string $fallback): string {
+    $publicUrl = static function (
+        mixed $value,
+        string $fallback
+    ): string {
         $resolved = mineacle_page_public_link($value);
 
-        return $resolved === '#' ? $fallback : $resolved;
+        return $resolved === '#'
+            ? $fallback
+            : $resolved;
     };
 
     $storeUrl = $publicUrl(
@@ -65,14 +83,14 @@ function mineacle_navigation_rail(array $site, array $options = []): void
         ],
         [
             'key' => 'leaderboards',
-            'label' => 'Leaderboards',
+            'label' => 'Leaderboard',
             'url' => '/leaderboards',
-            'icon' => 'leaderboards.png',
+            'icon' => 'leaderboard.png',
             'external' => false,
         ],
         [
             'key' => 'vote',
-            'label' => 'Vote & Rewards',
+            'label' => 'Earn a Reward',
             'url' => '/vote',
             'icon' => 'vote.png',
             'external' => false,
@@ -86,7 +104,7 @@ function mineacle_navigation_rail(array $site, array $options = []): void
         ],
         [
             'key' => 'store',
-            'label' => 'Store',
+            'label' => 'Visit our Store',
             'url' => $storeUrl,
             'icon' => 'store.png',
             'external' => true,
@@ -95,14 +113,14 @@ function mineacle_navigation_rail(array $site, array $options = []): void
 
     $quickLinks = [
         [
-            'label' => 'Top Players',
+            'label' => 'Top 10 (Global)',
             'url' => '/leaderboards?type=players',
-            'icon' => 'top.png',
+            'icon' => 'leaderboard.png',
         ],
         [
             'label' => 'Top Teams',
             'url' => '/leaderboards?type=teams',
-            'icon' => 'teams.png',
+            'icon' => 'team.png',
         ],
         [
             'label' => 'Top Balance',
@@ -128,7 +146,10 @@ function mineacle_navigation_rail(array $site, array $options = []): void
         }
     }
 
-    foreach (glob($assetDirectory . '/social/*') ?: [] as $assetPath) {
+    foreach (
+        glob($assetDirectory . '/social/*') ?: []
+        as $assetPath
+    ) {
         if (is_file($assetPath)) {
             $assetVersion = max(
                 $assetVersion,
@@ -141,7 +162,11 @@ function mineacle_navigation_rail(array $site, array $options = []): void
     $assetBase = '/shared/assets/images/navigation';
     ?>
     <div class="site-rail-shell" data-site-rail>
-        <a class="site-rail-logo" href="/" aria-label="Mineacle home">
+        <a
+            class="site-rail-logo"
+            href="/"
+            aria-label="Mineacle home"
+        >
             <img
                 src="<?php echo h($assetBase . '/mineacle-logo.png?rev=' . $rev); ?>"
                 alt="Mineacle"
@@ -152,17 +177,25 @@ function mineacle_navigation_rail(array $site, array $options = []): void
             >
         </a>
 
-        <aside class="site-rail" aria-label="Mineacle navigation">
+        <aside
+            class="site-rail"
+            aria-label="Mineacle navigation"
+        >
             <div class="site-rail__content">
                 <section class="site-rail__section">
-                    <div class="site-rail__heading">Menu</div>
+                    <h2 class="site-rail__heading">Menu</h2>
 
                     <nav
                         class="site-rail__menu site-rail__menu--main"
                         aria-label="Main navigation"
                     >
                         <?php foreach ($mainLinks as $link): ?>
-                            <?php $isCurrent = (string) $link['key'] === $currentKey; ?>
+                            <?php
+                            $isCurrent = (
+                                (string) $link['key']
+                                === $currentKey
+                            );
+                            ?>
                             <a
                                 class="site-rail__link<?php echo $isCurrent ? ' is-current' : ''; ?>"
                                 href="<?php echo h((string) $link['url']); ?>"
@@ -175,16 +208,25 @@ function mineacle_navigation_rail(array $site, array $options = []): void
                                     alt=""
                                     aria-hidden="true"
                                 >
-                                <span><?php echo h((string) $link['label']); ?></span>
+                                <span>
+                                    <?php echo h((string) $link['label']); ?>
+                                </span>
                             </a>
                         <?php endforeach; ?>
                     </nav>
                 </section>
 
-                <div class="site-rail__divider" aria-hidden="true"></div>
+                <div
+                    class="site-rail__divider"
+                    aria-hidden="true"
+                ></div>
 
-                <section class="site-rail__section site-rail__section--quick">
-                    <div class="site-rail__heading">Quick Links</div>
+                <section
+                    class="site-rail__section site-rail__section--quick"
+                >
+                    <h2 class="site-rail__heading">
+                        Quick Links
+                    </h2>
 
                     <nav
                         class="site-rail__menu site-rail__menu--quick"
@@ -201,70 +243,81 @@ function mineacle_navigation_rail(array $site, array $options = []): void
                                     alt=""
                                     aria-hidden="true"
                                 >
-                                <span><?php echo h((string) $link['label']); ?></span>
+                                <span>
+                                    <?php echo h((string) $link['label']); ?>
+                                </span>
                             </a>
                         <?php endforeach; ?>
                     </nav>
                 </section>
 
                 <div class="site-rail__footer">
-                    <nav
-                        class="site-rail__socials"
-                        aria-label="Mineacle social links"
-                    >
-                        <a
-                            href="<?php echo h($discordUrl); ?>"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="Discord"
-                            title="Discord"
+                    <div class="site-rail__utility-row">
+                        <nav
+                            class="site-rail__socials"
+                            aria-label="Mineacle social links"
                         >
-                            <img
-                                src="<?php echo h($assetBase . '/social/discord.png?rev=' . $rev); ?>"
-                                alt=""
-                                aria-hidden="true"
+                            <a
+                                href="<?php echo h($xUrl); ?>"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="X"
+                                title="X"
                             >
-                        </a>
+                                <img
+                                    src="<?php echo h($assetBase . '/social/x.png?rev=' . $rev); ?>"
+                                    alt=""
+                                    aria-hidden="true"
+                                >
+                            </a>
+
+                            <a
+                                href="<?php echo h($discordUrl); ?>"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="Discord"
+                                title="Discord"
+                            >
+                                <img
+                                    src="<?php echo h($assetBase . '/social/discord.png?rev=' . $rev); ?>"
+                                    alt=""
+                                    aria-hidden="true"
+                                >
+                            </a>
+
+                            <a
+                                href="<?php echo h($youtubeUrl); ?>"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="YouTube"
+                                title="YouTube"
+                            >
+                                <img
+                                    src="<?php echo h($assetBase . '/social/youtube.png?rev=' . $rev); ?>"
+                                    alt=""
+                                    aria-hidden="true"
+                                >
+                            </a>
+                        </nav>
 
                         <a
-                            href="<?php echo h($xUrl); ?>"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="X"
-                            title="X"
+                            class="site-rail__help"
+                            href="/contact"
+                            aria-label="Help and contact"
+                            title="Help"
                         >
-                            <img
-                                src="<?php echo h($assetBase . '/social/x.png?rev=' . $rev); ?>"
-                                alt=""
-                                aria-hidden="true"
-                            >
+                            ?
                         </a>
-
-                        <a
-                            href="<?php echo h($youtubeUrl); ?>"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="YouTube"
-                            title="YouTube"
-                        >
-                            <img
-                                src="<?php echo h($assetBase . '/social/youtube.png?rev=' . $rev); ?>"
-                                alt=""
-                                aria-hidden="true"
-                            >
-                        </a>
-                    </nav>
+                    </div>
 
                     <div
                         class="site-rail__status is-loading"
                         data-rail-status
                         aria-live="polite"
                     >
-                        <span
-                            class="site-rail__status-dot"
-                            aria-hidden="true"
-                        ></span>
-                        <span data-rail-status-label>Checking server</span>
+                        <span data-rail-status-label>
+                            Checking server
+                        </span>
                     </div>
 
                     <button
@@ -279,7 +332,15 @@ function mineacle_navigation_rail(array $site, array $options = []): void
                             alt=""
                             aria-hidden="true"
                         >
-                        <span data-rail-play-label>Play</span>
+
+                        <span class="site-rail__play-copy">
+                            <strong data-rail-play-label>
+                                Play Mineacle
+                            </strong>
+                            <small>
+                                <?php echo h($minecraftIp); ?>
+                            </small>
+                        </span>
                     </button>
                 </div>
             </div>
