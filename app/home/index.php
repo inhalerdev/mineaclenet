@@ -118,135 +118,34 @@ mineacle_page_head('Home', [
         </header>
 
         <aside class="home-rail" aria-label="Mineacle navigation">
-            <div class="home-rail__social-column">
-                <nav class="home-socials" aria-label="Mineacle social links">
-                    <a
-                        class="home-social home-social--x"
-                        href="<?php echo h($xUrl); ?>"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="Follow Mineacle on X"
-                    >
-                        <span aria-hidden="true"></span>
-                    </a>
-
-                    <a
-                        class="home-social home-social--discord"
-                        href="<?php echo h($discordUrl); ?>"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="Join Mineacle on Discord"
-                    >
-                        <span aria-hidden="true"></span>
-                    </a>
-
-                    <a
-                        class="home-social home-social--youtube"
-                        href="<?php echo h($youtubeUrl); ?>"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="Watch Mineacle on YouTube"
-                    >
-                        <span aria-hidden="true"></span>
-                    </a>
-                </nav>
-
-                <div class="home-rail__utility">
-                    <a
-                        class="home-utility-button"
-                        href="/login"
-                        aria-label="Login"
-                        title="Login"
-                    >
-                        <img
-                            src="/home/assets/images/nav/user.png?rev=<?php echo h($rev); ?>"
-                            alt=""
-                            aria-hidden="true"
-                        >
-                    </a>
-
-                    <a
-                        class="home-utility-button"
-                        href="/contact"
-                        aria-label="Contact Mineacle"
-                        title="Contact"
-                    >
-                        <img
-                            src="/home/assets/images/nav/email.png?rev=<?php echo h($rev); ?>"
-                            alt=""
-                            aria-hidden="true"
-                        >
-                    </a>
-                </div>
-            </div>
-
-            <div class="home-rail__menu-column">
+            <div class="home-rail__inner">
                 <section class="home-menu-section">
                     <div class="home-menu-heading">Menu</div>
 
                     <nav class="home-menu" aria-label="Main navigation">
-                        <a
-                            class="home-menu__link is-current"
-                            href="/"
-                            aria-current="page"
-                        >
-                            <img
-                                class="home-menu__icon"
-                                src="/home/assets/images/nav/home.png?rev=<?php echo h($rev); ?>"
-                                alt=""
-                                aria-hidden="true"
-                            >
+                        <a class="home-menu__link is-current" href="/" aria-current="page">
+                            <img class="home-menu__icon" src="/home/assets/images/nav/home.png?rev=<?php echo h($rev); ?>" alt="" aria-hidden="true">
                             <span>Home</span>
                         </a>
 
                         <a class="home-menu__link" href="/leaderboards">
-                            <img
-                                class="home-menu__icon"
-                                src="/home/assets/images/nav/leaderboard.png?rev=<?php echo h($rev); ?>"
-                                alt=""
-                                aria-hidden="true"
-                            >
-                            <span>Leaderboard</span>
+                            <img class="home-menu__icon" src="/home/assets/images/nav/leaderboard.png?rev=<?php echo h($rev); ?>" alt="" aria-hidden="true">
+                            <span>Leaderboards</span>
                         </a>
 
                         <a class="home-menu__link" href="/vote">
-                            <img
-                                class="home-menu__icon"
-                                src="/home/assets/images/nav/vote.png?rev=<?php echo h($rev); ?>"
-                                alt=""
-                                aria-hidden="true"
-                            >
-                            <span>Earn a Reward</span>
+                            <img class="home-menu__icon" src="/home/assets/images/nav/vote.png?rev=<?php echo h($rev); ?>" alt="" aria-hidden="true">
+                            <span>Vote &amp; Rewards</span>
                         </a>
 
-                        <a
-                            class="home-menu__link"
-                            href="https://bans.mineacle.net/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <img
-                                class="home-menu__icon"
-                                src="/home/assets/images/nav/bans.png?rev=<?php echo h($rev); ?>"
-                                alt=""
-                                aria-hidden="true"
-                            >
+                        <a class="home-menu__link" href="https://bans.mineacle.net/" target="_blank" rel="noopener noreferrer">
+                            <img class="home-menu__icon" src="/home/assets/images/nav/bans.png?rev=<?php echo h($rev); ?>" alt="" aria-hidden="true">
                             <span>Public Bans</span>
                         </a>
 
-                        <a
-                            class="home-menu__link"
-                            href="<?php echo h($storeUrl); ?>"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <img
-                                class="home-menu__icon"
-                                src="/home/assets/images/nav/store.png?rev=<?php echo h($rev); ?>"
-                                alt=""
-                                aria-hidden="true"
-                            >
-                            <span>Visit our Store</span>
+                        <a class="home-menu__link" href="<?php echo h($storeUrl); ?>" target="_blank" rel="noopener noreferrer">
+                            <img class="home-menu__icon" src="/home/assets/images/nav/store.png?rev=<?php echo h($rev); ?>" alt="" aria-hidden="true">
+                            <span>Store</span>
                         </a>
                     </nav>
                 </section>
@@ -256,81 +155,55 @@ mineacle_page_head('Home', [
                 <section class="home-menu-section home-menu-section--quick">
                     <div class="home-menu-heading">Quick Links</div>
 
-                    <nav class="home-menu" aria-label="Quick links">
-                        <a
-                            class="home-menu__link"
-                            href="/leaderboards?type=players"
-                        >
-                            <img
-                                class="home-menu__icon"
-                                src="/home/assets/images/nav/top.png?rev=<?php echo h($rev); ?>"
-                                alt=""
-                                aria-hidden="true"
-                            >
-                            <span>Top 10 (Global)</span>
+                    <nav class="home-menu home-menu--quick" aria-label="Quick links">
+                        <a class="home-menu__link" href="/leaderboards?type=players">
+                            <img class="home-menu__icon" src="/home/assets/images/nav/top.png?rev=<?php echo h($rev); ?>" alt="" aria-hidden="true">
+                            <span>Top Players</span>
                         </a>
 
-                        <a
-                            class="home-menu__link"
-                            href="/leaderboards?type=teams"
-                        >
-                            <img
-                                class="home-menu__icon"
-                                src="/home/assets/images/nav/team.png?rev=<?php echo h($rev); ?>"
-                                alt=""
-                                aria-hidden="true"
-                            >
+                        <a class="home-menu__link" href="/leaderboards?type=teams">
+                            <img class="home-menu__icon" src="/home/assets/images/nav/team.png?rev=<?php echo h($rev); ?>" alt="" aria-hidden="true">
                             <span>Top Teams</span>
                         </a>
 
-                        <a
-                            class="home-menu__link"
-                            href="/leaderboards?metric=balance"
-                        >
-                            <img
-                                class="home-menu__icon"
-                                src="/home/assets/images/nav/top.png?rev=<?php echo h($rev); ?>"
-                                alt=""
-                                aria-hidden="true"
-                            >
+                        <a class="home-menu__link" href="/leaderboards?metric=balance">
+                            <img class="home-menu__icon" src="/home/assets/images/nav/top.png?rev=<?php echo h($rev); ?>" alt="" aria-hidden="true">
                             <span>Top Balance</span>
                         </a>
 
-                        <a
-                            class="home-menu__link"
-                            href="/leaderboards?metric=kd"
-                        >
-                            <img
-                                class="home-menu__icon"
-                                src="/home/assets/images/nav/kills.png?rev=<?php echo h($rev); ?>"
-                                alt=""
-                                aria-hidden="true"
-                            >
+                        <a class="home-menu__link" href="/leaderboards?metric=kd">
+                            <img class="home-menu__icon" src="/home/assets/images/nav/kills.png?rev=<?php echo h($rev); ?>" alt="" aria-hidden="true">
                             <span>Top K/D</span>
                         </a>
                     </nav>
                 </section>
 
-                <div class="home-play-area">
-                    <div
-                        class="home-current-playing is-loading"
-                        data-home-status
-                        aria-live="polite"
-                    >
+                <div class="home-rail__footer">
+                    <nav class="home-socials" aria-label="Mineacle social links">
+                        <a class="home-social home-social--discord" href="<?php echo h($discordUrl); ?>" target="_blank" rel="noopener noreferrer" aria-label="Discord" title="Discord">
+                            <span aria-hidden="true"></span>
+                        </a>
+
+                        <a class="home-social home-social--x" href="<?php echo h($xUrl); ?>" target="_blank" rel="noopener noreferrer" aria-label="X" title="X">
+                            <span aria-hidden="true"></span>
+                        </a>
+
+                        <a class="home-social home-social--youtube" href="<?php echo h($youtubeUrl); ?>" target="_blank" rel="noopener noreferrer" aria-label="YouTube" title="YouTube">
+                            <span aria-hidden="true"></span>
+                        </a>
+
+                        <a class="home-social home-social--contact" href="/contact" aria-label="Contact" title="Contact">
+                            <img src="/home/assets/images/nav/email.png?rev=<?php echo h($rev); ?>" alt="" aria-hidden="true">
+                        </a>
+                    </nav>
+
+                    <div class="home-current-playing is-loading" data-home-status aria-live="polite">
+                        <span class="home-current-playing__dot" aria-hidden="true"></span>
                         <span data-home-status-label>Checking server</span>
                     </div>
 
-                    <button
-                        class="home-play-button"
-                        type="button"
-                        data-copy-server
-                        data-server-address="<?php echo h($minecraftIp); ?>"
-                    >
-                        <img
-                            src="/home/assets/images/nav/play.png?rev=<?php echo h($rev); ?>"
-                            alt=""
-                            aria-hidden="true"
-                        >
+                    <button class="home-play-button" type="button" data-copy-server data-server-address="<?php echo h($minecraftIp); ?>">
+                        <img src="/home/assets/images/nav/play.png?rev=<?php echo h($rev); ?>" alt="" aria-hidden="true">
                         <span data-play-label>Play</span>
                     </button>
                 </div>

@@ -44,8 +44,7 @@
   /* One spacing system for the whole desktop composition. */
   --home-space: 16px;
   --home-top-height: 72px;
-  --home-rail-width: 232px;
-  --home-social-width: 48px;
+  --home-rail-width: 240px;
   --home-radius: 4px;
   --home-viewport: 100vh;
 }
@@ -127,6 +126,7 @@ body.mineacle-home button {
   gap: var(--home-space);
 }
 
+.home-logo,
 .home-topbar,
 .home-rail,
 .home-promo-card,
@@ -144,33 +144,32 @@ body.mineacle-home button {
   grid-column: 1;
   grid-row: 1;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
+  width: 100%;
   min-width: 0;
   height: 100%;
-  padding: 4px 8px 4px 4px;
+  padding: 6px 10px;
+  overflow: hidden;
+  background: var(--home-surface);
   text-decoration: none;
 }
 
 .home-logo img {
   display: block;
-  width: min(100%, 218px);
-  height: auto;
-  max-height: 68px;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
   object-fit: contain;
-  object-position: left center;
-  filter: drop-shadow(0 5px 12px rgba(0, 0, 0, 0.20));
-  transform: translateY(0);
-  transition:
-    filter 120ms ease,
-    transform 120ms ease;
+  object-position: center;
+  filter: none;
+  transform: none;
+  transition: filter 100ms ease;
 }
 
 .home-logo:hover img,
 .home-logo:focus-visible img {
-  filter:
-    brightness(1.04)
-    drop-shadow(0 7px 14px rgba(0, 0, 0, 0.24));
-  transform: translateY(-1px);
+  filter: brightness(1.05);
 }
 
 /* ==========================================================================
@@ -226,53 +225,168 @@ body.mineacle-home button {
 
 /* ==========================================================================
    NAVIGATION RAIL
+   Flat 2D hierarchy: one surface, one row system, one active treatment.
    ========================================================================== */
 
 .home-rail {
-  display: grid;
   grid-column: 1;
   grid-row: 2;
-  grid-template-columns:
-    var(--home-social-width)
-    minmax(0, 1fr);
   min-width: 0;
   min-height: 0;
   overflow: hidden;
   background: var(--home-surface);
 }
 
-.home-rail__social-column {
+.home-rail__inner {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  height: 100%;
   min-height: 0;
-  padding: 12px 7px;
-  border-right: 1px solid var(--home-border);
-  background: var(--home-surface-2);
+  padding: 16px;
+}
+
+.home-menu-section {
+  min-width: 0;
+}
+
+.home-menu-heading {
+  margin: 0 8px 8px;
+  color: var(--home-muted-light);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.home-menu {
+  display: grid;
+  gap: 4px;
+}
+
+.home-menu__link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  height: 40px;
+  padding: 0 11px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--home-muted);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  gap: 10px;
+  transition:
+    background-color 100ms ease,
+    color 100ms ease;
+}
+
+.home-menu__link::before {
+  position: absolute;
+  top: 9px;
+  bottom: 9px;
+  left: 0;
+  width: 2px;
+  border-radius: 0 1px 1px 0;
+  background: transparent;
+  content: "";
+}
+
+.home-menu__link:hover,
+.home-menu__link:focus-visible {
+  background: #202329;
+  color: var(--home-text);
+}
+
+.home-menu__link.is-current {
+  background: #24272e;
+  color: var(--home-text);
+}
+
+.home-menu__link.is-current::before {
+  background: var(--home-purple-light);
+}
+
+.home-menu__icon {
+  display: block;
+  width: 17px;
+  height: 17px;
+  flex: 0 0 17px;
+  object-fit: contain;
+  opacity: 0.58;
+  filter: brightness(0) invert(1);
+  transition: opacity 100ms ease;
+}
+
+.home-menu__link:hover .home-menu__icon,
+.home-menu__link:focus-visible .home-menu__icon,
+.home-menu__link.is-current .home-menu__icon {
+  opacity: 1;
+}
+
+.home-menu__link > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-menu--quick .home-menu__link {
+  height: 36px;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.home-menu--quick .home-menu__icon {
+  width: 15px;
+  height: 15px;
+  flex-basis: 15px;
+  opacity: 0.48;
+}
+
+.home-menu-divider {
+  height: 1px;
+  margin: 14px 0;
+  background: var(--home-border);
+}
+
+.home-rail__footer {
+  display: grid;
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--home-border);
+  gap: 10px;
 }
 
 .home-socials {
-  display: grid;
-  justify-items: center;
-  gap: 9px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .home-social {
   position: relative;
   display: block;
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   overflow: hidden;
+  border: 1px solid var(--home-border);
   border-radius: 3px;
   background: #15171a;
   transition:
-    filter 120ms ease,
-    transform 120ms ease;
+    background-color 100ms ease,
+    border-color 100ms ease;
 }
 
 .home-social:hover,
 .home-social:focus-visible {
-  filter: brightness(1.08);
-  transform: translateY(-1px);
+  border-color: var(--home-border-strong);
+  background: #202329;
 }
 
 .home-social span {
@@ -296,169 +410,56 @@ body.mineacle-home button {
   background-image: url("../images/social-youtube.png");
 }
 
-.home-rail__utility {
-  display: grid;
-  margin-top: auto;
-  gap: 8px;
-}
-
-.home-utility-button {
+.home-social--contact {
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
-  justify-self: center;
-  border: 1px solid var(--home-border);
-  border-radius: 3px;
-  background: #15171a;
-  text-decoration: none;
-  transition:
-    background-color 120ms ease,
-    border-color 120ms ease,
-    transform 120ms ease;
 }
 
-.home-utility-button img {
-  width: 16px;
-  height: 16px;
+.home-social--contact img {
+  width: 15px;
+  height: 15px;
   object-fit: contain;
-  opacity: 0.72;
+  opacity: 0.68;
   filter: brightness(0) invert(1);
 }
 
-.home-utility-button:hover,
-.home-utility-button:focus-visible {
-  border-color: var(--home-border-strong);
-  background: var(--home-surface-hover);
-  transform: translateY(-1px);
-}
-
-.home-utility-button:hover img,
-.home-utility-button:focus-visible img {
+.home-social--contact:hover img,
+.home-social--contact:focus-visible img {
   opacity: 1;
-}
-
-.home-rail__menu-column {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  min-height: 0;
-  padding: 14px 10px 12px;
-}
-
-.home-menu-section {
-  min-width: 0;
-}
-
-.home-menu-heading {
-  margin: 0 6px 7px;
-  color: var(--home-text);
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 1;
-}
-
-.home-menu {
-  display: grid;
-  gap: 3px;
-}
-
-.home-menu__link {
-  position: relative;
-  display: flex;
-  align-items: center;
-  min-width: 0;
-  height: 36px;
-  padding: 0 9px;
-  overflow: hidden;
-  border-radius: 3px;
-  color: var(--home-muted);
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1;
-  text-decoration: none;
-  gap: 9px;
-  transition:
-    background-color 120ms ease,
-    color 120ms ease;
-}
-
-.home-menu__link::before {
-  position: absolute;
-  top: 8px;
-  bottom: 8px;
-  left: 0;
-  width: 2px;
-  border-radius: 0 2px 2px 0;
-  background: transparent;
-  content: "";
-}
-
-.home-menu__link:hover,
-.home-menu__link:focus-visible {
-  background: rgba(248, 248, 248, 0.045);
-  color: var(--home-text);
-}
-
-.home-menu__link.is-current {
-  background: var(--home-surface-3);
-  color: var(--home-text);
-}
-
-.home-menu__link.is-current::before {
-  background: var(--home-purple-light);
-}
-
-.home-menu__icon {
-  display: block;
-  width: 16px;
-  height: 16px;
-  flex: 0 0 16px;
-  object-fit: contain;
-  opacity: 0.62;
-  filter: brightness(0) invert(1);
-  transition: opacity 120ms ease;
-}
-
-.home-menu__link:hover .home-menu__icon,
-.home-menu__link:focus-visible .home-menu__icon,
-.home-menu__link.is-current .home-menu__icon {
-  opacity: 1;
-}
-
-.home-menu__link span {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.home-menu-divider {
-  height: 1px;
-  margin: 14px 6px;
-  background: var(--home-border);
-}
-
-.home-play-area {
-  display: grid;
-  margin-top: auto;
-  gap: 8px;
 }
 
 .home-current-playing {
   display: flex;
   align-items: center;
-  justify-content: center;
-  min-height: 30px;
-  padding: 0 8px;
+  min-height: 34px;
+  padding: 0 10px;
   overflow: hidden;
   border: 1px solid var(--home-border);
   border-radius: 3px;
-  background: var(--home-surface-3);
+  background: #15171a;
   color: var(--home-muted-light);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 500;
-  text-align: center;
+  line-height: 1;
+  gap: 8px;
+}
+
+.home-current-playing__dot {
+  display: block;
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-radius: 50%;
+  background: var(--home-green);
+}
+
+.home-current-playing.is-loading .home-current-playing__dot {
+  background: #747982;
+}
+
+.home-current-playing [data-home-status-label] {
+  min-width: 0;
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -474,14 +475,13 @@ body.mineacle-home button {
   border-radius: 3px;
   background: var(--home-green);
   color: #fff;
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 600;
+  line-height: 1;
   text-transform: uppercase;
   cursor: pointer;
   gap: 8px;
-  transition:
-    background-color 120ms ease,
-    transform 120ms ease;
+  transition: background-color 100ms ease;
 }
 
 .home-play-button img {
@@ -494,7 +494,6 @@ body.mineacle-home button {
 .home-play-button:hover,
 .home-play-button:focus-visible {
   background: var(--home-green-hover);
-  transform: translateY(-1px);
 }
 
 .home-play-button.is-copy-error {
@@ -729,8 +728,14 @@ body.mineacle-home button {
   .home-logo {
     grid-column: 1;
     grid-row: 1;
-    width: 190px;
-    padding: 0;
+    width: 100%;
+    height: 64px;
+    padding: 6px 10px;
+  }
+
+  .home-logo img {
+    width: min(220px, 100%);
+    margin-right: auto;
   }
 
   .home-topbar {
@@ -758,6 +763,10 @@ body.mineacle-home button {
   .home-rail {
     grid-row: 2;
     min-height: 500px;
+  }
+
+  .home-rail__inner {
+    padding: 16px;
   }
 
   .home-promo-card {
