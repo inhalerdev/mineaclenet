@@ -28,6 +28,19 @@ $site = is_array($config['site'] ?? null)
     ? $config['site']
     : [];
 
+$publicUrl = static function (mixed $value, string $fallback): string {
+    $resolved = mineacle_page_public_link($value);
+
+    return $resolved === '#'
+        ? $fallback
+        : $resolved;
+};
+
+$storeUrl = $publicUrl(
+    $site['store_url'] ?? '',
+    'https://store.mineacle.net/'
+);
+
 
 $assetFiles = [
     __DIR__ . '/assets/css/home.css',
@@ -37,6 +50,8 @@ $assetFiles = [
     __DIR__ . '/../shared/assets/css/site-header.css',
     __DIR__ . '/../shared/assets/js/site-header.js',
     __DIR__ . '/../shared/assets/images/search/search.png',
+    __DIR__ . '/assets/images/duels-slot.png',
+    __DIR__ . '/assets/images/mineacle-plus-slot.png',
 ];
 
 $assetVersion = 1;
@@ -83,9 +98,7 @@ mineacle_page_head('Home', [
         ?>
 
         <?php
-        mineacle_site_header([
-            'search_placeholder' => 'Search for a player',
-        ]);
+        mineacle_site_header();
         ?>
 
         <section
@@ -123,14 +136,94 @@ mineacle_page_head('Home', [
 
         <div class="home-feature-stack">
             <section
-                class="home-feature-card"
-                aria-label="Mineacle feature slot one"
-            ></section>
+                class="home-feature-card home-feature-card--duels"
+                aria-labelledby="home-duels-title"
+            >
+                <div
+                    class="home-feature-card__backdrop"
+                    aria-hidden="true"
+                ></div>
+
+                <div class="home-feature-card__content">
+                    <div class="home-feature-card__heading">
+                        <span class="home-feature-card__eyebrow">
+                            Mineacle Duels
+                        </span>
+
+                        <h2 id="home-duels-title">
+                            Fight. Climb. Repeat.
+                        </h2>
+
+                        <p>
+                            Competitive PvP built around quick fights,
+                            clean matchups, and server-wide combat rankings.
+                        </p>
+                    </div>
+
+                    <div class="home-feature-card__footer">
+                        <div class="home-feature-card__stat">
+                            <small>Combat Leaderboard</small>
+                            <strong>See Top Kills</strong>
+                        </div>
+
+                        <a
+                            class="home-feature-card__button"
+                            href="/leaderboards?metric=kills"
+                        >
+                            View Top Kills
+                        </a>
+                    </div>
+                </div>
+            </section>
 
             <section
-                class="home-feature-card"
-                aria-label="Mineacle feature slot two"
-            ></section>
+                class="home-feature-card home-feature-card--plus"
+                aria-labelledby="home-plus-title"
+            >
+                <div
+                    class="home-feature-card__backdrop"
+                    aria-hidden="true"
+                ></div>
+
+                <div class="home-feature-card__content">
+                    <div class="home-feature-card__heading">
+                        <span class="home-feature-card__eyebrow">
+                            Mineacle+
+                        </span>
+
+                        <h2 id="home-plus-title">
+                            More freedom to play your way.
+                        </h2>
+
+                        <p>
+                            Unlock premium convenience and progression
+                            perks across Mineacle.
+                        </p>
+                    </div>
+
+                    <div
+                        class="home-plus-perks"
+                        aria-label="Mineacle Plus perks"
+                    >
+                        <span>5 Homes</span>
+                        <span>Faster Teleports</span>
+                        <span>Priority RTP</span>
+                        <span>Spawn Flight</span>
+                        <span>25 Orders</span>
+                        <span>45 Auction Slots</span>
+                        <span>Nicknames</span>
+                    </div>
+
+                    <a
+                        class="home-feature-card__button home-feature-card__button--store"
+                        href="<?php echo h($storeUrl); ?>"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Visit Store
+                    </a>
+                </div>
+            </section>
         </div>
     </div>
 </main>

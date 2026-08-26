@@ -18,8 +18,8 @@ function mineacle_site_header(array $options = []): void
     $user = mineacle_auth_current_user();
 
     $searchPlaceholder = trim(
-        (string) ($options['search_placeholder'] ?? 'Search for a player')
-    ) ?: 'Search for a player';
+        (string) ($options['search_placeholder'] ?? 'Search player usernames, nicknames, uuids...')
+    ) ?: 'Search player usernames, nicknames, uuids...';
 
     $searchAsset = __DIR__ . '/../assets/images/search/search.png';
     $userAsset = __DIR__ . '/../assets/images/navigation/user.png';
