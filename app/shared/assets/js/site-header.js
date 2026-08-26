@@ -32,6 +32,39 @@
     `/player/${encodeURIComponent(username)}`
   );
 
+  const normalizedUsername = (player) => String(
+    player?.username || "",
+  ).trim();
+
+  const normalizedNickname = (player) => {
+    const username = normalizedUsername(player);
+
+    const nickname = String(
+      player?.nickname || "",
+    ).trim();
+
+    if (
+      !nickname
+      || nickname.toLowerCase() === username.toLowerCase()
+    ) {
+      return "";
+    }
+
+    return nickname;
+  };
+
+  const shortUuid = (uuid) => {
+    const compact = String(uuid || "")
+      .replace(/[^a-fA-F0-9]/g, "")
+      .toLowerCase();
+
+    if (compact.length < 8) {
+      return "";
+    }
+
+    return `${compact.slice(0, 8)}…`;
+  };
+
   const closeSuggestions = () => {
     if (!searchResults) {
       return;
@@ -70,9 +103,7 @@
   };
 
   const openPlayer = (player) => {
-    const username = String(
-      player?.username || player?.display_name || "",
-    ).trim();
+    const username = normalizedUsername(player);
 
     if (!username) {
       return;
@@ -81,13 +112,96 @@
     window.location.assign(playerUrl(username));
   };
 
+  const buildSuggestion = (player, index) => {
+    const username = normalizedUsername(player);
+
+    if (!username) {
+      return null;
+    }
+
+    const nickname = normalizedNickname(player);
+    const uuid = shortUuid(player?.uuid);
+
+    const row = document.createElement("button");
+    row.type = "button";
+    row.className = "site-header__search-result";
+    row.dataset.index = String(index);
+
+    const head = document.createElement("span");
+    head.className = "site-header__search-head";
+
+    const headUrl = String(player?.head || "").trim();
+
+    if (
+      headUrl.startsWith("/")
+      || headUrl.startsWith("https://")
+    ) {
+      const image = document.createElement("img");
+      image.src = headUrl;
+      image.alt = "";
+      image.decoding = "async";
+      image.loading = "lazy";
+      image.referrerPolicy = "no-referrer";
+      head.append(image);
+    }
+
+    const copy = document.createElement("span");
+    copy.className = "site-header__search-result-copy";
+
+    const primary = document.createElement("span");
+    primary.className = "site-header__search-result-primary";
+
+    const displayName = document.createElement("strong");
+    displayName.textContent = nickname || username;
+    primary.append(displayName);
+
+    if (nickname) {
+      const nicknameLabel = document.createElement("span");
+      nicknameLabel.className = "site-header__search-nickname";
+      nicknameLabel.textContent = "Nickname";
+      primary.append(nicknameLabel);
+    }
+
+    const secondary = document.createElement("span");
+    secondary.className = "site-header__search-result-secondary";
+
+    if (nickname) {
+      const realUsername = document.createElement("span");
+      realUsername.textContent = username;
+      secondary.append(realUsername);
+    }
+
+    if (uuid) {
+      const uuidText = document.createElement("span");
+      uuidText.textContent = `UUID ${uuid}`;
+      secondary.append(uuidText);
+    }
+
+    if (!nickname && !uuid) {
+      const accountText = document.createElement("span");
+      accountText.textContent = "Minecraft player";
+      secondary.append(accountText);
+    }
+
+    copy.append(primary, secondary);
+    row.append(head, copy);
+
+    row.addEventListener("click", () => {
+      openPlayer(player);
+    });
+
+    return row;
+  };
+
   const renderSuggestions = (players) => {
     if (!searchResults) {
       return;
     }
 
     suggestions = Array.isArray(players)
-      ? players.slice(0, 8)
+      ? players
+          .filter((player) => normalizedUsername(player))
+          .slice(0, 8)
       : [];
 
     activeIndex = -1;
@@ -101,42 +215,11 @@
     const fragment = document.createDocumentFragment();
 
     suggestions.forEach((player, index) => {
-      const username = String(
-        player?.username || "",
-      ).trim();
+      const row = buildSuggestion(player, index);
 
-      const displayName = String(
-        player?.display_name || username,
-      ).trim();
-
-      if (!username) {
-        return;
+      if (row) {
+        fragment.append(row);
       }
-
-      const row = document.createElement("button");
-      row.type = "button";
-      row.className = "site-header__search-result";
-      row.dataset.index = String(index);
-
-      const name = document.createElement("strong");
-      name.textContent = displayName || username;
-      row.append(name);
-
-      if (
-        displayName
-        && displayName.toLowerCase()
-          !== username.toLowerCase()
-      ) {
-        const accountName = document.createElement("small");
-        accountName.textContent = username;
-        row.append(accountName);
-      }
-
-      row.addEventListener("click", () => {
-        openPlayer(player);
-      });
-
-      fragment.append(row);
     });
 
     searchResults.append(fragment);
@@ -146,7 +229,7 @@
   const searchPlayers = async (query) => {
     searchRequest?.abort();
 
-    if (query.length < 1) {
+    if (!query) {
       closeSuggestions();
       return;
     }
@@ -156,7 +239,7 @@
 
     try {
       const response = await fetch(
-        `/api/player-search.php?mode=suggest&limit=8&q=${encodeURIComponent(query)}`,
+        `/api/player-identity-search.php?q=${encodeURIComponent(query)}`,
         {
           headers: {
             Accept: "application/json",
@@ -193,7 +276,9 @@
   searchInput?.addEventListener("input", () => {
     window.clearTimeout(searchTimer);
 
-    const query = searchInput.value.trim();
+    const query = searchInput.value
+      .trim()
+      .slice(0, 40);
 
     if (!query) {
       closeSuggestions();
@@ -202,7 +287,7 @@
 
     searchTimer = window.setTimeout(() => {
       searchPlayers(query);
-    }, 140);
+    }, 160);
   });
 
   searchInput?.addEventListener("keydown", (event) => {
@@ -256,19 +341,53 @@
   searchForm?.addEventListener("submit", (event) => {
     event.preventDefault();
 
-    const query = searchInput?.value.trim() || "";
+    const query = searchInput?.value
+      .trim()
+      .slice(0, 40) || "";
 
     if (!query) {
       searchInput?.focus();
       return;
     }
 
-    if (activeIndex >= 0 && suggestions[activeIndex]) {
+    if (
+      activeIndex >= 0
+      && suggestions[activeIndex]
+    ) {
       openPlayer(suggestions[activeIndex]);
       return;
     }
 
-    window.location.assign(playerUrl(query));
+    /*
+     * Do not construct a profile URL from an arbitrary nickname/UUID.
+     * Resolve it through the identity endpoint first.
+     */
+    searchPlayers(query).then(() => {
+      const exact = suggestions.find((player) => {
+        const username = normalizedUsername(player);
+        const nickname = normalizedNickname(player);
+        const compactUuid = String(player?.uuid || "")
+          .replace(/[^a-fA-F0-9]/g, "")
+          .toLowerCase();
+
+        const compactQuery = query
+          .replace(/[^a-fA-F0-9]/g, "")
+          .toLowerCase();
+
+        return (
+          username.toLowerCase() === query.toLowerCase()
+          || nickname.toLowerCase() === query.toLowerCase()
+          || (
+            compactQuery.length >= 8
+            && compactUuid.startsWith(compactQuery)
+          )
+        );
+      });
+
+      if (exact) {
+        openPlayer(exact);
+      }
+    });
   });
 
   document.addEventListener("pointerdown", (event) => {
