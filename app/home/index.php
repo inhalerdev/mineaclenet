@@ -34,6 +34,7 @@ $assetFiles = [
     __DIR__ . '/assets/js/home.js',
     __DIR__ . '/../shared/assets/css/navigation-rail.css',
     __DIR__ . '/../shared/assets/js/navigation-rail.js',
+    __DIR__ . '/../shared/assets/images/search/search.png',
 ];
 
 $assetVersion = 1;
@@ -91,7 +92,7 @@ mineacle_page_head('Home', [
                     autocomplete="off"
                 >
                     <img
-                        src="/shared/assets/images/search/search.png"
+                        src="/shared/assets/images/search/search.png?rev=<?php echo h($rev); ?>"
                         alt=""
                         aria-hidden="true"
                         width="18"

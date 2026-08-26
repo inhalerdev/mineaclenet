@@ -200,7 +200,9 @@
   height: 32px;
   flex: 0 0 32px;
   padding: 0;
+  overflow: hidden;
   border: 0;
+  border-radius: 4px;
   background: transparent;
   text-decoration: none;
   opacity: 0.92;
@@ -214,7 +216,8 @@
   display: block;
   width: 32px;
   height: 32px;
-  object-fit: contain;
+  border-radius: 4px;
+  object-fit: cover;
   pointer-events: none;
 }
 
@@ -225,28 +228,36 @@
   transform: translateY(-1px);
 }
 
-/* Help is a utility control, not part of the social links. */
+/* Help remains a utility action, but uses the same icon treatment. */
 .site-rail__help {
-  display: grid;
-  place-items: center;
+  display: block;
   width: 32px;
   height: 32px;
   flex: 0 0 32px;
+  overflow: hidden;
   border-radius: 4px;
-  background: #2f9d28;
-  color: #f8f8f8;
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 1;
+  background: transparent;
   text-decoration: none;
+  opacity: 0.92;
   transition:
-    background-color 100ms ease-out,
+    filter 100ms ease-out,
+    opacity 100ms ease-out,
     transform 100ms ease-out;
+}
+
+.site-rail__help img {
+  display: block;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  object-fit: cover;
+  pointer-events: none;
 }
 
 .site-rail__help:hover,
 .site-rail__help:focus-visible {
-  background: #3ab532;
+  filter: brightness(1.07);
+  opacity: 1;
   transform: translateY(-1px);
 }
 

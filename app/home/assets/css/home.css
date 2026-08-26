@@ -177,7 +177,8 @@ body.mineacle-home main.home-page {
   height: 17px;
   flex: 0 0 17px;
   object-fit: contain;
-  opacity: 0.52;
+  opacity: 0.62;
+  filter: brightness(0) invert(1);
 }
 
 .home-player-search input {

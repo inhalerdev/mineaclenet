@@ -306,7 +306,11 @@ function mineacle_navigation_rail(array $site, array $options = []): void
                             aria-label="Help and contact"
                             title="Help"
                         >
-                            ?
+                            <img
+                                src="<?php echo h($assetBase . '/social/help.png?rev=' . $rev); ?>"
+                                alt=""
+                                aria-hidden="true"
+                            >
                         </a>
                     </div>
 
