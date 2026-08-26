@@ -167,7 +167,7 @@ mineacle_page_head('Home', [
                         </a>
 
                         <a class="home-menu__link" href="/leaderboards?metric=balance">
-                            <img class="home-menu__icon" src="/home/assets/images/nav/top.png?rev=<?php echo h($rev); ?>" alt="" aria-hidden="true">
+                            <img class="home-menu__icon" src="/home/assets/images/nav/balance.png?rev=<?php echo h($rev); ?>" alt="" aria-hidden="true">
                             <span>Top Balance</span>
                         </a>
 
@@ -192,11 +192,6 @@ mineacle_page_head('Home', [
                             <span aria-hidden="true"></span>
                         </a>
                     </nav>
-
-                    <a class="home-contact-link" href="/contact">
-                        <img src="/home/assets/images/nav/email.png?rev=<?php echo h($rev); ?>" alt="" aria-hidden="true">
-                        <span>Contact</span>
-                    </a>
 
                     <div class="home-server-block">
                         <div class="home-current-playing is-loading" data-home-status aria-live="polite">
