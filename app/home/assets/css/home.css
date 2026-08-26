@@ -23,29 +23,39 @@
 }
 
 :root {
-  --home-background: #080a0b;
-  --home-panel: #21242c;
-  --home-panel-dark: #191b1f;
+  --home-bg: #111111;
+  --home-surface: #1c1c1e;
+  --home-surface-raised: #222224;
+  --home-border: rgba(248, 248, 248, 0.08);
+  --home-border-strong: rgba(248, 248, 248, 0.14);
 
-  /*
-   * The supplied 1512 × 982 wireframe uses a 32px system:
-   * 32px viewport edge, 32px column gaps, 32px row gaps.
-   */
-  --home-space: 32px;
+  --home-text: #f8f8f8;
+  --home-muted: #a9a9ad;
+  --home-muted-soft: #707075;
+
+  --home-purple: #8436fe;
+  --home-purple-light: #b078ff;
+  --home-purple-pale: #d0afff;
+  --home-green: #62c249;
+  --home-green-hover: #74d25c;
+  --home-red: #fc1111;
+
+  --home-gap: 32px;
   --home-top-height: 72px;
-  --home-radius: 4px;
-  --home-viewport-height: 100vh;
+  --home-rail-width: 226px;
+  --home-radius: 6px;
+  --home-viewport: 100vh;
 }
 
 @supports (height: 100svh) {
   :root {
-    --home-viewport-height: 100svh;
+    --home-viewport: 100svh;
   }
 }
 
 @supports (height: 100dvh) {
   :root {
-    --home-viewport-height: 100dvh;
+    --home-viewport: 100dvh;
   }
 }
 
@@ -55,56 +65,62 @@
   box-sizing: border-box;
 }
 
-/*
- * Home is intentionally a single-screen composition.
- * document.css loads after this stylesheet and normally restores document
- * scrolling, so these more-specific rules keep this route viewport-bound.
- */
 html:root {
   width: 100%;
-  height: var(--home-viewport-height) !important;
-  min-height: var(--home-viewport-height) !important;
+  min-width: 320px;
+  height: var(--home-viewport) !important;
+  min-height: var(--home-viewport) !important;
   overflow: hidden !important;
-  background: var(--home-background);
+  background: var(--home-bg);
 }
 
 body.mineacle-home {
   width: 100%;
-  height: var(--home-viewport-height) !important;
-  min-height: var(--home-viewport-height) !important;
+  min-width: 320px;
+  height: var(--home-viewport) !important;
+  min-height: var(--home-viewport) !important;
   margin: 0;
   overflow: hidden !important;
-  background: var(--home-background);
-  color: #f8f8f8;
+  background: var(--home-bg);
+  color: var(--home-text);
   color-scheme: dark;
   font-family: "Rubik", Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 body.mineacle-home main.home-page {
   width: 100%;
-  height: var(--home-viewport-height) !important;
-  min-height: var(--home-viewport-height) !important;
-  padding: var(--home-space);
+  height: var(--home-viewport) !important;
+  min-height: var(--home-viewport) !important;
+  padding: var(--home-gap);
   overflow: hidden !important;
-  background: var(--home-background);
+  background: var(--home-bg);
+}
+
+body.mineacle-home a,
+body.mineacle-home button,
+body.mineacle-home input {
+  font: inherit;
+}
+
+body.mineacle-home a {
+  color: inherit;
 }
 
 /* ==========================================================================
-   WIREFRAME GRID
-
-   At the 1512px reference width, after the 32px outer frame and two 32px
-   gutters, the three columns resolve to approximately:
-   226px / 440px / 718px.
-
-   Fr units preserve those exact proportions as the viewport changes.
+   DASHBOARD
    ========================================================================== */
 
-.home-wireframe {
+.home-dashboard {
   display: grid;
   grid-template-columns:
-    minmax(0, 0.1633fr)
-    minmax(0, 0.3179fr)
-    minmax(0, 0.5188fr);
+    var(--home-rail-width)
+    minmax(0, 0.64fr)
+    minmax(0, 1.04fr);
   grid-template-rows:
     var(--home-top-height)
     minmax(0, 1fr);
@@ -112,75 +128,346 @@ body.mineacle-home main.home-page {
   height: 100%;
   min-width: 0;
   min-height: 0;
-  gap: var(--home-space);
+  gap: var(--home-gap);
 }
 
-.home-panel {
+.home-rail,
+.home-topbar,
+.home-feature-card,
+.home-action-card {
   min-width: 0;
   min-height: 0;
-  overflow: hidden;
-  border: 0;
+  border: 1px solid var(--home-border);
   border-radius: var(--home-radius);
-  background: var(--home-panel);
+  background: var(--home-surface);
 }
 
-/* Top bar begins after the rail and spans the two content columns. */
-.home-panel--top {
-  grid-column: 2 / 4;
-  grid-row: 1;
-  background: var(--home-panel-dark);
-}
+/* ==========================================================================
+   LEFT NAVIGATION RAIL
+   ========================================================================== */
 
-/* Left rail occupies only the lower row. */
-.home-panel--rail {
-  position: relative;
+.home-rail {
   grid-column: 1;
-  grid-row: 2;
-  background: var(--home-panel-dark);
+  grid-row: 1 / 3;
+  overflow: hidden;
 }
 
-/* The lighter strip shown on the left edge of the rail. */
-.home-panel--rail::before {
+.home-rail__inner {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 24px 20px 20px;
+}
+
+.home-brand {
+  position: relative;
+  display: block;
+  width: 66px;
+  height: 56px;
+  flex: none;
+  text-decoration: none;
+}
+
+.home-brand__visual,
+.home-brand__image {
   position: absolute;
-  inset: 0 auto 0 0;
-  width: 23%;
-  background: var(--home-panel);
+  inset: 0;
+  display: block;
+}
+
+.home-brand__visual {
+  transform: translateY(0);
+  transition:
+    filter 120ms ease-out,
+    transform 120ms ease-out;
+}
+
+.home-brand__image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  transition: opacity 90ms ease-out;
+}
+
+.home-brand__image--hover {
+  opacity: 0;
+}
+
+.home-brand:hover .home-brand__visual,
+.home-brand:focus-visible .home-brand__visual {
+  filter: brightness(1.05);
+  transform: translateY(-2px);
+}
+
+.home-brand:hover .home-brand__image--static,
+.home-brand:focus-visible .home-brand__image--static {
+  opacity: 0;
+}
+
+.home-brand:hover .home-brand__image--hover,
+.home-brand:focus-visible .home-brand__image--hover {
+  opacity: 1;
+}
+
+.home-nav {
+  display: grid;
+  margin-top: 34px;
+  gap: 5px;
+}
+
+.home-nav__link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 13px;
+  border-radius: 4px;
+  color: var(--home-muted);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition:
+    background-color 120ms ease-out,
+    color 120ms ease-out;
+}
+
+.home-nav__link::before {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 0;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  background: transparent;
   content: "";
 }
 
-/* Tall center card with the original Mineacle campfire video. */
-.home-panel--primary {
+.home-nav__link span {
+  transition: transform 120ms ease-out;
+}
+
+.home-nav__link.is-current {
+  background: rgba(132, 54, 254, 0.13);
+  color: var(--home-purple-light);
+}
+
+.home-nav__link.is-current::before {
+  background: var(--home-purple);
+}
+
+.home-nav__link:not(.is-current):hover,
+.home-nav__link:not(.is-current):focus-visible {
+  background: rgba(248, 248, 248, 0.045);
+  color: var(--home-text);
+}
+
+.home-nav__link:hover span,
+.home-nav__link:focus-visible span {
+  transform: translateX(3px);
+}
+
+.home-socials {
+  display: grid;
+  grid-template-columns: repeat(3, 38px);
+  margin-top: auto;
+  gap: 9px;
+}
+
+.home-social {
+  position: relative;
+  display: block;
+  width: 38px;
+  height: 38px;
+  overflow: hidden;
+  border-radius: 4px;
+  text-decoration: none;
+  transition:
+    filter 120ms ease-out,
+    transform 120ms ease-out;
+}
+
+.home-social:hover,
+.home-social:focus-visible {
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+}
+
+.home-social__icon {
+  position: absolute;
+  inset: 0;
+  display: block;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.home-social--discord .home-social__icon {
+  background-image: url("../images/social-discord.png");
+}
+
+.home-social--x .home-social__icon {
+  background-image: url("../images/social-x.png");
+}
+
+.home-social--youtube .home-social__icon {
+  background-image: url("../images/social-youtube.png");
+}
+
+/* ==========================================================================
+   TOP UTILITY BAR
+   ========================================================================== */
+
+.home-topbar {
+  display: flex;
+  grid-column: 2 / 4;
+  grid-row: 1;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px 12px 16px;
+  gap: 18px;
+}
+
+.home-search {
+  display: flex;
+  align-items: center;
+  width: min(520px, 52%);
+  min-width: 220px;
+  height: 46px;
+  padding: 0 14px;
+  border: 1px solid var(--home-border);
+  border-radius: 4px;
+  background: #151517;
+  gap: 10px;
+  transition:
+    border-color 120ms ease-out,
+    box-shadow 120ms ease-out;
+}
+
+.home-search:focus-within {
+  border-color: var(--home-purple-light);
+  box-shadow: 0 0 0 2px rgba(176, 120, 255, 0.10);
+}
+
+.home-search img {
+  width: 18px;
+  height: 18px;
+  opacity: 0.62;
+}
+
+.home-search input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--home-text);
+  font-size: 14px;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.home-search input::placeholder {
+  color: var(--home-muted-soft);
+}
+
+.home-search input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.home-topbar__right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.home-server-status,
+.home-login {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.home-server-status {
+  padding: 0 13px;
+  border: 1px solid var(--home-border);
+  background: #151517;
+  color: var(--home-muted);
+  gap: 8px;
+}
+
+.home-server-status__dot {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #77777b;
+}
+
+.home-server-status.is-online .home-server-status__dot {
+  background: var(--home-green);
+  box-shadow: 0 0 10px rgba(98, 194, 73, 0.34);
+}
+
+.home-server-status.is-offline .home-server-status__dot {
+  background: var(--home-red);
+}
+
+.home-login {
+  justify-content: center;
+  min-width: 76px;
+  padding: 0 16px;
+  background: var(--home-purple);
+  color: #fff;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition:
+    background-color 120ms ease-out,
+    transform 120ms ease-out;
+}
+
+.home-login:hover,
+.home-login:focus-visible {
+  background: var(--home-purple-light);
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   PRIMARY CAMPFIRE CARD
+   ========================================================================== */
+
+.home-feature-card {
   position: relative;
   isolation: isolate;
   grid-column: 2;
   grid-row: 2;
   overflow: hidden;
   background:
-    var(--home-panel)
+    #171719
     url("../images/hero.webp")
     56% 50% / cover
     no-repeat;
 }
 
-/*
- * Hard clipping boundary for the video.
- * The media wrapper is sized from the center card, never the page.
- */
-.home-panel__media {
+.home-feature-card__media {
   position: absolute;
   z-index: 0;
   inset: 0;
-  width: 100%;
-  height: 100%;
   overflow: hidden;
   border-radius: inherit;
   pointer-events: none;
 }
 
-/*
- * Fit and center the campfire footage inside the tall center card only.
- */
-.home-panel__video {
+.home-feature-card__video {
   position: absolute;
   inset: 0;
   display: block;
@@ -188,81 +475,346 @@ body.mineacle-home main.home-page {
   height: 100%;
   max-width: none;
   max-height: none;
-  margin: 0;
-  border: 0;
   object-fit: cover;
   object-position: 56% 50%;
   pointer-events: none;
   user-select: none;
 }
 
-/* 75% black at the bottom, fading to transparent at the top. */
-.home-panel__video-overlay {
+.home-feature-card__overlay {
   position: absolute;
   z-index: 1;
   inset: 0;
-  width: 100%;
-  height: 100%;
   background: linear-gradient(
     to top,
-    rgba(0, 0, 0, 0.75) 0%,
-    rgba(0, 0, 0, 0.55) 28%,
-    rgba(0, 0, 0, 0.20) 58%,
-    rgba(0, 0, 0, 0) 100%
+    rgba(0, 0, 0, 0.82) 0%,
+    rgba(0, 0, 0, 0.66) 25%,
+    rgba(0, 0, 0, 0.22) 58%,
+    rgba(0, 0, 0, 0.02) 100%
   );
   pointer-events: none;
 }
 
-/* Reserved bottom layer for future text/buttons. */
-.home-panel__future-content {
+.home-feature-card__content {
   position: absolute;
   z-index: 2;
   inset: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  width: 100%;
-  height: 100%;
-  padding: 32px;
-  pointer-events: none;
+  padding: clamp(24px, 2vw, 34px);
 }
 
-/* Right side is split into two cards with the same 32px gap. */
-.home-panel-stack {
+.home-card-eyebrow {
+  color: var(--home-purple-pale);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+}
+
+.home-feature-card h1,
+.home-action-card h2 {
+  margin: 8px 0 0;
+  color: var(--home-text);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+}
+
+.home-feature-card h1 {
+  max-width: 11ch;
+  font-size: clamp(34px, 3.1vw, 54px);
+  line-height: 0.98;
+}
+
+.home-feature-card p {
+  max-width: 40ch;
+  margin: 15px 0 0;
+  color: rgba(248, 248, 248, 0.72);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.home-feature-card__actions {
+  display: flex;
+  align-items: center;
+  margin-top: 22px;
+  gap: 10px;
+}
+
+/* ==========================================================================
+   RIGHT ACTION STACK
+   ========================================================================== */
+
+.home-side-stack {
   display: grid;
   grid-column: 3;
   grid-row: 2;
-  grid-template-rows:
-    minmax(0, 0.49fr)
-    minmax(0, 0.51fr);
+  grid-template-rows: repeat(2, minmax(0, 1fr));
   min-width: 0;
   min-height: 0;
-  gap: var(--home-space);
+  gap: var(--home-gap);
 }
 
-.home-panel--secondary {
+.home-action-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.home-action-card--leaderboards {
+  background:
+    radial-gradient(
+      circle at 84% 22%,
+      rgba(132, 54, 254, 0.28),
+      transparent 34%
+    ),
+    linear-gradient(135deg, #1b1920 0%, #211a2b 100%);
+}
+
+.home-action-card--community {
+  background:
+    radial-gradient(
+      circle at 84% 22%,
+      rgba(98, 194, 73, 0.19),
+      transparent 35%
+    ),
+    linear-gradient(135deg, #191c19 0%, #1c221c 100%);
+}
+
+.home-action-card__content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
   width: 100%;
   height: 100%;
+  padding: clamp(24px, 2vw, 34px);
+}
+
+.home-action-card h2 {
+  font-size: clamp(26px, 2vw, 36px);
+  line-height: 1;
+}
+
+.home-action-card p {
+  max-width: 46ch;
+  margin: 12px 0 0;
+  color: var(--home-muted);
+  font-size: 13px;
+  line-height: 1.48;
+}
+
+.home-action-card__content > .home-button,
+.home-action-card__buttons {
+  margin-top: 18px;
+}
+
+.home-action-card__buttons {
+  display: flex;
+  gap: 10px;
+}
+
+/* Podium visual */
+.home-podium {
+  position: absolute;
+  z-index: 1;
+  top: 28px;
+  right: 30px;
+  display: flex;
+  align-items: flex-end;
+  gap: 7px;
+  opacity: 0.86;
+}
+
+.home-podium__bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 52px;
+  padding-top: 10px;
+  border: 1px solid rgba(176, 120, 255, 0.18);
+  border-radius: 5px 5px 2px 2px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(132, 54, 254, 0.24),
+      rgba(132, 54, 254, 0.08)
+    );
+}
+
+.home-podium__bar b {
+  color: var(--home-purple-light);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.home-podium__bar--first {
+  height: 98px;
+}
+
+.home-podium__bar--second {
+  height: 72px;
+}
+
+.home-podium__bar--third {
+  height: 54px;
+}
+
+/* Community visual */
+.home-community-mark {
+  position: absolute;
+  z-index: 1;
+  top: 30px;
+  right: 30px;
+  width: 142px;
+  height: 96px;
+  opacity: 0.75;
+}
+
+.home-community-mark span {
+  position: absolute;
+  display: block;
+  border: 1px solid rgba(98, 194, 73, 0.16);
+  border-radius: 50%;
+  background: rgba(98, 194, 73, 0.07);
+}
+
+.home-community-mark span:nth-child(1) {
+  top: 0;
+  right: 4px;
+  width: 74px;
+  height: 74px;
+}
+
+.home-community-mark span:nth-child(2) {
+  right: 60px;
+  bottom: 0;
+  width: 52px;
+  height: 52px;
+}
+
+.home-community-mark span:nth-child(3) {
+  top: 30px;
+  left: 0;
+  width: 34px;
+  height: 34px;
+}
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+
+.home-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 116px;
+  height: 44px;
+  padding: 0 17px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color 120ms ease-out,
+    border-color 120ms ease-out,
+    color 120ms ease-out,
+    filter 120ms ease-out,
+    transform 120ms ease-out;
+}
+
+.home-button:hover,
+.home-button:focus-visible {
+  transform: translateY(-2px);
+}
+
+.home-button:active {
+  filter: brightness(0.96);
+  transform: translateY(0);
+}
+
+.home-button--play,
+.home-button--green {
+  background: var(--home-green);
+}
+
+.home-button--play:hover,
+.home-button--play:focus-visible,
+.home-button--green:hover,
+.home-button--green:focus-visible {
+  background: var(--home-green-hover);
+}
+
+.home-button--purple {
+  background: var(--home-purple);
+}
+
+.home-button--purple:hover,
+.home-button--purple:focus-visible {
+  background: var(--home-purple-light);
+}
+
+.home-button--secondary {
+  border-color: rgba(248, 248, 248, 0.14);
+  background: rgba(17, 17, 17, 0.56);
+  color: var(--home-text);
+  backdrop-filter: blur(8px);
+}
+
+.home-button--secondary:hover,
+.home-button--secondary:focus-visible {
+  border-color: rgba(176, 120, 255, 0.42);
+  background: rgba(132, 54, 254, 0.14);
+}
+
+.home-button.is-copy-error {
+  background: #b63d3d;
+}
+
+/* ==========================================================================
+   FOCUS
+   ========================================================================== */
+
+.home-brand:focus-visible,
+.home-nav__link:focus-visible,
+.home-social:focus-visible,
+.home-login:focus-visible,
+.home-button:focus-visible {
+  outline: 2px solid var(--home-purple-light);
+  outline-offset: 3px;
 }
 
 /* ==========================================================================
    RESPONSIVE
-   Keep spacing mathematically consistent as the composition compresses.
    ========================================================================== */
 
-@media (max-width: 1100px) {
+@media (max-width: 1180px) {
   :root {
-    --home-space: 24px;
-    --home-top-height: 64px;
+    --home-gap: 24px;
+    --home-rail-width: 190px;
+  }
+
+  .home-dashboard {
+    grid-template-columns:
+      var(--home-rail-width)
+      minmax(0, 0.82fr)
+      minmax(0, 1.18fr);
+  }
+
+  .home-feature-card h1 {
+    font-size: clamp(32px, 4vw, 48px);
   }
 }
 
-@media (max-width: 760px) {
-  :root {
-    --home-space: 18px;
-    --home-top-height: 64px;
-  }
-
+@media (max-width: 900px) {
   html:root {
     height: auto !important;
     min-height: 100% !important;
@@ -278,67 +830,198 @@ body.mineacle-home main.home-page {
   body.mineacle-home main.home-page {
     height: auto !important;
     min-height: 100vh !important;
+    padding: 18px;
     overflow: visible !important;
   }
 
-  .home-wireframe {
+  .home-dashboard {
     grid-template-columns: 1fr;
     grid-template-rows:
-      var(--home-top-height)
-      180px
-      420px
+      auto
+      auto
+      620px
       auto;
     height: auto;
-    min-height: calc(100vh - (var(--home-space) * 2));
+    min-height: calc(100vh - 36px);
+    gap: 18px;
   }
 
-  .home-panel--top,
-  .home-panel--rail,
-  .home-panel--primary,
-  .home-panel-stack {
+  .home-rail {
     grid-column: 1;
-  }
-
-  .home-panel--top {
     grid-row: 1;
+    overflow: visible;
   }
 
-  .home-panel--rail {
+  .home-rail__inner {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    padding: 14px;
+    gap: 14px;
+  }
+
+  .home-brand {
+    width: 50px;
+    height: 44px;
+  }
+
+  .home-nav {
+    display: flex;
+    min-width: 0;
+    margin-top: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    gap: 4px;
+  }
+
+  .home-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .home-nav__link {
+    height: 40px;
+    padding: 0 11px;
+    flex: none;
+    font-size: 12px;
+  }
+
+  .home-nav__link::before {
+    top: auto;
+    right: 10px;
+    bottom: 0;
+    left: 10px;
+    width: auto;
+    height: 2px;
+  }
+
+  .home-nav__link:hover span,
+  .home-nav__link:focus-visible span {
+    transform: translateY(-1px);
+  }
+
+  .home-socials {
+    grid-template-columns: repeat(3, 34px);
+    margin-top: 0;
+    gap: 7px;
+  }
+
+  .home-social {
+    width: 34px;
+    height: 34px;
+  }
+
+  .home-topbar {
+    grid-column: 1;
     grid-row: 2;
   }
 
-  .home-panel--rail::before {
-    width: 18%;
-  }
-
-  .home-panel--primary {
+  .home-feature-card {
+    grid-column: 1;
     grid-row: 3;
   }
 
-  .home-panel__future-content {
-    padding: 20px;
-  }
-
-  .home-panel-stack {
+  .home-side-stack {
+    grid-column: 1;
     grid-row: 4;
-    grid-template-rows: repeat(2, 280px);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: 360px;
+    gap: 18px;
   }
 }
 
-@media (max-width: 480px) {
-  :root {
-    --home-space: 14px;
-  }
-
-  .home-wireframe {
+@media (max-width: 680px) {
+  .home-dashboard {
     grid-template-rows:
-      56px
-      150px
-      360px
+      auto
+      auto
+      560px
       auto;
   }
 
-  .home-panel-stack {
-    grid-template-rows: repeat(2, 240px);
+  .home-rail__inner {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .home-socials {
+    grid-column: 1 / -1;
+    justify-content: end;
+    margin-top: 4px;
+  }
+
+  .home-topbar {
+    align-items: stretch;
+    flex-direction: column;
+    height: auto;
+  }
+
+  .home-search {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .home-topbar__right {
+    justify-content: space-between;
+  }
+
+  .home-side-stack {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, 330px);
+  }
+
+  .home-podium,
+  .home-community-mark {
+    opacity: 0.46;
+  }
+}
+
+@media (max-width: 460px) {
+  body.mineacle-home main.home-page {
+    padding: 12px;
+  }
+
+  .home-dashboard {
+    gap: 12px;
+  }
+
+  .home-rail__inner,
+  .home-topbar,
+  .home-feature-card__content,
+  .home-action-card__content {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .home-nav__link {
+    padding-inline: 9px;
+    font-size: 11px;
+  }
+
+  .home-feature-card {
+    min-height: 520px;
+  }
+
+  .home-feature-card h1 {
+    font-size: 38px;
+  }
+
+  .home-feature-card__actions,
+  .home-action-card__buttons {
+    align-items: stretch;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .home-button {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
 }
