@@ -55,7 +55,7 @@
 
     window.setTimeout(() => {
       playButton.classList.remove("is-copy-error");
-      playLabel.textContent = "Play";
+      playLabel.textContent = "Play Mineacle";
     }, copied ? 1600 : 2200);
   });
 

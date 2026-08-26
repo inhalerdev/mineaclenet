@@ -191,21 +191,27 @@ mineacle_page_head('Home', [
                         <a class="home-social home-social--youtube" href="<?php echo h($youtubeUrl); ?>" target="_blank" rel="noopener noreferrer" aria-label="YouTube" title="YouTube">
                             <span aria-hidden="true"></span>
                         </a>
-
-                        <a class="home-social home-social--contact" href="/contact" aria-label="Contact" title="Contact">
-                            <img src="/home/assets/images/nav/email.png?rev=<?php echo h($rev); ?>" alt="" aria-hidden="true">
-                        </a>
                     </nav>
 
-                    <div class="home-current-playing is-loading" data-home-status aria-live="polite">
-                        <span class="home-current-playing__dot" aria-hidden="true"></span>
-                        <span data-home-status-label>Checking server</span>
-                    </div>
+                    <a class="home-contact-link" href="/contact">
+                        <img src="/home/assets/images/nav/email.png?rev=<?php echo h($rev); ?>" alt="" aria-hidden="true">
+                        <span>Contact</span>
+                    </a>
 
-                    <button class="home-play-button" type="button" data-copy-server data-server-address="<?php echo h($minecraftIp); ?>">
-                        <img src="/home/assets/images/nav/play.png?rev=<?php echo h($rev); ?>" alt="" aria-hidden="true">
-                        <span data-play-label>Play</span>
-                    </button>
+                    <div class="home-server-block">
+                        <div class="home-current-playing is-loading" data-home-status aria-live="polite">
+                            <span class="home-current-playing__dot" aria-hidden="true"></span>
+                            <span data-home-status-label>Checking server</span>
+                        </div>
+
+                        <button class="home-play-button" type="button" data-copy-server data-server-address="<?php echo h($minecraftIp); ?>">
+                            <img src="/home/assets/images/nav/play.png?rev=<?php echo h($rev); ?>" alt="" aria-hidden="true">
+                            <span class="home-play-button__copy">
+                                <strong data-play-label>Play Mineacle</strong>
+                                <small><?php echo h($minecraftIp); ?></small>
+                            </span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </aside>
