@@ -43,7 +43,7 @@
 
   /* One spacing system for the whole desktop composition. */
   --home-space: 16px;
-  --home-top-height: 72px;
+  --home-top-height: 104px;
   --home-rail-width: 240px;
   --home-radius: 4px;
   --home-viewport: 100vh;
@@ -143,12 +143,11 @@ body.mineacle-home button {
   grid-column: 1;
   grid-row: 1;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   width: 100%;
   min-width: 0;
   height: 100%;
   padding: 0;
-  overflow: visible;
   background: transparent;
   text-decoration: none;
 }
@@ -158,9 +157,9 @@ body.mineacle-home button {
   width: 100%;
   height: auto;
   max-width: var(--home-rail-width);
-  max-height: 68px;
+  max-height: 100px;
   object-fit: contain;
-  object-position: left center;
+  object-position: center;
   filter: none;
   transform: none;
   transition: filter 100ms ease;
@@ -179,8 +178,11 @@ body.mineacle-home button {
   display: flex;
   grid-column: 2 / 4;
   grid-row: 1;
+  align-self: end;
   align-items: center;
   justify-content: flex-end;
+  width: 100%;
+  height: 72px;
   min-width: 0;
   padding: 12px;
   background: var(--home-surface);
@@ -342,62 +344,55 @@ body.mineacle-home button {
 .home-rail__footer {
   display: grid;
   margin-top: auto;
-  padding-top: 16px;
+  padding-top: 14px;
   border-top: 1px solid var(--home-border);
-  gap: 12px;
+  gap: 10px;
 }
 
 .home-socials {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   width: 100%;
-  padding: 0 6px;
+  gap: 22px;
 }
 
 .home-social {
-  position: relative;
-  display: block;
-  width: 30px;
-  height: 30px;
-  flex: 0 0 30px;
-  overflow: visible;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  color: #a7adb9;
   text-decoration: none;
-  opacity: 0.82;
+  opacity: 0.72;
   transform: translateY(0);
   transition:
+    color 100ms ease,
     opacity 100ms ease,
     transform 100ms ease;
 }
 
+.home-social img {
+  display: block;
+  width: 21px;
+  height: 21px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  opacity: 0.86;
+  pointer-events: none;
+}
+
 .home-social:hover,
 .home-social:focus-visible {
+  color: #f8f8f8;
   opacity: 1;
   transform: translateY(-1px);
 }
 
-.home-social span {
-  position: absolute;
-  inset: 0;
-  display: block;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-}
-
-.home-social--x span {
-  background-image: url("../images/social-x.png");
-}
-
-.home-social--discord span {
-  background-image: url("../images/social-discord.png");
-}
-
-.home-social--youtube span {
-  background-image: url("../images/social-youtube.png");
+.home-social:hover img,
+.home-social:focus-visible img {
+  opacity: 1;
 }
 
 .home-server-block {
@@ -721,7 +716,7 @@ body.mineacle-home button {
   .home-layout {
     grid-template-columns: 1fr;
     grid-template-rows:
-      64px
+      88px
       auto
       540px
       auto;
@@ -732,13 +727,14 @@ body.mineacle-home button {
     grid-column: 1;
     grid-row: 1;
     width: min(240px, 100%);
-    height: 64px;
+    height: 88px;
     padding: 0;
   }
 
   .home-logo img {
     width: 100%;
     max-width: 240px;
+    max-height: 88px;
     margin-right: auto;
   }
 

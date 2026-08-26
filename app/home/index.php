@@ -180,16 +180,16 @@ mineacle_page_head('Home', [
 
                 <div class="home-rail__footer">
                     <nav class="home-socials" aria-label="Mineacle social links">
-                        <a class="home-social home-social--discord" href="<?php echo h($discordUrl); ?>" target="_blank" rel="noopener noreferrer" aria-label="Discord" title="Discord">
-                            <span aria-hidden="true"></span>
+                        <a class="home-social" href="<?php echo h($discordUrl); ?>" target="_blank" rel="noopener noreferrer" aria-label="Discord" title="Discord">
+                            <img src="/home/assets/images/social/discord.svg?rev=<?php echo h($rev); ?>" alt="" aria-hidden="true">
                         </a>
 
-                        <a class="home-social home-social--x" href="<?php echo h($xUrl); ?>" target="_blank" rel="noopener noreferrer" aria-label="X" title="X">
-                            <span aria-hidden="true"></span>
+                        <a class="home-social" href="<?php echo h($xUrl); ?>" target="_blank" rel="noopener noreferrer" aria-label="X" title="X">
+                            <img src="/home/assets/images/social/x.svg?rev=<?php echo h($rev); ?>" alt="" aria-hidden="true">
                         </a>
 
-                        <a class="home-social home-social--youtube" href="<?php echo h($youtubeUrl); ?>" target="_blank" rel="noopener noreferrer" aria-label="YouTube" title="YouTube">
-                            <span aria-hidden="true"></span>
+                        <a class="home-social" href="<?php echo h($youtubeUrl); ?>" target="_blank" rel="noopener noreferrer" aria-label="YouTube" title="YouTube">
+                            <img src="/home/assets/images/social/youtube.svg?rev=<?php echo h($rev); ?>" alt="" aria-hidden="true">
                         </a>
                     </nav>
 
