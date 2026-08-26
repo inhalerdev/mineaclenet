@@ -177,8 +177,7 @@ body.mineacle-home main.home-page {
   height: 17px;
   flex: 0 0 17px;
   object-fit: contain;
-  opacity: 0.62;
-  filter: brightness(0) invert(1);
+  opacity: 0.52;
 }
 
 .home-player-search input {
@@ -276,41 +275,51 @@ body.mineacle-home main.home-page {
   align-items: center;
   justify-content: center;
   height: 40px;
-  min-width: 116px;
+  min-width: 138px;
   padding: 0 14px;
-  border: 0;
+  border: 1px solid #313641;
   border-radius: 4px;
   background: var(--home-surface-raised);
-  color: #c8cfdd;
+  color: #D4E0FF;
   font-family: inherit;
   font-size: 12px;
   font-weight: 500;
   line-height: 1;
   text-decoration: none;
-  text-transform: uppercase;
+  text-transform: none;
   cursor: pointer;
   gap: 8px;
   transition:
     background-color 100ms ease-out,
+    border-color 100ms ease-out,
     color 100ms ease-out;
 }
 
-.home-account__button img {
+.home-account__icon {
   display: block;
   width: 16px;
   height: 16px;
-  object-fit: contain;
-  opacity: 0.72;
-  filter: invert(80%);
+  flex: 0 0 16px;
+  background: #B078FF;
+  -webkit-mask-image: url("../../../shared/assets/images/navigation/user.png");
+  mask-image: url("../../../shared/assets/images/navigation/user.png");
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
 }
 
 .home-account__button:hover,
 .home-account__button:focus-visible {
+  border-color: rgba(176, 120, 255, 0.42);
   background: #282c35;
   color: #f8f8f8;
 }
 
 .home-account__button--logout {
+  min-width: 94px;
   color: #ff9999;
 }
 

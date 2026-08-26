@@ -23,7 +23,28 @@
     "[data-rail-status-label]",
   );
 
+  const helpOpenButton = rail.querySelector(
+    "[data-rail-help-open]",
+  );
+
+  const joinDialog = rail.querySelector(
+    "[data-rail-join-dialog]",
+  );
+
+  const helpCloseButton = rail.querySelector(
+    "[data-rail-help-close]",
+  );
+
+  const joinCopyButton = rail.querySelector(
+    "[data-rail-join-copy]",
+  );
+
+  const joinCopyLabel = rail.querySelector(
+    "[data-rail-join-copy-label]",
+  );
+
   let playResetTimer = 0;
+  let joinCopyResetTimer = 0;
 
   const copyText = async (value) => {
     if (navigator.clipboard && window.isSecureContext) {
@@ -31,7 +52,7 @@
         await navigator.clipboard.writeText(value);
         return true;
       } catch {
-        // Continue to the local fallback.
+        // Continue to the local copy fallback.
       }
     }
 
@@ -86,6 +107,52 @@
     }, copied ? 1600 : 2200);
   });
 
+  joinCopyButton?.addEventListener("click", async () => {
+    const address = joinCopyButton.dataset.serverAddress?.trim();
+
+    if (!address || !joinCopyLabel) {
+      return;
+    }
+
+    window.clearTimeout(joinCopyResetTimer);
+
+    const copied = await copyText(address);
+
+    joinCopyLabel.textContent = copied
+      ? "Copied"
+      : "Try Again";
+
+    joinCopyResetTimer = window.setTimeout(() => {
+      joinCopyLabel.textContent = "Copy IP";
+    }, copied ? 1600 : 2200);
+  });
+
+  helpOpenButton?.addEventListener("click", () => {
+    if (!(joinDialog instanceof HTMLDialogElement)) {
+      return;
+    }
+
+    if (!joinDialog.open) {
+      joinDialog.showModal();
+    }
+  });
+
+  helpCloseButton?.addEventListener("click", () => {
+    if (joinDialog instanceof HTMLDialogElement) {
+      joinDialog.close();
+    }
+  });
+
+  joinDialog?.addEventListener("click", (event) => {
+    if (!(joinDialog instanceof HTMLDialogElement)) {
+      return;
+    }
+
+    if (event.target === joinDialog) {
+      joinDialog.close();
+    }
+  });
+
   const setUnavailable = () => {
     if (!statusElement || !statusLabel) {
       return;
@@ -93,7 +160,7 @@
 
     statusElement.classList.remove("is-loading");
     statusElement.classList.add("is-offline");
-    statusLabel.textContent = "Status unavailable";
+    statusLabel.textContent = "Unavailable";
   };
 
   const applyStatus = (payload) => {
@@ -125,7 +192,9 @@
     );
 
     statusLabel.textContent = online
-      ? `${players.toLocaleString()} Currently Playing`
+      ? `${players.toLocaleString()} ${
+          players === 1 ? "Player" : "Players"
+        }`
       : "Server Offline";
   };
 

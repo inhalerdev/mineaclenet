@@ -8,8 +8,11 @@
   --site-rail-current: #222630;
   --site-rail-hover: #202329;
   --site-rail-border: rgba(248, 248, 248, 0.055);
+  --site-rail-border-strong: rgba(248, 248, 248, 0.10);
 
   --site-rail-text: #f8f8f8;
+  --site-rail-current-text: #D4E0FF;
+  --site-rail-current-icon: #B078FF;
   --site-rail-muted: #8f97aa;
   --site-rail-muted-strong: #c8cfdd;
 
@@ -36,7 +39,6 @@
   gap: var(--site-rail-gap);
 }
 
-/* Logo intentionally has no card/container styling. */
 .site-rail-logo {
   display: flex;
   align-items: center;
@@ -124,7 +126,7 @@
 
 .site-rail__link.is-current {
   background: var(--site-rail-current);
-  color: #D4E0FF;
+  color: var(--site-rail-current-text);
 }
 
 .site-rail__link-icon {
@@ -145,14 +147,15 @@
     opacity 100ms ease-out;
 }
 
+/* Main navigation icons: filenames match the shared repo assets. */
 .site-rail__link-icon--home {
   -webkit-mask-image: url("../images/navigation/home.png");
   mask-image: url("../images/navigation/home.png");
 }
 
-.site-rail__link-icon--leaderboard {
-  -webkit-mask-image: url("../images/navigation/leaderboard.png");
-  mask-image: url("../images/navigation/leaderboard.png");
+.site-rail__link-icon--leaderboards {
+  -webkit-mask-image: url("../images/navigation/leaderboards.png");
+  mask-image: url("../images/navigation/leaderboards.png");
 }
 
 .site-rail__link-icon--vote {
@@ -170,14 +173,15 @@
   mask-image: url("../images/navigation/store.png");
 }
 
+/* Quick-link icons: explicitly allocated to their intended categories. */
 .site-rail__link-icon--top {
   -webkit-mask-image: url("../images/navigation/top.png");
   mask-image: url("../images/navigation/top.png");
 }
 
-.site-rail__link-icon--team {
-  -webkit-mask-image: url("../images/navigation/team.png");
-  mask-image: url("../images/navigation/team.png");
+.site-rail__link-icon--teams {
+  -webkit-mask-image: url("../images/navigation/teams.png");
+  mask-image: url("../images/navigation/teams.png");
 }
 
 .site-rail__link-icon--balance {
@@ -192,16 +196,16 @@
 
 .site-rail__link:hover .site-rail__link-icon,
 .site-rail__link:focus-visible .site-rail__link-icon {
-  background: #c8cfdd;
+  background: var(--site-rail-muted-strong);
   opacity: 0.90;
 }
 
 .site-rail__link.is-current .site-rail__link-icon {
-  background: #B078FF;
+  background: var(--site-rail-current-icon);
   opacity: 1;
 }
 
-.site-rail__link > span {
+.site-rail__link > span:last-child {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -228,7 +232,7 @@
 .site-rail__footer {
   display: grid;
   margin-top: auto;
-  gap: 14px;
+  gap: 12px;
 }
 
 .site-rail__utility-row {
@@ -244,8 +248,8 @@
   gap: 22px;
 }
 
-.site-rail__socials a {
-  display: block;
+.site-rail__socials a,
+.site-rail__help {
   width: 32px;
   height: 32px;
   flex: 0 0 32px;
@@ -254,6 +258,10 @@
   border: 0;
   border-radius: 4px;
   background: transparent;
+}
+
+.site-rail__socials a {
+  display: block;
   text-decoration: none;
   opacity: 0.92;
   transition:
@@ -262,39 +270,7 @@
     transform 100ms ease-out;
 }
 
-.site-rail__socials img {
-  display: block;
-  width: 32px;
-  height: 32px;
-  border-radius: 4px;
-  object-fit: cover;
-  pointer-events: none;
-}
-
-.site-rail__socials a:hover,
-.site-rail__socials a:focus-visible {
-  filter: brightness(1.07);
-  opacity: 1;
-  transform: translateY(-1px);
-}
-
-/* Help remains a utility action, but uses the same icon treatment. */
-.site-rail__help {
-  display: block;
-  width: 32px;
-  height: 32px;
-  flex: 0 0 32px;
-  overflow: hidden;
-  border-radius: 4px;
-  background: transparent;
-  text-decoration: none;
-  opacity: 0.92;
-  transition:
-    filter 100ms ease-out,
-    opacity 100ms ease-out,
-    transform 100ms ease-out;
-}
-
+.site-rail__socials img,
 .site-rail__help img {
   display: block;
   width: 32px;
@@ -304,6 +280,8 @@
   pointer-events: none;
 }
 
+.site-rail__socials a:hover,
+.site-rail__socials a:focus-visible,
 .site-rail__help:hover,
 .site-rail__help:focus-visible {
   filter: brightness(1.07);
@@ -311,31 +289,77 @@
   transform: translateY(-1px);
 }
 
+.site-rail__help {
+  display: block;
+  cursor: pointer;
+  opacity: 0.92;
+  transition:
+    filter 100ms ease-out,
+    opacity 100ms ease-out,
+    transform 100ms ease-out;
+}
+
+/* Compact live server strip with clearer visual hierarchy. */
 .site-rail__status {
   display: flex;
   align-items: center;
-  justify-content: center;
   width: 100%;
-  min-height: 26px;
-  padding: 0 8px;
+  min-height: 46px;
+  padding: 7px 10px;
+  border: 1px solid var(--site-rail-border);
   border-radius: 4px;
   background: #20232b;
   color: #d1d9e8;
-  font-size: 10px;
-  font-weight: 400;
-  line-height: 1;
-  text-align: center;
+  gap: 9px;
 }
 
-.site-rail__status.is-offline {
-  color: #ff8c8c;
+.site-rail__status-dot {
+  display: block;
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
+  border-radius: 50%;
+  background: var(--site-rail-green);
+  box-shadow: 0 0 0 3px rgba(98, 194, 73, 0.10);
 }
 
-.site-rail__status [data-rail-status-label] {
+.site-rail__status.is-loading .site-rail__status-dot {
+  background: #747b88;
+  box-shadow: none;
+}
+
+.site-rail__status.is-offline .site-rail__status-dot {
+  background: #fc1111;
+  box-shadow: 0 0 0 3px rgba(252, 17, 17, 0.10);
+}
+
+.site-rail__status-copy {
+  display: grid;
   min-width: 0;
+  gap: 3px;
+}
+
+.site-rail__status-copy small {
+  color: #7f8798;
+  font-size: 9px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.site-rail__status-copy strong {
   overflow: hidden;
+  color: #dbe4f5;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.site-rail__status.is-offline .site-rail__status-copy strong {
+  color: #ff9d9d;
 }
 
 .site-rail__play {
@@ -403,18 +427,208 @@
   background: #b63d3d;
 }
 
+/* ==========================================================================
+   HOW TO JOIN DIALOG
+   ========================================================================== */
+
+.site-join-dialog {
+  width: min(520px, calc(100vw - 32px));
+  max-width: 520px;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+  color: #f8f8f8;
+}
+
+.site-join-dialog::backdrop {
+  background: rgba(6, 7, 8, 0.78);
+  backdrop-filter: blur(4px);
+}
+
+.site-join-dialog__panel {
+  overflow: hidden;
+  border: 1px solid var(--site-rail-border-strong);
+  border-radius: 6px;
+  background: #181a1e;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.42);
+}
+
+.site-join-dialog__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 20px;
+  border-bottom: 1px solid var(--site-rail-border);
+  gap: 20px;
+}
+
+.site-join-dialog__eyebrow {
+  display: block;
+  margin-bottom: 6px;
+  color: #B078FF;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+}
+
+.site-join-dialog__header h2 {
+  margin: 0;
+  color: #D4E0FF;
+  font-size: 25px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.site-join-dialog__close {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: #222630;
+  color: #aab2c2;
+  font-size: 21px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.site-join-dialog__close:hover,
+.site-join-dialog__close:focus-visible {
+  background: #292d37;
+  color: #fff;
+}
+
+.site-join-dialog__body {
+  padding: 20px;
+}
+
+.site-join-dialog__intro {
+  margin: 0 0 18px;
+  color: #9ba4b7;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.site-join-dialog__steps {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  gap: 10px;
+}
+
+.site-join-dialog__steps li {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  align-items: start;
+  padding: 12px;
+  border: 1px solid var(--site-rail-border);
+  border-radius: 4px;
+  background: #1d2026;
+  gap: 11px;
+}
+
+.site-join-dialog__steps li > span {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  background: #262a33;
+  color: #B078FF;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.site-join-dialog__steps strong {
+  display: block;
+  margin: 1px 0 4px;
+  color: #D4E0FF;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.site-join-dialog__steps p {
+  margin: 0;
+  color: #8992a4;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.site-join-dialog__address {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  padding: 12px;
+  border: 1px solid rgba(98, 194, 73, 0.18);
+  border-radius: 4px;
+  background: rgba(98, 194, 73, 0.06);
+  gap: 14px;
+}
+
+.site-join-dialog__address > div {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+}
+
+.site-join-dialog__address small {
+  color: #82908b;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.site-join-dialog__address strong {
+  overflow: hidden;
+  color: #f8f8f8;
+  font-size: 14px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.site-join-dialog__address button {
+  min-width: 84px;
+  height: 36px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--site-rail-green);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.site-join-dialog__address button:hover,
+.site-join-dialog__address button:focus-visible {
+  background: var(--site-rail-green-hover);
+}
+
 .site-rail-logo:focus-visible,
 .site-rail__link:focus-visible,
 .site-rail__socials a:focus-visible,
 .site-rail__help:focus-visible,
-.site-rail__play:focus-visible {
-  outline: 2px solid #b078ff;
+.site-rail__play:focus-visible,
+.site-join-dialog__close:focus-visible,
+.site-join-dialog__address button:focus-visible {
+  outline: 2px solid #B078FF;
   outline-offset: 2px;
 }
 
-/* --------------------------------------------------------------------------
-   Shared rail responsive behavior
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
 
 @media (max-width: 900px) {
   .site-rail-shell {
@@ -493,18 +707,19 @@
 
   .site-rail__socials a,
   .site-rail__socials img,
-  .site-rail__help {
+  .site-rail__help,
+  .site-rail__help img {
     width: 28px;
     height: 28px;
     flex-basis: 28px;
   }
 
   .site-rail__status {
-    min-height: 32px;
+    min-height: 46px;
   }
 
   .site-rail__play {
-    min-height: 46px;
+    min-height: 48px;
   }
 
   .site-rail__play > img {
@@ -526,10 +741,23 @@
 
   .site-rail__status {
     justify-content: flex-start;
-    padding-inline: 10px;
   }
 
   .site-rail__play {
+    width: 100%;
+  }
+
+  .site-join-dialog__header,
+  .site-join-dialog__body {
+    padding: 16px;
+  }
+
+  .site-join-dialog__address {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .site-join-dialog__address button {
     width: 100%;
   }
 }

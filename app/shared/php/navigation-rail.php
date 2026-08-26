@@ -7,9 +7,6 @@ require_once __DIR__ . '/layout.php';
 /**
  * Shared Mineacle navigation rail.
  *
- * Pages include navigation-rail.css + navigation-rail.js, then render this
- * component in their page grid.
- *
  * @param array<string,mixed> $site
  * @param array<string,mixed> $options
  */
@@ -73,64 +70,75 @@ function mineacle_navigation_rail(array $site, array $options = []): void
         (string) ($site['minecraft_ip'] ?? 'mineacle.net')
     ) ?: 'mineacle.net';
 
+    /*
+     * IMPORTANT:
+     * These icon names match the actual shared asset filenames.
+     */
     $mainLinks = [
         [
             'key' => 'home',
             'label' => 'Home',
             'url' => '/',
-            'icon' => 'home.png',
+            'icon' => 'home',
             'external' => false,
         ],
         [
             'key' => 'leaderboards',
             'label' => 'Leaderboard',
             'url' => '/leaderboards',
-            'icon' => 'leaderboard.png',
+            'icon' => 'leaderboards',
             'external' => false,
         ],
         [
             'key' => 'vote',
             'label' => 'Earn a Reward',
             'url' => '/vote',
-            'icon' => 'vote.png',
+            'icon' => 'vote',
             'external' => false,
         ],
         [
             'key' => 'bans',
             'label' => 'Public Bans',
             'url' => 'https://bans.mineacle.net/',
-            'icon' => 'bans.png',
+            'icon' => 'bans',
             'external' => true,
         ],
         [
             'key' => 'store',
             'label' => 'Visit our Store',
             'url' => $storeUrl,
-            'icon' => 'store.png',
+            'icon' => 'store',
             'external' => true,
         ],
     ];
 
+    /*
+     * Quick-link icon allocation:
+     * Top 10       -> top.png
+     * Top Teams    -> teams.png
+     * Top Balance  -> balance.png
+     * Top K/D      -> kills.png
+     */
     $quickLinks = [
         [
             'label' => 'Top 10 (Global)',
             'url' => '/leaderboards?type=players',
-            'icon' => 'leaderboard.png',
+            'icon' => 'top',
         ],
         [
             'label' => 'Top Teams',
             'url' => '/leaderboards?type=teams',
-            'icon' => 'team.png',
+            'icon' => 'teams',
         ],
         [
             'label' => 'Top Balance',
             'url' => '/leaderboards?metric=balance',
-            'icon' => 'balance.png',
+            'icon' => 'balance',
         ],
         [
             'label' => 'Top K/D',
             'url' => '/leaderboards?metric=kd',
-            'icon' => 'kills.png',
+            'icon' => 'kills',
         ],
     ];
 
@@ -203,9 +211,10 @@ function mineacle_navigation_rail(array $site, array $options = []): void
                                 <?php echo $link['external'] ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>
                             >
                                 <span
-                                    class="site-rail__link-icon site-rail__link-icon--<?php echo h((string) pathinfo((string) $link['icon'], PATHINFO_FILENAME)); ?>"
+                                    class="site-rail__link-icon site-rail__link-icon--<?php echo h((string) $link['icon']); ?>"
                                     aria-hidden="true"
                                 ></span>
+
                                 <span>
                                     <?php echo h((string) $link['label']); ?>
                                 </span>
@@ -236,9 +245,10 @@ function mineacle_navigation_rail(array $site, array $options = []): void
                                 href="<?php echo h((string) $link['url']); ?>"
                             >
                                 <span
-                                    class="site-rail__link-icon site-rail__link-icon--<?php echo h((string) pathinfo((string) $link['icon'], PATHINFO_FILENAME)); ?>"
+                                    class="site-rail__link-icon site-rail__link-icon--<?php echo h((string) $link['icon']); ?>"
                                     aria-hidden="true"
                                 ></span>
+
                                 <span>
                                     <?php echo h((string) $link['label']); ?>
                                 </span>
@@ -296,18 +306,19 @@ function mineacle_navigation_rail(array $site, array $options = []): void
                             </a>
                         </nav>
 
-                        <a
+                        <button
                             class="site-rail__help"
-                            href="/contact"
-                            aria-label="Help and contact"
-                            title="Help"
+                            type="button"
+                            data-rail-help-open
+                            aria-label="How to join Mineacle"
+                            title="How to Join"
                         >
                             <img
                                 src="<?php echo h($assetBase . '/social/help.png?rev=' . $rev); ?>"
                                 alt=""
                                 aria-hidden="true"
                             >
-                        </a>
+                        </button>
                     </div>
 
                     <div
@@ -315,8 +326,16 @@ function mineacle_navigation_rail(array $site, array $options = []): void
                         data-rail-status
                         aria-live="polite"
                     >
-                        <span data-rail-status-label>
-                            Checking server
+                        <span
+                            class="site-rail__status-dot"
+                            aria-hidden="true"
+                        ></span>
+
+                        <span class="site-rail__status-copy">
+                            <small>Currently Playing</small>
+                            <strong data-rail-status-label>
+                                Checking...
+                            </strong>
                         </span>
                     </div>
 
@@ -345,6 +364,93 @@ function mineacle_navigation_rail(array $site, array $options = []): void
                 </div>
             </div>
         </aside>
+
+        <dialog
+            class="site-join-dialog"
+            data-rail-join-dialog
+            aria-labelledby="site-join-dialog-title"
+        >
+            <div class="site-join-dialog__panel">
+                <header class="site-join-dialog__header">
+                    <div>
+                        <span class="site-join-dialog__eyebrow">
+                            Mineacle SMP
+                        </span>
+                        <h2 id="site-join-dialog-title">
+                            How to Join
+                        </h2>
+                    </div>
+
+                    <button
+                        class="site-join-dialog__close"
+                        type="button"
+                        data-rail-help-close
+                        aria-label="Close how to join"
+                    >
+                        ×
+                    </button>
+                </header>
+
+                <div class="site-join-dialog__body">
+                    <p class="site-join-dialog__intro">
+                        Join Mineacle in a few seconds from
+                        Minecraft Java Edition.
+                    </p>
+
+                    <ol class="site-join-dialog__steps">
+                        <li>
+                            <span>1</span>
+                            <div>
+                                <strong>Open Multiplayer</strong>
+                                <p>
+                                    Launch Minecraft Java Edition and
+                                    choose Multiplayer.
+                                </p>
+                            </div>
+                        </li>
+
+                        <li>
+                            <span>2</span>
+                            <div>
+                                <strong>Add Mineacle</strong>
+                                <p>
+                                    Choose Add Server or Direct Connection.
+                                </p>
+                            </div>
+                        </li>
+
+                        <li>
+                            <span>3</span>
+                            <div>
+                                <strong>Enter the server address</strong>
+                                <p>
+                                    Use the Mineacle address below and join.
+                                </p>
+                            </div>
+                        </li>
+                    </ol>
+
+                    <div class="site-join-dialog__address">
+                        <div>
+                            <small>Server Address</small>
+                            <strong>
+                                <?php echo h($minecraftIp); ?>
+                            </strong>
+                        </div>
+
+                        <button
+                            type="button"
+                            data-rail-join-copy
+                            data-server-address="<?php echo h($minecraftIp); ?>"
+                        >
+                            <span data-rail-join-copy-label>
+                                Copy IP
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </dialog>
     </div>
     <?php
 }

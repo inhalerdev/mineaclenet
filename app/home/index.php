@@ -34,7 +34,6 @@ $assetFiles = [
     __DIR__ . '/assets/js/home.js',
     __DIR__ . '/../shared/assets/css/navigation-rail.css',
     __DIR__ . '/../shared/assets/js/navigation-rail.js',
-    __DIR__ . '/../shared/assets/images/search/search.png',
 ];
 
 $assetVersion = 1;
@@ -92,7 +91,7 @@ mineacle_page_head('Home', [
                     autocomplete="off"
                 >
                     <img
-                        src="/shared/assets/images/search/search.png?rev=<?php echo h($rev); ?>"
+                        src="/shared/assets/images/search/search.png"
                         alt=""
                         aria-hidden="true"
                         width="18"
@@ -124,12 +123,11 @@ mineacle_page_head('Home', [
                         class="home-account__button"
                         href="/login"
                     >
-                        <img
-                            src="/shared/assets/images/navigation/user.png?rev=<?php echo h($rev); ?>"
-                            alt=""
+                        <span
+                            class="home-account__icon"
                             aria-hidden="true"
-                        >
-                        <span>Login</span>
+                        ></span>
+                        <span>Log in / Sign Up</span>
                     </a>
                 <?php else: ?>
                     <form
@@ -146,11 +144,10 @@ mineacle_page_head('Home', [
                             class="home-account__button home-account__button--logout"
                             type="submit"
                         >
-                            <img
-                                src="/shared/assets/images/navigation/user.png?rev=<?php echo h($rev); ?>"
-                                alt=""
+                            <span
+                                class="home-account__icon"
                                 aria-hidden="true"
-                            >
+                            ></span>
                             <span>Logout</span>
                         </button>
                     </form>
