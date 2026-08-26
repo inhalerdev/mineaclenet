@@ -41,7 +41,6 @@ $storeUrl = $publicUrl(
     'https://store.mineacle.net/'
 );
 
-
 $assetFiles = [
     __DIR__ . '/assets/css/home.css',
     __DIR__ . '/assets/js/home.js',
@@ -97,13 +96,11 @@ mineacle_page_head('Home', [
         );
         ?>
 
-        <?php
-        mineacle_site_header();
-        ?>
+        <?php mineacle_site_header(); ?>
 
         <section
             class="home-promo-card"
-            aria-label="Mineacle featured content"
+            aria-label="Mineacle featured world"
         >
             <div
                 class="home-promo-card__media"
@@ -132,6 +129,39 @@ mineacle_page_head('Home', [
                 class="home-promo-card__overlay"
                 aria-hidden="true"
             ></div>
+
+            <div class="home-promo-card__content">
+                <span class="home-promo-card__eyebrow">
+                    Mineacle SMP
+                </span>
+
+                <div class="home-promo-card__copy">
+                    <h1>
+                        A survival world built around players.
+                    </h1>
+
+                    <p>
+                        Trade, compete, build, and make your mark
+                        in a persistent player-driven economy.
+                    </p>
+                </div>
+
+                <div class="home-promo-card__actions">
+                    <a
+                        class="home-ui-button home-ui-button--primary"
+                        href="/vote"
+                    >
+                        Earn Rewards
+                    </a>
+
+                    <a
+                        class="home-ui-button home-ui-button--secondary"
+                        href="/leaderboards"
+                    >
+                        View Leaderboards
+                    </a>
+                </div>
+            </div>
         </section>
 
         <div class="home-feature-stack">
@@ -164,8 +194,8 @@ mineacle_page_head('Home', [
                         </h2>
 
                         <p>
-                            Competitive PvP built around quick fights,
-                            clean matchups, and server-wide combat rankings.
+                            Fast competitive PvP, clean matchups,
+                            and server-wide combat rankings.
                         </p>
                     </div>
 
@@ -176,7 +206,7 @@ mineacle_page_head('Home', [
                         </div>
 
                         <a
-                            class="home-feature-card__button"
+                            class="home-ui-button home-ui-button--secondary"
                             href="/leaderboards?metric=kills"
                         >
                             View Top Kills
@@ -214,8 +244,8 @@ mineacle_page_head('Home', [
                         </h2>
 
                         <p>
-                            Unlock premium convenience and progression
-                            perks across Mineacle.
+                            Premium convenience without changing
+                            the core survival experience.
                         </p>
                     </div>
 
@@ -233,7 +263,7 @@ mineacle_page_head('Home', [
                     </div>
 
                     <a
-                        class="home-feature-card__button home-feature-card__button--store"
+                        class="home-ui-button home-ui-button--primary home-feature-card__store"
                         href="<?php echo h($storeUrl); ?>"
                         target="_blank"
                         rel="noopener noreferrer"

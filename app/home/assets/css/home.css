@@ -25,10 +25,18 @@
 :root {
   --home-bg: #0d0f10;
   --home-surface: #181a1e;
+  --home-surface-raised: #20232a;
   --home-border: rgba(248, 248, 248, 0.055);
+  --home-border-strong: rgba(248, 248, 248, 0.095);
   --home-text: #f8f8f8;
+  --home-text-soft: #D4E0FF;
+  --home-muted: #8f97aa;
+  --home-purple: #8436FE;
+  --home-purple-soft: #B078FF;
+  --home-green: #62C249;
   --home-space: 16px;
   --home-radius: 4px;
+  --home-control-height: 36px;
   --home-viewport: 100vh;
 }
 
@@ -78,13 +86,6 @@ body.mineacle-home main.home-page {
   background: var(--home-bg);
 }
 
-/*
- * Shared shell geometry:
- * - 16px outer spacing
- * - shared navigation rail at left
- * - shared utility header across content columns
- * - Home content begins one 16px gap beneath the shared header
- */
 .home-layout {
   display: grid;
   grid-template-columns:
@@ -118,7 +119,65 @@ body.mineacle-home main.home-page {
 }
 
 /* ==========================================================================
-   MAIN CONTENT CONTAINERS
+   SHARED BUTTON SCALE
+   ========================================================================== */
+
+.home-ui-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--home-control-height);
+  min-width: 116px;
+  padding: 0 13px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition:
+    background-color 100ms ease-out,
+    border-color 100ms ease-out,
+    color 100ms ease-out,
+    transform 100ms ease-out;
+}
+
+.home-ui-button--primary {
+  border: 1px solid transparent;
+  background: var(--home-purple);
+  color: #FFFFFF;
+}
+
+.home-ui-button--primary:hover,
+.home-ui-button--primary:focus-visible {
+  background: #9554FF;
+  color: #FFFFFF;
+  transform: translateY(-1px);
+}
+
+.home-ui-button--secondary {
+  border: 1px solid rgba(212, 224, 255, 0.14);
+  background: rgba(24, 26, 30, 0.72);
+  color: var(--home-text-soft);
+  backdrop-filter: blur(6px);
+}
+
+.home-ui-button--secondary:hover,
+.home-ui-button--secondary:focus-visible {
+  border-color: rgba(176, 120, 255, 0.46);
+  background: rgba(40, 44, 53, 0.92);
+  color: #FFFFFF;
+  transform: translateY(-1px);
+}
+
+.home-ui-button:focus-visible {
+  outline: 2px solid var(--home-purple-soft);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   PRIMARY VIDEO CARD
    ========================================================================== */
 
 .home-promo-card {
@@ -130,6 +189,17 @@ body.mineacle-home main.home-page {
   min-height: 0;
   overflow: hidden;
   background: var(--home-surface);
+}
+
+.home-promo-card::after,
+.home-feature-card::before {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.025);
+  border-radius: inherit;
+  content: "";
+  pointer-events: none;
 }
 
 .home-promo-card__media {
@@ -155,21 +225,85 @@ body.mineacle-home main.home-page {
   object-position: 56% 50%;
   pointer-events: none;
   user-select: none;
+  transform: scale(1.01);
 }
 
 .home-promo-card__overlay {
   position: absolute;
   z-index: 1;
   inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.78) 0%,
-    rgba(0, 0, 0, 0.58) 25%,
-    rgba(0, 0, 0, 0.20) 57%,
-    rgba(0, 0, 0, 0) 100%
-  );
+  background:
+    linear-gradient(
+      to top,
+      rgba(7, 8, 9, 0.90) 0%,
+      rgba(7, 8, 9, 0.58) 24%,
+      rgba(7, 8, 9, 0.14) 58%,
+      rgba(7, 8, 9, 0.02) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(7, 8, 9, 0.46) 0%,
+      rgba(7, 8, 9, 0.08) 62%,
+      rgba(7, 8, 9, 0) 100%
+    );
   pointer-events: none;
 }
+
+.home-promo-card__content {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: grid;
+  padding: 24px;
+  gap: 14px;
+}
+
+.home-promo-card__eyebrow,
+.home-feature-card__eyebrow {
+  display: inline-block;
+  width: fit-content;
+  color: var(--home-purple-soft);
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.home-promo-card__copy {
+  max-width: 440px;
+}
+
+.home-promo-card h1 {
+  max-width: 13ch;
+  margin: 0;
+  color: #FFFFFF;
+  font-size: clamp(28px, 2.45vw, 42px);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+
+.home-promo-card__copy p {
+  max-width: 43ch;
+  margin: 10px 0 0;
+  color: rgba(248, 248, 248, 0.74);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.home-promo-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ==========================================================================
+   FEATURE CARDS
+   ========================================================================== */
 
 .home-feature-stack {
   display: grid;
@@ -225,15 +359,15 @@ body.mineacle-home main.home-page {
   background:
     linear-gradient(
       90deg,
-      rgba(10, 11, 13, 0.86) 0%,
-      rgba(10, 11, 13, 0.68) 35%,
-      rgba(10, 11, 13, 0.30) 67%,
-      rgba(10, 11, 13, 0.10) 100%
+      rgba(8, 9, 11, 0.91) 0%,
+      rgba(8, 9, 11, 0.72) 37%,
+      rgba(8, 9, 11, 0.31) 69%,
+      rgba(8, 9, 11, 0.08) 100%
     ),
     linear-gradient(
       to top,
-      rgba(7, 8, 9, 0.68) 0%,
-      rgba(7, 8, 9, 0.06) 55%
+      rgba(7, 8, 9, 0.72) 0%,
+      rgba(7, 8, 9, 0.06) 58%
     );
   content: "";
   pointer-events: none;
@@ -247,39 +381,32 @@ body.mineacle-home main.home-page {
   width: 100%;
   height: 100%;
   min-height: 0;
-  padding: 22px;
+  padding: 20px;
 }
 
 .home-feature-card__heading {
-  max-width: min(62%, 470px);
+  max-width: min(58%, 450px);
 }
 
 .home-feature-card__eyebrow {
-  display: inline-block;
   margin-bottom: 8px;
-  color: #B078FF;
-  font-size: 10px;
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: 0.10em;
-  text-transform: uppercase;
 }
 
 .home-feature-card h2 {
-  max-width: 16ch;
+  max-width: 15ch;
   margin: 0;
-  color: #F8F8F8;
-  font-size: clamp(24px, 2.15vw, 36px);
+  color: #FFFFFF;
+  font-size: clamp(23px, 1.9vw, 34px);
   font-weight: 600;
   line-height: 1.02;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.032em;
 }
 
 .home-feature-card__heading p {
-  max-width: 44ch;
+  max-width: 42ch;
   margin: 9px 0 0;
-  color: rgba(248, 248, 248, 0.74);
-  font-size: 12px;
+  color: rgba(248, 248, 248, 0.72);
+  font-size: 11px;
   font-weight: 400;
   line-height: 1.48;
 }
@@ -289,7 +416,7 @@ body.mineacle-home main.home-page {
   align-items: end;
   justify-content: space-between;
   margin-top: auto;
-  gap: 14px;
+  gap: 12px;
 }
 
 .home-feature-card__stat {
@@ -298,93 +425,47 @@ body.mineacle-home main.home-page {
 }
 
 .home-feature-card__stat small {
-  color: #8A93A5;
-  font-size: 9px;
+  color: #7f8798;
+  font-size: 8px;
   font-weight: 600;
   line-height: 1;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
 }
 
 .home-feature-card__stat strong {
-  color: #D4E0FF;
-  font-size: 15px;
+  color: var(--home-text-soft);
+  font-size: 13px;
   font-weight: 500;
   line-height: 1;
-}
-
-.home-feature-card__button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 118px;
-  height: 38px;
-  padding: 0 14px;
-  border: 1px solid rgba(176, 120, 255, 0.34);
-  border-radius: 4px;
-  background: rgba(24, 26, 30, 0.86);
-  color: #D4E0FF;
-  font-size: 11px;
-  font-weight: 600;
-  line-height: 1;
-  text-decoration: none;
-  text-transform: uppercase;
-  backdrop-filter: blur(4px);
-  transition:
-    background-color 100ms ease-out,
-    border-color 100ms ease-out,
-    color 100ms ease-out,
-    transform 100ms ease-out;
-}
-
-.home-feature-card__button:hover,
-.home-feature-card__button:focus-visible {
-  border-color: rgba(176, 120, 255, 0.62);
-  background: #282C35;
-  color: #FFFFFF;
-  transform: translateY(-1px);
-}
-
-.home-feature-card__button--store {
-  margin-top: auto;
-  align-self: flex-start;
-  border-color: transparent;
-  background: #8436FE;
-  color: #FFFFFF;
-}
-
-.home-feature-card__button--store:hover,
-.home-feature-card__button--store:focus-visible {
-  border-color: transparent;
-  background: #9554FF;
 }
 
 .home-plus-perks {
   display: flex;
   flex-wrap: wrap;
-  max-width: min(78%, 620px);
-  margin-top: 14px;
-  gap: 6px;
+  max-width: min(80%, 620px);
+  margin-top: 12px;
+  gap: 5px;
 }
 
 .home-plus-perks span {
   display: inline-flex;
   align-items: center;
-  min-height: 27px;
-  padding: 0 9px;
-  border: 1px solid rgba(248, 248, 248, 0.08);
+  min-height: 24px;
+  padding: 0 8px;
+  border: 1px solid rgba(248, 248, 248, 0.075);
   border-radius: 4px;
-  background: rgba(20, 22, 26, 0.76);
-  color: #D4E0FF;
-  font-size: 10px;
+  background: rgba(18, 20, 24, 0.70);
+  color: var(--home-text-soft);
+  font-size: 9px;
   font-weight: 500;
   line-height: 1;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(5px);
 }
 
-.home-feature-card__button:focus-visible {
-  outline: 2px solid #B078FF;
-  outline-offset: 2px;
+.home-feature-card__store {
+  align-self: flex-start;
+  margin-top: auto;
 }
 
 /* ==========================================================================
@@ -401,6 +482,14 @@ body.mineacle-home main.home-page {
       var(--site-rail-width)
       minmax(320px, 0.68fr)
       minmax(0, 1fr);
+  }
+
+  .home-feature-card__heading {
+    max-width: 68%;
+  }
+
+  .home-plus-perks {
+    max-width: 90%;
   }
 }
 
@@ -456,34 +545,7 @@ body.mineacle-home main.home-page {
     grid-row: 4;
     grid-template-columns:
       repeat(2, minmax(0, 1fr));
-    grid-template-rows: 320px;
-  }
-}
-
-
-@media (max-width: 1180px) {
-  .home-feature-card__heading {
-    max-width: 72%;
-  }
-
-  .home-plus-perks {
-    max-width: 88%;
-  }
-}
-
-@media (max-width: 900px) {
-  .home-feature-card__heading {
-    max-width: 74%;
-  }
-
-  .home-plus-perks {
-    max-width: 92%;
-  }
-}
-
-@media (max-width: 680px) {
-  .home-feature-card__content {
-    padding: 18px;
+    grid-template-rows: 330px;
   }
 
   .home-feature-card__heading,
@@ -496,20 +558,9 @@ body.mineacle-home main.home-page {
       linear-gradient(
         to top,
         rgba(8, 9, 11, 0.94) 0%,
-        rgba(8, 9, 11, 0.72) 52%,
-        rgba(8, 9, 11, 0.28) 100%
+        rgba(8, 9, 11, 0.66) 53%,
+        rgba(8, 9, 11, 0.18) 100%
       );
-  }
-
-  .home-feature-card__footer {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .home-feature-card__button,
-  .home-feature-card__button--store {
-    width: 100%;
-    align-self: stretch;
   }
 }
 
@@ -518,14 +569,31 @@ body.mineacle-home main.home-page {
     grid-template-rows:
       auto
       auto
-      520px
+      500px
       auto;
   }
 
   .home-feature-stack {
     grid-template-columns: 1fr;
     grid-template-rows:
-      repeat(2, 300px);
+      repeat(2, 310px);
+  }
+
+  .home-promo-card__content,
+  .home-feature-card__content {
+    padding: 18px;
+  }
+
+  .home-promo-card__actions,
+  .home-feature-card__footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .home-ui-button,
+  .home-feature-card__store {
+    width: 100%;
+    align-self: stretch;
   }
 }
 
@@ -539,6 +607,12 @@ body.mineacle-home main.home-page {
   }
 
   .home-promo-card {
-    min-height: 480px;
+    min-height: 460px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-ui-button {
+    transition: none;
   }
 }

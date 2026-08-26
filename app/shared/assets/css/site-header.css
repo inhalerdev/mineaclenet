@@ -1,5 +1,5 @@
 :root {
-  --site-header-height: 68px;
+  --site-header-height: 60px;
   --site-header-radius: 4px;
   --site-header-bg: #181a1e;
   --site-header-surface: #20232a;
@@ -27,16 +27,16 @@
   width: 100%;
   min-width: 0;
   min-height: var(--site-header-height);
-  padding: 14px;
+  padding: 11px 12px;
   border: 1px solid var(--site-header-border);
   border-radius: var(--site-header-radius);
   background: var(--site-header-bg);
-  gap: 16px;
+  gap: 12px;
 }
 
 .site-header__search-shell {
   position: relative;
-  width: min(680px, 62%);
+  width: min(620px, 60%);
   min-width: 260px;
 }
 
@@ -44,29 +44,29 @@
   display: flex;
   align-items: center;
   width: 100%;
-  height: 40px;
-  padding: 0 12px;
+  height: 36px;
+  padding: 0 11px;
   border: 1px solid var(--site-header-border-input);
   border-radius: 4px;
   background: var(--site-header-surface);
-  gap: 9px;
+  gap: 8px;
   transition:
     border-color 100ms ease-out,
     background-color 100ms ease-out;
 }
 
 .site-header__search:focus-within {
-  border-color: rgba(176, 120, 255, 0.58);
+  border-color: rgba(176, 120, 255, 0.52);
   background: #222631;
 }
 
 .site-header__search-icon {
   display: block;
-  width: 17px;
-  height: 17px;
-  flex: 0 0 17px;
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
   object-fit: contain;
-  opacity: 0.62;
+  opacity: 0.58;
   filter: brightness(0) invert(1);
 }
 
@@ -80,7 +80,7 @@
   background: transparent;
   color: #f8f8f8;
   font-family: inherit;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 400;
   appearance: none;
 }
@@ -239,20 +239,20 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 40px;
-  min-width: 138px;
-  padding: 0 14px;
+  height: 36px;
+  min-width: 132px;
+  padding: 0 13px;
   border: 0;
   border-radius: 4px;
   background: #8436FE;
   color: #FFFFFF;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   line-height: 1;
   text-decoration: none;
   cursor: pointer;
-  gap: 8px;
+  gap: 7px;
   transition:
     background-color 100ms ease-out,
     transform 100ms ease-out;
@@ -260,9 +260,9 @@
 
 .site-header__account-icon {
   display: block;
-  width: 17px;
-  height: 17px;
-  flex: 0 0 17px;
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
   background: #FFFFFF;
   -webkit-mask-image: url("../images/navigation/user.png");
   mask-image: url("../images/navigation/user.png");
@@ -282,7 +282,7 @@
 }
 
 .site-header__account--logout {
-  min-width: 94px;
+  min-width: 90px;
   background: #FF5555;
   color: #FFFFFF;
 }
@@ -300,7 +300,7 @@
 
 @media (max-width: 1180px) {
   .site-header__search-shell {
-    width: min(560px, 64%);
+    width: min(520px, 64%);
   }
 }
 
@@ -314,6 +314,7 @@
   .site-header {
     align-items: stretch;
     flex-direction: column;
+    min-height: auto;
   }
 
   .site-header__search-shell {
