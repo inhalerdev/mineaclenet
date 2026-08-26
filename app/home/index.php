@@ -142,7 +142,16 @@ mineacle_page_head('Home', [
                 <div
                     class="home-feature-card__backdrop"
                     aria-hidden="true"
-                ></div>
+                >
+                    <img
+                        src="/home/assets/images/duels-slot.png?rev=<?php echo h($rev); ?>"
+                        alt=""
+                        width="1920"
+                        height="1080"
+                        decoding="async"
+                        draggable="false"
+                    >
+                </div>
 
                 <div class="home-feature-card__content">
                     <div class="home-feature-card__heading">
@@ -183,7 +192,16 @@ mineacle_page_head('Home', [
                 <div
                     class="home-feature-card__backdrop"
                     aria-hidden="true"
-                ></div>
+                >
+                    <img
+                        src="/home/assets/images/mineacle-plus-slot.png?rev=<?php echo h($rev); ?>"
+                        alt=""
+                        width="1708"
+                        height="960"
+                        decoding="async"
+                        draggable="false"
+                    >
+                </div>
 
                 <div class="home-feature-card__content">
                     <div class="home-feature-card__heading">
