@@ -21,19 +21,22 @@ if (
 require_once __DIR__ . '/../shared/php/layout.php';
 require_once __DIR__ . '/../shared/php/auth.php';
 require_once __DIR__ . '/../shared/php/navigation-rail.php';
+require_once __DIR__ . '/../shared/php/site-header.php';
 
 $config = mineacle_config();
 $site = is_array($config['site'] ?? null)
     ? $config['site']
     : [];
 
-$user = mineacle_auth_current_user();
 
 $assetFiles = [
     __DIR__ . '/assets/css/home.css',
     __DIR__ . '/assets/js/home.js',
     __DIR__ . '/../shared/assets/css/navigation-rail.css',
     __DIR__ . '/../shared/assets/js/navigation-rail.js',
+    __DIR__ . '/../shared/assets/css/site-header.css',
+    __DIR__ . '/../shared/assets/js/site-header.js',
+    __DIR__ . '/../shared/assets/images/search/search.png',
 ];
 
 $assetVersion = 1;
@@ -59,6 +62,7 @@ mineacle_page_head('Home', [
     'canonical_url' => 'https://mineacle.net/',
     'stylesheets' => [
         '/shared/assets/css/navigation-rail.css?rev=' . $rev,
+        '/shared/assets/css/site-header.css?rev=' . $rev,
         '/home/assets/css/home.css?rev=' . $rev,
     ],
     'body_class' => 'mineacle-home',
@@ -78,82 +82,11 @@ mineacle_page_head('Home', [
         );
         ?>
 
-        <header class="home-topbar">
-            <div
-                class="home-search-shell"
-                data-home-player-search
-            >
-                <form
-                    class="home-player-search"
-                    action="/player"
-                    method="get"
-                    role="search"
-                    autocomplete="off"
-                >
-                    <img
-                        src="/shared/assets/images/search/search.png"
-                        alt=""
-                        aria-hidden="true"
-                        width="18"
-                        height="18"
-                    >
-
-                    <input
-                        type="search"
-                        name="q"
-                        placeholder="Search for a player"
-                        autocomplete="off"
-                        autocapitalize="off"
-                        spellcheck="false"
-                        aria-label="Search for a player"
-                        data-home-search-input
-                    >
-                </form>
-
-                <div
-                    class="home-search-results"
-                    data-home-search-results
-                    hidden
-                ></div>
-            </div>
-
-            <div class="home-account">
-                <?php if ($user === null): ?>
-                    <a
-                        class="home-account__button"
-                        href="/login"
-                    >
-                        <span
-                            class="home-account__icon"
-                            aria-hidden="true"
-                        ></span>
-                        <span>Log in / Sign Up</span>
-                    </a>
-                <?php else: ?>
-                    <form
-                        action="/logout"
-                        method="post"
-                    >
-                        <input
-                            type="hidden"
-                            name="csrf"
-                            value="<?php echo h(mineacle_auth_csrf_token()); ?>"
-                        >
-
-                        <button
-                            class="home-account__button home-account__button--logout"
-                            type="submit"
-                        >
-                            <span
-                                class="home-account__icon"
-                                aria-hidden="true"
-                            ></span>
-                            <span>Logout</span>
-                        </button>
-                    </form>
-                <?php endif; ?>
-            </div>
-        </header>
+        <?php
+        mineacle_site_header([
+            'search_placeholder' => 'Search for a player',
+        ]);
+        ?>
 
         <section
             class="home-promo-card"
@@ -206,6 +139,7 @@ mineacle_page_head('Home', [
 mineacle_page_end([
     'scripts' => [
         '/shared/assets/js/navigation-rail.js?rev=' . $rev,
+        '/shared/assets/js/site-header.js?rev=' . $rev,
         '/home/assets/js/home.js?rev=' . $rev,
     ],
 ]);
