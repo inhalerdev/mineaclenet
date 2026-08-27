@@ -22,24 +22,17 @@ require_once __DIR__ . '/../shared/php/layout.php';
 require_once __DIR__ . '/../shared/php/auth.php';
 require_once __DIR__ . '/../shared/php/navigation-rail.php';
 require_once __DIR__ . '/../shared/php/site-header.php';
+require_once __DIR__ . '/../shared/php/home-content.php';
 
 $config = mineacle_config();
 $site = is_array($config['site'] ?? null)
     ? $config['site']
     : [];
 
-$publicUrl = static function (mixed $value, string $fallback): string {
-    $resolved = mineacle_page_public_link($value);
-
-    return $resolved === '#'
-        ? $fallback
-        : $resolved;
-};
-
-$storeUrl = $publicUrl(
-    $site['store_url'] ?? '',
-    'https://store.mineacle.net/'
-);
+$content = mineacle_home_content();
+$hero = $content['hero'];
+$duels = $content['duels'];
+$plus = $content['plus'];
 
 $assetFiles = [
     __DIR__ . '/assets/css/home.css',
@@ -51,6 +44,7 @@ $assetFiles = [
     __DIR__ . '/../shared/assets/images/search/search.png',
     __DIR__ . '/assets/images/duels-slot.png',
     __DIR__ . '/assets/images/mineacle-plus-slot.png',
+    __DIR__ . '/../shared/php/home-content.php',
 ];
 
 $assetVersion = 1;
@@ -84,10 +78,7 @@ mineacle_page_head('Home', [
     'theme_color' => '#0d0f10',
 ]);
 ?>
-<main
-    class="home-page"
-    aria-label="Mineacle home"
->
+<main class="home-page" aria-label="Mineacle home">
     <div class="home-layout">
         <?php
         mineacle_navigation_rail(
@@ -99,15 +90,15 @@ mineacle_page_head('Home', [
         <?php mineacle_site_header(); ?>
 
         <section
-            class="home-promo-card"
-            aria-label="Mineacle featured world"
+            class="home-tile home-tile--hero"
+            aria-labelledby="home-hero-title"
         >
             <div
-                class="home-promo-card__media"
+                class="home-tile__media"
                 aria-hidden="true"
             >
                 <video
-                    class="home-promo-card__video"
+                    class="home-tile__video"
                     autoplay
                     muted
                     loop
@@ -125,40 +116,38 @@ mineacle_page_head('Home', [
                 </video>
             </div>
 
-            <div
-                class="home-promo-card__overlay"
-                aria-hidden="true"
-            ></div>
+            <div class="home-tile__shade" aria-hidden="true"></div>
 
-            <div class="home-promo-card__content">
-                <span class="home-promo-card__eyebrow">
-                    Mineacle SMP
+            <?php if (!empty($hero['is_new'])): ?>
+                <span class="home-tile__new">New</span>
+            <?php endif; ?>
+
+            <div class="home-tile__caption">
+                <span class="home-tile__label">
+                    <?php echo h((string) $hero['label']); ?>
                 </span>
 
-                <div class="home-promo-card__copy">
-                    <h1>
-                        A survival world built around players.
-                    </h1>
+                <h1 id="home-hero-title">
+                    <?php echo h((string) $hero['title']); ?>
+                </h1>
 
-                    <p>
-                        Trade, compete, build, and make your mark
-                        in a persistent player-driven economy.
-                    </p>
-                </div>
+                <p>
+                    <?php echo h((string) $hero['description']); ?>
+                </p>
 
-                <div class="home-promo-card__actions">
+                <div class="home-tile__actions">
                     <a
-                        class="home-ui-button home-ui-button--primary"
-                        href="/vote"
+                        class="home-button home-button--primary"
+                        href="<?php echo h((string) $hero['primary_url']); ?>"
                     >
-                        Earn Rewards
+                        <?php echo h((string) $hero['primary_label']); ?>
                     </a>
 
                     <a
-                        class="home-ui-button home-ui-button--secondary"
-                        href="/leaderboards"
+                        class="home-button home-button--quiet"
+                        href="<?php echo h((string) $hero['secondary_url']); ?>"
                     >
-                        View Leaderboards
+                        <?php echo h((string) $hero['secondary_label']); ?>
                     </a>
                 </div>
             </div>
@@ -166,11 +155,11 @@ mineacle_page_head('Home', [
 
         <div class="home-feature-stack">
             <section
-                class="home-feature-card home-feature-card--duels"
+                class="home-tile home-tile--feature home-tile--duels"
                 aria-labelledby="home-duels-title"
             >
                 <div
-                    class="home-feature-card__backdrop"
+                    class="home-tile__media"
                     aria-hidden="true"
                 >
                     <img
@@ -183,44 +172,46 @@ mineacle_page_head('Home', [
                     >
                 </div>
 
-                <div class="home-feature-card__content">
-                    <div class="home-feature-card__heading">
-                        <span class="home-feature-card__eyebrow">
-                            Mineacle Duels
+                <div class="home-tile__shade" aria-hidden="true"></div>
+
+                <?php if (!empty($duels['is_new'])): ?>
+                    <span class="home-tile__new">New</span>
+                <?php endif; ?>
+
+                <div class="home-tile__caption">
+                    <span class="home-tile__label">
+                        <?php echo h((string) $duels['label']); ?>
+                    </span>
+
+                    <h2 id="home-duels-title">
+                        <?php echo h((string) $duels['title']); ?>
+                    </h2>
+
+                    <p>
+                        <?php echo h((string) $duels['description']); ?>
+                    </p>
+
+                    <div class="home-tile__bottom-row">
+                        <span class="home-tile__meta">
+                            <?php echo h((string) $duels['meta']); ?>
                         </span>
 
-                        <h2 id="home-duels-title">
-                            Fight. Climb. Repeat.
-                        </h2>
-
-                        <p>
-                            Fast competitive PvP, clean matchups,
-                            and server-wide combat rankings.
-                        </p>
-                    </div>
-
-                    <div class="home-feature-card__footer">
-                        <div class="home-feature-card__stat">
-                            <small>Combat Leaderboard</small>
-                            <strong>See Top Kills</strong>
-                        </div>
-
                         <a
-                            class="home-ui-button home-ui-button--secondary"
-                            href="/leaderboards?metric=kills"
+                            class="home-button home-button--quiet"
+                            href="<?php echo h((string) $duels['button_url']); ?>"
                         >
-                            View Top Kills
+                            <?php echo h((string) $duels['button_label']); ?>
                         </a>
                     </div>
                 </div>
             </section>
 
             <section
-                class="home-feature-card home-feature-card--plus"
+                class="home-tile home-tile--feature home-tile--plus"
                 aria-labelledby="home-plus-title"
             >
                 <div
-                    class="home-feature-card__backdrop"
+                    class="home-tile__media"
                     aria-hidden="true"
                 >
                     <img
@@ -233,43 +224,48 @@ mineacle_page_head('Home', [
                     >
                 </div>
 
-                <div class="home-feature-card__content">
-                    <div class="home-feature-card__heading">
-                        <span class="home-feature-card__eyebrow">
-                            Mineacle+
-                        </span>
+                <div class="home-tile__shade" aria-hidden="true"></div>
 
-                        <h2 id="home-plus-title">
-                            More freedom to play your way.
-                        </h2>
+                <?php if (!empty($plus['is_new'])): ?>
+                    <span class="home-tile__new">New</span>
+                <?php endif; ?>
 
-                        <p>
-                            Premium convenience without changing
-                            the core survival experience.
-                        </p>
-                    </div>
+                <div class="home-tile__caption">
+                    <span class="home-tile__label">
+                        <?php echo h((string) $plus['label']); ?>
+                    </span>
+
+                    <h2 id="home-plus-title">
+                        <?php echo h((string) $plus['title']); ?>
+                    </h2>
+
+                    <p>
+                        <?php echo h((string) $plus['description']); ?>
+                    </p>
 
                     <div
                         class="home-plus-perks"
                         aria-label="Mineacle Plus perks"
                     >
-                        <span>5 Homes</span>
-                        <span>Faster Teleports</span>
-                        <span>Priority RTP</span>
-                        <span>Spawn Flight</span>
-                        <span>25 Orders</span>
-                        <span>45 Auction Slots</span>
-                        <span>Nicknames</span>
+                        <?php foreach ((array) $plus['perks'] as $perk): ?>
+                            <span><?php echo h((string) $perk); ?></span>
+                        <?php endforeach; ?>
                     </div>
 
-                    <a
-                        class="home-ui-button home-ui-button--primary home-feature-card__store"
-                        href="<?php echo h($storeUrl); ?>"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Visit Store
-                    </a>
+                    <div class="home-tile__bottom-row">
+                        <span class="home-tile__meta">
+                            Mineacle+ Membership
+                        </span>
+
+                        <a
+                            class="home-button home-button--primary"
+                            href="<?php echo h((string) $plus['button_url']); ?>"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <?php echo h((string) $plus['button_label']); ?>
+                        </a>
+                    </div>
                 </div>
             </section>
         </div>

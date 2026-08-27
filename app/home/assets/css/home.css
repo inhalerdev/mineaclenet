@@ -25,15 +25,12 @@
 :root {
   --home-bg: #0d0f10;
   --home-surface: #181a1e;
-  --home-surface-raised: #20232a;
   --home-border: rgba(248, 248, 248, 0.055);
-  --home-border-strong: rgba(248, 248, 248, 0.095);
   --home-text: #f8f8f8;
-  --home-text-soft: #D4E0FF;
+  --home-soft: #D4E0FF;
   --home-muted: #8f97aa;
   --home-purple: #8436FE;
   --home-purple-soft: #B078FF;
-  --home-green: #62C249;
   --home-space: 16px;
   --home-radius: 4px;
   --home-control-height: 36px;
@@ -73,7 +70,6 @@ body.mineacle-home {
   color-scheme: dark;
   font-family: "Rubik", Arial, sans-serif;
   font-synthesis: none;
-  text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -112,22 +108,16 @@ body.mineacle-home main.home-page {
   grid-row: 1;
 }
 
-.home-promo-card,
-.home-feature-card {
-  border: 1px solid var(--home-border);
-  border-radius: var(--home-radius);
-}
-
 /* ==========================================================================
-   SHARED BUTTON SCALE
+   BUTTONS
    ========================================================================== */
 
-.home-ui-button {
+.home-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   height: var(--home-control-height);
-  min-width: 116px;
+  min-width: 112px;
   padding: 0 13px;
   border-radius: 4px;
   font-family: inherit;
@@ -139,171 +129,57 @@ body.mineacle-home main.home-page {
   transition:
     background-color 100ms ease-out,
     border-color 100ms ease-out,
-    color 100ms ease-out,
-    transform 100ms ease-out;
+    color 100ms ease-out;
 }
 
-.home-ui-button--primary {
+.home-button--primary {
   border: 1px solid transparent;
   background: var(--home-purple);
-  color: #FFFFFF;
+  color: #fff;
 }
 
-.home-ui-button--primary:hover,
-.home-ui-button--primary:focus-visible {
+.home-button--primary:hover,
+.home-button--primary:focus-visible {
   background: #9554FF;
-  color: #FFFFFF;
-  transform: translateY(-1px);
 }
 
-.home-ui-button--secondary {
+.home-button--quiet {
   border: 1px solid rgba(212, 224, 255, 0.14);
-  background: rgba(24, 26, 30, 0.72);
-  color: var(--home-text-soft);
-  backdrop-filter: blur(6px);
+  background: rgba(24, 26, 30, 0.78);
+  color: var(--home-soft);
 }
 
-.home-ui-button--secondary:hover,
-.home-ui-button--secondary:focus-visible {
-  border-color: rgba(176, 120, 255, 0.46);
-  background: rgba(40, 44, 53, 0.92);
-  color: #FFFFFF;
-  transform: translateY(-1px);
+.home-button--quiet:hover,
+.home-button--quiet:focus-visible {
+  border-color: rgba(176, 120, 255, 0.42);
+  background: #252932;
+  color: #fff;
 }
 
-.home-ui-button:focus-visible {
+.home-button:focus-visible {
   outline: 2px solid var(--home-purple-soft);
   outline-offset: 2px;
 }
 
 /* ==========================================================================
-   PRIMARY VIDEO CARD
+   TILES
    ========================================================================== */
 
-.home-promo-card {
+.home-tile {
   position: relative;
   isolation: isolate;
-  grid-column: 2;
-  grid-row: 2;
   min-width: 0;
   min-height: 0;
   overflow: hidden;
+  border: 1px solid var(--home-border);
+  border-radius: var(--home-radius);
   background: var(--home-surface);
 }
 
-.home-promo-card::after,
-.home-feature-card::before {
-  position: absolute;
-  z-index: 3;
-  inset: 0;
-  border: 1px solid rgba(255, 255, 255, 0.025);
-  border-radius: inherit;
-  content: "";
-  pointer-events: none;
+.home-tile--hero {
+  grid-column: 2;
+  grid-row: 2;
 }
-
-.home-promo-card__media {
-  position: absolute;
-  z-index: 0;
-  inset: 0;
-  overflow: hidden;
-  border-radius: inherit;
-  pointer-events: none;
-}
-
-.home-promo-card__video {
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  max-height: none;
-  margin: 0;
-  border: 0;
-  object-fit: cover;
-  object-position: 56% 50%;
-  pointer-events: none;
-  user-select: none;
-  transform: scale(1.01);
-}
-
-.home-promo-card__overlay {
-  position: absolute;
-  z-index: 1;
-  inset: 0;
-  background:
-    linear-gradient(
-      to top,
-      rgba(7, 8, 9, 0.90) 0%,
-      rgba(7, 8, 9, 0.58) 24%,
-      rgba(7, 8, 9, 0.14) 58%,
-      rgba(7, 8, 9, 0.02) 100%
-    ),
-    linear-gradient(
-      90deg,
-      rgba(7, 8, 9, 0.46) 0%,
-      rgba(7, 8, 9, 0.08) 62%,
-      rgba(7, 8, 9, 0) 100%
-    );
-  pointer-events: none;
-}
-
-.home-promo-card__content {
-  position: absolute;
-  z-index: 2;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  display: grid;
-  padding: 24px;
-  gap: 14px;
-}
-
-.home-promo-card__eyebrow,
-.home-feature-card__eyebrow {
-  display: inline-block;
-  width: fit-content;
-  color: var(--home-purple-soft);
-  font-size: 9px;
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
-}
-
-.home-promo-card__copy {
-  max-width: 440px;
-}
-
-.home-promo-card h1 {
-  max-width: 13ch;
-  margin: 0;
-  color: #FFFFFF;
-  font-size: clamp(28px, 2.45vw, 42px);
-  font-weight: 600;
-  line-height: 1.02;
-  letter-spacing: -0.035em;
-}
-
-.home-promo-card__copy p {
-  max-width: 43ch;
-  margin: 10px 0 0;
-  color: rgba(248, 248, 248, 0.74);
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1.5;
-}
-
-.home-promo-card__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-/* ==========================================================================
-   FEATURE CARDS
-   ========================================================================== */
 
 .home-feature-stack {
   display: grid;
@@ -316,16 +192,7 @@ body.mineacle-home main.home-page {
   gap: var(--home-space);
 }
 
-.home-feature-card {
-  position: relative;
-  isolation: isolate;
-  min-width: 0;
-  min-height: 0;
-  overflow: hidden;
-  background: var(--home-surface);
-}
-
-.home-feature-card__backdrop {
+.home-tile__media {
   position: absolute;
   z-index: 0;
   inset: 0;
@@ -333,139 +200,184 @@ body.mineacle-home main.home-page {
   pointer-events: none;
 }
 
-.home-feature-card__backdrop img {
+.home-tile__media img,
+.home-tile__video {
   display: block;
   width: 100%;
   height: 100%;
   max-width: none;
   max-height: none;
+  border: 0;
   object-fit: cover;
   user-select: none;
-  transform: scale(1.01);
 }
 
-.home-feature-card--duels .home-feature-card__backdrop img {
+.home-tile__video {
+  object-position: 56% 50%;
+}
+
+.home-tile--duels .home-tile__media img {
   object-position: 50% 46%;
 }
 
-.home-feature-card--plus .home-feature-card__backdrop img {
+.home-tile--plus .home-tile__media img {
   object-position: 53% 50%;
 }
 
-.home-feature-card::after {
+/*
+ * One simple shade:
+ * let the image remain the card design, then darken only the lower caption
+ * region enough for reliable text contrast.
+ */
+.home-tile__shade {
   position: absolute;
   z-index: 1;
   inset: 0;
   background:
     linear-gradient(
-      90deg,
-      rgba(8, 9, 11, 0.91) 0%,
-      rgba(8, 9, 11, 0.72) 37%,
-      rgba(8, 9, 11, 0.31) 69%,
-      rgba(8, 9, 11, 0.08) 100%
-    ),
-    linear-gradient(
       to top,
-      rgba(7, 8, 9, 0.72) 0%,
-      rgba(7, 8, 9, 0.06) 58%
+      rgba(7, 8, 9, 0.94) 0%,
+      rgba(7, 8, 9, 0.72) 24%,
+      rgba(7, 8, 9, 0.24) 52%,
+      rgba(7, 8, 9, 0.02) 78%,
+      rgba(7, 8, 9, 0) 100%
     );
+  pointer-events: none;
+}
+
+.home-tile::after {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.018);
+  border-radius: inherit;
   content: "";
   pointer-events: none;
 }
 
-.home-feature-card__content {
-  position: relative;
+/* The only normal top-of-card UI is an explicit "New" state. */
+.home-tile__new {
+  position: absolute;
+  z-index: 3;
+  top: 14px;
+  left: 14px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 25px;
+  padding: 0 9px;
+  border-radius: 3px;
+  background: var(--home-purple);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.home-tile__caption {
+  position: absolute;
   z-index: 2;
+  right: 0;
+  bottom: 0;
+  left: 0;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
-  min-height: 0;
+  align-items: flex-start;
   padding: 20px;
 }
 
-.home-feature-card__heading {
-  max-width: min(58%, 450px);
+.home-tile--hero .home-tile__caption {
+  padding: 22px;
 }
 
-.home-feature-card__eyebrow {
-  margin-bottom: 8px;
-}
-
-.home-feature-card h2 {
-  max-width: 15ch;
-  margin: 0;
-  color: #FFFFFF;
-  font-size: clamp(23px, 1.9vw, 34px);
+.home-tile__label {
+  margin-bottom: 7px;
+  color: var(--home-purple-soft);
+  font-size: 9px;
   font-weight: 600;
-  line-height: 1.02;
-  letter-spacing: -0.032em;
+  line-height: 1;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
 }
 
-.home-feature-card__heading p {
-  max-width: 42ch;
-  margin: 9px 0 0;
+.home-tile h1,
+.home-tile h2 {
+  margin: 0;
+  color: #fff;
+  font-weight: 600;
+  line-height: 1.03;
+  letter-spacing: -0.03em;
+}
+
+.home-tile h1 {
+  max-width: 13ch;
+  font-size: clamp(28px, 2.35vw, 40px);
+}
+
+.home-tile h2 {
+  max-width: 18ch;
+  font-size: clamp(22px, 1.7vw, 30px);
+}
+
+.home-tile__caption > p {
+  max-width: 46ch;
+  margin: 8px 0 0;
   color: rgba(248, 248, 248, 0.72);
   font-size: 11px;
   font-weight: 400;
   line-height: 1.48;
 }
 
-.home-feature-card__footer {
+.home-tile__actions {
   display: flex;
-  align-items: end;
+  flex-wrap: wrap;
+  margin-top: 14px;
+  gap: 7px;
+}
+
+.home-tile__bottom-row {
+  display: flex;
+  align-items: center;
   justify-content: space-between;
-  margin-top: auto;
+  width: 100%;
+  margin-top: 14px;
   gap: 12px;
 }
 
-.home-feature-card__stat {
-  display: grid;
-  gap: 4px;
-}
-
-.home-feature-card__stat small {
-  color: #7f8798;
-  font-size: 8px;
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-}
-
-.home-feature-card__stat strong {
-  color: var(--home-text-soft);
-  font-size: 13px;
+.home-tile__meta {
+  overflow: hidden;
+  color: #9aa3b6;
+  font-size: 10px;
   font-weight: 500;
   line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
+/*
+ * Mineacle+ perks are plain inline metadata, not pills/cards.
+ */
 .home-plus-perks {
   display: flex;
   flex-wrap: wrap;
-  max-width: min(80%, 620px);
-  margin-top: 12px;
-  gap: 5px;
+  max-width: 620px;
+  margin-top: 11px;
+  color: #b9c1d1;
+  font-size: 9px;
+  font-weight: 500;
+  line-height: 1.35;
+  gap: 5px 0;
 }
 
 .home-plus-perks span {
-  display: inline-flex;
-  align-items: center;
-  min-height: 24px;
-  padding: 0 8px;
-  border: 1px solid rgba(248, 248, 248, 0.075);
-  border-radius: 4px;
-  background: rgba(18, 20, 24, 0.70);
-  color: var(--home-text-soft);
-  font-size: 9px;
-  font-weight: 500;
-  line-height: 1;
-  backdrop-filter: blur(5px);
+  display: inline;
 }
 
-.home-feature-card__store {
-  align-self: flex-start;
-  margin-top: auto;
+.home-plus-perks span + span::before {
+  margin: 0 7px;
+  color: #626a7a;
+  content: "•";
 }
 
 /* ==========================================================================
@@ -482,14 +394,6 @@ body.mineacle-home main.home-page {
       var(--site-rail-width)
       minmax(320px, 0.68fr)
       minmax(0, 1fr);
-  }
-
-  .home-feature-card__heading {
-    max-width: 68%;
-  }
-
-  .home-plus-perks {
-    max-width: 90%;
   }
 }
 
@@ -517,7 +421,7 @@ body.mineacle-home main.home-page {
     grid-template-rows:
       auto
       auto
-      560px
+      540px
       auto;
     height: auto;
   }
@@ -528,7 +432,7 @@ body.mineacle-home main.home-page {
   }
 
   .home-layout > .site-header,
-  .home-promo-card,
+  .home-tile--hero,
   .home-feature-stack {
     grid-column: 1;
   }
@@ -537,7 +441,7 @@ body.mineacle-home main.home-page {
     grid-row: 2;
   }
 
-  .home-promo-card {
+  .home-tile--hero {
     grid-row: 3;
   }
 
@@ -546,21 +450,6 @@ body.mineacle-home main.home-page {
     grid-template-columns:
       repeat(2, minmax(0, 1fr));
     grid-template-rows: 330px;
-  }
-
-  .home-feature-card__heading,
-  .home-plus-perks {
-    max-width: 100%;
-  }
-
-  .home-feature-card::after {
-    background:
-      linear-gradient(
-        to top,
-        rgba(8, 9, 11, 0.94) 0%,
-        rgba(8, 9, 11, 0.66) 53%,
-        rgba(8, 9, 11, 0.18) 100%
-      );
   }
 }
 
@@ -579,21 +468,23 @@ body.mineacle-home main.home-page {
       repeat(2, 310px);
   }
 
-  .home-promo-card__content,
-  .home-feature-card__content {
-    padding: 18px;
+  .home-tile__caption,
+  .home-tile--hero .home-tile__caption {
+    padding: 17px;
   }
 
-  .home-promo-card__actions,
-  .home-feature-card__footer {
+  .home-tile__bottom-row,
+  .home-tile__actions {
     align-items: stretch;
     flex-direction: column;
   }
 
-  .home-ui-button,
-  .home-feature-card__store {
+  .home-button {
     width: 100%;
-    align-self: stretch;
+  }
+
+  .home-tile__meta {
+    white-space: normal;
   }
 }
 
@@ -606,13 +497,13 @@ body.mineacle-home main.home-page {
     padding: var(--home-space);
   }
 
-  .home-promo-card {
-    min-height: 460px;
+  .home-tile--hero {
+    min-height: 450px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .home-ui-button {
+  .home-button {
     transition: none;
   }
 }
