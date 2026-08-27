@@ -123,7 +123,7 @@ mineacle_page_head('Home', [
             <?php endif; ?>
 
             <div class="home-tile__caption">
-<h1 id="home-hero-title">
+                <h1 id="home-hero-title">
                     <?php echo h((string) $hero['title']); ?>
                 </h1>
 
@@ -175,19 +175,14 @@ mineacle_page_head('Home', [
                 <?php endif; ?>
 
                 <div class="home-tile__caption">
-<h2 id="home-duels-title">
+                    <h2 id="home-duels-title">
                         <?php echo h((string) $duels['title']); ?>
                     </h2>
 
                     <p>
                         <?php echo h((string) $duels['description']); ?>
                     </p>
-
-                    <div class="home-tile__bottom-row">
-                        <span class="home-tile__meta">
-                            <?php echo h((string) $duels['meta']); ?>
-                        </span>
-
+                    <div class="home-tile__actions">
                         <a
                             class="home-button home-button--quiet"
                             href="<?php echo h((string) $duels['button_url']); ?>"
@@ -223,7 +218,7 @@ mineacle_page_head('Home', [
                 <?php endif; ?>
 
                 <div class="home-tile__caption">
-<h2 id="home-plus-title">
+                    <h2 id="home-plus-title">
                         <?php echo h((string) $plus['title']); ?>
                     </h2>
 
@@ -239,12 +234,7 @@ mineacle_page_head('Home', [
                             <span><?php echo h((string) $perk); ?></span>
                         <?php endforeach; ?>
                     </div>
-
-                    <div class="home-tile__bottom-row">
-                        <span class="home-tile__meta">
-                            Mineacle+ Membership
-                        </span>
-
+                    <div class="home-tile__actions">
                         <a
                             class="home-button home-button--primary"
                             href="<?php echo h((string) $plus['button_url']); ?>"

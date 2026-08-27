@@ -33,28 +33,27 @@ function mineacle_home_content_defaults(): array
     return [
         'hero' => [
             'is_new' => false,
-            'title' => 'A survival world built around players.',
+            'title' => 'A survival world shaped by players.',
             'description' =>
-                'Trade, compete, build, and make your mark in a persistent player-driven economy.',
-            'primary_label' => 'Earn Rewards',
-            'primary_url' => '/vote',
-            'secondary_label' => 'View Leaderboards',
-            'secondary_url' => '/leaderboards',
+                'Build, trade, form teams, and compete in a persistent world powered by a player-driven economy.',
+            'primary_label' => 'View Leaderboards',
+            'primary_url' => '/leaderboards',
+            'secondary_label' => 'Earn Rewards',
+            'secondary_url' => '/vote',
         ],
         'duels' => [
             'is_new' => false,
-            'title' => 'Fight. Climb. Repeat.',
+            'title' => 'Climb the combat rankings.',
             'description' =>
-                'Quick competitive PvP with server-wide combat rankings.',
-            'meta' => 'Top Kills',
-            'button_label' => 'View Leaderboard',
+                'Take on fast PvP fights, improve your record, and see how you stack up against Mineacle’s top killers.',
+            'button_label' => 'View Top Kills',
             'button_url' => '/leaderboards?metric=kills',
         ],
         'plus' => [
             'is_new' => false,
-            'title' => 'More freedom to play your way.',
+            'title' => 'More freedom with Mineacle+.',
             'description' =>
-                'Premium convenience without changing the core survival experience.',
+                'Move faster, keep more homes, unlock spawn flight, and expand the way you trade and play.',
             'perks' => [
                 '5 Homes',
                 'Faster Teleports',
@@ -127,7 +126,6 @@ function mineacle_home_content_normalize_slot(
         [
             'title' => 90,
             'description' => 220,
-            'meta' => 60,
             'primary_label' => 40,
             'secondary_label' => 40,
             'button_label' => 40,
