@@ -121,6 +121,11 @@ function mineacle_navigation_rail(array $site, array $options = []): void
      */
     $quickLinks = [
         [
+            'label' => 'Baltop (Global)',
+            'url' => '/leaderboards?metric=balance',
+            'icon' => 'balance',
+        ],
+        [
             'label' => 'Top Players (Global)',
             'url' => '/leaderboards?type=players',
             'icon' => 'top',
@@ -129,11 +134,6 @@ function mineacle_navigation_rail(array $site, array $options = []): void
             'label' => 'Top Teams (Global)',
             'url' => '/leaderboards?type=teams',
             'icon' => 'teams',
-        ],
-        [
-            'label' => 'Baltop (Global)',
-            'url' => '/leaderboards?metric=balance',
-            'icon' => 'balance',
         ],
         [
             'label' => 'Best K/D (Global)',
