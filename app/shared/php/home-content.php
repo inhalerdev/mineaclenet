@@ -33,7 +33,6 @@ function mineacle_home_content_defaults(): array
     return [
         'hero' => [
             'is_new' => false,
-            'label' => 'Mineacle SMP',
             'title' => 'A survival world built around players.',
             'description' =>
                 'Trade, compete, build, and make your mark in a persistent player-driven economy.',
@@ -44,7 +43,6 @@ function mineacle_home_content_defaults(): array
         ],
         'duels' => [
             'is_new' => false,
-            'label' => 'Mineacle Duels',
             'title' => 'Fight. Climb. Repeat.',
             'description' =>
                 'Quick competitive PvP with server-wide combat rankings.',
@@ -54,7 +52,6 @@ function mineacle_home_content_defaults(): array
         ],
         'plus' => [
             'is_new' => false,
-            'label' => 'Mineacle+',
             'title' => 'More freedom to play your way.',
             'description' =>
                 'Premium convenience without changing the core survival experience.',
@@ -128,7 +125,6 @@ function mineacle_home_content_normalize_slot(
 
     foreach (
         [
-            'label' => 40,
             'title' => 90,
             'description' => 220,
             'meta' => 60,

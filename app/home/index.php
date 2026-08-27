@@ -123,11 +123,7 @@ mineacle_page_head('Home', [
             <?php endif; ?>
 
             <div class="home-tile__caption">
-                <span class="home-tile__label">
-                    <?php echo h((string) $hero['label']); ?>
-                </span>
-
-                <h1 id="home-hero-title">
+<h1 id="home-hero-title">
                     <?php echo h((string) $hero['title']); ?>
                 </h1>
 
@@ -179,11 +175,7 @@ mineacle_page_head('Home', [
                 <?php endif; ?>
 
                 <div class="home-tile__caption">
-                    <span class="home-tile__label">
-                        <?php echo h((string) $duels['label']); ?>
-                    </span>
-
-                    <h2 id="home-duels-title">
+<h2 id="home-duels-title">
                         <?php echo h((string) $duels['title']); ?>
                     </h2>
 
@@ -231,11 +223,7 @@ mineacle_page_head('Home', [
                 <?php endif; ?>
 
                 <div class="home-tile__caption">
-                    <span class="home-tile__label">
-                        <?php echo h((string) $plus['label']); ?>
-                    </span>
-
-                    <h2 id="home-plus-title">
+<h2 id="home-plus-title">
                         <?php echo h((string) $plus['title']); ?>
                     </h2>
 

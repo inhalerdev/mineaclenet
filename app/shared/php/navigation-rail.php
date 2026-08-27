@@ -373,10 +373,7 @@ function mineacle_navigation_rail(array $site, array $options = []): void
             <div class="site-join-dialog__panel">
                 <header class="site-join-dialog__header">
                     <div>
-                        <span class="site-join-dialog__eyebrow">
-                            Mineacle SMP
-                        </span>
-                        <h2 id="site-join-dialog-title">
+<h2 id="site-join-dialog-title">
                             How to Join
                         </h2>
                     </div>

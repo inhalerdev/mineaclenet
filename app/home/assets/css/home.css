@@ -284,22 +284,13 @@ body.mineacle-home main.home-page {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 20px;
+  padding: clamp(17px, 1.55vw, 22px);
 }
 
 .home-tile--hero .home-tile__caption {
-  padding: 22px;
+  padding: clamp(19px, 1.75vw, 24px);
 }
 
-.home-tile__label {
-  margin-bottom: 7px;
-  color: var(--home-purple-soft);
-  font-size: 9px;
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: 0.10em;
-  text-transform: uppercase;
-}
 
 .home-tile h1,
 .home-tile h2 {
@@ -312,12 +303,12 @@ body.mineacle-home main.home-page {
 
 .home-tile h1 {
   max-width: 13ch;
-  font-size: clamp(28px, 2.35vw, 40px);
+  font-size: clamp(27px, 2.35vw, 40px);
 }
 
 .home-tile h2 {
   max-width: 18ch;
-  font-size: clamp(22px, 1.7vw, 30px);
+  font-size: clamp(21px, 1.7vw, 30px);
 }
 
 .home-tile__caption > p {
@@ -384,7 +375,12 @@ body.mineacle-home main.home-page {
    RESPONSIVE
    ========================================================================== */
 
-@media (max-width: 1180px) {
+/*
+ * Desktop keeps the three-column dashboard.
+ * At laptop/tablet widths the shared rail becomes horizontal and Home
+ * becomes a natural scrolling content feed instead of squeezing cards.
+ */
+@media (max-width: 1180px) and (min-width: 1025px) {
   :root {
     --site-rail-width: 214px;
   }
@@ -392,12 +388,20 @@ body.mineacle-home main.home-page {
   .home-layout {
     grid-template-columns:
       var(--site-rail-width)
-      minmax(320px, 0.68fr)
+      minmax(300px, 0.72fr)
       minmax(0, 1fr);
+  }
+
+  .home-tile h1 {
+    font-size: clamp(25px, 2.5vw, 36px);
+  }
+
+  .home-tile h2 {
+    font-size: clamp(20px, 2vw, 27px);
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   html:root {
     height: auto !important;
     min-height: 100% !important;
@@ -417,60 +421,75 @@ body.mineacle-home main.home-page {
   }
 
   .home-layout {
-    grid-template-columns: 1fr;
-    grid-template-rows:
-      auto
-      auto
-      540px
-      auto;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
     height: auto;
   }
 
-  .home-layout > .site-rail-shell {
-    grid-column: 1;
-    grid-row: 1;
-  }
-
+  .home-layout > .site-rail-shell,
   .home-layout > .site-header,
   .home-tile--hero,
   .home-feature-stack {
     grid-column: 1;
-  }
-
-  .home-layout > .site-header {
-    grid-row: 2;
+    grid-row: auto;
   }
 
   .home-tile--hero {
-    grid-row: 3;
+    min-height: clamp(460px, 64vw, 620px);
   }
 
   .home-feature-stack {
-    grid-row: 4;
     grid-template-columns:
       repeat(2, minmax(0, 1fr));
-    grid-template-rows: 330px;
+    grid-template-rows: auto;
+  }
+
+  .home-tile--feature {
+    min-height: clamp(300px, 36vw, 390px);
+  }
+
+  .home-tile__shade {
+    background:
+      linear-gradient(
+        to top,
+        rgba(7, 8, 9, 0.96) 0%,
+        rgba(7, 8, 9, 0.70) 27%,
+        rgba(7, 8, 9, 0.22) 57%,
+        rgba(7, 8, 9, 0.01) 82%,
+        rgba(7, 8, 9, 0) 100%
+      );
   }
 }
 
-@media (max-width: 680px) {
-  .home-layout {
-    grid-template-rows:
-      auto
-      auto
-      500px
-      auto;
-  }
-
+@media (max-width: 760px) {
   .home-feature-stack {
     grid-template-columns: 1fr;
-    grid-template-rows:
-      repeat(2, 310px);
   }
 
-  .home-tile__caption,
-  .home-tile--hero .home-tile__caption {
-    padding: 17px;
+  .home-tile--feature {
+    min-height: clamp(300px, 64vw, 400px);
+  }
+
+  .home-tile__bottom-row {
+    align-items: flex-end;
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --home-space: 12px;
+  }
+
+  body.mineacle-home main.home-page {
+    padding: var(--home-space);
+  }
+
+  .home-tile--hero {
+    min-height: clamp(430px, 112vw, 520px);
+  }
+
+  .home-tile--feature {
+    min-height: clamp(300px, 82vw, 380px);
   }
 
   .home-tile__bottom-row,
@@ -488,17 +507,21 @@ body.mineacle-home main.home-page {
   }
 }
 
-@media (max-width: 460px) {
-  :root {
-    --home-space: 12px;
+@media (max-width: 420px) {
+  .home-tile h1 {
+    font-size: clamp(25px, 8vw, 31px);
   }
 
-  body.mineacle-home main.home-page {
-    padding: var(--home-space);
+  .home-tile h2 {
+    font-size: clamp(21px, 7vw, 27px);
   }
 
-  .home-tile--hero {
-    min-height: 450px;
+  .home-tile__caption > p {
+    font-size: 11px;
+  }
+
+  .home-plus-perks {
+    font-size: 9px;
   }
 }
 
