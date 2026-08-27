@@ -64,7 +64,7 @@ $heroVideoUrl =
     'https://pub-a87f1944ab6f4788a1974177e59cf562.r2.dev/hero-bg.mp4';
 
 mineacle_page_head('Home', [
-    'meta_title' => 'Home | Mineacle',
+    'meta_title' => 'Mineacle | Home',
     'meta_description' =>
         'Play Mineacle, find players, view rankings, vote, and explore the network.',
     'canonical_url' => 'https://mineacle.net/',

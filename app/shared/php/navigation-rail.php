@@ -121,22 +121,22 @@ function mineacle_navigation_rail(array $site, array $options = []): void
      */
     $quickLinks = [
         [
-            'label' => 'Top 10 (Global)',
+            'label' => 'Top Players (Global)',
             'url' => '/leaderboards?type=players',
             'icon' => 'top',
         ],
         [
-            'label' => 'Top Teams',
+            'label' => 'Top Teams (Global)',
             'url' => '/leaderboards?type=teams',
             'icon' => 'teams',
         ],
         [
-            'label' => 'Top Balance',
+            'label' => 'Baltop (Global)',
             'url' => '/leaderboards?metric=balance',
             'icon' => 'balance',
         ],
         [
-            'label' => 'Top K/D',
+            'label' => 'Best K/D (Global)',
             'url' => '/leaderboards?metric=kd',
             'icon' => 'kills',
         ],
