@@ -25,11 +25,13 @@
 :root {
   --home-bg: #0d0f10;
   --home-surface: #181a1e;
-  --home-border: rgba(248, 248, 248, 0.055);
+  --home-border: rgba(248, 248, 248, 0.06);
+  --home-border-hover: rgba(212, 224, 255, 0.18);
   --home-text: #f8f8f8;
   --home-soft: #D4E0FF;
-  --home-muted: #8f97aa;
+  --home-muted: #a7afbf;
   --home-purple: #8436FE;
+  --home-purple-hover: #9554FF;
   --home-purple-soft: #B078FF;
   --home-space: 16px;
   --home-radius: 4px;
@@ -86,7 +88,7 @@ body.mineacle-home main.home-page {
   display: grid;
   grid-template-columns:
     var(--site-rail-width)
-    minmax(340px, 0.61fr)
+    minmax(350px, 0.61fr)
     minmax(0, 1fr);
   grid-template-rows:
     var(--site-header-height)
@@ -113,23 +115,25 @@ body.mineacle-home main.home-page {
    ========================================================================== */
 
 .home-button {
+  position: relative;
+  z-index: 4;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   height: var(--home-control-height);
-  min-width: 112px;
-  padding: 0 13px;
+  min-width: 118px;
+  padding: 0 14px;
   border-radius: 4px;
   font-family: inherit;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1;
   text-decoration: none;
-  text-transform: uppercase;
+  text-transform: none;
   transition:
-    background-color 100ms ease-out,
-    border-color 100ms ease-out,
-    color 100ms ease-out;
+    background-color 120ms ease-out,
+    border-color 120ms ease-out,
+    color 120ms ease-out;
 }
 
 .home-button--primary {
@@ -140,18 +144,18 @@ body.mineacle-home main.home-page {
 
 .home-button--primary:hover,
 .home-button--primary:focus-visible {
-  background: #9554FF;
+  background: var(--home-purple-hover);
 }
 
 .home-button--quiet {
-  border: 1px solid rgba(212, 224, 255, 0.14);
-  background: rgba(24, 26, 30, 0.78);
+  border: 1px solid rgba(212, 224, 255, 0.16);
+  background: rgba(23, 25, 29, 0.88);
   color: var(--home-soft);
 }
 
 .home-button--quiet:hover,
 .home-button--quiet:focus-visible {
-  border-color: rgba(176, 120, 255, 0.42);
+  border-color: rgba(176, 120, 255, 0.44);
   background: #252932;
   color: #fff;
 }
@@ -162,7 +166,7 @@ body.mineacle-home main.home-page {
 }
 
 /* ==========================================================================
-   TILES
+   GALLERY
    ========================================================================== */
 
 .home-tile {
@@ -174,6 +178,7 @@ body.mineacle-home main.home-page {
   border: 1px solid var(--home-border);
   border-radius: var(--home-radius);
   background: var(--home-surface);
+  transition: border-color 160ms ease-out;
 }
 
 .home-tile--hero {
@@ -190,6 +195,14 @@ body.mineacle-home main.home-page {
   min-width: 0;
   min-height: 0;
   gap: var(--home-space);
+}
+
+.home-layout.has-single-feature .home-feature-stack {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.home-tile--feature {
+  cursor: pointer;
 }
 
 .home-tile__media {
@@ -210,6 +223,8 @@ body.mineacle-home main.home-page {
   border: 0;
   object-fit: cover;
   user-select: none;
+  transform: scale(1.001);
+  transition: transform 180ms ease-out;
 }
 
 .home-tile__video {
@@ -225,9 +240,8 @@ body.mineacle-home main.home-page {
 }
 
 /*
- * One simple shade:
- * let the image remain the card design, then darken only the lower caption
- * region enough for reliable text contrast.
+ * The artwork is the design.
+ * Only the lower reading zone is shaded.
  */
 .home-tile__shade {
   position: absolute;
@@ -236,103 +250,137 @@ body.mineacle-home main.home-page {
   background:
     linear-gradient(
       to top,
-      rgba(7, 8, 9, 0.94) 0%,
-      rgba(7, 8, 9, 0.72) 24%,
-      rgba(7, 8, 9, 0.24) 52%,
-      rgba(7, 8, 9, 0.02) 78%,
-      rgba(7, 8, 9, 0) 100%
+      rgba(6, 7, 8, 0.96) 0%,
+      rgba(6, 7, 8, 0.78) 17%,
+      rgba(6, 7, 8, 0.42) 33%,
+      rgba(6, 7, 8, 0.10) 50%,
+      rgba(6, 7, 8, 0.015) 64%,
+      rgba(6, 7, 8, 0) 78%
     );
   pointer-events: none;
 }
 
 .home-tile::after {
   position: absolute;
-  z-index: 4;
+  z-index: 5;
   inset: 0;
-  border: 1px solid rgba(255, 255, 255, 0.018);
+  border: 1px solid rgba(255, 255, 255, 0.015);
   border-radius: inherit;
   content: "";
   pointer-events: none;
 }
 
-/* The only normal top-of-card UI is an explicit "New" state. */
 .home-tile__new {
   position: absolute;
-  z-index: 3;
+  z-index: 4;
   top: 14px;
   left: 14px;
   display: inline-flex;
   align-items: center;
-  min-height: 25px;
+  height: 26px;
   padding: 0 9px;
   border-radius: 3px;
   background: var(--home-purple);
   color: #fff;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 600;
   line-height: 1;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
 }
 
 .home-tile__caption {
   position: absolute;
-  z-index: 2;
+  z-index: 3;
   right: 0;
   bottom: 0;
   left: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: clamp(17px, 1.55vw, 22px);
+  padding: clamp(18px, 1.45vw, 24px);
+  pointer-events: none;
 }
 
 .home-tile--hero .home-tile__caption {
-  padding: clamp(19px, 1.75vw, 24px);
+  padding: clamp(20px, 1.65vw, 26px);
 }
-
 
 .home-tile h1,
 .home-tile h2 {
-  max-width: 17ch;
+  max-width: 18ch;
   margin: 0;
   color: #fff;
-  font-size: clamp(28px, 2vw, 34px);
+  font-size: clamp(30px, 2vw, 34px);
   font-weight: 600;
-  line-height: 1.05;
-  letter-spacing: -0.028em;
+  line-height: 1.04;
+  letter-spacing: -0.027em;
 }
 
 .home-tile__caption > p {
-  max-width: 46ch;
-  margin: 10px 0 0;
-  color: rgba(248, 248, 248, 0.78);
-  font-size: 13px;
+  max-width: 48ch;
+  margin: 9px 0 0;
+  color: rgba(248, 248, 248, 0.80);
+  font-size: clamp(13px, 0.78vw, 14px);
   font-weight: 400;
-  line-height: 1.46;
+  line-height: 1.48;
 }
 
 .home-tile__actions {
   display: flex;
   flex-wrap: wrap;
-  margin-top: 16px;
+  margin-top: 15px;
   gap: 8px;
+  pointer-events: auto;
 }
 
+.home-competitive-line {
+  position: relative;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  margin-top: 12px;
+  color: #d7dcea;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
+  text-decoration: none;
+  gap: 8px;
+  pointer-events: auto;
+}
 
-/*
- * Mineacle+ perks are plain inline metadata, not pills/cards.
- */
+.home-competitive-line strong {
+  overflow: hidden;
+  color: #fff;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-competitive-line span {
+  color: #aeb6c7;
+  white-space: nowrap;
+}
+
+.home-competitive-line:hover strong,
+.home-competitive-line:focus-visible strong {
+  color: var(--home-purple-soft);
+}
+
+.home-competitive-line:focus-visible {
+  outline: 2px solid var(--home-purple-soft);
+  outline-offset: 3px;
+}
+
 .home-plus-perks {
   display: flex;
   flex-wrap: wrap;
-  max-width: 620px;
-  margin-top: 12px;
-  color: #c0c7d5;
+  max-width: 650px;
+  margin-top: 11px;
+  color: #c4cad7;
   font-size: 11px;
   font-weight: 500;
   line-height: 1.4;
-  gap: 5px 0;
+  gap: 4px 0;
 }
 
 .home-plus-perks span {
@@ -341,33 +389,39 @@ body.mineacle-home main.home-page {
 
 .home-plus-perks span + span::before {
   margin: 0 7px;
-  color: #626a7a;
+  color: #697181;
   content: "•";
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .home-tile--feature:hover {
+    border-color: var(--home-border-hover);
+  }
+
+  .home-tile--feature:hover .home-tile__media img,
+  .home-tile--feature:hover .home-tile__video {
+    transform: scale(1.015);
+  }
 }
 
 /* ==========================================================================
    RESPONSIVE
    ========================================================================== */
 
-/*
- * Desktop keeps the three-column dashboard.
- * At laptop/tablet widths the shared rail becomes horizontal and Home
- * becomes a natural scrolling content feed instead of squeezing cards.
- */
-@media (max-width: 1180px) and (min-width: 1025px) {
-  :root {
-    --site-rail-width: 214px;
-  }
-
+@media (max-width: 1360px) and (min-width: 1121px) {
   .home-layout {
     grid-template-columns:
       var(--site-rail-width)
-      minmax(300px, 0.72fr)
+      minmax(330px, 0.66fr)
       minmax(0, 1fr);
+  }
+
+  .home-tile__caption > p {
+    max-width: 43ch;
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1120px) {
   html:root {
     height: auto !important;
     min-height: 100% !important;
@@ -401,7 +455,7 @@ body.mineacle-home main.home-page {
   }
 
   .home-tile--hero {
-    min-height: clamp(460px, 64vw, 620px);
+    min-height: clamp(480px, 62vw, 640px);
   }
 
   .home-feature-stack {
@@ -411,19 +465,7 @@ body.mineacle-home main.home-page {
   }
 
   .home-tile--feature {
-    min-height: clamp(300px, 36vw, 390px);
-  }
-
-  .home-tile__shade {
-    background:
-      linear-gradient(
-        to top,
-        rgba(7, 8, 9, 0.96) 0%,
-        rgba(7, 8, 9, 0.70) 27%,
-        rgba(7, 8, 9, 0.22) 57%,
-        rgba(7, 8, 9, 0.01) 82%,
-        rgba(7, 8, 9, 0) 100%
-      );
+    min-height: clamp(330px, 39vw, 430px);
   }
 }
 
@@ -433,9 +475,8 @@ body.mineacle-home main.home-page {
   }
 
   .home-tile--feature {
-    min-height: clamp(300px, 64vw, 400px);
+    min-height: clamp(330px, 68vw, 430px);
   }
-
 }
 
 @media (max-width: 640px) {
@@ -448,14 +489,25 @@ body.mineacle-home main.home-page {
   }
 
   .home-tile--hero {
-    min-height: clamp(430px, 112vw, 520px);
+    min-height: clamp(440px, 112vw, 540px);
   }
 
   .home-tile--feature {
-    min-height: clamp(300px, 82vw, 380px);
+    min-height: clamp(330px, 88vw, 410px);
+  }
+
+  .home-tile h1,
+  .home-tile h2 {
+    font-size: clamp(28px, 8vw, 32px);
+  }
+
+  .home-tile__caption,
+  .home-tile--hero .home-tile__caption {
+    padding: 18px;
   }
 
   .home-tile__actions {
+    width: 100%;
     align-items: stretch;
     flex-direction: column;
   }
@@ -463,21 +515,29 @@ body.mineacle-home main.home-page {
   .home-button {
     width: 100%;
   }
-}
-
-@media (max-width: 420px) {
-
-  .home-tile__caption > p {
-    font-size: 12px;
-  }
 
   .home-plus-perks {
     font-size: 10px;
   }
 }
 
+@media (max-width: 420px) {
+  .home-tile__caption > p {
+    font-size: 12px;
+  }
+
+  .home-competitive-line {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .home-button {
+  .home-button,
+  .home-tile,
+  .home-tile__media img,
+  .home-tile__video {
     transition: none;
   }
 }

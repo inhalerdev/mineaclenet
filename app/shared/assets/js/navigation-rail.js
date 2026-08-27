@@ -160,7 +160,7 @@
 
     statusElement.classList.remove("is-loading");
     statusElement.classList.add("is-offline");
-    statusLabel.textContent = "Unavailable";
+    statusLabel.textContent = "Status unavailable";
   };
 
   const applyStatus = (payload) => {
@@ -193,9 +193,9 @@
 
     statusLabel.textContent = online
       ? `${players.toLocaleString()} ${
-          players === 1 ? "Player" : "Players"
-        }`
-      : "Server Offline";
+          players === 1 ? "player" : "players"
+        } online`
+      : "Server offline";
   };
 
   const loadStatus = async () => {

@@ -1,5 +1,5 @@
 :root {
-  --site-rail-width: 226px;
+  --site-rail-width: clamp(206px, 13vw, 226px);
   --site-rail-logo-height: 96px;
   --site-rail-gap: 16px;
   --site-rail-radius: 4px;
@@ -304,13 +304,13 @@
   display: flex;
   align-items: center;
   width: 100%;
-  min-height: 46px;
-  padding: 7px 10px;
+  min-height: 38px;
+  padding: 0 10px;
   border: 1px solid var(--site-rail-border);
   border-radius: 4px;
   background: #20232b;
-  color: #d1d9e8;
-  gap: 9px;
+  color: #dbe4f5;
+  gap: 8px;
 }
 
 .site-rail__status-dot {
@@ -320,35 +320,17 @@
   flex: 0 0 8px;
   border-radius: 50%;
   background: var(--site-rail-green);
-  box-shadow: 0 0 0 3px rgba(98, 194, 73, 0.10);
 }
 
 .site-rail__status.is-loading .site-rail__status-dot {
   background: #747b88;
-  box-shadow: none;
 }
 
 .site-rail__status.is-offline .site-rail__status-dot {
-  background: #fc1111;
-  box-shadow: 0 0 0 3px rgba(252, 17, 17, 0.10);
+  background: #fc5555;
 }
 
-.site-rail__status-copy {
-  display: grid;
-  min-width: 0;
-  gap: 3px;
-}
-
-.site-rail__status-copy small {
-  color: #7f8798;
-  font-size: 9px;
-  font-weight: 500;
-  line-height: 1;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.site-rail__status-copy strong {
+.site-rail__status-label {
   overflow: hidden;
   color: #dbe4f5;
   font-size: 12px;
@@ -358,8 +340,8 @@
   white-space: nowrap;
 }
 
-.site-rail__status.is-offline .site-rail__status-copy strong {
-  color: #ff9d9d;
+.site-rail__status.is-offline .site-rail__status-label {
+  color: #ffaaaa;
 }
 
 .site-rail__play {
@@ -621,7 +603,7 @@
    RESPONSIVE
    ========================================================================== */
 
-@media (max-width: 1024px) {
+@media (max-width: 1120px) {
   .site-rail-shell {
     grid-template-rows: 82px auto;
     width: 100%;
@@ -706,7 +688,7 @@
   }
 
   .site-rail__status {
-    min-height: 46px;
+    min-height: 38px;
   }
 
   .site-rail__play {

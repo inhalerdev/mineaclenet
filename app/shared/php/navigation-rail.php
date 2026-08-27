@@ -122,22 +122,22 @@ function mineacle_navigation_rail(array $site, array $options = []): void
     $quickLinks = [
         [
             'label' => 'Baltop (Global)',
-            'url' => '/leaderboards?metric=balance',
+            'url' => '/leaderboards?category=players&view=balance&order=desc',
             'icon' => 'balance',
         ],
         [
-            'label' => 'Top Players (Global)',
-            'url' => '/leaderboards?type=players',
-            'icon' => 'top',
-        ],
-        [
             'label' => 'Top Teams (Global)',
-            'url' => '/leaderboards?type=teams',
+            'url' => '/leaderboards?category=teams&view=overall&order=desc',
             'icon' => 'teams',
         ],
         [
+            'label' => 'Top Players (Global)',
+            'url' => '/leaderboards?category=players&view=overall&order=desc',
+            'icon' => 'top',
+        ],
+        [
             'label' => 'Best K/D (Global)',
-            'url' => '/leaderboards?metric=kd',
+            'url' => '/leaderboards?category=players&view=kd&order=desc',
             'icon' => 'kills',
         ],
     ];
@@ -331,12 +331,12 @@ function mineacle_navigation_rail(array $site, array $options = []): void
                             aria-hidden="true"
                         ></span>
 
-                        <span class="site-rail__status-copy">
-                            <small>Currently Playing</small>
-                            <strong data-rail-status-label>
-                                Checking...
-                            </strong>
-                        </span>
+                        <strong
+                            class="site-rail__status-label"
+                            data-rail-status-label
+                        >
+                            Checking server…
+                        </strong>
                     </div>
 
                     <button
@@ -372,11 +372,9 @@ function mineacle_navigation_rail(array $site, array $options = []): void
         >
             <div class="site-join-dialog__panel">
                 <header class="site-join-dialog__header">
-                    <div>
-<h2 id="site-join-dialog-title">
-                            How to Join
-                        </h2>
-                    </div>
+                    <h2 id="site-join-dialog-title">
+                        How to Join
+                    </h2>
 
                     <button
                         class="site-join-dialog__close"

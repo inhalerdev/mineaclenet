@@ -1,15 +1,13 @@
 (() => {
   "use strict";
 
-  const video = document.querySelector(
-    ".home-promo-card__video",
+  const videos = Array.from(
+    document.querySelectorAll(".home-tile__video"),
+  ).filter(
+    (video) => video instanceof HTMLVideoElement,
   );
 
-  if (!(video instanceof HTMLVideoElement)) {
-    return;
-  }
-
-  const requestPlayback = () => {
+  const requestPlayback = (video) => {
     video.muted = true;
     video.defaultMuted = true;
     video.playsInline = true;
@@ -18,33 +16,84 @@
 
     if (playback instanceof Promise) {
       playback.catch(() => {
-        // Browser may wait for the first user gesture.
+        // Some browsers wait for the first user gesture.
       });
     }
   };
 
-  requestPlayback();
+  videos.forEach((video) => {
+    requestPlayback(video);
 
-  video.addEventListener(
-    "canplay",
-    requestPlayback,
-  );
+    video.addEventListener("canplay", () => {
+      requestPlayback(video);
+    });
+  });
 
-  document.addEventListener(
-    "pointerdown",
-    requestPlayback,
-    {
-      once: true,
-      passive: true,
-    },
-  );
+  if (videos.length > 0) {
+    document.addEventListener(
+      "pointerdown",
+      () => {
+        videos.forEach(requestPlayback);
+      },
+      {
+        once: true,
+        passive: true,
+      },
+    );
 
-  document.addEventListener(
-    "visibilitychange",
-    () => {
-      if (!document.hidden && video.paused) {
-        requestPlayback();
-      }
-    },
-  );
+    document.addEventListener(
+      "visibilitychange",
+      () => {
+        if (document.hidden) {
+          return;
+        }
+
+        videos.forEach((video) => {
+          if (video.paused) {
+            requestPlayback(video);
+          }
+        });
+      },
+    );
+  }
+
+  const interactiveSelector = [
+    "a",
+    "button",
+    "input",
+    "select",
+    "textarea",
+    "summary",
+    "[role='button']",
+  ].join(",");
+
+  document
+    .querySelectorAll("[data-home-tile-link]")
+    .forEach((tile) => {
+      tile.addEventListener("click", (event) => {
+        if (
+          !(event.target instanceof Element)
+          || event.target.closest(interactiveSelector)
+        ) {
+          return;
+        }
+
+        const href = tile.dataset.homeTileLink?.trim();
+
+        if (!href || href === "#") {
+          return;
+        }
+
+        if (tile.dataset.homeTileExternal === "true") {
+          window.open(
+            href,
+            "_blank",
+            "noopener,noreferrer",
+          );
+          return;
+        }
+
+        window.location.assign(href);
+      });
+    });
 })();

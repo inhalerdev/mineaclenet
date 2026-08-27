@@ -3,13 +3,12 @@
 declare(strict_types=1);
 
 /**
- * Homepage content source.
+ * Mineacle Home content source.
  *
- * Home renders from this normalized structure instead of hardcoding tile
- * copy in app/home/index.php.
- *
- * The admin UI can later call mineacle_home_content_save() after its own
- * authorization + CSRF checks. This file deliberately exposes no route.
+ * The public Home page reads only this normalized structure. A future admin
+ * editor can call mineacle_home_content_save() after its existing
+ * authorization and CSRF checks. Nothing in this file exposes a public write
+ * route.
  */
 
 function mineacle_home_content_path(): string
@@ -18,11 +17,9 @@ function mineacle_home_content_path(): string
         (string) (getenv('MINEACLE_HOME_CONTENT_PATH') ?: '')
     );
 
-    if ($configured !== '') {
-        return $configured;
-    }
-
-    return '/var/lib/mineacle/home-content.json';
+    return $configured !== ''
+        ? $configured
+        : '/var/lib/mineacle/home-content.json';
 }
 
 /**
@@ -33,27 +30,42 @@ function mineacle_home_content_defaults(): array
     return [
         'hero' => [
             'is_new' => false,
-            'title' => 'A survival world shaped by players.',
+            'published_at' => '',
+            'media_type' => 'video',
+            'media_url' =>
+                'https://pub-a87f1944ab6f4788a1974177e59cf562.r2.dev/hero-bg.mp4',
+            'title' => 'Build a world worth competing for.',
             'description' =>
-                'Build, trade, form teams, and compete in a persistent world powered by a player-driven economy.',
+                'Mineacle is a player-driven survival server where economy, teams, PvP, and progression all connect.',
             'primary_label' => 'View Leaderboards',
             'primary_url' => '/leaderboards',
             'secondary_label' => 'Earn Rewards',
             'secondary_url' => '/vote',
         ],
         'duels' => [
+            'enabled' => true,
+            'order' => 10,
             'is_new' => false,
-            'title' => 'Climb the combat rankings.',
+            'published_at' => '',
+            'media_type' => 'image',
+            'media_url' => '/home/assets/images/duels-slot.png',
+            'title' => 'Prove it in combat.',
             'description' =>
-                'Take on fast PvP fights, improve your record, and see how you stack up against Mineacle’s top killers.',
+                'Fight fast PvP matches and climb Mineacle’s global kill rankings.',
             'button_label' => 'View Top Kills',
-            'button_url' => '/leaderboards?metric=kills',
+            'button_url' =>
+                '/leaderboards?category=players&view=kills&order=desc',
         ],
         'plus' => [
+            'enabled' => true,
+            'order' => 20,
             'is_new' => false,
-            'title' => 'More freedom with Mineacle+.',
+            'published_at' => '',
+            'media_type' => 'image',
+            'media_url' => '/home/assets/images/mineacle-plus-slot.png',
+            'title' => 'Play with fewer limits.',
             'description' =>
-                'Move faster, keep more homes, unlock spawn flight, and expand the way you trade and play.',
+                'Mineacle+ gives you more freedom to travel, trade, build, and personalize how you play.',
             'perks' => [
                 '5 Homes',
                 'Faster Teleports',
@@ -93,17 +105,35 @@ function mineacle_home_content_clean_url(
         str_starts_with($url, '/')
         && !str_starts_with($url, '//')
     ) {
-        return mb_substr($url, 0, 500, 'UTF-8');
+        return mb_substr($url, 0, 700, 'UTF-8');
     }
 
     if (
         filter_var($url, FILTER_VALIDATE_URL) !== false
         && str_starts_with(strtolower($url), 'https://')
     ) {
-        return mb_substr($url, 0, 500, 'UTF-8');
+        return mb_substr($url, 0, 700, 'UTF-8');
     }
 
     return $fallback;
+}
+
+function mineacle_home_content_clean_date(
+    mixed $value
+): string {
+    $date = trim((string) $value);
+
+    if ($date === '') {
+        return '';
+    }
+
+    try {
+        $resolved = new DateTimeImmutable($date);
+    } catch (Throwable) {
+        return '';
+    }
+
+    return $resolved->format(DATE_ATOM);
 }
 
 /**
@@ -117,26 +147,80 @@ function mineacle_home_content_normalize_slot(
 ): array {
     $normalized = $defaults;
 
+    if (array_key_exists('enabled', $defaults)) {
+        $normalized['enabled'] = filter_var(
+            $input['enabled'] ?? $defaults['enabled'],
+            FILTER_VALIDATE_BOOL
+        );
+    }
+
+    if (array_key_exists('order', $defaults)) {
+        $normalized['order'] = max(
+            0,
+            min(
+                1000,
+                (int) ($input['order'] ?? $defaults['order'])
+            )
+        );
+    }
+
     $normalized['is_new'] = filter_var(
         $input['is_new'] ?? $defaults['is_new'] ?? false,
         FILTER_VALIDATE_BOOL
     );
 
+    $normalized['published_at'] =
+        mineacle_home_content_clean_date(
+            $input['published_at']
+            ?? $defaults['published_at']
+            ?? ''
+        );
+
+    $allowedMediaTypes = ['image', 'video'];
+    $mediaType = strtolower(
+        trim(
+            (string) (
+                $input['media_type']
+                ?? $defaults['media_type']
+                ?? 'image'
+            )
+        )
+    );
+
+    $normalized['media_type'] = in_array(
+        $mediaType,
+        $allowedMediaTypes,
+        true
+    )
+        ? $mediaType
+        : (string) ($defaults['media_type'] ?? 'image');
+
+    $normalized['media_url'] =
+        mineacle_home_content_clean_url(
+            $input['media_url']
+            ?? $defaults['media_url']
+            ?? '',
+            (string) ($defaults['media_url'] ?? '')
+        );
+
     foreach (
         [
             'title' => 90,
-            'description' => 220,
+            'description' => 240,
             'primary_label' => 40,
             'secondary_label' => 40,
             'button_label' => 40,
         ] as $field => $maxLength
     ) {
-        if (array_key_exists($field, $defaults)) {
-            $normalized[$field] = mineacle_home_content_clean_text(
+        if (!array_key_exists($field, $defaults)) {
+            continue;
+        }
+
+        $normalized[$field] =
+            mineacle_home_content_clean_text(
                 $input[$field] ?? $defaults[$field],
                 $maxLength
             );
-        }
     }
 
     foreach (
@@ -146,12 +230,15 @@ function mineacle_home_content_normalize_slot(
             'button_url',
         ] as $field
     ) {
-        if (array_key_exists($field, $defaults)) {
-            $normalized[$field] = mineacle_home_content_clean_url(
+        if (!array_key_exists($field, $defaults)) {
+            continue;
+        }
+
+        $normalized[$field] =
+            mineacle_home_content_clean_url(
                 $input[$field] ?? $defaults[$field],
                 (string) $defaults[$field]
             );
-        }
     }
 
     if (array_key_exists('perks', $defaults)) {
@@ -162,7 +249,10 @@ function mineacle_home_content_normalize_slot(
         $cleanPerks = [];
 
         foreach (array_slice($perks, 0, 10) as $perk) {
-            $clean = mineacle_home_content_clean_text($perk, 40);
+            $clean = mineacle_home_content_clean_text(
+                $perk,
+                40
+            );
 
             if ($clean !== '') {
                 $cleanPerks[] = $clean;
@@ -189,7 +279,7 @@ function mineacle_home_content(): array
 
     $raw = file_get_contents($path);
 
-    if (!is_string($raw) || $raw === '') {
+    if (!is_string($raw) || trim($raw) === '') {
         return $defaults;
     }
 
@@ -215,26 +305,59 @@ function mineacle_home_content(): array
             ? $decoded[$slot]
             : [];
 
-        $result[$slot] = mineacle_home_content_normalize_slot(
-            $slotInput,
-            $slotDefaults
-        );
+        $result[$slot] =
+            mineacle_home_content_normalize_slot(
+                $slotInput,
+                $slotDefaults
+            );
     }
 
     return $result;
 }
 
 /**
- * Server-side persistence hook for the future admin editor.
+ * A future-dated feature stays hidden until its publish time.
+ *
+ * @param array<string,mixed> $slot
+ */
+function mineacle_home_content_is_visible(
+    array $slot
+): bool {
+    if (
+        array_key_exists('enabled', $slot)
+        && !$slot['enabled']
+    ) {
+        return false;
+    }
+
+    $publishedAt = trim(
+        (string) ($slot['published_at'] ?? '')
+    );
+
+    if ($publishedAt === '') {
+        return true;
+    }
+
+    try {
+        return new DateTimeImmutable($publishedAt)
+            <= new DateTimeImmutable('now');
+    } catch (Throwable) {
+        return true;
+    }
+}
+
+/**
+ * Server-side persistence hook for the future admin Home editor.
  *
  * IMPORTANT:
- * The admin route must perform authorization and CSRF validation before
- * calling this function. This helper does not make itself web-accessible.
+ * The admin route must perform authorization + CSRF validation before
+ * calling this function.
  *
  * @param array<string,mixed> $input
  */
-function mineacle_home_content_save(array $input): bool
-{
+function mineacle_home_content_save(
+    array $input
+): bool {
     $defaults = mineacle_home_content_defaults();
     $normalized = [];
 
@@ -243,10 +366,11 @@ function mineacle_home_content_save(array $input): bool
             ? $input[$slot]
             : [];
 
-        $normalized[$slot] = mineacle_home_content_normalize_slot(
-            $slotInput,
-            $slotDefaults
-        );
+        $normalized[$slot] =
+            mineacle_home_content_normalize_slot(
+                $slotInput,
+                $slotDefaults
+            );
     }
 
     $path = mineacle_home_content_path();
@@ -267,11 +391,14 @@ function mineacle_home_content_save(array $input): bool
             | JSON_UNESCAPED_UNICODE
             | JSON_THROW_ON_ERROR
         );
+
+        $temporary =
+            $path
+            . '.tmp-'
+            . bin2hex(random_bytes(6));
     } catch (Throwable) {
         return false;
     }
-
-    $temporary = $path . '.tmp-' . bin2hex(random_bytes(6));
 
     if (
         file_put_contents(

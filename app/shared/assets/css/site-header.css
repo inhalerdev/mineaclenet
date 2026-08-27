@@ -36,10 +36,10 @@
 
 .site-header__search-shell {
   position: relative;
-  width: min(640px, 68%);
+  width: min(720px, 72%);
   min-width: 220px;
-  flex: 1 1 420px;
-  max-width: 640px;
+  flex: 1 1 440px;
+  max-width: 720px;
 }
 
 .site-header__search {
@@ -308,7 +308,7 @@
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1120px) {
   .site-header__search-shell {
     width: auto;
     max-width: none;
