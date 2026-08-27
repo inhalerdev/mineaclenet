@@ -1,0 +1,12 @@
+{
+  "name": "mineacle-app",
+  "private": true,
+  "workspaces": [
+    "web"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=@mineacle/web",
+    "build": "npm run build --workspace=@mineacle/web",
+    "typecheck": "npm run typecheck --workspace=@mineacle/web"
+  }
+}
