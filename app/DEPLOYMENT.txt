@@ -1,0 +1,22 @@
+MINEACLE APP DEPLOYMENT ROOT
+
+This entire app/ directory is self-contained.
+
+Configure the Git web app to use:
+  Root directory: app
+  Install command: npm install
+  Build command: npm run build
+  Start command: npm run start
+  Node version: 24
+
+The visual Next.js application lives in:
+  app/web/src
+
+Do not point the web-app root at app/web/src.
+
+next-env.d.ts is not committed intentionally.
+Next.js generates it on the Ubuntu build machine.
+
+Local IntelliJ on a Mac without Node/npm may still warn that packages listed
+in package.json are not installed. Those are local IDE inspection warnings
+only and do not affect the Ubuntu build.
