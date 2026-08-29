@@ -567,3 +567,352 @@
     rgba(17, 17, 17, 0.96) 100%
   );
 }
+
+
+/* v1.8 flat 2D overhaul ----------------------------------------- */
+
+/*
+ * Hero video:
+ * - height drives sizing so the full vertical frame remains visible
+ * - width is allowed to overflow and crop only on the sides
+ * - slightly more negative translate shifts the footage LEFT
+ */
+.mosaic-media--hero {
+  overflow: hidden;
+  background: #181818;
+}
+
+.mosaic-media--hero video {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: auto;
+  min-width: 100%;
+  max-width: none;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  transform: translateX(-56%);
+  filter: none;
+}
+
+.mosaic-card--hero:hover .mosaic-media--hero video {
+  transform: translateX(-56%);
+  filter: none;
+}
+
+/* Flat card surfaces -------------------------------------------- */
+
+.mosaic-card {
+  border: 0;
+  border-radius: 7px;
+  background: #222222;
+  box-shadow: none;
+}
+
+.mosaic-card--hero:hover {
+  transform: none;
+}
+
+.mosaic-card--plus:hover,
+.mosaic-card--rewards:hover,
+.mosaic-card--competitive:hover {
+  transform: translateY(-2px);
+}
+
+.mosaic-media,
+.mosaic-media__placeholder {
+  background: #2b2b2b;
+}
+
+.mosaic-media__placeholder {
+  color: #6f6f6f;
+}
+
+.mosaic-media__placeholder::before,
+.mosaic-media__placeholder::after {
+  display: none;
+}
+
+.mosaic-card:hover .mosaic-media__placeholder {
+  filter: none;
+}
+
+/*
+ * Remove glassy/gradient treatment.
+ * Text gets its own flat dark content plane instead.
+ */
+.mosaic-card__shade,
+.mosaic-card__shade--hero,
+.mosaic-card__shade--wide,
+.mosaic-card:hover .mosaic-card__shade,
+.mosaic-card:hover .mosaic-card__shade--wide,
+.mosaic-card--hero:hover .mosaic-card__shade--hero {
+  background: transparent;
+}
+
+.mosaic-card__content {
+  background: rgba(20, 20, 20, 0.96);
+}
+
+.mosaic-card__content--hero {
+  right: 14px;
+  bottom: 14px;
+  left: 14px;
+  width: auto;
+  padding: 20px;
+  border-radius: 6px;
+}
+
+.mosaic-card__content--compact {
+  right: 12px;
+  bottom: 12px;
+  left: 12px;
+  width: auto;
+  padding: 17px 18px;
+  border-radius: 6px;
+}
+
+.mosaic-card__content--wide {
+  top: auto;
+  right: auto;
+  bottom: 14px;
+  left: 14px;
+  width: min(48%, 500px);
+  min-height: 0;
+  justify-content: flex-start;
+  padding: 18px 20px;
+  border-radius: 6px;
+}
+
+/* Cleaner hierarchy --------------------------------------------- */
+
+.mosaic-eyebrow {
+  color: var(--accent);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+}
+
+.mosaic-title {
+  margin-top: 5px;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+}
+
+.mosaic-title--hero {
+  max-width: 12ch;
+  font-size: clamp(31px, 2.7vw, 47px);
+}
+
+.mosaic-title--small {
+  font-size: clamp(22px, 1.65vw, 29px);
+}
+
+.mosaic-title--wide {
+  max-width: 14ch;
+  font-size: clamp(25px, 1.95vw, 34px);
+}
+
+.mosaic-copy {
+  max-width: 39ch;
+  margin-top: 7px;
+  color: #bbbbbb;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.mosaic-copy--compact {
+  max-width: 34ch;
+  margin-top: 6px;
+  font-size: 10px;
+}
+
+.mosaic-copy--wide {
+  max-width: 42ch;
+}
+
+/*
+ * Feature CTA becomes a small flat action chip instead of
+ * another floating text element.
+ */
+.mosaic-link {
+  min-height: 29px;
+  margin-top: 11px;
+  padding: 0 10px;
+  border-radius: 5px;
+  background: #252525;
+  color: #f8f8f8;
+  font-size: 10px;
+  gap: 6px;
+  transition:
+    background var(--ease-fast),
+    color var(--ease-fast);
+}
+
+.mosaic-card--plus:hover .mosaic-link,
+.mosaic-card--rewards:hover .mosaic-link,
+.mosaic-card--competitive:hover .mosaic-link {
+  background: #303030;
+  color: var(--accent-hover);
+}
+
+.mosaic-card:hover .mosaic-link svg {
+  transform: translateX(2px);
+}
+
+.competitive-categories {
+  margin-top: 10px;
+  gap: 5px;
+}
+
+.competitive-categories > span {
+  padding: 4px 7px;
+  border: 0;
+  border-radius: 4px;
+  background: #272727;
+  color: #bbbbbb;
+  font-size: 8px;
+}
+
+/* Hero utilities: fully flat ------------------------------------ */
+
+.hero-status {
+  top: 16px;
+  left: 16px;
+  min-height: 28px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 5px;
+  background: #181818;
+  backdrop-filter: none;
+  font-size: 9px;
+}
+
+.status-light {
+  width: 6px;
+  height: 6px;
+  box-shadow: none;
+}
+
+.hero-actions {
+  margin-top: 14px;
+  gap: 7px;
+}
+
+.cta-button,
+.ghost-button {
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: 5px;
+  font-size: 10px;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.cta-button {
+  border: 0;
+}
+
+.ghost-button {
+  border: 0;
+  background: #292929;
+}
+
+.ghost-button:hover {
+  background: #333333;
+  color: var(--accent-hover);
+}
+
+.server-address {
+  right: 16px;
+  bottom: auto;
+  top: 16px;
+  min-width: 132px;
+  min-height: 40px;
+  padding: 7px 9px;
+  border: 0;
+  border-radius: 5px;
+  background: #181818;
+  backdrop-filter: none;
+}
+
+.server-address:hover {
+  border: 0;
+  background: #252525;
+  transform: none;
+}
+
+/* Flat media hover ---------------------------------------------- */
+
+.mosaic-card--plus .mosaic-media img,
+.mosaic-card--rewards .mosaic-media img,
+.mosaic-card--competitive .mosaic-media img {
+  transform: scale(1.001);
+  transition: transform var(--ease-image);
+}
+
+.mosaic-card--plus:hover .mosaic-media img,
+.mosaic-card--rewards:hover .mosaic-media img,
+.mosaic-card--competitive:hover .mosaic-media img {
+  transform: scale(1.02);
+}
+
+@media (max-width: 1180px) {
+  .mosaic-card__content--wide {
+    width: 58%;
+  }
+}
+
+@media (max-width: 800px) {
+  .mosaic-media--hero video {
+    left: 50%;
+    width: 100%;
+    min-width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: translateX(-50%);
+  }
+
+  .mosaic-card--hero:hover .mosaic-media--hero video {
+    transform: translateX(-50%);
+  }
+
+  .mosaic-card__content--hero {
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+    padding: 15px;
+  }
+
+  .mosaic-card__content--compact {
+    right: 8px;
+    bottom: 8px;
+    left: 8px;
+    padding: 11px;
+  }
+
+  .mosaic-card__content--wide {
+    right: 8px;
+    bottom: 8px;
+    left: 8px;
+    width: auto;
+    padding: 12px;
+  }
+
+  .mosaic-copy--compact,
+  .mosaic-copy--wide {
+    display: none;
+  }
+
+  .hero-status {
+    top: 10px;
+    left: 10px;
+  }
+
+  .server-address {
+    top: 10px;
+    right: 10px;
+    bottom: auto;
+  }
+}
