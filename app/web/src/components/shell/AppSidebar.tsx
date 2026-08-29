@@ -2,26 +2,29 @@
 
 import type { CSSProperties } from "react";
 import { useState } from "react";
-import { homeNavigation, type HomeNavIcon } from "@/lib/home-content";
+import {
+  siteNavigation,
+  type SiteNavIcon,
+} from "@/shared/navigation/site-navigation";
 
-const navIconPaths: Record<HomeNavIcon, string> = {
-  home: "/ui/icons/home.png",
-  leaderboard: "/ui/icons/leaderboards.png",
-  rewards: "/ui/icons/rewards.png",
-  punishments: "/ui/icons/punishments.png",
-  marketplace: "/ui/icons/marketplace.png",
+const NAV_ICON_PATHS: Record<SiteNavIcon, string> = {
+  home: "/shared/images/icons/navigation/home.png",
+  leaderboard: "/shared/images/icons/navigation/leaderboards.png",
+  rewards: "/shared/images/icons/navigation/rewards.png",
+  punishments: "/shared/images/icons/navigation/punishments.png",
+  marketplace: "/shared/images/icons/navigation/marketplace.png",
 };
 
-const socialLinks = [
+const SOCIAL_LINKS = [
   {
     label: "Discord",
     href: "#",
-    icon: "/ui/social/discord.png",
+    icon: "/shared/images/social/discord.png",
   },
   {
     label: "X",
     href: "#",
-    icon: "/ui/social/x.png",
+    icon: "/shared/images/social/x.png",
   },
 ] as const;
 
@@ -46,15 +49,15 @@ function AssetIcon({
   );
 }
 
-function NavIcon({ icon }: { icon: HomeNavIcon }) {
-  return <AssetIcon src={navIconPaths[icon]} />;
+function NavIcon({ icon }: { icon: SiteNavIcon }) {
+  return <AssetIcon src={NAV_ICON_PATHS[icon]} />;
 }
 
 function MobileMenuIcon({ open }: { open: boolean }) {
   return (
     <span className="menu-icon" aria-hidden="true">
       {open ? (
-        <AssetIcon src="/ui/icons/close.png" />
+        <AssetIcon src="/shared/images/icons/actions/close.png" />
       ) : (
         <>
           <span />
@@ -73,25 +76,32 @@ export function AppSidebar() {
     <>
       <aside className="site-sidebar">
         <div className="sidebar-head">
-          <a className="sidebar-brand" href="/" aria-label="Reload Mineacle home">
+          <a className="sidebar-brand" href="/" aria-label="Mineacle home">
             <span className="sidebar-brand__mark">
-              <img src="/ui/mineacle-mark.png" alt="" />
+              <img
+                src="/shared/images/branding/mineacle-mark.png"
+                alt=""
+              />
             </span>
             <img
               className="sidebar-brand__wordmark"
-              src="/mineacle-logo.png"
+              src="/shared/images/branding/mineacle-logo.png"
               alt="Mineacle"
             />
           </a>
         </div>
 
         <nav className="sidebar-nav" aria-label="Primary navigation">
-          {homeNavigation.map((item) => (
+          {siteNavigation.map((item) => (
             <a
-              className={`sidebar-nav__item ${item.href === "/" ? "is-active" : ""}`}
+              className={`sidebar-nav__item ${
+                item.href === "/" ? "is-active" : ""
+              }`}
               href={item.href}
               key={item.label}
-              {...(item.external ? { target: "_blank", rel: "noreferrer" } : {})}
+              {...(item.external
+                ? { target: "_blank", rel: "noreferrer" }
+                : {})}
             >
               <span className="sidebar-nav__icon">
                 <NavIcon icon={item.icon} />
@@ -108,7 +118,7 @@ export function AppSidebar() {
 
         <div className="sidebar-actions">
           <div className="sidebar-socials" aria-label="Mineacle social links">
-            {socialLinks.map((social) => (
+            {SOCIAL_LINKS.map((social) => (
               <a
                 aria-label={social.label}
                 className="sidebar-social-link"
@@ -118,14 +128,16 @@ export function AppSidebar() {
                 <span className="sidebar-social-link__icon">
                   <AssetIcon src={social.icon} />
                 </span>
-                <span className="sidebar-social-link__label">{social.label}</span>
+                <span className="sidebar-social-link__label">
+                  {social.label}
+                </span>
               </a>
             ))}
           </div>
 
           <a className="sidebar-account-action" href="/login">
             <span className="sidebar-account-action__icon">
-              <AssetIcon src="/ui/icons/user.png" />
+              <AssetIcon src="/shared/images/icons/actions/user.png" />
             </span>
             <span className="sidebar-account-action__copy">
               <small>Mineacle</small>
@@ -146,8 +158,11 @@ export function AppSidebar() {
           <MobileMenuIcon open={mobileOpen} />
         </button>
 
-        <a className="mobile-brand" href="/" aria-label="Reload Mineacle home">
-          <img src="/ui/mineacle-mark.png" alt="Mineacle" />
+        <a className="mobile-brand" href="/" aria-label="Mineacle home">
+          <img
+            src="/shared/images/branding/mineacle-mark.png"
+            alt="Mineacle"
+          />
         </a>
 
         <a
@@ -155,7 +170,7 @@ export function AppSidebar() {
           href="/login"
           aria-label="Mineacle account"
         >
-          <AssetIcon src="/ui/icons/user.png" />
+          <AssetIcon src="/shared/images/icons/actions/user.png" />
         </a>
       </header>
 
@@ -169,13 +184,15 @@ export function AppSidebar() {
 
         <div className="mobile-drawer__panel">
           <nav aria-label="Mobile navigation">
-            {homeNavigation.map((item) => (
+            {siteNavigation.map((item) => (
               <a
                 className={item.href === "/" ? "is-active" : ""}
                 href={item.href}
                 key={item.label}
                 onClick={() => setMobileOpen(false)}
-                {...(item.external ? { target: "_blank", rel: "noreferrer" } : {})}
+                {...(item.external
+                  ? { target: "_blank", rel: "noreferrer" }
+                  : {})}
               >
                 <NavIcon icon={item.icon} />
                 <span>{item.label}</span>
@@ -185,9 +202,13 @@ export function AppSidebar() {
           </nav>
 
           <div className="mobile-drawer__bottom">
-            <div className="mobile-socials" aria-label="Mineacle social links">
-              {socialLinks.map((social) => (
-                <a aria-label={social.label} href={social.href} key={social.label}>
+            <div className="mobile-socials">
+              {SOCIAL_LINKS.map((social) => (
+                <a
+                  aria-label={social.label}
+                  href={social.href}
+                  key={social.label}
+                >
                   <AssetIcon src={social.icon} />
                   <span>{social.label}</span>
                 </a>
@@ -195,7 +216,7 @@ export function AppSidebar() {
             </div>
 
             <a className="mobile-account-link" href="/login">
-              <AssetIcon src="/ui/icons/user.png" />
+              <AssetIcon src="/shared/images/icons/actions/user.png" />
               <span>Log in / Sign up</span>
             </a>
           </div>

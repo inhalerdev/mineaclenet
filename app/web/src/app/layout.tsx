@@ -1,10 +1,10 @@
 import type { ReactNode } from "react";
 import "./globals.css";
-import "./homepage-polish.css";
 
 export const metadata = {
   title: "Home | Mineacle",
-  description: "Mineacle SMP — play, compete, vote, and connect with the community.",
+  description:
+    "Mineacle SMP — play, compete, vote, and connect with the community.",
 };
 
 export const viewport = {
