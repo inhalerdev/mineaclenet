@@ -1,5 +1,4 @@
 import { AppSidebar } from "@/components/shell/AppSidebar";
-import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { PlayButton } from "@/components/ui/PlayButton";
 import { homeContent } from "@/lib/home-content";
 
@@ -77,6 +76,7 @@ function PromoPanel({
     <a className={`mosaic-card mosaic-card--${variant}`} href={href}>
       <PanelMedia alt={imageLabel} src={image} variant={variant} />
       <span className="mosaic-card__shade" aria-hidden="true" />
+
       <span className="mosaic-card__content mosaic-card__content--compact">
         <span className="mosaic-eyebrow">{eyebrow}</span>
         <strong className="mosaic-title mosaic-title--small">{title}</strong>
@@ -119,15 +119,20 @@ export function HomeWireframe() {
               <span aria-hidden="true"> / </span>
               {homeContent.season}
             </span>
-            <h1 className="mosaic-title mosaic-title--hero">{homeContent.hero.title}</h1>
+
+            <h1 className="mosaic-title mosaic-title--hero">
+              {homeContent.hero.title}
+            </h1>
+
             <p className="mosaic-copy">{homeContent.hero.body}</p>
+
             <div className="hero-actions">
               <PlayButton address={homeContent.server.address} />
-              <button className="ghost-button" type="button">How to join</button>
+              <button className="hero-how-to" type="button">
+                How to join →
+              </button>
             </div>
           </div>
-
-          <CopyAddressButton address={homeContent.server.address} />
         </section>
 
         <PromoPanel {...homeContent.mineaclePlus} variant="plus" />
@@ -143,13 +148,19 @@ export function HomeWireframe() {
 
           <span className="mosaic-card__content mosaic-card__content--wide">
             <span className="mosaic-eyebrow">{homeContent.competitive.eyebrow}</span>
-            <strong className="mosaic-title mosaic-title--wide">{homeContent.competitive.title}</strong>
-            <span className="mosaic-copy mosaic-copy--wide">{homeContent.competitive.body}</span>
+            <strong className="mosaic-title mosaic-title--wide">
+              {homeContent.competitive.title}
+            </strong>
+            <span className="mosaic-copy mosaic-copy--wide">
+              {homeContent.competitive.body}
+            </span>
+
             <span className="competitive-categories" aria-label="Leaderboard categories">
               {homeContent.competitive.categories.map((category) => (
                 <span key={category}>{category}</span>
               ))}
             </span>
+
             <FeatureLink label={homeContent.competitive.action} />
           </span>
         </a>
