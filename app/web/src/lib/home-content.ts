@@ -40,8 +40,8 @@ export const homeContent = {
     body: "Extra perks for players who want more from the season.",
     action: "View Mineacle+",
     href: "#",
-    image: "",
-    imageLabel: "Mineacle+ artwork",
+    image: "/home/mineacle-plus-showcase.png",
+    imageLabel: "Mineacle+ showcase artwork",
   },
   rewards: {
     eyebrow: "Vote & earn",
@@ -58,8 +58,8 @@ export const homeContent = {
     body: "See the players and teams leading Mineacle.",
     action: "View rankings",
     href: "/leaderboards",
-    image: "",
-    imageLabel: "Competitive season artwork",
+    image: "/home/leaderboards-duel-showcase.png",
+    imageLabel: "Competitive duel showcase artwork",
     categories: ["Players", "Teams", "K/D", "Balance"],
   },
 };
