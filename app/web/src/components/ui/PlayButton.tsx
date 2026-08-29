@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { useState } from "react";
 
 type PlayButtonProps = {
@@ -25,13 +26,18 @@ export function PlayButton({
     }
   }
 
+  const playIconStyle: CSSProperties = {
+    WebkitMaskImage: 'url("/ui/icons/play.png")',
+    maskImage: 'url("/ui/icons/play.png")',
+  };
+
   return (
     <button
       className={`cta-button ${compact ? "cta-button--compact" : ""} ${className}`.trim()}
       onClick={copyAddress}
       type="button"
     >
-      <span className="cta-button__icon" aria-hidden="true" />
+      <span className="cta-button__icon" style={playIconStyle} aria-hidden="true" />
       {copied ? "IP Copied" : "Play Mineacle"}
     </button>
   );

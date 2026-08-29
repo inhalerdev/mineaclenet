@@ -667,8 +667,12 @@ button {
   height: 13px;
   margin-right: 8px;
   background: currentColor;
-  -webkit-mask: url("/ui/icons/play.png") center / contain no-repeat;
-  mask: url("/ui/icons/play.png") center / contain no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
 }
 
 .ghost-button {
@@ -744,8 +748,12 @@ button {
   height: 16px;
   flex: 0 0 auto;
   background: var(--muted);
-  -webkit-mask: url("/ui/icons/copy.png") center / contain no-repeat;
-  mask: url("/ui/icons/copy.png") center / contain no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
   transition:
     background var(--ease-fast),
     transform var(--ease-fast);

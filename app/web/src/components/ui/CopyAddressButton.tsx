@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { useState } from "react";
 
 export function CopyAddressButton({ address }: { address: string }) {
@@ -15,6 +16,11 @@ export function CopyAddressButton({ address }: { address: string }) {
     }
   }
 
+  const copyIconStyle: CSSProperties = {
+    WebkitMaskImage: 'url("/ui/icons/copy.png")',
+    maskImage: 'url("/ui/icons/copy.png")',
+  };
+
   return (
     <button
       className="server-address"
@@ -26,7 +32,7 @@ export function CopyAddressButton({ address }: { address: string }) {
         <small>Server IP</small>
         <strong>{copied ? "Copied" : address}</strong>
       </span>
-      <span className="server-address__icon" aria-hidden="true" />
+      <span className="server-address__icon" style={copyIconStyle} aria-hidden="true" />
     </button>
   );
 }
