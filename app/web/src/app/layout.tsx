@@ -1,27 +1,25 @@
-import { AppHeader } from "@/components/shell/AppHeader";
+import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata = {
-  title: "Mineacle",
-  description: "Mineacle web application",
+  title: "Home | Mineacle",
+  description: "Mineacle SMP — play, compete, vote, and connect with the community.",
 };
 
 export const viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: "#111111",
 };
 
 type RootLayoutProps = {
-  children: any;
+  children: ReactNode;
 };
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
-      <body>
-        <AppHeader />
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
