@@ -36,7 +36,7 @@ export const homeContent = {
     body: "See the players and teams leading Mineacle.",
     action: "View rankings",
     href: "/leaderboards",
-    media: "/images/home/leaderboards-duel.png",
+    media: "/images/home/leaderboards.png",
     mediaLabel: "Competitive duel showcase artwork",
     categories: ["Players", "Teams", "K/D", "Balance"],
   },
