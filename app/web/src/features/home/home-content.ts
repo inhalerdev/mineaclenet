@@ -1,0 +1,43 @@
+export const homeContent = {
+  season: "Season 03",
+  server: {
+    address: "mineacle.net",
+    statusLabel: "Online",
+    playerCount: "",
+  },
+  hero: {
+    eyebrow: "Mineacle SMP",
+    title: "A world worth staying for.",
+    body: "Build, trade, compete, and make your mark.",
+    media: "https://pub-a87f1944ab6f4788a1974177e59cf562.r2.dev/hero-bg.mp4",
+    mediaLabel: "Mineacle seasonal world",
+  },
+  mineaclePlus: {
+    eyebrow: "Monthly membership",
+    title: "Mineacle+",
+    body: "Extra perks for players who want more from the season.",
+    action: "View Mineacle+",
+    href: "#",
+    media: "/images/home/mineacle-plus.png",
+    mediaLabel: "Mineacle+ showcase artwork",
+  },
+  rewards: {
+    eyebrow: "Vote & earn",
+    title: "Free crate keys.",
+    body: "Vote for Mineacle and collect rewards in game.",
+    action: "Earn keys",
+    href: "/vote",
+    media: "",
+    mediaLabel: "Vote and crate key artwork",
+  },
+  competitive: {
+    eyebrow: "Global leaderboards",
+    title: "Own the season.",
+    body: "See the players and teams leading Mineacle.",
+    action: "View rankings",
+    href: "/leaderboards",
+    media: "/images/home/leaderboards-duel.png",
+    mediaLabel: "Competitive duel showcase artwork",
+    categories: ["Players", "Teams", "K/D", "Balance"],
+  },
+};
