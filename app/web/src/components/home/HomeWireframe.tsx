@@ -1,4 +1,5 @@
 import { AppSidebar } from "@/components/shell/AppSidebar";
+import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { PlayButton } from "@/components/ui/PlayButton";
 import { homeContent } from "@/lib/home-content";
 
@@ -114,10 +115,7 @@ export function HomeWireframe() {
             </div>
           </div>
 
-          <button className="server-address" type="button" aria-label={`Copy ${homeContent.server.address}`}>
-            <span>Server IP</span>
-            <strong>{homeContent.server.address}</strong>
-          </button>
+          <CopyAddressButton address={homeContent.server.address} />
         </section>
 
         <PromoPanel {...homeContent.mineaclePlus} variant="plus" />

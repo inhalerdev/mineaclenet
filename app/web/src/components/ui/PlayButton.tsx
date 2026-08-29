@@ -8,7 +8,11 @@ type PlayButtonProps = {
   compact?: boolean;
 };
 
-export function PlayButton({ address, className = "", compact = false }: PlayButtonProps) {
+export function PlayButton({
+  address,
+  className = "",
+  compact = false,
+}: PlayButtonProps) {
   const [copied, setCopied] = useState(false);
 
   async function copyAddress() {
@@ -27,7 +31,7 @@ export function PlayButton({ address, className = "", compact = false }: PlayBut
       onClick={copyAddress}
       type="button"
     >
-      <span className="cta-button__dot" aria-hidden="true" />
+      <span className="cta-button__icon" aria-hidden="true" />
       {copied ? "IP Copied" : "Play Mineacle"}
     </button>
   );
