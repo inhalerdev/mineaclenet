@@ -7,8 +7,8 @@ export const homeContent = {
   },
   hero: {
     eyebrow: "Mineacle SMP",
-    title: "A world worth staying for.",
-    body: "Build, trade, compete, and make your mark.",
+    title: "Join Mineacle. Make your mark.",
+    body: "Build wealth, form a team, fight rivals, and leave your name on the season.",
     media: "https://pub-a87f1944ab6f4788a1974177e59cf562.r2.dev/hero-bg.mp4",
     mediaLabel: "Mineacle seasonal world",
   },

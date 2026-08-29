@@ -46,7 +46,13 @@ export function PlayButton({
         style={playIconStyle}
         aria-hidden="true"
       />
-      {copied ? "IP Copied" : "Play Mineacle"}
+
+      <span className="cta-button__copy">
+        <span className="cta-button__label">Join Mineacle</span>
+        <span className="cta-button__address">
+          {copied ? "IP copied — open Minecraft" : `${address} · copy IP`}
+        </span>
+      </span>
     </button>
   );
 }
