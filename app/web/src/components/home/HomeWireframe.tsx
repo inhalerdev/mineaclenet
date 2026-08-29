@@ -17,16 +17,25 @@ function ArrowIcon() {
   );
 }
 
-type PanelImageProps = {
+type PanelMediaProps = {
   src: string;
   alt: string;
   variant: "hero" | "plus" | "rewards" | "competitive";
 };
 
-function PanelImage({ src, alt, variant }: PanelImageProps) {
+function PanelMedia({ src, alt, variant }: PanelMediaProps) {
+  const isVideo = src.toLowerCase().split("?")[0].endsWith(".mp4");
+
   return (
     <div className={`mosaic-media mosaic-media--${variant}`}>
-      {src ? <img alt={alt} src={src} /> : null}
+      {src && isVideo ? (
+        <video aria-label={alt} autoPlay loop muted playsInline preload="auto">
+          <source src={src} type="video/mp4" />
+        </video>
+      ) : null}
+
+      {src && !isVideo ? <img alt={alt} src={src} /> : null}
+
       {!src ? (
         <div className="mosaic-media__placeholder" aria-label={alt}>
           <span>{alt}</span>
@@ -66,7 +75,7 @@ function PromoPanel({
 }) {
   return (
     <a className={`mosaic-card mosaic-card--${variant}`} href={href}>
-      <PanelImage alt={imageLabel} src={image} variant={variant} />
+      <PanelMedia alt={imageLabel} src={image} variant={variant} />
       <span className="mosaic-card__shade" aria-hidden="true" />
       <span className="mosaic-card__content mosaic-card__content--compact">
         <span className="mosaic-eyebrow">{eyebrow}</span>
@@ -85,7 +94,7 @@ export function HomeWireframe() {
 
       <main className="home-mosaic" aria-label="Mineacle homepage">
         <section className="mosaic-card mosaic-card--hero">
-          <PanelImage
+          <PanelMedia
             alt={homeContent.hero.imageLabel}
             src={homeContent.hero.image}
             variant="hero"
@@ -114,9 +123,7 @@ export function HomeWireframe() {
             <p className="mosaic-copy">{homeContent.hero.body}</p>
             <div className="hero-actions">
               <PlayButton address={homeContent.server.address} />
-              <button className="ghost-button" type="button">
-                How to join
-              </button>
+              <button className="ghost-button" type="button">How to join</button>
             </div>
           </div>
 
@@ -127,7 +134,7 @@ export function HomeWireframe() {
         <PromoPanel {...homeContent.rewards} variant="rewards" />
 
         <a className="mosaic-card mosaic-card--competitive" href={homeContent.competitive.href}>
-          <PanelImage
+          <PanelMedia
             alt={homeContent.competitive.imageLabel}
             src={homeContent.competitive.image}
             variant="competitive"

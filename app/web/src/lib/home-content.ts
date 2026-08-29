@@ -31,8 +31,8 @@ export const homeContent = {
     eyebrow: "Mineacle SMP",
     title: "A world worth staying for.",
     body: "Explore, build, trade, compete, and make your mark on the season.",
-    image: "",
-    imageLabel: "Season artwork",
+    image: "https://pub-a87f1944ab6f4788a1974177e59cf562.r2.dev/hero-bg.mp4",
+    imageLabel: "Mineacle seasonal world",
   },
   mineaclePlus: {
     eyebrow: "Monthly membership",

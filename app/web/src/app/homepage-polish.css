@@ -476,3 +476,65 @@
     font-size: clamp(21px, 5vw, 28px);
   }
 }
+
+
+/* v1.7 logo, hero media, and active navigation ------------------ */
+
+.sidebar-brand__wordmark {
+  left: 5px;
+  width: 126px;
+  max-height: 44px;
+}
+
+.sidebar-brand__mark img {
+  width: 40px;
+  height: 40px;
+}
+
+.sidebar-nav__item.is-active {
+  background: transparent;
+  color: var(--muted);
+}
+
+.sidebar-nav__item.is-active::before {
+  display: none;
+  content: none;
+}
+
+.sidebar-nav__item.is-active .sidebar-nav__icon,
+.sidebar-nav__item.is-active .sidebar-nav__label {
+  color: var(--accent);
+}
+
+.site-sidebar:hover .sidebar-nav__item.is-active {
+  background: rgba(176, 120, 255, 0.06);
+}
+
+.site-sidebar:hover .sidebar-nav__item.is-active .sidebar-nav__icon,
+.site-sidebar:hover .sidebar-nav__item.is-active .sidebar-nav__label {
+  color: var(--accent-hover);
+}
+
+.mosaic-media video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1.001);
+  transition:
+    transform var(--ease-image),
+    filter var(--ease-image);
+}
+
+.mosaic-card:hover .mosaic-media video {
+  transform: scale(1.025);
+}
+
+.mosaic-media--hero video {
+  filter: saturate(0.94) brightness(0.9);
+}
+
+.mosaic-card--hero:hover .mosaic-media--hero video {
+  filter: saturate(1) brightness(0.94);
+}
