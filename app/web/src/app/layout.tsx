@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import "./globals.css";
+import "./homepage-polish.css";
 
 export const metadata = {
   title: "Home | Mineacle",

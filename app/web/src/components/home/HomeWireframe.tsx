@@ -95,8 +95,13 @@ export function HomeWireframe() {
           <div className="hero-status">
             <span className="status-light" aria-hidden="true" />
             <span>{homeContent.server.statusLabel}</span>
-            <strong>{homeContent.server.playerCount}</strong>
-            <span>players</span>
+            {homeContent.server.playerCount ? (
+              <>
+                <span className="hero-status__divider" aria-hidden="true" />
+                <strong>{homeContent.server.playerCount}</strong>
+                <span>players</span>
+              </>
+            ) : null}
           </div>
 
           <div className="mosaic-card__content mosaic-card__content--hero">

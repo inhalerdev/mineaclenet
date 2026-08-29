@@ -25,7 +25,7 @@ export const homeContent = {
   server: {
     address: "mineacle.net",
     statusLabel: "Online",
-    playerCount: "—",
+    playerCount: "",
   },
   hero: {
     eyebrow: "Mineacle SMP",

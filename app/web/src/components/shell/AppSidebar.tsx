@@ -12,6 +12,19 @@ const navIconPaths: Record<HomeNavIcon, string> = {
   marketplace: "/ui/icons/marketplace.png",
 };
 
+const socialLinks = [
+  {
+    label: "Discord",
+    href: "#",
+    icon: "/ui/social/discord.png",
+  },
+  {
+    label: "X",
+    href: "#",
+    icon: "/ui/social/x.png",
+  },
+] as const;
+
 function AssetIcon({
   src,
   className = "",
@@ -105,19 +118,27 @@ export function AppSidebar() {
         <div className="sidebar-spacer" />
 
         <div className="sidebar-actions">
-          <a className="sidebar-mini-action" href="#">
-            <span className="sidebar-mini-action__icon" aria-hidden="true">#</span>
-            <span className="sidebar-mini-action__copy">
-              <small>Community</small>
-              <strong>Discord</strong>
-            </span>
-          </a>
+          <div className="sidebar-socials" aria-label="Mineacle social links">
+            {socialLinks.map((social) => (
+              <a
+                aria-label={social.label}
+                className="sidebar-social-link"
+                href={social.href}
+                key={social.label}
+              >
+                <span className="sidebar-social-link__icon">
+                  <AssetIcon src={social.icon} />
+                </span>
+                <span className="sidebar-social-link__label">{social.label}</span>
+              </a>
+            ))}
+          </div>
 
-          <a className="sidebar-mini-action" href="/login">
-            <span className="sidebar-mini-action__icon">
+          <a className="sidebar-account-action" href="/login">
+            <span className="sidebar-account-action__icon">
               <AssetIcon src="/ui/icons/user.png" />
             </span>
-            <span className="sidebar-mini-action__copy">
+            <span className="sidebar-account-action__copy">
               <small>Mineacle</small>
               <strong>Account</strong>
             </span>
@@ -175,8 +196,18 @@ export function AppSidebar() {
           </nav>
 
           <div className="mobile-drawer__bottom">
-            <a href="#">Join Discord</a>
-            <a href="/login">Log in / Sign up</a>
+            <div className="mobile-socials" aria-label="Mineacle social links">
+              {socialLinks.map((social) => (
+                <a aria-label={social.label} href={social.href} key={social.label}>
+                  <AssetIcon src={social.icon} />
+                  <span>{social.label}</span>
+                </a>
+              ))}
+            </div>
+            <a className="mobile-account-link" href="/login">
+              <AssetIcon src="/ui/icons/user.png" />
+              <span>Log in / Sign up</span>
+            </a>
           </div>
         </div>
       </div>
