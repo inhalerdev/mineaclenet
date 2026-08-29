@@ -12,7 +12,7 @@ export const homeContent = {
     mediaLabel: "Rewards artwork",
   },
   competitive: {
-    media: "/images/home/leaderboards-duel.png",
+    media: "/images/home/leaderboards.png",
     mediaLabel: "Competitive duel showcase artwork",
   },
 };
