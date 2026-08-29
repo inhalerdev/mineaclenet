@@ -50,7 +50,7 @@ function NavIcon({ icon }: { icon: HomeNavIcon }) {
   return <AssetIcon src={navIconPaths[icon]} />;
 }
 
-function MenuIcon({ open }: { open: boolean }) {
+function MobileMenuIcon({ open }: { open: boolean }) {
   return (
     <span className="menu-icon" aria-hidden="true">
       {open ? (
@@ -67,12 +67,11 @@ function MenuIcon({ open }: { open: boolean }) {
 }
 
 export function AppSidebar() {
-  const [expanded, setExpanded] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <>
-      <aside className={`site-sidebar ${expanded ? "is-expanded" : ""}`}>
+      <aside className="site-sidebar">
         <div className="sidebar-head">
           <a className="sidebar-brand" href="/" aria-label="Reload Mineacle home">
             <span className="sidebar-brand__mark">
@@ -84,16 +83,6 @@ export function AppSidebar() {
               alt="Mineacle"
             />
           </a>
-
-          <button
-            aria-expanded={expanded}
-            aria-label={expanded ? "Collapse navigation" : "Expand navigation"}
-            className="sidebar-toggle"
-            onClick={() => setExpanded((value) => !value)}
-            type="button"
-          >
-            <MenuIcon open={expanded} />
-          </button>
         </div>
 
         <nav className="sidebar-nav" aria-label="Primary navigation">
@@ -154,7 +143,7 @@ export function AppSidebar() {
           onClick={() => setMobileOpen((value) => !value)}
           type="button"
         >
-          <MenuIcon open={mobileOpen} />
+          <MobileMenuIcon open={mobileOpen} />
         </button>
 
         <a className="mobile-brand" href="/" aria-label="Reload Mineacle home">
@@ -204,6 +193,7 @@ export function AppSidebar() {
                 </a>
               ))}
             </div>
+
             <a className="mobile-account-link" href="/login">
               <AssetIcon src="/ui/icons/user.png" />
               <span>Log in / Sign up</span>

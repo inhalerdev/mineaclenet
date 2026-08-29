@@ -1,22 +1,59 @@
 /*
- * Mineacle homepage polish overrides.
- * Kept separate from globals.css so the existing mosaic system remains intact.
+ * Mineacle homepage v1.6
+ * Hover-only rail + streamlined media card presentation.
  */
 
-/* Sidebar header ------------------------------------------------ */
+:root {
+  --sidebar-collapsed: 58px;
+  --sidebar-expanded: 198px;
+  --gap: 14px;
+}
+
+/* Hover-only rail ------------------------------------------------ */
+
+.site-sidebar {
+  width: var(--sidebar-collapsed);
+  padding: 10px 7px;
+  transition:
+    width var(--ease-fast),
+    box-shadow var(--ease-fast),
+    background var(--ease-fast);
+}
+
+.site-sidebar:hover {
+  width: var(--sidebar-expanded);
+  background: #181818;
+  box-shadow:
+    16px 0 38px rgba(0, 0, 0, 0.42),
+    1px 0 0 rgba(255, 255, 255, 0.035);
+}
+
+/*
+ * globals.css also contains focus/is-expanded rules from earlier versions.
+ * Neutralize them so desktop expansion is pointer-hover only.
+ */
+.site-sidebar:focus-within:not(:hover),
+.site-sidebar.is-expanded:not(:hover) {
+  width: var(--sidebar-collapsed);
+  box-shadow: none;
+}
+
+.sidebar-toggle {
+  display: none !important;
+}
 
 .sidebar-head {
   position: relative;
   display: block;
-  min-height: 52px;
-  margin-bottom: 18px;
+  min-height: 62px;
+  margin-bottom: 12px;
 }
 
 .sidebar-brand {
   position: relative;
   display: block;
   width: 100%;
-  height: 52px;
+  height: 62px;
   overflow: visible;
 }
 
@@ -33,86 +70,150 @@
 .sidebar-brand__mark {
   left: 0;
   display: grid;
-  width: 52px;
-  min-width: 52px;
-  height: 52px;
+  width: 44px;
+  min-width: 44px;
+  height: 58px;
   place-items: center;
   opacity: 1;
   transform: translateY(-50%);
 }
 
 .sidebar-brand__mark img {
-  width: 38px;
-  height: 34px;
+  width: 43px;
+  height: 43px;
   object-fit: contain;
 }
 
 .sidebar-brand__wordmark {
-  left: 8px;
-  width: 132px;
-  max-height: 46px;
+  left: 4px;
+  width: 154px;
+  max-height: 54px;
   margin: 0;
   object-fit: contain;
   object-position: left center;
   opacity: 0;
-  transform: translateY(-50%) translateX(-6px);
+  transform: translateY(-50%) translateX(-5px);
 }
 
-.site-sidebar:hover .sidebar-brand__mark,
-.site-sidebar:focus-within .sidebar-brand__mark,
-.site-sidebar.is-expanded .sidebar-brand__mark {
+.site-sidebar:hover .sidebar-brand__mark {
   opacity: 0;
-  transform: translateY(-50%) scale(0.94);
+  transform: translateY(-50%) scale(0.95);
 }
 
-.site-sidebar:hover .sidebar-brand__wordmark,
-.site-sidebar:focus-within .sidebar-brand__wordmark,
-.site-sidebar.is-expanded .sidebar-brand__wordmark {
+.site-sidebar:hover .sidebar-brand__wordmark {
   opacity: 1;
   transform: translateY(-50%) translateX(0);
 }
 
-.sidebar-toggle {
-  position: absolute;
-  z-index: 2;
-  top: 9px;
-  right: 0;
-  flex: none;
+/*
+ * Cancel earlier focus/is-expanded logo visibility behavior.
+ * Keyboard focus does not pin the desktop rail open.
+ */
+.site-sidebar:focus-within:not(:hover) .sidebar-brand__mark,
+.site-sidebar.is-expanded:not(:hover) .sidebar-brand__mark {
+  opacity: 1;
+  transform: translateY(-50%);
 }
 
-.site-sidebar:hover,
-.site-sidebar:focus-within,
-.site-sidebar.is-expanded {
-  box-shadow:
-    16px 0 38px rgba(0, 0, 0, 0.4),
-    1px 0 0 rgba(255, 255, 255, 0.035);
+.site-sidebar:focus-within:not(:hover) .sidebar-brand__wordmark,
+.site-sidebar.is-expanded:not(:hover) .sidebar-brand__wordmark {
+  opacity: 0;
+  transform: translateY(-50%) translateX(-5px);
 }
 
-/* Bottom actions / socials ------------------------------------- */
+.sidebar-nav {
+  gap: 2px;
+}
+
+.sidebar-nav__item {
+  min-width: 184px;
+  height: 42px;
+  border-radius: 6px;
+}
+
+.sidebar-nav__icon {
+  width: 44px;
+  min-width: 44px;
+  height: 42px;
+}
+
+.sidebar-nav__icon .asset-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.sidebar-nav__label {
+  font-size: 12px;
+}
+
+.sidebar-nav__external {
+  margin-right: 10px;
+  font-size: 11px;
+}
+
+.sidebar-nav__label,
+.sidebar-nav__external,
+.sidebar-social-link__label,
+.sidebar-account-action__copy {
+  opacity: 0;
+  transform: translateX(-4px);
+  pointer-events: none;
+  transition:
+    opacity var(--ease-fast),
+    transform var(--ease-fast);
+}
+
+.site-sidebar:hover .sidebar-nav__label,
+.site-sidebar:hover .sidebar-nav__external,
+.site-sidebar:hover .sidebar-social-link__label,
+.site-sidebar:hover .sidebar-account-action__copy {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.site-sidebar:focus-within:not(:hover) .sidebar-nav__label,
+.site-sidebar:focus-within:not(:hover) .sidebar-nav__external,
+.site-sidebar:focus-within:not(:hover) .sidebar-social-link__label,
+.site-sidebar:focus-within:not(:hover) .sidebar-account-action__copy {
+  opacity: 0;
+  transform: translateX(-4px);
+  pointer-events: none;
+}
+
+/* Social/account rail ------------------------------------------- */
 
 .sidebar-actions {
-  padding-top: 10px;
-  gap: 8px;
+  padding-top: 8px;
+  gap: 5px;
 }
 
 .sidebar-socials {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
 }
 
 .sidebar-social-link,
 .sidebar-account-action {
-  position: relative;
   display: flex;
-  min-width: 204px;
-  height: 42px;
+  min-width: 184px;
   align-items: center;
-  border-radius: 7px;
   color: var(--muted);
   transition:
     background var(--ease-fast),
     color var(--ease-fast);
+}
+
+.sidebar-social-link {
+  height: 37px;
+  border-radius: 6px;
+}
+
+.sidebar-account-action {
+  height: 44px;
+  margin-top: 3px;
+  border-top: 1px solid rgba(255, 255, 255, 0.055);
 }
 
 .sidebar-social-link:hover,
@@ -124,86 +225,206 @@
 .sidebar-social-link__icon,
 .sidebar-account-action__icon {
   display: grid;
-  width: 50px;
-  min-width: 50px;
+  width: 44px;
+  min-width: 44px;
   place-items: center;
 }
 
 .sidebar-social-link__icon .asset-icon {
-  width: 17px;
-  height: 17px;
+  width: 16px;
+  height: 16px;
 }
 
 .sidebar-account-action__icon .asset-icon {
-  width: 19px;
-  height: 19px;
-}
-
-.sidebar-social-link__label,
-.sidebar-account-action__copy {
-  opacity: 0;
-  transform: translateX(-5px);
-  transition:
-    opacity var(--ease-fast),
-    transform var(--ease-fast);
-}
-
-.site-sidebar:hover .sidebar-social-link__label,
-.site-sidebar:hover .sidebar-account-action__copy,
-.site-sidebar:focus-within .sidebar-social-link__label,
-.site-sidebar:focus-within .sidebar-account-action__copy,
-.site-sidebar.is-expanded .sidebar-social-link__label,
-.site-sidebar.is-expanded .sidebar-account-action__copy {
-  opacity: 1;
-  transform: translateX(0);
+  width: 18px;
+  height: 18px;
 }
 
 .sidebar-social-link__label {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   white-space: nowrap;
-}
-
-.sidebar-account-action {
-  height: 50px;
-  border-top: 1px solid rgba(255, 255, 255, 0.055);
-  border-radius: 0 0 7px 7px;
 }
 
 .sidebar-account-action__copy {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
 }
 
 .sidebar-account-action__copy small {
   color: #777777;
-  font-size: 9px;
+  font-size: 8px;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.07em;
 }
 
 .sidebar-account-action__copy strong {
-  font-size: 12px;
+  font-size: 11px;
 }
 
-/* Remove old placeholder action visuals if stale markup persists */
 .sidebar-mini-action {
-  display: none;
+  display: none !important;
 }
 
-/* Hero status --------------------------------------------------- */
+/* Grid breathes slightly more with narrower rail ---------------- */
 
-.hero-status__divider {
-  width: 1px;
-  height: 10px;
-  margin: 0 2px;
-  background: rgba(255, 255, 255, 0.13);
+.home-mosaic {
+  width: calc(100vw - var(--sidebar-collapsed));
+  margin-left: var(--sidebar-collapsed);
+  padding: var(--gap);
+  gap: var(--gap);
+  grid-template-columns:
+    minmax(270px, 0.82fr)
+    minmax(300px, 1fr)
+    minmax(300px, 1fr);
 }
 
-/* Mobile social/account area ----------------------------------- */
+/* Streamlined media cards --------------------------------------- */
+
+.mosaic-card__content {
+  padding: clamp(17px, 1.55vw, 25px);
+}
+
+.mosaic-card__content--hero {
+  padding: clamp(22px, 2vw, 34px);
+  padding-bottom: clamp(82px, 8.5vh, 104px);
+}
+
+.mosaic-card__content--compact {
+  padding: clamp(17px, 1.45vw, 24px);
+}
+
+.mosaic-card__content--wide {
+  width: min(52%, 540px);
+  padding: clamp(20px, 1.8vw, 30px);
+}
+
+.mosaic-eyebrow {
+  font-size: 9px;
+  letter-spacing: 0.09em;
+}
+
+.mosaic-title {
+  margin-top: 6px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.mosaic-title--hero {
+  max-width: 9.5ch;
+  font-size: clamp(34px, 3.15vw, 54px);
+}
+
+.mosaic-title--small {
+  font-size: clamp(23px, 1.85vw, 32px);
+}
+
+.mosaic-title--wide {
+  max-width: 12ch;
+  font-size: clamp(27px, 2.25vw, 39px);
+}
+
+.mosaic-copy {
+  max-width: 31ch;
+  margin-top: 9px;
+  font-size: clamp(11px, 0.78vw, 13px);
+  line-height: 1.45;
+}
+
+.mosaic-copy--compact {
+  max-width: 28ch;
+  margin-top: 7px;
+  font-size: 11px;
+}
+
+.mosaic-copy--wide {
+  max-width: 36ch;
+}
+
+.mosaic-link {
+  margin-top: 12px;
+  font-size: 11px;
+  gap: 5px;
+}
+
+.mosaic-link svg {
+  width: 14px;
+  height: 14px;
+}
+
+.hero-status {
+  top: 18px;
+  left: 18px;
+  min-height: 29px;
+  padding: 0 9px;
+  font-size: 9px;
+}
+
+.hero-actions {
+  margin-top: 17px;
+  gap: 7px;
+}
+
+.cta-button,
+.ghost-button {
+  min-height: 38px;
+  padding: 0 13px;
+  border-radius: 6px;
+  font-size: 11px;
+}
+
+.cta-button__icon {
+  width: 12px;
+  height: 12px;
+  margin-right: 7px;
+}
+
+.server-address {
+  right: 16px;
+  bottom: 16px;
+  min-width: 144px;
+  min-height: 43px;
+  padding: 7px 9px 7px 10px;
+}
+
+.server-address small {
+  font-size: 7px;
+}
+
+.server-address strong {
+  font-size: 11px;
+}
+
+.server-address__icon {
+  width: 14px;
+  height: 14px;
+}
+
+.competitive-categories {
+  margin-top: 12px;
+  gap: 5px;
+}
+
+.competitive-categories > span {
+  padding: 4px 7px;
+  font-size: 8px;
+}
+
+/* Mobile stays drawer-based ------------------------------------- */
 
 @media (max-width: 800px) {
+  :root {
+    --gap: 8px;
+  }
+
+  .home-mosaic {
+    width: 100vw;
+    margin-left: 0;
+    padding: var(--gap);
+    gap: var(--gap);
+  }
+
   .mobile-drawer__bottom {
     gap: 7px;
   }
@@ -228,12 +449,6 @@
     gap: 9px;
   }
 
-  .mobile-socials a:hover,
-  .mobile-account-link:hover {
-    background: #222222;
-    color: var(--text);
-  }
-
   .mobile-socials .asset-icon {
     width: 16px;
     height: 16px;
@@ -242,5 +457,22 @@
   .mobile-account-link .asset-icon {
     width: 18px;
     height: 18px;
+  }
+
+  .mosaic-card__content--hero {
+    padding: 18px;
+    padding-bottom: 60px;
+  }
+
+  .mosaic-title--hero {
+    font-size: clamp(27px, 7vw, 38px);
+  }
+
+  .mosaic-title--small {
+    font-size: clamp(17px, 4vw, 22px);
+  }
+
+  .mosaic-title--wide {
+    font-size: clamp(21px, 5vw, 28px);
   }
 }
