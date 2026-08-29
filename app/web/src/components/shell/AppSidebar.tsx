@@ -1,5 +1,7 @@
+"use client";
+
+import { useState } from "react";
 import { homeNavigation, type HomeNavIcon } from "@/lib/home-content";
-import { PlayButton } from "@/components/ui/PlayButton";
 
 function NavIcon({ icon }: { icon: HomeNavIcon }) {
   const common = {
@@ -34,10 +36,14 @@ function NavIcon({ icon }: { icon: HomeNavIcon }) {
     );
   }
 
-  if (icon === "vote") {
+  if (icon === "rewards") {
     return (
       <svg {...common}>
-        <path d="m12 3 2.4 4.8 5.3.8-3.8 3.7.9 5.3L12 15.1 7.2 17.6l.9-5.3-3.8-3.7 5.3-.8L12 3Z" />
+        <path d="M4 9h16v11H4z" />
+        <path d="M12 9v11" />
+        <path d="M3 6h18v3H3z" />
+        <path d="M12 6c-1.2 0-4.2-.5-4.2-2.2C7.8 2.7 8.6 2 9.6 2 11 2 12 4.3 12 6Z" />
+        <path d="M12 6c1.2 0 4.2-.5 4.2-2.2 0-1.1-.8-1.8-1.8-1.8C13 2 12 4.3 12 6Z" />
       </svg>
     );
   }
@@ -61,13 +67,47 @@ function NavIcon({ icon }: { icon: HomeNavIcon }) {
   );
 }
 
+function MenuIcon({ open }: { open: boolean }) {
+  return (
+    <svg aria-hidden="true" fill="none" height="20" viewBox="0 0 20 20" width="20">
+      {open ? (
+        <>
+          <path d="m5 5 10 10" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
+          <path d="m15 5-10 10" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
+        </>
+      ) : (
+        <>
+          <path d="M4 6h12" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
+          <path d="M4 10h12" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
+          <path d="M4 14h12" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
+        </>
+      )}
+    </svg>
+  );
+}
+
 export function AppSidebar() {
+  const [expanded, setExpanded] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   return (
     <>
-      <aside className="site-sidebar">
-        <a className="sidebar-brand" href="/" aria-label="Mineacle home">
-          <img src="/mineacle-logo.png" alt="Mineacle" />
-        </a>
+      <aside className={`site-sidebar ${expanded ? "is-expanded" : ""}`}>
+        <div className="sidebar-head">
+          <a className="sidebar-brand" href="/" aria-label="Mineacle home">
+            <span className="sidebar-brand__mark">M</span>
+            <img src="/mineacle-logo.png" alt="Mineacle" />
+          </a>
+          <button
+            aria-expanded={expanded}
+            aria-label={expanded ? "Collapse navigation" : "Expand navigation"}
+            className="sidebar-toggle"
+            onClick={() => setExpanded((value) => !value)}
+            type="button"
+          >
+            <MenuIcon open={expanded} />
+          </button>
+        </div>
 
         <nav className="sidebar-nav" aria-label="Primary navigation">
           {homeNavigation.map((item, index) => (
@@ -87,49 +127,65 @@ export function AppSidebar() {
         <div className="sidebar-spacer" />
 
         <div className="sidebar-actions">
-          <PlayButton address="mineacle.net" compact />
-          <a className="sidebar-community" href="#">
-            <span className="sidebar-community__mark" aria-hidden="true">#</span>
-            <span>
+          <a className="sidebar-mini-action" href="#">
+            <span className="sidebar-mini-action__icon" aria-hidden="true">#</span>
+            <span className="sidebar-mini-action__copy">
               <small>Community</small>
-              <strong>Join Discord</strong>
+              <strong>Discord</strong>
             </span>
           </a>
-          <a className="sidebar-account" href="/login">
-            <span className="sidebar-account__avatar" aria-hidden="true" />
-            <span>
-              <small>Mineacle Account</small>
-              <strong>Log in / Sign up</strong>
+          <a className="sidebar-mini-action" href="/login">
+            <span className="sidebar-account-dot" aria-hidden="true" />
+            <span className="sidebar-mini-action__copy">
+              <small>Mineacle</small>
+              <strong>Account</strong>
             </span>
           </a>
         </div>
       </aside>
 
       <header className="mobile-header">
-        <a href="/" aria-label="Mineacle home">
+        <button
+          aria-expanded={mobileOpen}
+          aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
+          className="mobile-menu-button"
+          onClick={() => setMobileOpen((value) => !value)}
+          type="button"
+        >
+          <MenuIcon open={mobileOpen} />
+        </button>
+        <a className="mobile-brand" href="/" aria-label="Mineacle home">
           <img src="/mineacle-logo.png" alt="Mineacle" />
         </a>
-        <div className="mobile-header__actions">
-          <PlayButton address="mineacle.net" compact />
-          <a className="mobile-account-button" href="/login" aria-label="Log in or sign up">
-            <span aria-hidden="true" />
-          </a>
-        </div>
+        <a className="mobile-account-button" href="/login" aria-label="Mineacle account">
+          <span aria-hidden="true" />
+        </a>
       </header>
 
-      <nav className="mobile-nav" aria-label="Mobile navigation">
-        {homeNavigation.map((item, index) => (
-          <a
-            className={index === 0 ? "is-active" : ""}
-            href={item.href}
-            key={item.label}
-            {...(item.external ? { target: "_blank", rel: "noreferrer" } : {})}
-          >
-            <NavIcon icon={item.icon} />
-            <span>{item.label === "Leaderboards" ? "Leaders" : item.label}</span>
-          </a>
-        ))}
-      </nav>
+      <div className={`mobile-drawer ${mobileOpen ? "is-open" : ""}`}>
+        <button className="mobile-drawer__scrim" onClick={() => setMobileOpen(false)} aria-label="Close navigation" type="button" />
+        <div className="mobile-drawer__panel">
+          <nav aria-label="Mobile navigation">
+            {homeNavigation.map((item, index) => (
+              <a
+                className={index === 0 ? "is-active" : ""}
+                href={item.href}
+                key={item.label}
+                onClick={() => setMobileOpen(false)}
+                {...(item.external ? { target: "_blank", rel: "noreferrer" } : {})}
+              >
+                <NavIcon icon={item.icon} />
+                <span>{item.label}</span>
+                {item.external ? <small>↗</small> : null}
+              </a>
+            ))}
+          </nav>
+          <div className="mobile-drawer__bottom">
+            <a href="#">Join Discord</a>
+            <a href="/login">Log in / Sign up</a>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

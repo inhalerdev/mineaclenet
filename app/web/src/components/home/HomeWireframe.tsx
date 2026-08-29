@@ -10,7 +10,7 @@ function ArrowIcon() {
   );
 }
 
-function ImageSlot({ label, variant = "default" }: { label: string; variant?: "default" | "plus" | "vote" | "creator" }) {
+function ImageSlot({ label, variant = "default" }: { label: string; variant?: "default" | "plus" | "rewards" }) {
   return (
     <div className={`image-slot image-slot--${variant}`} aria-label={label}>
       <span className="image-slot__label">{label}</span>
@@ -21,30 +21,29 @@ function ImageSlot({ label, variant = "default" }: { label: string; variant?: "d
 
 function LeaderboardPreview() {
   const rows = [
-    { label: "Top Player", sub: "Global", value: "—" },
-    { label: "Top Team", sub: "Global", value: "—" },
-    { label: "Best K/D", sub: "Global", value: "—" },
-    { label: "Balance Top", sub: "Global", value: "—" },
+    { label: "Top Player", meta: "Global", value: "—" },
+    { label: "Top Team", meta: "Global", value: "—" },
+    { label: "Best K/D", meta: "Global", value: "—" },
   ];
 
   return (
-    <article className="showcase-card leaderboard-card">
-      <div className="showcase-card__heading">
+    <article className="highlight-card leaderboard-card">
+      <div className="highlight-card__head">
         <div>
-          <span className="card-eyebrow">Competitive</span>
+          <span className="card-eyebrow">Global</span>
           <h2>Leaderboards</h2>
         </div>
-        <a className="icon-link" href="/leaderboards" aria-label="View leaderboards"><ArrowIcon /></a>
+        <a className="round-link" href="/leaderboards" aria-label="View leaderboards"><ArrowIcon /></a>
       </div>
-      <div className="leaderboard-preview__rows">
+      <div className="leaderboard-list">
         {rows.map((row, index) => (
-          <div className="leaderboard-preview__row" key={row.label}>
-            <span className="leaderboard-preview__rank">0{index + 1}</span>
-            <span className="leaderboard-preview__name">
+          <div className="leaderboard-row" key={row.label}>
+            <span className="leaderboard-rank">0{index + 1}</span>
+            <div>
               <strong>{row.label}</strong>
-              <small>{row.sub}</small>
-            </span>
-            <span className="leaderboard-preview__value">{row.value}</span>
+              <small>{row.meta}</small>
+            </div>
+            <span className="leaderboard-value">{row.value}</span>
           </div>
         ))}
       </div>
@@ -59,25 +58,25 @@ function PromoCard({
   imageLabel,
   href,
   variant,
+  action,
 }: {
   eyebrow: string;
   title: string;
   body: string;
   imageLabel: string;
   href: string;
-  variant: "plus" | "vote" | "creator";
+  variant: "plus" | "rewards";
+  action: string;
 }) {
   return (
-    <article className={`showcase-card promo-card promo-card--${variant}`}>
+    <article className={`highlight-card promo-card promo-card--${variant}`}>
       <ImageSlot label={imageLabel} variant={variant} />
-      <div className="promo-card__overlay" />
+      <div className="promo-card__shade" />
       <div className="promo-card__content">
         <span className="card-eyebrow">{eyebrow}</span>
         <h2>{title}</h2>
         <p>{body}</p>
-        <a className="text-link" href={href}>
-          Explore <ArrowIcon />
-        </a>
+        <a className="text-link" href={href}>{action}<ArrowIcon /></a>
       </div>
     </article>
   );
@@ -91,14 +90,14 @@ export function HomeWireframe() {
       <div className="home-shell">
         <header className="home-topbar">
           <div className="home-topbar__context">
-            <span className="status-light status-light--muted" aria-hidden="true" />
-            <span>Mineacle SMP</span>
-            <span className="topbar-divider" />
-            <strong>{homeContent.season}</strong>
+            <span className="status-light" aria-hidden="true" />
+            <strong>Mineacle SMP</strong>
+            <span className="topbar-muted">{homeContent.season}</span>
           </div>
           <div className="home-topbar__actions">
             <a href="#">How to join</a>
-            <a className="topbar-login" href="/login">Log in</a>
+            <span className="topbar-status">Online <strong>—</strong></span>
+            <a className="topbar-login" href="/login">Account</a>
           </div>
         </header>
 
@@ -106,12 +105,14 @@ export function HomeWireframe() {
           <section className="hero-card">
             <ImageSlot label={homeContent.hero.imageLabel} />
             <div className="hero-card__shade" />
-            <div className="hero-card__badge">
-              <span className="status-light" aria-hidden="true" />
-              Featured now
+
+            <div className="hero-card__meta">
+              <span>{homeContent.hero.eyebrow}</span>
+              <span className="hero-meta-divider" />
+              <strong>{homeContent.season}</strong>
             </div>
+
             <div className="hero-card__content">
-              <span className="hero-eyebrow">{homeContent.hero.eyebrow} · {homeContent.season}</span>
               <h1>{homeContent.hero.title}</h1>
               <p>{homeContent.hero.body}</p>
               <div className="hero-card__actions">
@@ -119,72 +120,35 @@ export function HomeWireframe() {
                 <a className="ghost-button" href="#">How to join</a>
               </div>
             </div>
-            <div className="hero-pagination" aria-label="Featured slide position">
-              <span className="is-active" />
-              <span />
-              <span />
+
+            <div className="hero-card__server">
+              <span className="status-light" aria-hidden="true" />
+              <div>
+                <small>Server address</small>
+                <strong>{homeContent.server.address}</strong>
+              </div>
+            </div>
+
+            <div className="hero-pagination" aria-label="Featured content">
+              {homeContent.hero.slides.map((slide, index) => (
+                <button className={index === 0 ? "is-active" : ""} key={slide} type="button" aria-label={`Show ${slide} feature`} />
+              ))}
             </div>
           </section>
 
-          <aside className="home-side-stack">
-            <section className="side-card server-card">
-              <div className="side-card__heading">
-                <div>
-                  <span className="card-eyebrow">Server</span>
-                  <h2>{homeContent.server.statusLabel}</h2>
-                </div>
-                <span className="server-status-pill">
-                  <span className="status-light status-light--muted" aria-hidden="true" />
-                  API pending
-                </span>
-              </div>
-
-              <div className="server-card__metric">
-                <span>Players online</span>
-                <strong>—</strong>
-              </div>
-
-              <div className="server-card__address">
-                <div>
-                  <small>Server address</small>
-                  <strong>{homeContent.server.address}</strong>
-                </div>
-                <PlayButton address={homeContent.server.address} compact />
-              </div>
-            </section>
-
-            <section className="side-card account-card">
-              <div className="account-card__avatar" aria-hidden="true">
-                <span />
-              </div>
-              <div className="account-card__copy">
-                <span className="card-eyebrow">{homeContent.account.eyebrow}</span>
-                <h2>{homeContent.account.title}</h2>
-                <p>{homeContent.account.body}</p>
-              </div>
-              <div className="account-card__actions">
-                <a className="secondary-button" href="/signup">Sign up</a>
-                <a className="subtle-link" href="/login">Log in</a>
-              </div>
-            </section>
-          </aside>
-
-          <section className="home-showcase" aria-label="Mineacle highlights">
+          <section className="home-highlights" aria-label="Mineacle highlights">
             <LeaderboardPreview />
             <PromoCard
               {...homeContent.mineaclePlus}
+              action="Explore Mineacle+"
               href="#"
               variant="plus"
             />
             <PromoCard
-              {...homeContent.voting}
+              {...homeContent.rewards}
+              action="Earn keys"
               href="/vote"
-              variant="vote"
-            />
-            <PromoCard
-              {...homeContent.creator}
-              href="#"
-              variant="creator"
+              variant="rewards"
             />
           </section>
         </main>
