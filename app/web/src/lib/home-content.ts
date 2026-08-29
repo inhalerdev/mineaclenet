@@ -40,7 +40,7 @@ export const homeContent = {
     body: "Extra perks for players who want more from the season.",
     action: "View Mineacle+",
     href: "#",
-    image: "/home/mineacle-plus-showcase.png",
+    image: "/home/mineacle-plus.png",
     imageLabel: "Mineacle+ showcase artwork",
   },
   rewards: {

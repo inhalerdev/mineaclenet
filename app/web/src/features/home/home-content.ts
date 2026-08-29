@@ -4,7 +4,7 @@ export const homeContent = {
     mediaLabel: "Mineacle seasonal world",
   },
   mineaclePlus: {
-    media: "/images/home/mineacle-plus-showcase.png",
+    media: "/images/home/mineacle-plus.png",
     mediaLabel: "Mineacle+ showcase artwork",
   },
   rewards: {
