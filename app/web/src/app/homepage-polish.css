@@ -538,3 +538,32 @@
 .mosaic-card--hero:hover .mosaic-media--hero video {
   filter: saturate(1) brightness(0.94);
 }
+
+
+/* v1.7.1 static hero treatment ---------------------------------- */
+
+/* Shift the seasonal video itself slightly to the right. */
+.mosaic-media--hero video {
+  object-position: 46% center;
+}
+
+/* The hero is informational, not a clickable CTA card. */
+.mosaic-card--hero:hover {
+  transform: translateZ(0);
+}
+
+.mosaic-card--hero:hover .mosaic-media video {
+  transform: scale(1.001);
+}
+
+.mosaic-card--hero:hover .mosaic-media--hero video {
+  filter: saturate(0.94) brightness(0.9);
+}
+
+.mosaic-card--hero:hover .mosaic-card__shade--hero {
+  background: linear-gradient(
+    180deg,
+    rgba(17, 17, 17, 0.06) 25%,
+    rgba(17, 17, 17, 0.96) 100%
+  );
+}
