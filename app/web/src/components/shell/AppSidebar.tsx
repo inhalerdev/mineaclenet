@@ -1,39 +1,54 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import { useState } from "react";
 import {
   siteNavigation,
   type SiteNavIcon,
 } from "@/shared/navigation/site-navigation";
 
-const STREAMLINE_CORE = "/shared/images/icons/streamline/core-solid";
-const STREAMLINE_LOGOS = "/shared/images/icons/streamline/logos";
+/*
+ * These are normal public image assets.
+ * Replace a file in public/ with the same filename and the website uses
+ * the replacement automatically. The icon artwork is not embedded here.
+ */
+const SITE_ICON_ROOT = "/shared/images/icons/streamline/core-solid";
+const SITE_LOGO_ROOT = "/shared/images/icons/streamline/logos";
 
 const NAV_ICON_PATHS: Record<SiteNavIcon, string> = {
-  home: `${STREAMLINE_CORE}/home.svg`,
-  leaderboard: `${STREAMLINE_CORE}/leaderboards.svg`,
-  rewards: `${STREAMLINE_CORE}/rewards.svg`,
-  punishments: `${STREAMLINE_CORE}/punishments.svg`,
-  marketplace: `${STREAMLINE_CORE}/marketplace.svg`,
+  home: `${SITE_ICON_ROOT}/home.svg`,
+  leaderboard: `${SITE_ICON_ROOT}/leaderboards.svg`,
+  rewards: `${SITE_ICON_ROOT}/rewards.svg`,
+  punishments: `${SITE_ICON_ROOT}/punishments.svg`,
+  marketplace: `${SITE_ICON_ROOT}/marketplace.svg`,
 };
 
 const SOCIAL_LINKS = [
-  { label: "Discord", href: "#", icon: `${STREAMLINE_LOGOS}/discord.svg` },
-  { label: "X", href: "#", icon: `${STREAMLINE_LOGOS}/x.svg` },
+  {
+    label: "Discord",
+    href: "#",
+    icon: `${SITE_LOGO_ROOT}/discord.png`,
+  },
+  {
+    label: "X",
+    href: "#",
+    icon: `${SITE_LOGO_ROOT}/x.svg`,
+  },
 ] as const;
 
-function AssetIcon({ src, className = "" }: { src: string; className?: string }) {
-  const style: CSSProperties = {
-    WebkitMaskImage: `url("${src}")`,
-    maskImage: `url("${src}")`,
-  };
-
+function AssetIcon({
+  src,
+  className = "",
+}: {
+  src: string;
+  className?: string;
+}) {
   return (
-    <span
+    <img
       aria-hidden="true"
+      alt=""
       className={`asset-icon ${className}`.trim()}
-      style={style}
+      draggable={false}
+      src={src}
     />
   );
 }
@@ -46,7 +61,7 @@ function MobileMenuIcon({ open }: { open: boolean }) {
   return (
     <span className="menu-icon" aria-hidden="true">
       {open ? (
-        <AssetIcon src={`${STREAMLINE_CORE}/close.svg`} />
+        <AssetIcon src={`${SITE_ICON_ROOT}/close.svg`} />
       ) : (
         <>
           <span />
@@ -67,8 +82,12 @@ export function AppSidebar() {
         <div className="sidebar-head">
           <a className="sidebar-brand" href="/" aria-label="Mineacle home">
             <span className="sidebar-brand__mark">
-              <img src="/shared/images/branding/mineacle-mark.png" alt="" />
+              <img
+                src="/shared/images/branding/mineacle-mark.png"
+                alt=""
+              />
             </span>
+
             <img
               className="sidebar-brand__wordmark"
               src="/shared/images/branding/mineacle-logo.png"
@@ -80,16 +99,26 @@ export function AppSidebar() {
         <nav className="sidebar-nav" aria-label="Primary navigation">
           {siteNavigation.map((item) => (
             <a
-              className={`sidebar-nav__item ${item.href === "/" ? "is-active" : ""}`}
+              className={`sidebar-nav__item ${
+                item.href === "/" ? "is-active" : ""
+              }`}
               href={item.href}
               key={item.label}
-              {...(item.external ? { target: "_blank", rel: "noreferrer" } : {})}
+              {...(item.external
+                ? { target: "_blank", rel: "noreferrer" }
+                : {})}
             >
               <span className="sidebar-nav__icon">
                 <NavIcon icon={item.icon} />
               </span>
-              <span className="sidebar-nav__label">{item.label}</span>
-              {item.external ? <span className="sidebar-nav__external">↗</span> : null}
+
+              <span className="sidebar-nav__label">
+                {item.label}
+              </span>
+
+              {item.external ? (
+                <span className="sidebar-nav__external">↗</span>
+              ) : null}
             </a>
           ))}
         </nav>
@@ -97,7 +126,10 @@ export function AppSidebar() {
         <div className="sidebar-spacer" />
 
         <div className="sidebar-actions">
-          <div className="sidebar-socials" aria-label="Mineacle social links">
+          <div
+            className="sidebar-socials"
+            aria-label="Mineacle social links"
+          >
             {SOCIAL_LINKS.map((social) => (
               <a
                 aria-label={social.label}
@@ -108,33 +140,45 @@ export function AppSidebar() {
                 <span className="sidebar-social-link__icon">
                   <AssetIcon src={social.icon} />
                 </span>
-                <span className="sidebar-social-link__label">{social.label}</span>
+
+                <span className="sidebar-social-link__label">
+                  {social.label}
+                </span>
               </a>
             ))}
           </div>
 
           <a className="sidebar-account-action" href="/login">
             <span className="sidebar-account-action__icon">
-              <AssetIcon src={`${STREAMLINE_CORE}/user.svg`} />
+              <AssetIcon src={`${SITE_ICON_ROOT}/user.svg`} />
             </span>
+
             <span className="sidebar-account-action__copy">
               <small>Player account</small>
               <strong>Log in / Sign up</strong>
             </span>
-            <span className="sidebar-account-action__arrow" aria-hidden="true">→</span>
+
+            <span
+              className="sidebar-account-action__arrow"
+              aria-hidden="true"
+            >
+              →
+            </span>
           </a>
         </div>
       </aside>
 
       <a className="desktop-auth-cta" href="/login">
-        <AssetIcon src={`${STREAMLINE_CORE}/user.svg`} />
+        <AssetIcon src={`${SITE_ICON_ROOT}/user.svg`} />
         <span>Log in / Sign up</span>
       </a>
 
       <header className="mobile-header">
         <button
           aria-expanded={mobileOpen}
-          aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
+          aria-label={
+            mobileOpen ? "Close navigation" : "Open navigation"
+          }
           className="mobile-menu-button"
           onClick={() => setMobileOpen((value) => !value)}
           type="button"
@@ -142,14 +186,27 @@ export function AppSidebar() {
           <MobileMenuIcon open={mobileOpen} />
         </button>
 
-        <a className="mobile-brand" href="/" aria-label="Mineacle home">
-          <img src="/shared/images/branding/mineacle-mark.png" alt="Mineacle" />
+        <a
+          className="mobile-brand"
+          href="/"
+          aria-label="Mineacle home"
+        >
+          <img
+            src="/shared/images/branding/mineacle-mark.png"
+            alt="Mineacle"
+          />
         </a>
 
-        <a className="mobile-account-button" href="/login">Log in</a>
+        <a className="mobile-account-button" href="/login">
+          Log in
+        </a>
       </header>
 
-      <div className={`mobile-drawer ${mobileOpen ? "is-open" : ""}`}>
+      <div
+        className={`mobile-drawer ${
+          mobileOpen ? "is-open" : ""
+        }`}
+      >
         <button
           className="mobile-drawer__scrim"
           onClick={() => setMobileOpen(false)}
@@ -161,11 +218,18 @@ export function AppSidebar() {
           <nav aria-label="Mobile navigation">
             {siteNavigation.map((item) => (
               <a
-                className={item.href === "/" ? "is-active" : ""}
+                className={
+                  item.href === "/" ? "is-active" : ""
+                }
                 href={item.href}
                 key={item.label}
                 onClick={() => setMobileOpen(false)}
-                {...(item.external ? { target: "_blank", rel: "noreferrer" } : {})}
+                {...(item.external
+                  ? {
+                      target: "_blank",
+                      rel: "noreferrer",
+                    }
+                  : {})}
               >
                 <NavIcon icon={item.icon} />
                 <span>{item.label}</span>
@@ -177,15 +241,24 @@ export function AppSidebar() {
           <div className="mobile-drawer__bottom">
             <div className="mobile-socials">
               {SOCIAL_LINKS.map((social) => (
-                <a aria-label={social.label} href={social.href} key={social.label}>
+                <a
+                  aria-label={social.label}
+                  href={social.href}
+                  key={social.label}
+                >
                   <AssetIcon src={social.icon} />
                   <span>{social.label}</span>
                 </a>
               ))}
             </div>
 
-            <a className="mobile-account-link" href="/login">
-              <AssetIcon src={`${STREAMLINE_CORE}/user.svg`} />
+            <a
+              className="mobile-account-link"
+              href="/login"
+            >
+              <AssetIcon
+                src={`${SITE_ICON_ROOT}/user.svg`}
+              />
               <span>Log in / Sign up</span>
               <small aria-hidden="true">→</small>
             </a>
