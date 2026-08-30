@@ -7,17 +7,20 @@ import {
   type SiteNavIcon,
 } from "@/shared/navigation/site-navigation";
 
+const STREAMLINE_CORE = "/shared/icons/streamline/core-solid";
+const STREAMLINE_LOGOS = "/shared/icons/streamline/logos";
+
 const NAV_ICON_PATHS: Record<SiteNavIcon, string> = {
-  home: "/shared/images/icons/navigation/home.png",
-  leaderboard: "/shared/images/icons/navigation/leaderboards.png",
-  rewards: "/shared/images/icons/navigation/rewards.png",
-  punishments: "/shared/images/icons/navigation/punishments.png",
-  marketplace: "/shared/images/icons/navigation/marketplace.png",
+  home: `${STREAMLINE_CORE}/home.svg`,
+  leaderboard: `${STREAMLINE_CORE}/leaderboards.svg`,
+  rewards: `${STREAMLINE_CORE}/rewards.svg`,
+  punishments: `${STREAMLINE_CORE}/punishments.svg`,
+  marketplace: `${STREAMLINE_CORE}/marketplace.svg`,
 };
 
 const SOCIAL_LINKS = [
-  { label: "Discord", href: "#", icon: "/shared/images/social/discord.png" },
-  { label: "X", href: "#", icon: "/shared/images/social/x.png" },
+  { label: "Discord", href: "#", icon: `${STREAMLINE_LOGOS}/discord.svg` },
+  { label: "X", href: "#", icon: `${STREAMLINE_LOGOS}/x.svg` },
 ] as const;
 
 function AssetIcon({ src, className = "" }: { src: string; className?: string }) {
@@ -43,7 +46,7 @@ function MobileMenuIcon({ open }: { open: boolean }) {
   return (
     <span className="menu-icon" aria-hidden="true">
       {open ? (
-        <AssetIcon src="/shared/images/icons/actions/close.png" />
+        <AssetIcon src={`${STREAMLINE_CORE}/close.svg`} />
       ) : (
         <>
           <span />
@@ -112,7 +115,7 @@ export function AppSidebar() {
 
           <a className="sidebar-account-action" href="/login">
             <span className="sidebar-account-action__icon">
-              <AssetIcon src="/shared/images/icons/actions/user.png" />
+              <AssetIcon src={`${STREAMLINE_CORE}/user.svg`} />
             </span>
             <span className="sidebar-account-action__copy">
               <small>Player account</small>
@@ -124,7 +127,7 @@ export function AppSidebar() {
       </aside>
 
       <a className="desktop-auth-cta" href="/login">
-        <AssetIcon src="/shared/images/icons/actions/user.png" />
+        <AssetIcon src={`${STREAMLINE_CORE}/user.svg`} />
         <span>Log in / Sign up</span>
       </a>
 
@@ -182,7 +185,7 @@ export function AppSidebar() {
             </div>
 
             <a className="mobile-account-link" href="/login">
-              <AssetIcon src="/shared/images/icons/actions/user.png" />
+              <AssetIcon src={`${STREAMLINE_CORE}/user.svg`} />
               <span>Log in / Sign up</span>
               <small aria-hidden="true">→</small>
             </a>
