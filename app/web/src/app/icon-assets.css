@@ -1,12 +1,8 @@
 /*
  * Site icons are actual <img> elements.
  *
- * The artwork lives in:
- *   public/shared/images/icons/streamline/core-solid/
- *   public/shared/images/icons/streamline/logos/
- *
- * Replacing an asset with another file using the SAME filename changes
- * the rendered icon without editing React.
+ * Replace an asset using the same filename and the website will use the
+ * replacement automatically.
  */
 
 .asset-icon {
@@ -23,10 +19,6 @@
   -webkit-mask-image: none !important;
   mask-image: none !important;
 
-  /*
-   * Normalize black monochrome SVG/PNG artwork to Mineacle's
-   * secondary icon color while preserving the actual image shape.
-   */
   filter:
     brightness(0)
     saturate(100%)
@@ -73,9 +65,8 @@
     contrast(101%);
 }
 
-.site-sidebar:hover,
-  .sidebar-nav__item.is-active,
-  .asset-icon {
+/* Expanded rail: only the active nav icon gets the accent-hover color. */
+.site-sidebar:hover .sidebar-nav__item.is-active .asset-icon {
   filter:
     brightness(0)
     saturate(100%)
