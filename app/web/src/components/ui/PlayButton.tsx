@@ -28,9 +28,9 @@ export function PlayButton({
 
   const playIconStyle: CSSProperties = {
     WebkitMaskImage:
-      'url("/shared/icons/streamline/core-solid/play.svg")',
+      'url("/shared/images/icons/streamline/core-solid/play.svg")',
     maskImage:
-      'url("/shared/icons/streamline/core-solid/play.svg")',
+      'url("/shared/images/icons/streamline/core-solid/play.svg")',
   };
 
   return (

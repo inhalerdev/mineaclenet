@@ -7,8 +7,8 @@ import {
   type SiteNavIcon,
 } from "@/shared/navigation/site-navigation";
 
-const STREAMLINE_CORE = "/shared/icons/streamline/core-solid";
-const STREAMLINE_LOGOS = "/shared/icons/streamline/logos";
+const STREAMLINE_CORE = "/shared/images/icons/streamline/core-solid";
+const STREAMLINE_LOGOS = "/shared/images/icons/streamline/logos";
 
 const NAV_ICON_PATHS: Record<SiteNavIcon, string> = {
   home: `${STREAMLINE_CORE}/home.svg`,

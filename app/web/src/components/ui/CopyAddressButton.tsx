@@ -18,9 +18,9 @@ export function CopyAddressButton({ address }: { address: string }) {
 
   const copyIconStyle: CSSProperties = {
     WebkitMaskImage:
-      'url("/shared/icons/streamline/core-solid/copy.svg")',
+      'url("/shared/images/icons/streamline/core-solid/copy.svg")',
     maskImage:
-      'url("/shared/icons/streamline/core-solid/copy.svg")',
+      'url("/shared/images/icons/streamline/core-solid/copy.svg")',
   };
 
   return (
