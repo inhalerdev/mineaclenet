@@ -1,0 +1,23 @@
+.player-home__logout {
+  min-height: 34px;
+  margin: 0;
+  padding: 0 11px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  background: #222222;
+  color: #bbbbbb;
+  font-size: 8px;
+  font-weight: 650;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.player-home__logout:hover {
+  border-color: rgba(208, 175, 255, 0.35);
+  color: #f8f8f8;
+}
+
+.player-home__logout:disabled {
+  opacity: 0.55;
+  cursor: default;
+}

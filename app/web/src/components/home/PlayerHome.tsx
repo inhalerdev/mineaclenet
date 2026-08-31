@@ -1,3 +1,4 @@
+import { LogoutButton } from "@/components/auth/LogoutButton";
 import type { Viewer } from "@/features/auth/types";
 import type { DashboardData } from "@/features/social/dashboard";
 
@@ -27,6 +28,7 @@ export function PlayerHome({
           <a className="player-profile-pill" href="/profile">
             {viewer.username.slice(0, 1).toUpperCase()}
           </a>
+          <LogoutButton className="player-home__logout" />
         </div>
       </header>
 

@@ -93,7 +93,8 @@ export async function getCurrentViewer(): Promise<Viewer | null> {
       followingCount: Number(row.following_count),
       unreadNotifications: Number(row.unread_count),
     };
-  } catch {
+  } catch (error) {
+    console.error("[mineacle-auth] Failed to resolve current viewer", error);
     return null;
   }
 }
@@ -112,7 +113,7 @@ export async function destroyCurrentSession() {
       "DELETE FROM mineacle_web_sessions WHERE token_hash = ?",
       [digest(token)],
     );
-  } catch {
-    // Cookie removal still proceeds.
+  } catch (error) {
+    console.error("[mineacle-auth] Failed to destroy session row", error);
   }
 }

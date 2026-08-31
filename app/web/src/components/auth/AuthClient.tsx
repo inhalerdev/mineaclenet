@@ -9,6 +9,23 @@ type VerifyState = {
   expiresAt: number;
 };
 
+async function confirmBrowserSession() {
+  const response = await fetch("/api/auth/me", {
+    cache: "no-store",
+    credentials: "same-origin",
+  });
+
+  if (!response.ok) {
+    return false;
+  }
+
+  const data = (await response.json()) as {
+    authenticated?: boolean;
+  };
+
+  return data.authenticated === true;
+}
+
 export function AuthClient() {
   const [mode, setMode] = useState<"login" | "create">("login");
   const [step, setStep] = useState<"username" | "verify" | "password">("username");
@@ -64,6 +81,7 @@ export function AuthClient() {
     try {
       const response = await fetch("/api/auth/login", {
         method: "POST",
+        credentials: "same-origin",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ username, password }),
       });
@@ -75,7 +93,12 @@ export function AuthClient() {
         return;
       }
 
-      window.location.assign("/");
+      if (!(await confirmBrowserSession())) {
+        setError("Login was accepted, but the browser session was not established");
+        return;
+      }
+
+      window.location.replace("/");
     } catch {
       setError("Unable to connect to Mineacle");
     } finally {
@@ -91,6 +114,7 @@ export function AuthClient() {
     try {
       const response = await fetch("/api/auth/verify/start", {
         method: "POST",
+        credentials: "same-origin",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ username }),
       });
@@ -131,6 +155,7 @@ export function AuthClient() {
     try {
       const response = await fetch("/api/auth/complete", {
         method: "POST",
+        credentials: "same-origin",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           challengeId: verification.challengeId,
@@ -145,7 +170,12 @@ export function AuthClient() {
         return;
       }
 
-      window.location.assign("/");
+      if (!(await confirmBrowserSession())) {
+        setError("Account was created, but the browser session was not established");
+        return;
+      }
+
+      window.location.replace("/");
     } catch {
       setError("Unable to connect to Mineacle");
     } finally {
