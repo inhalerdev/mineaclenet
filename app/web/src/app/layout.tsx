@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 import "./globals.css";
 import "./auth-cta.css";
 import "./icon-assets.css";
+import "./sidebar-v2.css";
+import "./home-v2.css";
 
 export const metadata = {
   title: "Home | Mineacle",
@@ -15,11 +17,11 @@ export const viewport = {
   themeColor: "#111111",
 };
 
-type RootLayoutProps = {
+export default function RootLayout({
+  children,
+}: {
   children: ReactNode;
-};
-
-export default function RootLayout({ children }: RootLayoutProps) {
+}) {
   return (
     <html lang="en">
       <body>{children}</body>

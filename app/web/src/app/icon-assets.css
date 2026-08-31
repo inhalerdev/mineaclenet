@@ -1,10 +1,3 @@
-/*
- * Site icons are actual <img> elements.
- *
- * Replace an asset using the same filename and the website will use the
- * replacement automatically.
- */
-
 .asset-icon {
   display: block;
   width: 18px;
@@ -13,92 +6,13 @@
   object-fit: contain;
   object-position: center;
   background: transparent !important;
-
   -webkit-mask: none !important;
   mask: none !important;
   -webkit-mask-image: none !important;
   mask-image: none !important;
-
-  filter:
-    brightness(0)
-    saturate(100%)
-    invert(78%)
-    sepia(0%)
-    saturate(0%)
-    hue-rotate(164deg)
-    brightness(96%)
-    contrast(90%);
-
-  transition:
-    filter var(--ease-fast),
-    opacity var(--ease-fast);
 }
 
 .sidebar-social-link__icon .asset-icon {
   width: 16px;
   height: 16px;
-}
-
-.sidebar-nav__item:hover .asset-icon,
-.sidebar-social-link:hover .asset-icon,
-.sidebar-account-action:hover .asset-icon {
-  filter:
-    brightness(0)
-    saturate(100%)
-    invert(100%)
-    sepia(3%)
-    saturate(50%)
-    hue-rotate(230deg)
-    brightness(106%)
-    contrast(95%);
-}
-
-.sidebar-nav__item.is-active .asset-icon {
-  filter:
-    brightness(0)
-    saturate(100%)
-    invert(57%)
-    sepia(75%)
-    saturate(2096%)
-    hue-rotate(226deg)
-    brightness(103%)
-    contrast(101%);
-}
-
-/* Expanded rail: only the active nav icon gets the accent-hover color. */
-.site-sidebar:hover .sidebar-nav__item.is-active .asset-icon {
-  filter:
-    brightness(0)
-    saturate(100%)
-    invert(77%)
-    sepia(30%)
-    saturate(968%)
-    hue-rotate(211deg)
-    brightness(103%)
-    contrast(101%);
-}
-
-.desktop-auth-cta .asset-icon,
-.mobile-account-link .asset-icon {
-  filter:
-    brightness(0)
-    saturate(100%)
-    invert(7%)
-    sepia(3%)
-    saturate(129%)
-    hue-rotate(314deg)
-    brightness(94%)
-    contrast(96%);
-}
-
-.mobile-drawer nav a.is-active .asset-icon {
-  filter:
-    brightness(0)
-    saturate(100%)
-    invert(57%)
-    sepia(75%)
-    saturate(2096%)
-    hue-rotate(226deg)
-    brightness(103%)
-    contrast(101%);
 }
