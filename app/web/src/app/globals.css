@@ -246,11 +246,71 @@ video {
   flex: 0 0 auto;
   object-fit: contain;
   object-position: center;
+  background: transparent;
+
+  /*
+   * The SVG/PNG file remains the actual icon source. These filters only
+   * normalize monochrome artwork to Mineacle UI states.
+   */
+  filter:
+    brightness(0)
+    saturate(100%)
+    invert(78%)
+    sepia(0%)
+    saturate(0%)
+    hue-rotate(164deg)
+    brightness(96%)
+    contrast(90%);
+
+  transition:
+    filter var(--ease-fast),
+    opacity var(--ease-fast);
 }
 
 .sidebar-social-link__icon .asset-icon {
   width: 16px;
   height: 16px;
+}
+
+.sidebar-nav__item:hover .asset-icon,
+.sidebar-social-link:hover .asset-icon,
+.sidebar-account-action:hover .asset-icon,
+.mobile-drawer a:hover .asset-icon {
+  filter:
+    brightness(0)
+    saturate(100%)
+    invert(100%)
+    sepia(3%)
+    saturate(50%)
+    hue-rotate(230deg)
+    brightness(106%)
+    contrast(95%);
+}
+
+.sidebar-nav__item.is-active .asset-icon,
+.mobile-drawer nav a.is-active .asset-icon {
+  filter:
+    brightness(0)
+    saturate(100%)
+    invert(57%)
+    sepia(75%)
+    saturate(2096%)
+    hue-rotate(226deg)
+    brightness(103%)
+    contrast(101%);
+}
+
+/* Only the active icon changes when the desktop rail expands. */
+.site-sidebar:hover .sidebar-nav__item.is-active .asset-icon {
+  filter:
+    brightness(0)
+    saturate(100%)
+    invert(77%)
+    sepia(30%)
+    saturate(968%)
+    hue-rotate(211deg)
+    brightness(103%)
+    contrast(101%);
 }
 
 .sidebar-nav__label,

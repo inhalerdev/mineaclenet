@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import type { Viewer } from "@/features/auth/types";
 import {
   siteNavigation,
   type SiteNavIcon,
+  type SiteNavItem,
 } from "@/shared/navigation/site-navigation";
 
 const ICON_ROOT = "/shared/images/icons/streamline/core-solid";
@@ -22,7 +24,7 @@ const SOCIAL_LINKS = [
   {
     label: "Discord",
     href: "#",
-    icon: `${LOGO_ROOT}/discord.png`,
+    icon: `${LOGO_ROOT}/discord.svg`,
   },
   {
     label: "X",
@@ -35,11 +37,24 @@ function AssetIcon({ src }: { src: string }) {
   return <img className="asset-icon" src={src} alt="" draggable={false} />;
 }
 
+function navItemIsActive(pathname: string, item: SiteNavItem) {
+  if (item.external || !item.href.startsWith("/")) {
+    return false;
+  }
+
+  if (item.href === "/") {
+    return pathname === "/";
+  }
+
+  return pathname === item.href || pathname.startsWith(`${item.href}/`);
+}
+
 export function AppSidebar({
   viewer = null,
 }: {
   viewer?: Viewer | null;
 }) {
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const quickLinks = viewer
@@ -74,33 +89,42 @@ export function AppSidebar({
         </div>
 
         <nav className="sidebar-nav" aria-label="Primary navigation">
-          {siteNavigation.map((item) => (
-            <a
-              className={`sidebar-nav__item ${
-                item.href === "/" ? "is-active" : ""
-              }`}
-              href={item.href}
-              key={item.label}
-              {...(item.external
-                ? { target: "_blank", rel: "noreferrer" }
-                : {})}
-            >
-              <span className="sidebar-nav__icon">
-                <AssetIcon src={NAV_ICON_PATHS[item.icon]} />
-              </span>
-              <span className="sidebar-nav__label">{item.label}</span>
-              {item.external ? (
-                <span className="sidebar-nav__external">↗</span>
-              ) : null}
-            </a>
-          ))}
+          {siteNavigation.map((item) => {
+            const active = navItemIsActive(pathname, item);
+
+            return (
+              <a
+                aria-current={active ? "page" : undefined}
+                className={`sidebar-nav__item ${
+                  active ? "is-active" : ""
+                }`}
+                href={item.href}
+                key={item.label}
+                {...(item.external
+                  ? { target: "_blank", rel: "noreferrer" }
+                  : {})}
+              >
+                <span className="sidebar-nav__icon">
+                  <AssetIcon src={NAV_ICON_PATHS[item.icon]} />
+                </span>
+                <span className="sidebar-nav__label">{item.label}</span>
+                {item.external ? (
+                  <span className="sidebar-nav__external">↗</span>
+                ) : null}
+              </a>
+            );
+          })}
         </nav>
 
         {viewer ? (
           <div className="sidebar-quick">
             <small>MY MINEACLE</small>
             {quickLinks.map(([label, href]) => (
-              <a href={href} key={href}>
+              <a
+                aria-current={pathname === href ? "page" : undefined}
+                href={href}
+                key={href}
+              >
                 <span>{label}</span>
                 {href === "/notifications" &&
                 viewer.unreadNotifications > 0 ? (
@@ -200,21 +224,26 @@ export function AppSidebar({
 
         <aside className="mobile-drawer__panel" aria-label="Mobile navigation">
           <nav>
-            {siteNavigation.map((item) => (
-              <a
-                className={item.href === "/" ? "is-active" : ""}
-                href={item.href}
-                key={item.label}
-                onClick={closeMobile}
-                {...(item.external
-                  ? { target: "_blank", rel: "noreferrer" }
-                  : {})}
-              >
-                <AssetIcon src={NAV_ICON_PATHS[item.icon]} />
-                <span>{item.label}</span>
-                {item.external ? <small>↗</small> : null}
-              </a>
-            ))}
+            {siteNavigation.map((item) => {
+              const active = navItemIsActive(pathname, item);
+
+              return (
+                <a
+                  aria-current={active ? "page" : undefined}
+                  className={active ? "is-active" : ""}
+                  href={item.href}
+                  key={item.label}
+                  onClick={closeMobile}
+                  {...(item.external
+                    ? { target: "_blank", rel: "noreferrer" }
+                    : {})}
+                >
+                  <AssetIcon src={NAV_ICON_PATHS[item.icon]} />
+                  <span>{item.label}</span>
+                  {item.external ? <small>↗</small> : null}
+                </a>
+              );
+            })}
           </nav>
 
           {viewer ? (
@@ -222,7 +251,12 @@ export function AppSidebar({
               <small>MY MINEACLE</small>
               <nav>
                 {quickLinks.map(([label, href]) => (
-                  <a href={href} key={href} onClick={closeMobile}>
+                  <a
+                    aria-current={pathname === href ? "page" : undefined}
+                    href={href}
+                    key={href}
+                    onClick={closeMobile}
+                  >
                     <span />
                     <span>{label}</span>
                     {href === "/notifications" &&

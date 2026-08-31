@@ -5,27 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7daf79ef-1464-45dd-8d8f-6e6e7f86d67e" name="Changes" comment="8/30 v1.21">
-      <change afterPath="$PROJECT_DIR$/app/web/src/components/home/HomeExperience.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/mineacle-web.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/web/src/app/auth-cta.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/web/public/shared/images/icons/streamline/logos/discord.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/web/public/shared/images/icons/streamline/logos/discord.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/web/src/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/web/src/app/globals.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/web/src/app/icon-assets.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/web/src/app/home-v2.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/web/src/app/home.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/web/src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/web/src/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/web/src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/web/src/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/web/src/app/session-proof.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/web/src/app/sidebar-v2.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/web/src/components/home/HomeWireframe.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/web/src/components/shell/AppHeader.tsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/web/src/components/shell/AppSidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/web/src/components/shell/AppSidebar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/web/src/components/shell/SiteFooter.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/web/src/components/ui/CopyAddressButton.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/web/src/components/ui/PlayButton.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/web/src/features/players/types.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/web/src/features/server/types.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/web/src/shared/navigation/site-navigation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/web/src/shared/navigation/site-navigation.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,11 +79,11 @@
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/web/src/shared/navigation" />
       <recent name="$PROJECT_DIR$/app/web/src/components/shell" />
-      <recent name="$PROJECT_DIR$/app/web/src/components/home" />
       <recent name="$PROJECT_DIR$/app/web/src/app" />
+      <recent name="$PROJECT_DIR$/app/web/src/components/home" />
       <recent name="$PROJECT_DIR$/app/web/src/features/auth" />
-      <recent name="$PROJECT_DIR$/app/web/src/components/auth" />
     </key>
   </component>
   <component name="SharedIndexes">
