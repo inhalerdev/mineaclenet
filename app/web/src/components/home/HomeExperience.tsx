@@ -4,7 +4,7 @@ import { VisitorHome } from "@/components/home/VisitorHome";
 import { getCurrentViewer } from "@/features/auth/session";
 import { getDashboard } from "@/features/social/dashboard";
 
-export async function HomeWireframe() {
+export async function HomeExperience() {
   const viewer = await getCurrentViewer();
 
   if (!viewer) {

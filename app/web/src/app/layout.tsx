@@ -1,10 +1,6 @@
 import type { ReactNode } from "react";
 import "./globals.css";
-import "./auth-cta.css";
-import "./icon-assets.css";
-import "./sidebar-v2.css";
 import "./home-v2.css";
-import "./session-proof.css";
 
 export const metadata = {
   title: "Home | Mineacle",

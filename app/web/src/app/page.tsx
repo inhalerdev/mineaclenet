@@ -1,8 +1,8 @@
-import { HomeWireframe } from "@/components/home/HomeWireframe";
+import { HomeExperience } from "@/components/home/HomeExperience";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export default function HomePage() {
-  return <HomeWireframe />;
+  return <HomeExperience />;
 }

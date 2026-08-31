@@ -18,6 +18,19 @@ const NAV_ICON_PATHS: Record<SiteNavIcon, string> = {
   marketplace: `${ICON_ROOT}/marketplace.svg`,
 };
 
+const SOCIAL_LINKS = [
+  {
+    label: "Discord",
+    href: "#",
+    icon: `${LOGO_ROOT}/discord.png`,
+  },
+  {
+    label: "X",
+    href: "#",
+    icon: `${LOGO_ROOT}/x.svg`,
+  },
+] as const;
+
 function AssetIcon({ src }: { src: string }) {
   return <img className="asset-icon" src={src} alt="" draggable={false} />;
 }
@@ -38,14 +51,20 @@ export function AppSidebar({
       ]
     : [];
 
+  const closeMobile = () => setMobileOpen(false);
+
   return (
     <>
       <aside className="site-sidebar">
         <div className="sidebar-head">
           <a className="sidebar-brand" href="/" aria-label="Mineacle home">
             <span className="sidebar-brand__mark">
-              <img src="/shared/images/branding/mineacle-mark.png" alt="" />
+              <img
+                src="/shared/images/branding/mineacle-mark.png"
+                alt=""
+              />
             </span>
+
             <img
               className="sidebar-brand__wordmark"
               src="/shared/images/branding/mineacle-logo.png"
@@ -96,18 +115,21 @@ export function AppSidebar({
 
         <div className="sidebar-actions">
           <div className="sidebar-socials">
-            <a className="sidebar-social-link" href="#">
-              <span className="sidebar-social-link__icon">
-                <AssetIcon src={`${LOGO_ROOT}/discord.png`} />
-              </span>
-              <span className="sidebar-social-link__label">Discord</span>
-            </a>
-            <a className="sidebar-social-link" href="#">
-              <span className="sidebar-social-link__icon">
-                <AssetIcon src={`${LOGO_ROOT}/x.svg`} />
-              </span>
-              <span className="sidebar-social-link__label">X</span>
-            </a>
+            {SOCIAL_LINKS.map((social) => (
+              <a
+                className="sidebar-social-link"
+                href={social.href}
+                key={social.label}
+                aria-label={social.label}
+              >
+                <span className="sidebar-social-link__icon">
+                  <AssetIcon src={social.icon} />
+                </span>
+                <span className="sidebar-social-link__label">
+                  {social.label}
+                </span>
+              </a>
+            ))}
           </div>
 
           <a
@@ -123,10 +145,16 @@ export function AppSidebar({
                 <AssetIcon src={`${ICON_ROOT}/user.svg`} />
               )}
             </span>
+
             <span className="sidebar-account-action__copy">
-              <small>{viewer ? "Verified player" : "Player account"}</small>
-              <strong>{viewer ? viewer.username : "Log in / Sign up"}</strong>
+              <small>
+                {viewer ? "Verified player" : "Player account"}
+              </small>
+              <strong>
+                {viewer ? viewer.username : "Log in / Sign up"}
+              </strong>
             </span>
+
             <span className="sidebar-account-action__arrow">→</span>
           </a>
         </div>
@@ -137,17 +165,21 @@ export function AppSidebar({
           className="mobile-menu-button"
           onClick={() => setMobileOpen((value) => !value)}
           type="button"
+          aria-expanded={mobileOpen}
           aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
         >
-          <span className="menu-icon">
+          <span className="menu-icon" aria-hidden="true">
             <span />
             <span />
             <span />
           </span>
         </button>
 
-        <a className="mobile-brand" href="/">
-          <img src="/shared/images/branding/mineacle-mark.png" alt="Mineacle" />
+        <a className="mobile-brand" href="/" aria-label="Mineacle home">
+          <img
+            src="/shared/images/branding/mineacle-mark.png"
+            alt="Mineacle"
+          />
         </a>
 
         <a
@@ -157,6 +189,82 @@ export function AppSidebar({
           {viewer ? viewer.username : "Log in"}
         </a>
       </header>
+
+      <div className={`mobile-drawer ${mobileOpen ? "is-open" : ""}`}>
+        <button
+          className="mobile-drawer__scrim"
+          onClick={closeMobile}
+          type="button"
+          aria-label="Close navigation"
+        />
+
+        <aside className="mobile-drawer__panel" aria-label="Mobile navigation">
+          <nav>
+            {siteNavigation.map((item) => (
+              <a
+                className={item.href === "/" ? "is-active" : ""}
+                href={item.href}
+                key={item.label}
+                onClick={closeMobile}
+                {...(item.external
+                  ? { target: "_blank", rel: "noreferrer" }
+                  : {})}
+              >
+                <AssetIcon src={NAV_ICON_PATHS[item.icon]} />
+                <span>{item.label}</span>
+                {item.external ? <small>↗</small> : null}
+              </a>
+            ))}
+          </nav>
+
+          {viewer ? (
+            <div className="mobile-drawer__section">
+              <small>MY MINEACLE</small>
+              <nav>
+                {quickLinks.map(([label, href]) => (
+                  <a href={href} key={href} onClick={closeMobile}>
+                    <span />
+                    <span>{label}</span>
+                    {href === "/notifications" &&
+                    viewer.unreadNotifications > 0 ? (
+                      <small>{viewer.unreadNotifications}</small>
+                    ) : null}
+                  </a>
+                ))}
+              </nav>
+            </div>
+          ) : null}
+
+          <div className="mobile-drawer__bottom">
+            <div className="mobile-drawer__socials">
+              {SOCIAL_LINKS.map((social) => (
+                <a href={social.href} key={social.label}>
+                  <AssetIcon src={social.icon} />
+                  <span>{social.label}</span>
+                </a>
+              ))}
+            </div>
+
+            <a
+              className="mobile-drawer__account"
+              href={viewer ? "/profile" : "/login"}
+              onClick={closeMobile}
+            >
+              {viewer ? (
+                <span className="rail-user">
+                  {viewer.username.slice(0, 1).toUpperCase()}
+                </span>
+              ) : (
+                <AssetIcon src={`${ICON_ROOT}/user.svg`} />
+              )}
+              <span>
+                {viewer ? viewer.username : "Log in / Sign up"}
+              </span>
+              <small>→</small>
+            </a>
+          </div>
+        </aside>
+      </div>
     </>
   );
 }
