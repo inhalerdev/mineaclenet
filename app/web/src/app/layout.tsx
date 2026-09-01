@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import "./globals.css";
 import "./home.css";
-import "../../../Desktop/mineaclenet-v2.2-systems-foundation/app/web/src/app/systems.css";
+import "./systems.css";
 
 export const metadata = {
   title: "Home | Mineacle",

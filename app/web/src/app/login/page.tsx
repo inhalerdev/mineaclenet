@@ -3,6 +3,9 @@ import { AuthClient } from "@/components/auth/AuthClient";
 import { AppSidebar } from "@/components/shell/AppSidebar";
 import { getCurrentViewer } from "@/features/auth/session";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function LoginPage() {
   const viewer = await getCurrentViewer();
 

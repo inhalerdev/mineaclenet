@@ -3,12 +3,14 @@ import { AppSidebar } from "@/components/shell/AppSidebar";
 import { getCurrentViewer } from "@/features/auth/session";
 import { getDashboard } from "@/features/social/dashboard";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function TeamPage() {
   const viewer = await getCurrentViewer();
 
   if (!viewer) {
     redirect("/login");
-    return null;
   }
 
   const dashboard = await getDashboard(viewer);
