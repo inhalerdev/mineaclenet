@@ -163,10 +163,23 @@ export function AuthClient() {
         }),
       });
 
-      const data = (await response.json()) as { error?: string };
+      const data = (await response.json()) as {
+        error?: string;
+        session?: boolean;
+      };
 
       if (!response.ok) {
         setError(data.error || "Unable to create account");
+        return;
+      }
+
+      if (data.session === false) {
+        setMode("login");
+        setStep("username");
+        setVerification(null);
+        setPassword("");
+        setConfirm("");
+        setError(data.error || "Account created. Log in with your new password");
         return;
       }
 

@@ -1,0 +1,33 @@
+export type PlayerProfile = {
+  uuid: string;
+  username: string;
+  displayName: string;
+  rankKey: string;
+  rankName: string;
+  rankPrefix: string;
+  rankColor: string;
+  rankWeight: number;
+  online: boolean;
+  worldKey: string;
+  worldName: string;
+  worldGroup: string;
+  teamId: string;
+  teamName: string;
+  teamRole: string;
+  teamJoinedAt: number;
+  balanceCents: number;
+  balanceFormatted: string;
+  playtimeSeconds: number;
+  playtimeFormatted: string;
+  kills: number;
+  deaths: number;
+  kdRatio: number;
+  moneyRank: number;
+  killsRank: number;
+  playtimeRank: number;
+  firstJoinedAt: number;
+  lastSeen: number;
+  updatedAt: number;
+};
+
+export type LeaderboardSort = "balance" | "kd" | "kills" | "playtime";

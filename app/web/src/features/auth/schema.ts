@@ -49,6 +49,18 @@ export async function ensureAuthSchema() {
   `);
 
   await db.query(`
+    CREATE TABLE IF NOT EXISTS mineacle_web_auth_limits (
+      bucket_hash CHAR(64) NOT NULL,
+      attempts INT UNSIGNED NOT NULL DEFAULT 0,
+      window_started_at BIGINT UNSIGNED NOT NULL,
+      blocked_until BIGINT UNSIGNED NOT NULL DEFAULT 0,
+      updated_at BIGINT UNSIGNED NOT NULL,
+      PRIMARY KEY (bucket_hash),
+      KEY idx_mineacle_auth_limit_updated (updated_at)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+  `);
+
+  await db.query(`
     CREATE TABLE IF NOT EXISTS mineacle_web_sessions (
       id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
       account_id BIGINT UNSIGNED NOT NULL,

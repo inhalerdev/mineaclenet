@@ -31,7 +31,9 @@ export function FollowPlayer() {
 
       setMessage(`Following ${data.player?.username || username}`);
       setUsername("");
-      window.setTimeout(() => window.location.reload(), 500);
+      window.setTimeout(() => window.location.reload(), 350);
+    } catch {
+      setMessage("Unable to connect to Mineacle");
     } finally {
       setBusy(false);
     }

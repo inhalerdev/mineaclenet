@@ -1,0 +1,495 @@
+.system-page {
+  width: calc(100vw - var(--sidebar-collapsed));
+  height: 100dvh;
+  margin-left: var(--sidebar-collapsed);
+  padding: 14px;
+  overflow: auto;
+  background: #111111;
+}
+
+.system-card {
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  background: #171717;
+}
+
+.system-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.system-page-header small,
+.system-card > small,
+.player-profile-identity small,
+.account-security__section > small {
+  color: #b078ff;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.system-page-header h1,
+.player-profile-identity h1 {
+  margin: 5px 0 0;
+  color: #f8f8f8;
+  font-size: 28px;
+  letter-spacing: -0.035em;
+}
+
+.system-page-header p,
+.player-profile-identity p {
+  margin: 6px 0 0;
+  color: #888888;
+  font-size: 9px;
+  line-height: 1.55;
+}
+
+.system-card.is-wide,
+.leaderboard-shell,
+.profile-account-card {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.leaderboard-tabs {
+  display: flex;
+  gap: 5px;
+}
+
+.leaderboard-tabs a,
+.system-inline-action,
+.profile-account-actions > a,
+.follow-toggle button,
+.account-security button {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 11px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 6px;
+  background: #222222;
+  color: #bbbbbb;
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.leaderboard-tabs a.is-active,
+.follow-toggle button:not(.is-following) {
+  border-color: rgba(176, 120, 255, 0.28);
+  color: #d0afff;
+}
+
+.leaderboard-list {
+  display: grid;
+  margin-top: 18px;
+  gap: 5px;
+}
+
+.leaderboard-row {
+  min-height: 54px;
+  display: grid;
+  grid-template-columns: 36px 34px minmax(0, 1fr) auto;
+  align-items: center;
+  padding: 0 12px;
+  border-radius: 6px;
+  background: #1e1e1e;
+  gap: 9px;
+}
+
+.leaderboard-row:hover {
+  background: #222222;
+}
+
+.leaderboard-row > b {
+  color: #777777;
+  font-size: 9px;
+}
+
+.leaderboard-avatar,
+.player-profile-avatar {
+  display: grid;
+  place-items: center;
+  background: #2a2a2a;
+  color: #d0afff;
+  font-weight: 800;
+}
+
+.leaderboard-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 5px;
+  font-size: 10px;
+}
+
+.leaderboard-player,
+.leaderboard-value {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.leaderboard-player strong,
+.leaderboard-value strong {
+  color: #f8f8f8;
+  font-size: 9px;
+}
+
+.leaderboard-player small,
+.leaderboard-value small {
+  color: #777777;
+  font-size: 7px;
+}
+
+.leaderboard-value {
+  align-items: flex-end;
+}
+
+.player-profile-page {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+
+.player-profile-hero,
+.player-profile-details,
+.player-stat-grid {
+  width: min(1040px, 100%);
+  margin: 0 auto;
+}
+
+.player-profile-hero {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr) auto;
+  align-items: center;
+  padding: 20px;
+  gap: 16px;
+}
+
+.player-profile-avatar {
+  width: 74px;
+  height: 74px;
+  border-radius: 8px;
+  font-size: 22px;
+}
+
+.player-profile-identity h1 {
+  font-size: 30px;
+}
+
+.player-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.player-stat-grid .system-card {
+  min-height: 110px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 16px;
+}
+
+.player-stat-grid strong {
+  margin-top: 7px;
+  color: #f8f8f8;
+  font-size: 18px;
+}
+
+.player-stat-grid span {
+  margin-top: 4px;
+  color: #777777;
+  font-size: 8px;
+}
+
+.player-profile-details {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 16px 20px;
+  gap: 12px;
+}
+
+.player-profile-details > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.player-profile-details small {
+  color: #777777;
+  font-size: 7px;
+  font-weight: 700;
+}
+
+.player-profile-details strong {
+  color: #f8f8f8;
+  font-size: 9px;
+}
+
+.follow-toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+}
+
+.follow-toggle button {
+  cursor: pointer;
+}
+
+.follow-toggle button.is-following {
+  color: #bbbbbb;
+}
+
+.follow-toggle small {
+  max-width: 180px;
+  color: #ff7777;
+  font-size: 7px;
+}
+
+.system-following-list {
+  display: grid;
+  margin-top: 16px;
+  gap: 6px;
+}
+
+.system-following-list article {
+  display: flex;
+  min-height: 56px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: #1e1e1e;
+  gap: 12px;
+}
+
+.system-following-list article > a {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+}
+
+.system-following-list article > a > span:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.system-following-list strong {
+  color: #f8f8f8;
+  font-size: 9px;
+}
+
+.system-following-list small {
+  color: #777777;
+  font-size: 7px;
+}
+
+.system-empty {
+  padding: 24px 16px;
+  border: 1px dashed rgba(255, 255, 255, 0.08);
+  border-radius: 7px;
+  background: #151515;
+}
+
+.system-empty strong {
+  color: #f8f8f8;
+  font-size: 10px;
+}
+
+.system-empty p {
+  margin: 5px 0 0;
+  color: #777777;
+  font-size: 8px;
+}
+
+.profile-account-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.profile-account-stats {
+  display: grid;
+  grid-template-columns: 1.6fr repeat(3, 1fr);
+  margin: 18px 0 0;
+  padding: 0;
+  gap: 8px;
+}
+
+.profile-account-stats > div {
+  min-width: 0;
+  padding: 12px;
+  border-radius: 6px;
+  background: #1e1e1e;
+}
+
+.profile-account-stats dt {
+  color: #777777;
+  font-size: 7px;
+  font-weight: 700;
+}
+
+.profile-account-stats dd {
+  margin: 4px 0 0;
+  overflow: hidden;
+  color: #f8f8f8;
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-security {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  gap: 10px;
+}
+
+.account-security__section {
+  padding: 16px;
+  border-radius: 7px;
+  background: #1e1e1e;
+}
+
+.account-security__section h2 {
+  margin: 4px 0 0;
+  color: #f8f8f8;
+  font-size: 14px;
+}
+
+.account-security__section p {
+  max-width: 48ch;
+  margin: 6px 0 0;
+  color: #777777;
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+.account-security form {
+  display: grid;
+  margin-top: 12px;
+  gap: 8px;
+}
+
+.account-security label {
+  display: grid;
+  color: #999999;
+  font-size: 8px;
+  font-weight: 600;
+  gap: 4px;
+}
+
+.account-security input {
+  min-height: 36px;
+  padding: 0 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  outline: none;
+  background: #111111;
+  color: #f8f8f8;
+}
+
+.account-security input:focus {
+  border-color: rgba(176, 120, 255, 0.45);
+}
+
+.account-security button {
+  width: fit-content;
+  margin-top: 4px;
+  cursor: pointer;
+}
+
+.account-security button.is-secondary {
+  margin-top: 12px;
+}
+
+.account-security button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.account-security__message {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 9px 11px;
+  border-radius: 6px;
+  background: rgba(176, 120, 255, 0.08);
+  color: #d0afff;
+  font-size: 8px;
+}
+
+.system-notification-list {
+  margin-top: 16px;
+}
+
+.system-notification-list article.is-unread {
+  border-left: 2px solid #b078ff;
+}
+
+@media (max-width: 900px) {
+  .system-page {
+    width: 100%;
+    min-height: 100dvh;
+    margin-left: 0;
+    padding: calc(var(--mobile-header) + 10px) 10px 10px;
+  }
+
+  .system-page-header {
+    flex-direction: column;
+  }
+
+  .leaderboard-tabs {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .player-stat-grid,
+  .player-profile-details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .account-security,
+  .profile-account-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .leaderboard-row {
+    grid-template-columns: 28px 30px minmax(0, 1fr) auto;
+    padding: 0 8px;
+  }
+
+  .leaderboard-value small {
+    display: none;
+  }
+
+  .player-profile-hero {
+    grid-template-columns: 56px minmax(0, 1fr);
+  }
+
+  .player-profile-avatar {
+    width: 56px;
+    height: 56px;
+  }
+
+  .player-profile-hero .follow-toggle {
+    grid-column: 1 / -1;
+    align-items: flex-start;
+  }
+
+  .player-stat-grid,
+  .player-profile-details {
+    grid-template-columns: 1fr;
+  }
+}

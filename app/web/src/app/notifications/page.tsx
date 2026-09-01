@@ -1,9 +1,12 @@
 import type { RowDataPacket } from "mysql2";
 import { redirect } from "next/navigation";
+import { MarkNotificationsRead } from "@/components/notifications/MarkNotificationsRead";
 import { AppSidebar } from "@/components/shell/AppSidebar";
 import { ensureAuthSchema } from "@/features/auth/schema";
 import { getCurrentViewer } from "@/features/auth/session";
 import { getCoreDb } from "@/lib/db";
+
+export const dynamic = "force-dynamic";
 
 export default async function NotificationsPage() {
   const viewer = await getCurrentViewer();
@@ -15,7 +18,7 @@ export default async function NotificationsPage() {
   await ensureAuthSchema();
 
   const [rows] = await getCoreDb().execute<RowDataPacket[]>(
-    `SELECT id, category, title, body
+    `SELECT id, category, title, body, created_at, read_at
      FROM mineacle_web_notifications
      WHERE account_id = ?
      ORDER BY created_at DESC
@@ -23,29 +26,41 @@ export default async function NotificationsPage() {
     [viewer.accountId],
   );
 
+  const hasUnread = rows.some((row) => !Number(row.read_at || 0));
+
   return (
     <div className="mineacle-app">
       <AppSidebar viewer={viewer} />
-      <main className="utility-page">
-        <section className="utility-card is-wide">
-          <small>ACTIVITY</small>
-          <h1>Notifications</h1>
 
-          <div className="notification-list">
+      <main className="system-page">
+        <section className="system-card is-wide">
+          <header className="system-page-header">
+            <div>
+              <small>ACTIVITY</small>
+              <h1>Notifications</h1>
+            </div>
+
+            <MarkNotificationsRead hasUnread={hasUnread} />
+          </header>
+
+          <div className="notification-list system-notification-list">
             {rows.length ? (
               rows.map((row) => (
-                <article key={String(row.id)}>
+                <article
+                  className={!Number(row.read_at || 0) ? "is-unread" : ""}
+                  key={String(row.id)}
+                >
                   <small>{String(row.category)}</small>
                   <strong>{String(row.title)}</strong>
                   <p>{String(row.body)}</p>
                 </article>
               ))
             ) : (
-              <div className="dashboard-empty">
+              <div className="system-empty">
                 <strong>Nothing new yet</strong>
                 <p>
-                  Player milestones, leaderboard movement and team activity
-                  will appear here when those events occur.
+                  Real player and team events will appear here as those
+                  integrations are enabled.
                 </p>
               </div>
             )}

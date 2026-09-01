@@ -1,4 +1,4 @@
-import { createHash, randomBytes } from "node:crypto";
+import { createHash, randomBytes, randomInt } from "node:crypto";
 import type { RowDataPacket } from "mysql2";
 import { ensureAuthSchema } from "@/features/auth/schema";
 import { getCoreDb } from "@/lib/db";
@@ -17,12 +17,11 @@ export function hashVerificationCode(code: string) {
     .digest("hex");
 }
 
-function code() {
-  const bytes = randomBytes(6);
+function generateCode() {
   let value = "";
 
-  for (const byte of bytes) {
-    value += ALPHABET[byte % ALPHABET.length];
+  for (let index = 0; index < 6; index += 1) {
+    value += ALPHABET[randomInt(0, ALPHABET.length)];
   }
 
   return value;
@@ -54,27 +53,72 @@ export async function beginVerification(usernameValue: string) {
     );
   }
 
-  const [existing] = await db.execute<RowDataPacket[]>(
+  const [uuidAccounts] = await db.execute<RowDataPacket[]>(
     `SELECT id
      FROM mineacle_web_accounts
-     WHERE uuid = ? OR username_lower = LOWER(?)
+     WHERE uuid = ?
      LIMIT 1`,
-    [profile.uuid, profile.username],
+    [profile.uuid],
   );
 
-  if (existing[0]) {
+  if (uuidAccounts[0]) {
     throw new Error("That player already has an account. Log in instead");
+  }
+
+  const [nameAccounts] = await db.execute<RowDataPacket[]>(
+    `SELECT
+       a.id,
+       a.uuid,
+       a.username,
+       p.username AS current_username
+     FROM mineacle_web_accounts a
+     LEFT JOIN mineacle_web_profiles p ON p.uuid = a.uuid
+     WHERE a.username_lower = LOWER(?)
+     LIMIT 1`,
+    [profile.username],
+  );
+
+  const nameAccount = nameAccounts[0];
+
+  if (nameAccount) {
+    const currentUsername = String(nameAccount.current_username || "").trim();
+
+    if (
+      currentUsername &&
+      currentUsername.toLowerCase() !== profile.username.toLowerCase()
+    ) {
+      try {
+        await db.execute(
+          `UPDATE mineacle_web_accounts
+           SET username = ?, username_lower = LOWER(?), updated_at = ?
+           WHERE id = ?`,
+          [
+            currentUsername,
+            currentUsername,
+            Math.floor(Date.now() / 1000),
+            Number(nameAccount.id),
+          ],
+        );
+      } catch {
+        throw new Error(
+          "That username is still linked to an older web account. Try again later",
+        );
+      }
+    } else {
+      throw new Error("That player already has an account. Log in instead");
+    }
   }
 
   const now = Math.floor(Date.now() / 1000);
   const expiresAt = now + TTL_SECONDS;
   const challengeId = randomBytes(16).toString("hex");
-  const verificationCode = code();
+  const verificationCode = generateCode();
 
   await db.execute(
     `UPDATE mineacle_web_verifications
      SET consumed_at = ?
-     WHERE uuid = ? AND consumed_at IS NULL`,
+     WHERE uuid = ?
+       AND consumed_at IS NULL`,
     [now, profile.uuid],
   );
 

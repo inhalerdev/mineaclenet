@@ -1,6 +1,11 @@
 import type { RowDataPacket } from "mysql2";
 import type { Viewer } from "@/features/auth/types";
+import {
+  getPlayerByUuid,
+} from "@/features/players/repository";
+import type { PlayerProfile } from "@/features/players/types";
 import { ensureAuthSchema } from "@/features/auth/schema";
+import { getFollowingPlayers } from "@/features/social/follows";
 import { getCoreDb } from "@/lib/db";
 
 export type FriendStat = {
@@ -29,65 +34,36 @@ export type DashboardData = {
   viewerTeamRole: string;
 };
 
-function numberValue(value: unknown) {
-  const parsed = Number(value || 0);
-  return Number.isFinite(parsed) ? parsed : 0;
-}
-
-function textValue(value: unknown) {
-  return typeof value === "string" ? value : "";
-}
-
-function mapProfile(
-  row: RowDataPacket,
+function friendFromProfile(
+  profile: PlayerProfile,
   viewerUuid: string,
 ): Omit<FriendStat, "friendRank"> {
-  const balanceCents = numberValue(row.balance_cents);
-  const formatted = textValue(row.balance_formatted);
-
   return {
-    uuid: textValue(row.uuid),
-    username:
-      textValue(row.display_name) ||
-      textValue(row.username) ||
-      "Unknown",
-    balanceCents,
-    balance:
-      formatted ||
-      new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(balanceCents / 100),
-    kd: numberValue(row.kd_ratio),
-    team: textValue(row.team_name),
-    online: numberValue(row.online) > 0,
-    isViewer: textValue(row.uuid) === viewerUuid,
+    uuid: profile.uuid,
+    username: profile.displayName || profile.username,
+    balanceCents: profile.balanceCents,
+    balance: profile.balanceFormatted,
+    kd: profile.kdRatio,
+    team: profile.teamName,
+    online: profile.online,
+    isViewer: profile.uuid === viewerUuid,
   };
 }
 
 export async function getDashboard(viewer: Viewer): Promise<DashboardData> {
   await ensureAuthSchema();
 
-  const db = getCoreDb();
-
   try {
-    const [viewerRows] = await db.execute<RowDataPacket[]>(
-      "SELECT * FROM mineacle_web_profiles WHERE uuid = ? LIMIT 1",
-      [viewer.uuid],
-    );
+    const [viewerProfile, following] = await Promise.all([
+      getPlayerByUuid(viewer.uuid),
+      getFollowingPlayers(viewer.accountId),
+    ]);
 
-    const [followRows] = await db.execute<RowDataPacket[]>(
-      `SELECT p.*
-       FROM mineacle_web_follows f
-       INNER JOIN mineacle_web_profiles p ON p.uuid = f.target_uuid
-       WHERE f.follower_account_id = ?
-       ORDER BY f.created_at DESC
-       LIMIT 12`,
-      [viewer.accountId],
-    );
-
-    const combined = [...viewerRows.slice(0, 1), ...followRows]
-      .map((row) => mapProfile(row, viewer.uuid))
+    const combined = [
+      ...(viewerProfile ? [viewerProfile] : []),
+      ...following.map((item) => item.profile),
+    ]
+      .map((profile) => friendFromProfile(profile, viewer.uuid))
       .filter((row) => row.uuid);
 
     combined.sort((a, b) => b.balanceCents - a.balanceCents);
@@ -97,7 +73,7 @@ export async function getDashboard(viewer: Viewer): Promise<DashboardData> {
       friendRank: index + 1,
     }));
 
-    const [notificationRows] = await db.execute<RowDataPacket[]>(
+    const [notificationRows] = await getCoreDb().execute<RowDataPacket[]>(
       `SELECT id, category, title, body
        FROM mineacle_web_notifications
        WHERE account_id = ?
@@ -106,20 +82,20 @@ export async function getDashboard(viewer: Viewer): Promise<DashboardData> {
       [viewer.accountId],
     );
 
-    const viewerProfile = viewerRows[0];
-
     return {
       friends,
       activity: notificationRows.map((row) => ({
-        id: numberValue(row.id),
-        category: textValue(row.category),
-        title: textValue(row.title),
-        body: textValue(row.body),
+        id: Number(row.id || 0),
+        category: String(row.category || ""),
+        title: String(row.title || ""),
+        body: String(row.body || ""),
       })),
-      viewerTeam: viewerProfile ? textValue(viewerProfile.team_name) : "",
-      viewerTeamRole: viewerProfile ? textValue(viewerProfile.team_role) : "",
+      viewerTeam: viewerProfile?.teamName || "",
+      viewerTeamRole: viewerProfile?.teamRole || "",
     };
-  } catch {
+  } catch (error) {
+    console.error("[mineacle-social] Dashboard data failed", error);
+
     return {
       friends: [],
       activity: [],

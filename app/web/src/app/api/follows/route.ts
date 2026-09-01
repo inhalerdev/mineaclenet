@@ -1,8 +1,11 @@
-import type { RowDataPacket } from "mysql2";
 import { NextResponse } from "next/server";
-import { ensureAuthSchema } from "@/features/auth/schema";
 import { getCurrentViewer } from "@/features/auth/session";
-import { getCoreDb } from "@/lib/db";
+import {
+  followByUsername,
+  unfollowByUuid,
+} from "@/features/social/follows";
+
+export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   const viewer = await getCurrentViewer();
@@ -21,47 +24,55 @@ export async function POST(request: Request) {
     );
   }
 
-  await ensureAuthSchema();
+  try {
+    const player = await followByUsername(
+      viewer.accountId,
+      viewer.uuid,
+      username,
+    );
 
-  const [profiles] = await getCoreDb().execute<RowDataPacket[]>(
-    `SELECT uuid, username
-     FROM mineacle_web_profiles
-     WHERE LOWER(username) = LOWER(?)
-     LIMIT 1`,
-    [username],
-  );
-
-  const player = profiles[0];
-
-  if (!player) {
+    return NextResponse.json({
+      ok: true,
+      player: {
+        uuid: player.uuid,
+        username: player.username,
+      },
+    });
+  } catch (error) {
     return NextResponse.json(
-      { error: "That player has not joined Mineacle" },
-      { status: 404 },
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "Unable to follow that player",
+      },
+      { status: 400 },
     );
   }
+}
 
-  if (String(player.uuid) === viewer.uuid) {
+export async function DELETE(request: Request) {
+  const viewer = await getCurrentViewer();
+
+  if (!viewer) {
+    return NextResponse.json({ error: "Log in required" }, { status: 401 });
+  }
+
+  const body = (await request.json()) as { uuid?: string };
+  const uuid = (body.uuid || "").trim();
+
+  if (
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      uuid,
+    )
+  ) {
     return NextResponse.json(
-      { error: "You cannot follow yourself" },
+      { error: "Invalid player UUID" },
       { status: 400 },
     );
   }
 
-  const now = Math.floor(Date.now() / 1000);
+  await unfollowByUuid(viewer.accountId, uuid);
 
-  await getCoreDb().execute(
-    `INSERT INTO mineacle_web_follows
-      (follower_account_id, target_uuid, target_username, created_at)
-     VALUES (?, ?, ?, ?)
-     ON DUPLICATE KEY UPDATE target_username = VALUES(target_username)`,
-    [viewer.accountId, player.uuid, player.username, now],
-  );
-
-  return NextResponse.json({
-    ok: true,
-    player: {
-      uuid: String(player.uuid),
-      username: String(player.username),
-    },
-  });
+  return NextResponse.json({ ok: true });
 }
