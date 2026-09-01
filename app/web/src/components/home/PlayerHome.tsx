@@ -1,4 +1,5 @@
 import { LogoutButton } from "@/components/auth/LogoutButton";
+import { PlayerAvatar } from "@/components/players/PlayerAvatar";
 import type { Viewer } from "@/features/auth/types";
 import type { DashboardData } from "@/features/social/dashboard";
 
@@ -26,7 +27,12 @@ export function PlayerHome({
             ) : null}
           </a>
           <a className="player-profile-pill" href="/profile">
-            {viewer.username.slice(0, 1).toUpperCase()}
+            <PlayerAvatar
+              uuid={viewer.uuid}
+              size={34}
+              className="player-profile-pill__avatar"
+              eager
+            />
           </a>
           <LogoutButton className="player-home__logout" />
         </div>
@@ -65,9 +71,11 @@ export function PlayerHome({
                   key={friend.uuid}
                 >
                   <b>#{friend.friendRank}</b>
-                  <span className="friend-avatar">
-                    {friend.username.slice(0, 1).toUpperCase()}
-                  </span>
+                  <PlayerAvatar
+                    uuid={friend.uuid}
+                    size={30}
+                    className="friend-avatar"
+                  />
                   <span className="friend-name">
                     <strong>{friend.username}</strong>
                     <small>

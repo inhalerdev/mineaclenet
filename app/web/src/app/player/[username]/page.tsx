@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { PlayerAvatar } from "@/components/players/PlayerAvatar";
 import { AppSidebar } from "@/components/shell/AppSidebar";
 import { FollowToggle } from "@/components/social/FollowToggle";
 import { getCurrentViewer } from "@/features/auth/session";
@@ -45,9 +46,12 @@ export default async function PlayerPage({
 
       <main className="system-page player-profile-page">
         <section className="system-card player-profile-hero">
-          <div className="player-profile-avatar">
-            {player.username.slice(0, 1).toUpperCase()}
-          </div>
+          <PlayerAvatar
+            uuid={player.uuid}
+            size={74}
+            className="player-profile-avatar"
+            eager
+          />
 
           <div className="player-profile-identity">
             <small>{player.online ? "ONLINE" : "PLAYER PROFILE"}</small>

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import mysql from "mysql2/promise";
+import { createMineaclePool } from "./db-env.mjs";
 
 const [command, usernameArg, ...rest] = process.argv.slice(2);
 const username = (usernameArg || "").trim();
@@ -8,12 +8,6 @@ const username = (usernameArg || "").trim();
 function fail(message) {
   console.error(message);
   process.exit(1);
-}
-
-if (!process.env.DB_PASSWORD) {
-  fail(
-    "DB_PASSWORD is not set. Load /etc/mineacle/mineacle-web.env into this shell first.",
-  );
 }
 
 if (!command || !username) {
@@ -26,15 +20,7 @@ if (!/^[A-Za-z0-9_]{3,16}$/.test(username)) {
   fail("Invalid Minecraft username");
 }
 
-const pool = mysql.createPool({
-  host: process.env.DB_HOST || "127.0.0.1",
-  port: Number(process.env.DB_PORT || 3306),
-  user: process.env.DB_USERNAME || process.env.DB_USER || "website_user",
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_CORE_NAME || "mineacle_core",
-  charset: process.env.DB_CHARSET || "utf8mb4",
-  connectionLimit: 2,
-});
+const pool = createMineaclePool(2);
 
 async function account() {
   const [rows] = await pool.execute(

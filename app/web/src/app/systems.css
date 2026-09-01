@@ -493,3 +493,74 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Predesign functional surfaces */
+
+img.leaderboard-avatar,
+img.player-profile-avatar {
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.vote-shell {
+  width: min(900px, 100%);
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.vote-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 18px;
+  gap: 10px;
+}
+
+.vote-card {
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  background: #1e1e1e;
+}
+
+.vote-card small {
+  color: #b078ff;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .08em;
+}
+
+.vote-card strong {
+  margin-top: 6px;
+  color: #f8f8f8;
+  font-size: 15px;
+}
+
+.vote-card p {
+  margin: 6px 0 0;
+  color: #777777;
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+.vote-card > span {
+  display: flex;
+  flex-direction: column;
+}
+
+.vote-card > b {
+  width: fit-content;
+  margin-top: 18px;
+  color: #d0afff;
+  font-size: 8px;
+}
+
+@media (max-width: 620px) {
+  .vote-grid {
+    grid-template-columns: 1fr;
+  }
+}

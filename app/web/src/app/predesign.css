@@ -1,0 +1,12 @@
+img.friend-avatar,
+.player-profile-pill__avatar {
+  display: block;
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.player-profile-pill__avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+}

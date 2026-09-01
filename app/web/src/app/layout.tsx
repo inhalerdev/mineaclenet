@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import "./globals.css";
 import "./home.css";
 import "./systems.css";
+import "./predesign.css";
 
 export const metadata = {
   title: "Home | Mineacle",

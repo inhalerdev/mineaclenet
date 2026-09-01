@@ -1,11 +1,11 @@
 {
   "name": "mineaclenet-web",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start -H 0.0.0.0",
+    "start": "node ../../../../Desktop/mineaclenet-v2.3-predesign-readiness/app/web/scripts/migrate.mjs && node scripts/cleanup.mjs && next start -H 127.0.0.1",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

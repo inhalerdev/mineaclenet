@@ -1,63 +1,38 @@
-import { existsSync, readFileSync } from "node:fs";
-import path from "node:path";
 import mysql, { type Pool } from "mysql2/promise";
 
 declare global {
   var __mineacleCorePool: Pool | undefined;
 }
 
-function loadLegacyParentEnv() {
-  const envPath = path.resolve(process.cwd(), "..", ".env");
+function requiredEnv(
+  primary: string,
+  fallback?: string,
+) {
+  const value =
+    process.env[primary]?.trim() ||
+    (fallback ? process.env[fallback]?.trim() : "");
 
-  if (!existsSync(envPath)) {
-    return;
+  if (!value) {
+    throw new Error(`Missing required database environment: ${primary}`);
   }
 
-  try {
-    const source = readFileSync(envPath, "utf8");
-
-    for (const line of source.split(/\r?\n/)) {
-      const trimmed = line.trim();
-
-      if (!trimmed || trimmed.startsWith("#")) {
-        continue;
-      }
-
-      const separator = trimmed.indexOf("=");
-
-      if (separator <= 0) {
-        continue;
-      }
-
-      const key = trimmed.slice(0, separator).trim();
-      let value = trimmed.slice(separator + 1).trim();
-
-      if (
-        (value.startsWith('"') && value.endsWith('"')) ||
-        (value.startsWith("'") && value.endsWith("'"))
-      ) {
-        value = value.slice(1, -1);
-      }
-
-      if (!(key in process.env)) {
-        process.env[key] = value;
-      }
-    }
-  } catch {
-    // The visitor homepage must remain available if legacy env loading fails.
-  }
+  return value;
 }
 
-loadLegacyParentEnv();
-
 export function coreDbConfig() {
+  const port = Number(process.env.DB_PORT || 3306);
+
+  if (!Number.isInteger(port) || port < 1 || port > 65535) {
+    throw new Error("DB_PORT must be a valid TCP port");
+  }
+
   return {
-    host: process.env.DB_HOST || "127.0.0.1",
-    port: Number(process.env.DB_PORT || 3306),
-    user: process.env.DB_USERNAME || process.env.DB_USER || "website_user",
-    password: process.env.DB_PASSWORD || "",
-    database: process.env.DB_CORE_NAME || process.env.CORE_DB_NAME || "mineacle_core",
-    charset: process.env.DB_CHARSET || "utf8mb4",
+    host: process.env.DB_HOST?.trim() || "127.0.0.1",
+    port,
+    user: requiredEnv("DB_USERNAME", "DB_USER"),
+    password: requiredEnv("DB_PASSWORD"),
+    database: requiredEnv("DB_CORE_NAME", "CORE_DB_NAME"),
+    charset: process.env.DB_CHARSET?.trim() || "utf8mb4",
   };
 }
 
@@ -72,7 +47,12 @@ export function getCoreDb(): Pool {
       password: config.password,
       database: config.database,
       charset: config.charset,
-      connectionLimit: 10,
+      connectionLimit: 8,
+      maxIdle: 4,
+      idleTimeout: 60_000,
+      waitForConnections: true,
+      queueLimit: 32,
+      connectTimeout: 2_000,
       enableKeepAlive: true,
       keepAliveInitialDelay: 0,
       timezone: "Z",

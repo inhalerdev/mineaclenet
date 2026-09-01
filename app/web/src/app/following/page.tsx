@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { PlayerAvatar } from "@/components/players/PlayerAvatar";
 import { AppSidebar } from "@/components/shell/AppSidebar";
 import { FollowPlayer } from "@/components/social/FollowPlayer";
 import { FollowToggle } from "@/components/social/FollowToggle";
@@ -38,9 +39,11 @@ export default async function FollowingPage() {
               following.map(({ profile }) => (
                 <article key={profile.uuid}>
                   <a href={`/player/${encodeURIComponent(profile.username)}`}>
-                    <span className="leaderboard-avatar">
-                      {profile.username.slice(0, 1).toUpperCase()}
-                    </span>
+                    <PlayerAvatar
+                      uuid={profile.uuid}
+                      size={34}
+                      className="leaderboard-avatar"
+                    />
                     <span>
                       <strong>{profile.displayName || profile.username}</strong>
                       <small>

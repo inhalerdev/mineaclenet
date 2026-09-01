@@ -1,3 +1,4 @@
+import { PlayerAvatar } from "@/components/players/PlayerAvatar";
 import { AppSidebar } from "@/components/shell/AppSidebar";
 import { getCurrentViewer } from "@/features/auth/session";
 import { getPlayerLeaderboard } from "@/features/players/repository";
@@ -88,9 +89,11 @@ export default async function LeaderboardsPage({
                 key={player.uuid}
               >
                 <b>#{index + 1}</b>
-                <span className="leaderboard-avatar">
-                  {player.username.slice(0, 1).toUpperCase()}
-                </span>
+                <PlayerAvatar
+                  uuid={player.uuid}
+                  size={34}
+                  className="leaderboard-avatar"
+                />
                 <span className="leaderboard-player">
                   <strong>{player.displayName || player.username}</strong>
                   <small>
