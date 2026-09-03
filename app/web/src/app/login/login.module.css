@@ -1,0 +1,135 @@
+.page {
+  width: 100%;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 28px 18px;
+  overflow: auto;
+  background: #111111;
+}
+
+.shell {
+  width: min(100%, 440px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.brand {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.brand img {
+  width: 172px;
+  height: auto;
+  object-fit: contain;
+}
+
+.intro {
+  width: 100%;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.accessLabel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #b078ff;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  gap: 7px;
+}
+
+.accessLabel span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #62c249;
+  box-shadow: 0 0 0 3px rgba(98, 194, 73, 0.09);
+}
+
+.intro h1 {
+  margin: 8px 0 0;
+  color: #ffffff;
+  font-size: clamp(26px, 5vw, 34px);
+  line-height: 1.04;
+  letter-spacing: -0.045em;
+}
+
+.intro p {
+  max-width: 48ch;
+  margin: 10px auto 0;
+  color: #888888;
+  font-size: 9px;
+  line-height: 1.6;
+}
+
+.loginPanel {
+  width: 100%;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  background: #171717;
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.24);
+}
+
+.loginPanel :global(.auth-card) {
+  width: 100%;
+  max-width: none;
+}
+
+.loginPanel :global(.auth-tabs) {
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.loginPanel :global(.auth-tabs button) {
+  cursor: pointer;
+}
+
+.loginPanel :global(.auth-submit) {
+  cursor: pointer;
+}
+
+.loginPanel :global(.auth-submit:hover) {
+  background: #c49aff;
+}
+
+.loginPanel :global(.auth-submit:disabled) {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.notice {
+  margin: 14px 0 0;
+  color: #666666;
+  font-size: 8px;
+  font-weight: 600;
+  text-align: center;
+}
+
+@media (max-width: 520px) {
+  .page {
+    align-items: start;
+    padding: 22px 12px;
+  }
+
+  .brand {
+    margin-bottom: 20px;
+  }
+
+  .brand img {
+    width: 150px;
+  }
+
+  .loginPanel {
+    padding: 16px;
+  }
+
+  .intro h1 {
+    font-size: 27px;
+  }
+}
