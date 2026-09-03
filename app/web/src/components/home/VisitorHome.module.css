@@ -1,18 +1,18 @@
 .page {
   width: 100vw;
   height: 100dvh;
-  padding: 14px;
+  padding: 18px;
   overflow: hidden;
   background: #111111;
 }
 
-.frame {
+.hero {
   position: relative;
   width: 100%;
   height: 100%;
   overflow: hidden;
-  border: 1px solid #2a2a2a;
-  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 9px;
   background: #222222;
 }
 
@@ -30,16 +30,28 @@
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(17, 17, 17, 0.50) 0%, rgba(17, 17, 17, 0.08) 27%, rgba(17, 17, 17, 0.06) 64%, rgba(17, 17, 17, 0.58) 100%),
-    linear-gradient(90deg, rgba(17, 17, 17, 0.22) 0%, transparent 24%, transparent 76%, rgba(17, 17, 17, 0.18) 100%);
+    linear-gradient(
+      180deg,
+      rgba(17, 17, 17, 0.42) 0%,
+      rgba(17, 17, 17, 0.06) 26%,
+      rgba(17, 17, 17, 0.05) 62%,
+      rgba(17, 17, 17, 0.64) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(17, 17, 17, 0.18) 0%,
+      transparent 28%,
+      transparent 72%,
+      rgba(17, 17, 17, 0.14) 100%
+    );
 }
 
-.header {
+.top {
   position: absolute;
   z-index: 3;
-  top: 26px;
-  right: 28px;
-  left: 28px;
+  top: 28px;
+  right: 30px;
+  left: 30px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -48,156 +60,152 @@
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
 }
 
-.brandMark {
-  width: 34px;
-  height: 34px;
-  object-fit: contain;
-}
-
-.brandWordmark {
-  width: 132px;
+.brand img {
+  width: clamp(155px, 12vw, 215px);
   height: auto;
   object-fit: contain;
 }
 
-.auth {
+.account {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 }
 
-.auth a {
-  min-height: 36px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 14px;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 650;
-  transition:
-    background-color var(--ease-fast),
-    color var(--ease-fast),
-    transform var(--ease-fast);
-}
-
-.auth a:hover {
-  transform: translateY(-1px);
-}
-
-.authSecondary {
-  background: #222222;
+.verifyLink {
   color: #f8f8f8;
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
-.authSecondary:hover {
-  background: #2a2a2a;
-}
-
-.authPrimary {
-  background: #f8f8f8;
-  color: #111111;
-}
-
-.authPrimary:hover {
-  background: #e8e8e8;
-}
-
-.quickLinks {
-  position: absolute;
-  z-index: 3;
-  right: 28px;
-  bottom: 26px;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-}
-
-.quickLink {
+.signIn {
   min-height: 38px;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 0 11px;
+  justify-content: center;
+  padding: 0 15px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 6px;
-  background: #222222;
-  color: #bbbbbb;
-  font-size: 10px;
+  background: #7d2cff;
+  color: #ffffff;
+  font-size: 12px;
   font-weight: 650;
   transition:
     background-color var(--ease-fast),
-    color var(--ease-fast),
     transform var(--ease-fast);
 }
 
-.quickLink:hover {
+.signIn:hover {
+  background: #8a3cff;
   transform: translateY(-1px);
-  background: #2a2a2a;
-  color: #f8f8f8;
 }
 
-.quickLink img {
-  width: 16px;
-  height: 16px;
-  object-fit: contain;
-}
-
-.socials {
+.bottom {
   position: absolute;
   z-index: 3;
-  bottom: 26px;
-  left: 28px;
-  display: flex;
+  left: 50%;
+  bottom: 28px;
+  display: grid;
+  grid-template-columns: 184px 142px 104px;
+  align-items: end;
+  gap: 10px;
+  transform: translateX(-50%);
+}
+
+.categoryStack {
+  display: grid;
   gap: 7px;
 }
 
-.social {
-  width: 36px;
-  height: 36px;
+.category {
+  min-height: 54px;
   display: grid;
-  place-items: center;
+  grid-template-columns: 60px minmax(0, 1fr);
+  align-items: stretch;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.20);
   border-radius: 6px;
   background: #222222;
+  color: #f8f8f8;
   transition:
     background-color var(--ease-fast),
     transform var(--ease-fast);
 }
 
-.social:hover {
+.category:hover {
+  background: #292929;
   transform: translateY(-1px);
-  background: #2a2a2a;
 }
 
-.social img {
-  width: 16px;
-  height: 16px;
+.categoryImage {
+  position: relative;
+  overflow: hidden;
+  background: #1a1a1a;
+}
+
+.categoryImage > img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.punishmentImage {
+  display: grid;
+  place-items: center;
+  background: #1c1c1c;
+}
+
+.punishmentImage > img {
+  width: 23px;
+  height: 23px;
   object-fit: contain;
 }
 
+.categoryCopy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 10px;
+}
+
+.categoryCopy small,
+.search small {
+  color: #888888;
+  font-size: 7px;
+  font-weight: 650;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.categoryCopy strong,
+.search strong {
+  margin-top: 2px;
+  color: #f8f8f8;
+  font-size: 10px;
+  font-weight: 700;
+}
+
 .play {
-  position: absolute;
-  z-index: 4;
-  left: 50%;
-  bottom: 26px;
-  min-width: 116px;
-  min-height: 40px;
+  min-height: 46px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 9px;
-  padding: 0 15px;
-  border: 0;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 6px;
   background: #389222;
-  color: #f8f8f8;
+  color: #ffffff;
   cursor: pointer;
-  transform: translateX(-50%);
   font: inherit;
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 750;
+  text-transform: uppercase;
   transition:
     background-color var(--ease-fast),
     transform var(--ease-fast);
@@ -205,11 +213,13 @@
 
 .play:hover {
   background: #43a62b;
-  transform: translateX(-50%) translateY(-1px);
+  transform: translateY(-1px);
 }
 
-.play:active {
-  transform: translateX(-50%);
+.play img {
+  width: 17px;
+  height: 17px;
+  object-fit: contain;
 }
 
 .playCopied,
@@ -217,79 +227,134 @@
   background: #389222;
 }
 
-.play img {
-  width: 16px;
-  height: 16px;
+.search {
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 11px;
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  border-radius: 6px;
+  background: #222222;
+  color: #f8f8f8;
+  transition:
+    background-color var(--ease-fast),
+    transform var(--ease-fast);
+}
+
+.search:hover {
+  background: #292929;
+  transform: translateY(-1px);
+}
+
+.search > img {
+  width: 17px;
+  height: 17px;
   object-fit: contain;
 }
 
+.search > span {
+  display: flex;
+  flex-direction: column;
+}
+
+.socials {
+  position: absolute;
+  z-index: 3;
+  right: 30px;
+  bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.socials a {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  border-radius: 6px;
+  background: #222222;
+  transition: transform var(--ease-fast);
+}
+
+.socials a:hover {
+  transform: translateY(-1px);
+}
+
+.socials img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
 @media (max-width: 980px) {
-  .quickLinks {
+  .bottom {
+    grid-template-columns: 164px 132px;
+  }
+
+  .search {
     display: none;
+  }
+
+  .socials {
+    right: 22px;
   }
 }
 
-@media (max-width: 680px) {
+@media (max-width: 720px) {
   .page {
     padding: 8px;
   }
 
-  .frame {
+  .hero {
     border-radius: 7px;
   }
 
-  .header {
+  .top {
     top: 18px;
     right: 18px;
     left: 18px;
   }
 
-  .brand {
-    gap: 8px;
+  .brand img {
+    width: 135px;
   }
 
-  .brandMark {
-    width: 30px;
-    height: 30px;
+  .verifyLink {
+    display: none;
   }
 
-  .brandWordmark {
-    width: 106px;
+  .signIn {
+    min-height: 35px;
+    padding: 0 12px;
   }
 
-  .auth {
-    gap: 6px;
+  .bottom {
+    bottom: 18px;
+    grid-template-columns: 1fr 126px;
+    width: calc(100% - 36px);
   }
 
-  .auth a {
-    min-height: 34px;
-    padding: 0 10px;
-    font-size: 10px;
+  .categoryStack {
+    display: none;
+  }
+
+  .play {
+    grid-column: 2;
   }
 
   .socials {
+    right: auto;
     bottom: 18px;
     left: 18px;
   }
 
-  .play {
-    bottom: 18px;
-    min-width: 106px;
-    min-height: 38px;
-  }
-}
-
-@media (max-width: 480px) {
-  .brandWordmark {
-    display: none;
-  }
-
-  .authSecondary {
-    display: none !important;
-  }
-
-  .social {
-    width: 34px;
-    height: 34px;
+  .socials a {
+    width: 38px;
+    height: 38px;
   }
 }

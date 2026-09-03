@@ -6,37 +6,6 @@ import styles from "./VisitorHome.module.css";
 
 const SERVER_ADDRESS = "mineacle.net";
 
-const QUICK_LINKS = [
-  {
-    label: "Leaderboards",
-    href: "/leaderboards",
-    icon: "/shared/images/icons/streamline/core-solid/leaderboards.svg",
-  },
-  {
-    label: "Punishments",
-    href: "/punishments",
-    icon: "/shared/images/icons/streamline/core-solid/punishments.svg",
-  },
-  {
-    label: "Search players",
-    href: "/leaderboards",
-    icon: "/shared/images/icons/streamline/core-solid/search.svg",
-  },
-] as const;
-
-const SOCIAL_LINKS = [
-  {
-    label: "Discord",
-    href: "#",
-    icon: "/shared/images/icons/streamline/logos/discord.svg",
-  },
-  {
-    label: "X",
-    href: "#",
-    icon: "/shared/images/icons/streamline/logos/x.svg",
-  },
-] as const;
-
 export function VisitorHome() {
   const [copied, setCopied] = useState(false);
 
@@ -44,7 +13,7 @@ export function VisitorHome() {
     try {
       await navigator.clipboard.writeText(SERVER_ADDRESS);
       setCopied(true);
-      window.setTimeout(() => setCopied(false), 1600);
+      window.setTimeout(() => setCopied(false), 1400);
     } catch {
       setCopied(false);
     }
@@ -52,7 +21,7 @@ export function VisitorHome() {
 
   return (
     <main className={styles.page}>
-      <section className={styles.frame}>
+      <section className={styles.hero}>
         <video
           className={styles.video}
           autoPlay
@@ -67,67 +36,110 @@ export function VisitorHome() {
 
         <div className={styles.scrim} aria-hidden="true" />
 
-        <header className={styles.header}>
+        <header className={styles.top}>
           <a className={styles.brand} href="/" aria-label="Mineacle home">
             <img
-              className={styles.brandMark}
-              src="/shared/images/branding/mineacle-mark.png"
-              alt=""
-              draggable={false}
-            />
-            <img
-              className={styles.brandWordmark}
               src="/shared/images/branding/mineacle-logo.png"
               alt="Mineacle"
               draggable={false}
             />
           </a>
 
-          <div className={styles.auth}>
-            <a className={styles.authSecondary} href="/login">
-              Log in
+          <div className={styles.account}>
+            <a className={styles.verifyLink} href="/login">
+              Need to verify your account?
             </a>
-            <a className={styles.authPrimary} href="/login">
-              Sign up
+            <a className={styles.signIn} href="/login">
+              Sign in
             </a>
           </div>
         </header>
 
-        <nav className={styles.quickLinks} aria-label="Explore Mineacle">
-          {QUICK_LINKS.map((item) => (
-            <a className={styles.quickLink} href={item.href} key={item.label}>
-              <img src={item.icon} alt="" draggable={false} />
-              <span>{item.label}</span>
+        <div className={styles.bottom}>
+          <div className={styles.categoryStack}>
+            <a className={styles.category} href="/leaderboards">
+              <span className={styles.categoryImage}>
+                <img
+                  src="/images/home/leaderboards.jpg"
+                  alt=""
+                  draggable={false}
+                />
+              </span>
+              <span className={styles.categoryCopy}>
+                <small>Explore</small>
+                <strong>Leaderboards</strong>
+              </span>
             </a>
-          ))}
-        </nav>
 
-        <div className={styles.socials} aria-label="Mineacle social links">
-          {SOCIAL_LINKS.map((social) => (
-            <a
-              className={styles.social}
-              href={social.href}
-              key={social.label}
-              aria-label={social.label}
-            >
-              <img src={social.icon} alt="" draggable={false} />
+            <a className={styles.category} href="/punishments">
+              <span
+                className={`${styles.categoryImage} ${styles.punishmentImage}`}
+              >
+                <img
+                  src="/shared/images/icons/streamline/core-solid/punishments.svg"
+                  alt=""
+                  draggable={false}
+                />
+              </span>
+              <span className={styles.categoryCopy}>
+                <small>Review</small>
+                <strong>Punishments</strong>
+              </span>
             </a>
-          ))}
+          </div>
+
+          <button
+            className={`${styles.play} ${copied ? styles.playCopied : ""}`}
+            type="button"
+            onClick={copyServerAddress}
+            aria-label={`Copy Mineacle server address: ${SERVER_ADDRESS}`}
+          >
+            <img
+              src="/shared/images/icons/streamline/core-solid/play.svg"
+              alt=""
+              draggable={false}
+            />
+            <span>{copied ? "Copied" : "Play now"}</span>
+          </button>
+
+          <a className={styles.search} href="/leaderboards">
+            <img
+              src="/shared/images/icons/streamline/core-solid/search.svg"
+              alt=""
+              draggable={false}
+            />
+            <span>
+              <small>Players</small>
+              <strong>Search</strong>
+            </span>
+          </a>
         </div>
 
-        <button
-          className={`${styles.play} ${copied ? styles.playCopied : ""}`}
-          type="button"
-          onClick={copyServerAddress}
-          aria-label={`Copy Mineacle server address: ${SERVER_ADDRESS}`}
-        >
-          <img
-            src="/shared/images/icons/streamline/core-solid/play.svg"
-            alt=""
-            draggable={false}
-          />
-          <span>{copied ? "Copied" : "Play"}</span>
-        </button>
+        <div className={styles.socials}>
+          <a href="#" aria-label="Discord">
+            <img
+              src="/images/home/visitorhome/discord.png"
+              alt=""
+              draggable={false}
+            />
+          </a>
+
+          <a href="#" aria-label="YouTube">
+            <img
+              src="/images/home/visitorhome/youtube.png"
+              alt=""
+              draggable={false}
+            />
+          </a>
+
+          <a href="#" aria-label="X">
+            <img
+              src="/images/home/visitorhome/x.png"
+              alt=""
+              draggable={false}
+            />
+          </a>
+        </div>
       </section>
     </main>
   );
