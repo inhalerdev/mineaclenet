@@ -1,4 +1,5 @@
 import {
+  createHash,
   createHmac,
   timingSafeEqual,
 } from "node:crypto";
@@ -8,8 +9,13 @@ export const ADMIN_GATE_COOKIE = "mineacle_admin_gate";
 export const ADMIN_PREVIEW_COOKIE = "mineacle_admin_preview";
 
 const TOKEN_VERSION = "v1";
-const DEFAULT_SESSION_HOURS = 12;
-const MAX_SESSION_HOURS = 168;
+const SESSION_HOURS = 12;
+
+const ADMIN_USERNAME = "notator";
+
+// bcrypt cost 12. Plaintext password is intentionally not stored in Git.
+const ADMIN_PASSWORD_HASH =
+  "$2b$12$vBgLL58BJi97LYVvhsDnsOIlScYyh8Dsy95m.JTUri7mhkQSOc6C6";
 
 function requiredEnv(name: string) {
   const value = process.env[name]?.trim();
@@ -21,31 +27,16 @@ function requiredEnv(name: string) {
   return value;
 }
 
-function configuredUsername() {
-  return requiredEnv("ADMIN_GATE_USERNAME");
-}
-
 function gateSecret() {
-  const value = requiredEnv("ADMIN_GATE_SECRET");
-
-  if (value.length < 32) {
-    throw new Error("ADMIN_GATE_SECRET must be at least 32 characters");
-  }
-
-  return value;
+  // Derive the signing key from an existing server-only secret.
+  // DB_PASSWORD is never sent to the browser or stored in the cookie.
+  return createHash("sha256")
+    .update(`mineacle-admin-gate:${requiredEnv("DB_PASSWORD")}`)
+    .digest("hex");
 }
 
 function sessionSeconds() {
-  const hours = Number(
-    process.env.ADMIN_GATE_SESSION_HOURS || DEFAULT_SESSION_HOURS,
-  );
-
-  const safeHours =
-    Number.isFinite(hours) && hours > 0
-      ? Math.min(hours, MAX_SESSION_HOURS)
-      : DEFAULT_SESSION_HOURS;
-
-  return Math.floor(safeHours * 60 * 60);
+  return SESSION_HOURS * 60 * 60;
 }
 
 function safeEqual(left: string, right: string) {
@@ -69,19 +60,14 @@ export async function verifyAdminGateCredentials(
   username: string,
   password: string,
 ) {
-  const expectedUsername = configuredUsername();
-  const passwordHash = requiredEnv("ADMIN_GATE_PASSWORD_HASH");
-
-  // Always verify the password hash so username failures do not become
-  // noticeably cheaper than password failures.
   const [usernameMatches, passwordMatches] = await Promise.all([
     Promise.resolve(
       safeEqual(
         username.trim().toLowerCase(),
-        expectedUsername.toLowerCase(),
+        ADMIN_USERNAME.toLowerCase(),
       ),
     ),
-    compare(password, passwordHash),
+    compare(password, ADMIN_PASSWORD_HASH),
   ]);
 
   return usernameMatches && passwordMatches;
@@ -94,7 +80,7 @@ export function createAdminGateToken() {
   const payload = Buffer.from(
     JSON.stringify({
       v: TOKEN_VERSION,
-      u: configuredUsername(),
+      u: ADMIN_USERNAME,
       exp: expiresAt,
     }),
   ).toString("base64url");
@@ -137,7 +123,7 @@ export function verifyAdminGateToken(token?: string) {
       typeof data.u === "string" &&
       safeEqual(
         data.u.toLowerCase(),
-        configuredUsername().toLowerCase(),
+        ADMIN_USERNAME.toLowerCase(),
       )
     );
   } catch {
