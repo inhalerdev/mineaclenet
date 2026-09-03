@@ -8,12 +8,7 @@ export async function HomeExperience() {
   const viewer = await getCurrentViewer();
 
   if (!viewer) {
-    return (
-      <div className="mineacle-app">
-        <AppSidebar viewer={null} />
-        <VisitorHome />
-      </div>
-    );
+    return <VisitorHome />;
   }
 
   const dashboard = await getDashboard(viewer);

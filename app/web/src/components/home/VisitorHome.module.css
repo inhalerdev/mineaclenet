@@ -1,0 +1,295 @@
+.page {
+  width: 100vw;
+  height: 100dvh;
+  padding: 14px;
+  overflow: hidden;
+  background: #111111;
+}
+
+.frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  background: #222222;
+}
+
+.video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(17, 17, 17, 0.50) 0%, rgba(17, 17, 17, 0.08) 27%, rgba(17, 17, 17, 0.06) 64%, rgba(17, 17, 17, 0.58) 100%),
+    linear-gradient(90deg, rgba(17, 17, 17, 0.22) 0%, transparent 24%, transparent 76%, rgba(17, 17, 17, 0.18) 100%);
+}
+
+.header {
+  position: absolute;
+  z-index: 3;
+  top: 26px;
+  right: 28px;
+  left: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brandMark {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+
+.brandWordmark {
+  width: 132px;
+  height: auto;
+  object-fit: contain;
+}
+
+.auth {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.auth a {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 650;
+  transition:
+    background-color var(--ease-fast),
+    color var(--ease-fast),
+    transform var(--ease-fast);
+}
+
+.auth a:hover {
+  transform: translateY(-1px);
+}
+
+.authSecondary {
+  background: #222222;
+  color: #f8f8f8;
+}
+
+.authSecondary:hover {
+  background: #2a2a2a;
+}
+
+.authPrimary {
+  background: #f8f8f8;
+  color: #111111;
+}
+
+.authPrimary:hover {
+  background: #e8e8e8;
+}
+
+.quickLinks {
+  position: absolute;
+  z-index: 3;
+  right: 28px;
+  bottom: 26px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.quickLink {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 11px;
+  border-radius: 6px;
+  background: #222222;
+  color: #bbbbbb;
+  font-size: 10px;
+  font-weight: 650;
+  transition:
+    background-color var(--ease-fast),
+    color var(--ease-fast),
+    transform var(--ease-fast);
+}
+
+.quickLink:hover {
+  transform: translateY(-1px);
+  background: #2a2a2a;
+  color: #f8f8f8;
+}
+
+.quickLink img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.socials {
+  position: absolute;
+  z-index: 3;
+  bottom: 26px;
+  left: 28px;
+  display: flex;
+  gap: 7px;
+}
+
+.social {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  background: #222222;
+  transition:
+    background-color var(--ease-fast),
+    transform var(--ease-fast);
+}
+
+.social:hover {
+  transform: translateY(-1px);
+  background: #2a2a2a;
+}
+
+.social img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.play {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  bottom: 26px;
+  min-width: 116px;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 0 15px;
+  border: 0;
+  border-radius: 6px;
+  background: #389222;
+  color: #f8f8f8;
+  cursor: pointer;
+  transform: translateX(-50%);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  transition:
+    background-color var(--ease-fast),
+    transform var(--ease-fast);
+}
+
+.play:hover {
+  background: #43a62b;
+  transform: translateX(-50%) translateY(-1px);
+}
+
+.play:active {
+  transform: translateX(-50%);
+}
+
+.playCopied,
+.playCopied:hover {
+  background: #389222;
+}
+
+.play img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+@media (max-width: 980px) {
+  .quickLinks {
+    display: none;
+  }
+}
+
+@media (max-width: 680px) {
+  .page {
+    padding: 8px;
+  }
+
+  .frame {
+    border-radius: 7px;
+  }
+
+  .header {
+    top: 18px;
+    right: 18px;
+    left: 18px;
+  }
+
+  .brand {
+    gap: 8px;
+  }
+
+  .brandMark {
+    width: 30px;
+    height: 30px;
+  }
+
+  .brandWordmark {
+    width: 106px;
+  }
+
+  .auth {
+    gap: 6px;
+  }
+
+  .auth a {
+    min-height: 34px;
+    padding: 0 10px;
+    font-size: 10px;
+  }
+
+  .socials {
+    bottom: 18px;
+    left: 18px;
+  }
+
+  .play {
+    bottom: 18px;
+    min-width: 106px;
+    min-height: 38px;
+  }
+}
+
+@media (max-width: 480px) {
+  .brandWordmark {
+    display: none;
+  }
+
+  .authSecondary {
+    display: none !important;
+  }
+
+  .social {
+    width: 34px;
+    height: 34px;
+  }
+}
