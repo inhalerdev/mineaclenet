@@ -1,58 +1,3 @@
-.loader {
-  position: fixed;
-  z-index: 9999;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  background: #111111;
-  animation: loaderFade 820ms ease forwards;
-  pointer-events: none;
-}
-
-.loaderLogo {
-  width: 128px;
-  height: auto;
-  object-fit: contain;
-  user-select: none;
-  animation: loaderBounce 620ms cubic-bezier(0.22, 0.78, 0.32, 1) both;
-}
-
-@keyframes loaderBounce {
-  0% {
-    opacity: 0;
-    transform: translateY(5px) scale(0.94);
-  }
-
-  22% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-
-  48% {
-    transform: translateY(-8px) scale(1.025);
-  }
-
-  68% {
-    transform: translateY(2px) scale(0.995);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes loaderFade {
-  0%,
-  68% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
-
 .page {
   width: 100vw;
   height: 100dvh;
@@ -165,7 +110,33 @@
   display: block;
   object-fit: contain;
   user-select: none;
+  animation: heroLogoBounce 620ms cubic-bezier(0.22, 0.78, 0.32, 1) both;
   transition: transform var(--ease-fast);
+}
+
+@keyframes heroLogoBounce {
+  0% {
+    opacity: 0;
+    transform: translateY(5px) scale(0.94);
+  }
+
+  22% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  48% {
+    transform: translateY(-8px) scale(1.025);
+  }
+
+  68% {
+    transform: translateY(2px) scale(0.995);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .heroLogoLink:hover .heroLogo {
@@ -294,10 +265,6 @@
 }
 
 @media (max-width: 680px) {
-  .loaderLogo {
-    width: 104px;
-  }
-
   .page {
     grid-template-rows: auto 560px auto;
     gap: 16px;
@@ -380,11 +347,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .loader {
-    animation-duration: 220ms;
-  }
-
-  .loaderLogo {
+  .heroLogo {
     animation: none;
   }
 }
