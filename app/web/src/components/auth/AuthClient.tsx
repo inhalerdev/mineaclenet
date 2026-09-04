@@ -37,6 +37,14 @@ export function AuthClient() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
+    const requestedMode = new URLSearchParams(window.location.search).get("mode");
+
+    if (requestedMode === "create") {
+      setMode("create");
+    }
+  }, []);
+
+  useEffect(() => {
     if (!verification || step !== "verify") {
       return;
     }
