@@ -1,495 +1,313 @@
 .page {
   width: 100vw;
   height: 100dvh;
-  padding: 18px;
-  overflow: hidden;
+  min-width: 320px;
+  display: grid;
+  grid-template-rows: 32px minmax(420px, 1fr) 246px;
+  gap: 32px;
+  padding: 32px;
+  overflow: auto;
   background: #111111;
 }
 
-.hero {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 9px;
-  background: #222222;
-}
-
-.video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-
-.scrim {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(17, 17, 17, 0.42) 0%,
-      rgba(17, 17, 17, 0.05) 26%,
-      rgba(17, 17, 17, 0.04) 64%,
-      rgba(17, 17, 17, 0.62) 100%
-    ),
-    linear-gradient(
-      90deg,
-      rgba(17, 17, 17, 0.16) 0%,
-      transparent 28%,
-      transparent 72%,
-      rgba(17, 17, 17, 0.12) 100%
-    );
-}
-
-.whiteIcon {
-  filter: brightness(0) invert(1);
-}
-
-.top {
-  position: absolute;
-  z-index: 5;
-  top: 28px;
-  right: 30px;
-  left: 30px;
-  display: grid;
-  grid-template-columns: minmax(180px, 1fr) minmax(260px, 420px) minmax(300px, 1fr);
-  align-items: center;
-  gap: 24px;
-}
-
-.brand {
-  display: inline-flex;
-  align-items: center;
-  justify-self: start;
-}
-
-.brand img {
-  width: clamp(155px, 12vw, 215px);
-  height: auto;
-  object-fit: contain;
-}
-
-.searchWrap {
-  position: relative;
-  width: 100%;
-  justify-self: center;
-}
-
-.searchBar {
-  width: 100%;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0 13px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 6px;
-  background: #222222;
-}
-
-.searchBar > img {
-  width: 16px;
-  height: 16px;
-  flex: 0 0 16px;
-  object-fit: contain;
-}
-
-.searchBar input {
-  min-width: 0;
-  width: 100%;
-  border: 0;
-  outline: 0;
-  background: transparent;
-  color: #ffffff;
-  font: inherit;
-  font-size: 11px;
-  font-weight: 500;
-}
-
-.searchBar input::placeholder {
-  color: #9b9b9b;
-}
-
-.searchBar input::-webkit-search-cancel-button {
-  filter: brightness(0) invert(1);
-  opacity: 0.65;
-}
-
-.searchResults {
-  position: absolute;
-  top: calc(100% + 7px);
-  right: 0;
-  left: 0;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 6px;
-  background: #222222;
-}
-
-.searchResults a {
-  min-height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 12px;
-  color: #ffffff;
-  transition: background-color var(--ease-fast);
-}
-
-.searchResults a + a {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.searchResults a:hover {
-  background: #2a2a2a;
-}
-
-.searchResults a > span {
+.utilityBar {
   min-width: 0;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
 }
 
-.searchResults strong {
-  overflow: hidden;
-  color: #ffffff;
-  font-size: 10px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.searchResults small {
-  margin-top: 2px;
-  color: #888888;
-  font-size: 8px;
-}
-
-.searchResults b {
-  margin-left: 12px;
-  color: #bbbbbb;
-  font-size: 8px;
-  font-weight: 650;
-}
-
-.account {
+.accountActions {
   display: flex;
   align-items: center;
-  justify-self: end;
-  gap: 12px;
+  gap: 36px;
 }
 
 .verifyLink {
   color: #f8f8f8;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
   text-decoration: underline;
-  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
 }
 
-.signIn {
-  min-height: 38px;
+.loginButton {
+  width: 100px;
+  height: 32px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0 15px;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  border-radius: 6px;
-  background: #7d2cff;
+  border-radius: 4px;
+  background: #b078ff;
   color: #ffffff;
-  font-size: 12px;
-  font-weight: 650;
-  transition:
-    background-color var(--ease-fast),
-    transform var(--ease-fast);
-}
-
-.signIn:hover {
-  background: #8a3cff;
-  transform: translateY(-1px);
-}
-
-.bottomControls {
-  position: absolute;
-  z-index: 4;
-  right: 30px;
-  bottom: 28px;
-  left: 30px;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: end;
-  gap: 18px;
-  pointer-events: none;
-}
-
-.bottomControls > * {
-  pointer-events: auto;
-}
-
-.categoryStack {
-  width: 190px;
-  display: grid;
-  justify-self: end;
-  gap: 7px;
-}
-
-.category {
-  min-height: 52px;
-  display: grid;
-  grid-template-columns: 58px minmax(0, 1fr);
-  align-items: stretch;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.20);
-  border-radius: 6px;
-  background: #222222;
-  color: #ffffff;
-  transition:
-    background-color var(--ease-fast),
-    transform var(--ease-fast);
-}
-
-.category:hover {
-  background: #292929;
-  transform: translateY(-1px);
-}
-
-.categoryImage {
-  position: relative;
-  overflow: hidden;
-  background: #1a1a1a;
-}
-
-.categoryImage > img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-}
-
-.punishmentImage {
-  display: grid;
-  place-items: center;
-  background: #1c1c1c;
-}
-
-.punishmentImage > img {
-  width: 23px;
-  height: 23px;
-  object-fit: contain;
-}
-
-.categoryCopy {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 0 10px;
-}
-
-.categoryCopy small {
-  color: #8d8d8d;
-  font-size: 7px;
-  font-weight: 650;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-}
-
-.categoryCopy strong {
-  margin-top: 2px;
-  color: #ffffff;
-  font-size: 10px;
-  font-weight: 700;
-}
-
-.playGroup {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.play {
-  min-width: 150px;
-  min-height: 46px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  padding: 0 16px;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  border-radius: 6px;
-  background: #389222;
-  color: #ffffff;
-  cursor: pointer;
-  font: inherit;
-  font-size: 12px;
-  font-weight: 750;
-  text-transform: uppercase;
-  transition:
-    background-color var(--ease-fast),
-    transform var(--ease-fast);
-}
-
-.play:hover {
-  background: #43a62b;
-  transform: translateY(-1px);
-}
-
-.play img {
-  width: 17px;
-  height: 17px;
-  object-fit: contain;
-}
-
-.playCopied,
-.playCopied:hover {
-  background: #389222;
-}
-
-.joinHelp {
-  width: 46px;
-  height: 46px;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  border-radius: 6px;
-  background: #389222;
-  color: #ffffff;
-  font-size: 24px;
-  font-weight: 800;
+  font-size: 16px;
+  font-weight: 400;
   line-height: 1;
   transition:
     background-color var(--ease-fast),
     transform var(--ease-fast);
 }
 
-.joinHelp:hover {
-  background: #43a62b;
+.loginButton:hover {
+  background: #d0afff;
   transform: translateY(-1px);
 }
 
-.socials {
-  display: flex;
-  align-items: center;
-  justify-self: start;
-  gap: 8px;
+.hero {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #333333;
 }
 
-.socials a {
-  width: 44px;
-  height: 44px;
-  display: block;
-  border: 1px solid rgba(255, 255, 255, 0.20);
-  border-radius: 0;
-  background: transparent;
-  transition: transform var(--ease-fast);
-}
-
-.socials a:hover {
-  transform: translateY(-1px);
-}
-
-.socials img {
+.heroVideo {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   display: block;
   object-fit: cover;
-  border-radius: 0;
+  object-position: center;
+  background: #333333;
 }
 
-@media (max-width: 1100px) {
-  .top {
-    grid-template-columns: minmax(150px, 0.8fr) minmax(220px, 340px) minmax(220px, 0.8fr);
-    gap: 16px;
-  }
-
-  .verifyLink {
-    font-size: 10px;
-  }
-
-  .categoryStack {
-    width: 170px;
-  }
+.heroShade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(17, 17, 17, 0.12) 0%,
+      rgba(17, 17, 17, 0.02) 48%,
+      rgba(17, 17, 17, 0.26) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(17, 17, 17, 0.12) 0%,
+      transparent 34%,
+      transparent 66%,
+      rgba(17, 17, 17, 0.08) 100%
+    );
 }
 
-@media (max-width: 860px) {
-  .top {
-    grid-template-columns: auto minmax(180px, 1fr) auto;
+.heroLogo {
+  position: absolute;
+  z-index: 2;
+  top: 20px;
+  left: 50%;
+  width: 270px;
+  height: auto;
+  object-fit: contain;
+  transform: translateX(-50%);
+  user-select: none;
+}
+
+.heroFooter {
+  position: absolute;
+  z-index: 3;
+  right: 16px;
+  bottom: 15px;
+  left: 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: end;
+  gap: 24px;
+}
+
+.heroCopy {
+  width: min(100%, 430px);
+}
+
+.heroCopy h1 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.heroCopy h1 span {
+  color: #d0afff;
+}
+
+.heroCopy p {
+  max-width: 430px;
+  margin: 3px 0 0;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.22;
+}
+
+.playGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.joinGuide {
+  margin: 0 0 12px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #f8f8f8;
+  cursor: pointer;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.playButton {
+  width: 186px;
+  height: 61px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: #389222;
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+  transition:
+    background-color var(--ease-fast),
+    transform var(--ease-fast);
+}
+
+.playButton:hover {
+  background: #43a62b;
+  transform: translateY(-1px);
+}
+
+.playButtonCopied,
+.playButtonCopied:hover {
+  background: #389222;
+}
+
+.cards {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 32px;
+}
+
+.card {
+  min-width: 0;
+  min-height: 0;
+  border-radius: 8px;
+  background: #444444;
+}
+
+/*
+ * At 1512 × 982 this resolves to the reference layout exactly:
+ * 32px page padding + 32px utility row + 32px gap +
+ * 576px hero + 32px gap + 246px cards + 32px bottom padding.
+ */
+@media (max-width: 980px) {
+  .page {
+    height: auto;
+    min-height: 100dvh;
+    grid-template-rows: 32px 560px auto;
+    gap: 24px;
+    padding: 24px;
   }
 
-  .brand img {
-    width: 135px;
-  }
-
-  .verifyLink {
-    display: none;
-  }
-
-  .categoryStack {
-    display: none;
-  }
-
-  .bottomControls {
-    grid-template-columns: 1fr auto 1fr;
-  }
-
-  .socials {
-    justify-self: end;
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: 210px;
+    gap: 24px;
   }
 }
 
 @media (max-width: 680px) {
   .page {
-    padding: 8px;
+    grid-template-rows: auto 560px auto;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .utilityBar {
+    min-height: 36px;
+  }
+
+  .accountActions {
+    width: 100%;
+    justify-content: flex-end;
+    gap: 16px;
+  }
+
+  .verifyLink {
+    font-size: 12px;
+  }
+
+  .loginButton {
+    width: 82px;
+    height: 34px;
+    font-size: 13px;
   }
 
   .hero {
     border-radius: 7px;
   }
 
-  .top {
+  .heroLogo {
     top: 18px;
-    right: 18px;
-    left: 18px;
-    grid-template-columns: auto 1fr auto;
-    gap: 10px;
+    width: 190px;
   }
 
-  .brand img {
-    width: 108px;
+  .heroFooter {
+    right: 14px;
+    bottom: 14px;
+    left: 14px;
+    grid-template-columns: 1fr;
+    gap: 18px;
   }
 
-  .searchBar {
-    height: 36px;
+  .heroCopy {
+    grid-row: 1;
   }
 
-  .signIn {
-    min-height: 36px;
-    padding: 0 11px;
-    font-size: 10px;
+  .heroCopy h1 {
+    font-size: 17px;
   }
 
-  .bottomControls {
-    right: 18px;
-    bottom: 18px;
-    left: 18px;
+  .heroCopy p {
+    max-width: 34ch;
+    font-size: 11px;
   }
 
-  .play {
-    min-width: 126px;
-    min-height: 42px;
+  .playGroup {
+    align-items: stretch;
   }
 
-  .joinHelp {
-    width: 42px;
-    height: 42px;
+  .joinGuide {
+    align-self: center;
+    font-size: 12px;
+  }
+
+  .playButton {
+    width: 100%;
+    height: 54px;
     font-size: 21px;
   }
 
-  .socials {
-    display: none;
+  .cards {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 190px;
+    gap: 16px;
   }
 }

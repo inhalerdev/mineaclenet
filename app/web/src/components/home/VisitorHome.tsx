@@ -21,9 +21,20 @@ export function VisitorHome() {
 
   return (
     <main className={styles.page}>
-      <section className={styles.hero}>
+      <header className={styles.utilityBar}>
+        <nav className={styles.accountActions} aria-label="Account">
+          <a className={styles.verifyLink} href="/login">
+            Verify in-game account
+          </a>
+          <a className={styles.loginButton} href="/login">
+            Login
+          </a>
+        </nav>
+      </header>
+
+      <section className={styles.hero} aria-label="Mineacle open beta">
         <video
-          className={styles.video}
+          className={styles.heroVideo}
           autoPlay
           loop
           muted
@@ -34,112 +45,56 @@ export function VisitorHome() {
           <source src={homeContent.hero.media} type="video/mp4" />
         </video>
 
-        <div className={styles.scrim} aria-hidden="true" />
+        <div className={styles.heroShade} aria-hidden="true" />
 
-        <header className={styles.top}>
-          <a className={styles.brand} href="/" aria-label="Mineacle home">
-            <img
-              src="/shared/images/branding/mineacle-logo.png"
-              alt="Mineacle"
-              draggable={false}
-            />
-          </a>
+        <img
+          className={styles.heroLogo}
+          src="/shared/images/branding/mineacle-logo.png"
+          alt="Mineacle"
+          draggable={false}
+        />
 
-          <div className={styles.account}>
-            <a className={styles.verifyLink} href="/login">
-              Need to verify your account?
-            </a>
-            <a className={styles.signIn} href="/login">
-              Sign in
-            </a>
-          </div>
-        </header>
-
-        <div className={styles.bottom}>
-          <div className={styles.categoryStack}>
-            <a className={styles.category} href="/leaderboards">
-              <span className={styles.categoryImage}>
-                <img
-                  src="/images/home/leaderboards.jpg"
-                  alt=""
-                  draggable={false}
-                />
-              </span>
-              <span className={styles.categoryCopy}>
-                <small>Explore</small>
-                <strong>Leaderboards</strong>
-              </span>
-            </a>
-
-            <a className={styles.category} href="/punishments">
-              <span
-                className={`${styles.categoryImage} ${styles.punishmentImage}`}
-              >
-                <img
-                  src="/shared/images/icons/streamline/core-solid/punishments.svg"
-                  alt=""
-                  draggable={false}
-                />
-              </span>
-              <span className={styles.categoryCopy}>
-                <small>Review</small>
-                <strong>Punishments</strong>
-              </span>
-            </a>
+        <div className={styles.heroFooter}>
+          <div className={styles.heroCopy}>
+            <h1>
+              MINEACLE <span>OPEN BETA</span>
+            </h1>
+            <p>
+              Paragraph text or labels or a mixture of both with features
+              included in the open public beta fill this in with information.
+            </p>
           </div>
 
-          <button
-            className={`${styles.play} ${copied ? styles.playCopied : ""}`}
-            type="button"
-            onClick={copyServerAddress}
-            aria-label={`Copy Mineacle server address: ${SERVER_ADDRESS}`}
-          >
-            <img
-              src="/shared/images/icons/streamline/core-solid/play.svg"
-              alt=""
-              draggable={false}
-            />
-            <span>{copied ? "Copied" : "Play now"}</span>
-          </button>
+          <div className={styles.playGroup}>
+            <button
+              className={styles.joinGuide}
+              type="button"
+              onClick={copyServerAddress}
+            >
+              How to join mineacle.net
+            </button>
 
-          <a className={styles.search} href="/leaderboards">
-            <img
-              src="/shared/images/icons/streamline/core-solid/search.svg"
-              alt=""
-              draggable={false}
-            />
-            <span>
-              <small>Players</small>
-              <strong>Search</strong>
-            </span>
-          </a>
+            <button
+              className={`${styles.playButton} ${
+                copied ? styles.playButtonCopied : ""
+              }`}
+              type="button"
+              onClick={copyServerAddress}
+              aria-label={`Copy Mineacle server address: ${SERVER_ADDRESS}`}
+            >
+              {copied ? "COPIED" : "PLAY"}
+            </button>
+          </div>
+
+          <div aria-hidden="true" />
         </div>
+      </section>
 
-        <div className={styles.socials}>
-          <a href="#" aria-label="Discord">
-            <img
-              src="/images/home/visitorhome/discord.png"
-              alt=""
-              draggable={false}
-            />
-          </a>
-
-          <a href="#" aria-label="YouTube">
-            <img
-              src="/images/home/visitorhome/youtube.png"
-              alt=""
-              draggable={false}
-            />
-          </a>
-
-          <a href="#" aria-label="X">
-            <img
-              src="/images/home/visitorhome/x.png"
-              alt=""
-              draggable={false}
-            />
-          </a>
-        </div>
+      <section className={styles.cards} aria-label="Mineacle features">
+        <article className={styles.card} />
+        <article className={styles.card} />
+        <article className={styles.card} />
+        <article className={styles.card} />
       </section>
     </main>
   );
