@@ -1,3 +1,58 @@
+.loader {
+  position: fixed;
+  z-index: 9999;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #111111;
+  animation: loaderFade 820ms ease forwards;
+  pointer-events: none;
+}
+
+.loaderLogo {
+  width: 128px;
+  height: auto;
+  object-fit: contain;
+  user-select: none;
+  animation: loaderBounce 620ms cubic-bezier(0.22, 0.78, 0.32, 1) both;
+}
+
+@keyframes loaderBounce {
+  0% {
+    opacity: 0;
+    transform: translateY(5px) scale(0.94);
+  }
+
+  22% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  48% {
+    transform: translateY(-8px) scale(1.025);
+  }
+
+  68% {
+    transform: translateY(2px) scale(0.995);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes loaderFade {
+  0%,
+  68% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
 .page {
   width: 100vw;
   height: 100dvh;
@@ -95,16 +150,26 @@
     );
 }
 
-.heroLogo {
+.heroLogoLink {
   position: absolute;
   z-index: 2;
   top: 20px;
   left: 50%;
+  display: block;
+  transform: translateX(-50%);
+}
+
+.heroLogo {
   width: 270px;
   height: auto;
+  display: block;
   object-fit: contain;
-  transform: translateX(-50%);
   user-select: none;
+  transition: transform var(--ease-fast);
+}
+
+.heroLogoLink:hover .heroLogo {
+  transform: translateY(-1px);
 }
 
 .heroFooter {
@@ -168,8 +233,8 @@
 }
 
 .playButton {
-  width: 186px;
-  height: 51px;
+  width: 176px;
+  height: 61px;
   display: grid;
   place-items: center;
   padding: 0;
@@ -212,11 +277,6 @@
   background: #444444;
 }
 
-/*
- * At 1512 × 982 this resolves to the reference layout exactly:
- * 32px page padding + 32px utility row + 32px gap +
- * 576px hero + 32px gap + 246px cards + 32px bottom padding.
- */
 @media (max-width: 980px) {
   .page {
     height: auto;
@@ -234,6 +294,10 @@
 }
 
 @media (max-width: 680px) {
+  .loaderLogo {
+    width: 104px;
+  }
+
   .page {
     grid-template-rows: auto 560px auto;
     gap: 16px;
@@ -264,8 +328,11 @@
     border-radius: 7px;
   }
 
-  .heroLogo {
+  .heroLogoLink {
     top: 18px;
+  }
+
+  .heroLogo {
     width: 190px;
   }
 
@@ -309,5 +376,15 @@
     grid-template-columns: 1fr;
     grid-auto-rows: 190px;
     gap: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader {
+    animation-duration: 220ms;
+  }
+
+  .loaderLogo {
+    animation: none;
   }
 }
