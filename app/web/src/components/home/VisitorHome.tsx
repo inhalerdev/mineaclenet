@@ -152,19 +152,14 @@ export function VisitorHome() {
 
           <div className={styles.heroFooter}>
             <div className={styles.heroCopy}>
-              <div className={styles.betaStatus}>
-                <span aria-hidden="true" />
-                OPEN BETA LIVE
-              </div>
-
               <h1>
                 MINEACLE <span>OPEN BETA</span>
               </h1>
 
               <p>
-                Build your name, grow your wealth, compete
-                with others, and be part of Mineacle before
-                full release.
+                The world is open. Build your name, grow your
+                wealth, compete with other players, and be part
+                of Mineacle before the full release.
               </p>
             </div>
 
@@ -207,8 +202,8 @@ export function VisitorHome() {
                 alt=""
                 draggable={false}
               />
+              <span className={styles.mediaShade} aria-hidden="true" />
             </span>
-            <span className={styles.mediaShade} />
 
             <span className={styles.cardContent}>
               <small>COMPETE</small>
@@ -231,7 +226,6 @@ export function VisitorHome() {
                 draggable={false}
               />
             </span>
-            <span className={styles.mediaShade} />
 
             <span className={styles.cardContent}>
               <small>REWARDS</small>
@@ -257,13 +251,12 @@ export function VisitorHome() {
                 draggable={false}
               />
             </span>
-            <span className={styles.mediaShade} />
 
             <span className={styles.cardContent}>
               <small>PUBLIC RECORDS</small>
               <strong>Punishments</strong>
               <span>
-                Review public bans and player history.
+                Review public bans and player punishment history.
               </span>
               <b>VIEW PUNISHMENTS →</b>
             </span>
@@ -281,14 +274,14 @@ export function VisitorHome() {
                 alt=""
                 draggable={false}
               />
+              <span className={styles.mediaShade} aria-hidden="true" />
             </span>
-            <span className={styles.mediaShade} />
 
             <span className={styles.cardContent}>
-              <small>MINEACLE+</small>
-              <strong>Go further</strong>
+              <small>MARKETPLACE</small>
+              <strong>Mineacle Store</strong>
               <span>
-                Explore Mineacle+ and available upgrades.
+                Explore Mineacle+ and available server upgrades.
               </span>
               <b>OPEN MARKETPLACE ↗</b>
             </span>
@@ -356,10 +349,7 @@ export function VisitorHome() {
 
                     <span className={styles.editionCopy}>
                       <strong>Java Edition</strong>
-                      <small>
-                        <i aria-hidden="true" />
-                        SUPPORTED
-                      </small>
+                      <small>SUPPORTED</small>
                     </span>
 
                     <span className={styles.editionArrow}>
