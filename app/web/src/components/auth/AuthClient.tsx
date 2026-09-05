@@ -9,6 +9,13 @@ type VerifyState = {
   expiresAt: number;
 };
 
+type AuthMode = "login" | "create";
+
+type AuthClientProps = {
+  initialMode?: AuthMode;
+  onAuthenticated?: () => void | Promise<void>;
+};
+
 async function confirmBrowserSession() {
   const response = await fetch("/api/auth/me", {
     cache: "no-store",
@@ -26,9 +33,14 @@ async function confirmBrowserSession() {
   return data.authenticated === true;
 }
 
-export function AuthClient() {
-  const [mode, setMode] = useState<"login" | "create">("login");
-  const [step, setStep] = useState<"username" | "verify" | "password">("username");
+export function AuthClient({
+  initialMode = "login",
+  onAuthenticated,
+}: AuthClientProps = {}) {
+  const [mode, setMode] = useState<AuthMode>(initialMode);
+  const [step, setStep] = useState<"username" | "verify" | "password">(
+    "username",
+  );
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -37,12 +49,25 @@ export function AuthClient() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    const requestedMode = new URLSearchParams(window.location.search).get("mode");
+    const requestedMode =
+      new URLSearchParams(window.location.search).get("mode");
 
-    if (requestedMode === "create") {
-      setMode("create");
+    setMode(requestedMode === "create" ? "create" : initialMode);
+    setStep("username");
+    setVerification(null);
+    setPassword("");
+    setConfirm("");
+    setError("");
+  }, [initialMode]);
+
+  async function finishAuthentication() {
+    if (onAuthenticated) {
+      await onAuthenticated();
+      return;
     }
-  }, []);
+
+    window.location.replace("/");
+  }
 
   useEffect(() => {
     if (!verification || step !== "verify") {
@@ -102,11 +127,13 @@ export function AuthClient() {
       }
 
       if (!(await confirmBrowserSession())) {
-        setError("Login was accepted, but the browser session was not established");
+        setError(
+          "Login was accepted, but the browser session was not established",
+        );
         return;
       }
 
-      window.location.replace("/");
+      await finishAuthentication();
     } catch {
       setError("Unable to connect to Mineacle");
     } finally {
@@ -187,16 +214,20 @@ export function AuthClient() {
         setVerification(null);
         setPassword("");
         setConfirm("");
-        setError(data.error || "Account created. Log in with your new password");
+        setError(
+          data.error || "Account created. Log in with your new password",
+        );
         return;
       }
 
       if (!(await confirmBrowserSession())) {
-        setError("Account was created, but the browser session was not established");
+        setError(
+          "Account was created, but the browser session was not established",
+        );
         return;
       }
 
-      window.location.replace("/");
+      await finishAuthentication();
     } catch {
       setError("Unable to connect to Mineacle");
     } finally {
@@ -204,7 +235,7 @@ export function AuthClient() {
     }
   }
 
-  function changeMode(next: "login" | "create") {
+  function changeMode(next: AuthMode) {
     setMode(next);
     setStep("username");
     setVerification(null);
@@ -223,6 +254,7 @@ export function AuthClient() {
         >
           Log in
         </button>
+
         <button
           className={mode === "create" ? "is-active" : ""}
           onClick={() => changeMode("create")}
@@ -237,7 +269,9 @@ export function AuthClient() {
           <header>
             <small>MINEACLE ACCOUNT</small>
             <h1>Welcome back</h1>
-            <p>Your verified Minecraft account is your Mineacle.net identity.</p>
+            <p>
+              Your verified Minecraft account is your Mineacle.net identity.
+            </p>
           </header>
 
           <label>
@@ -304,7 +338,10 @@ export function AuthClient() {
           <header>
             <small>VERIFY IN MINECRAFT</small>
             <h1>{verification.username}</h1>
-            <p>Join Mineacle and enter this command. The page will update automatically.</p>
+            <p>
+              Join Mineacle and enter this command. The page will update
+              automatically.
+            </p>
           </header>
 
           <div className="auth-command">
@@ -326,7 +363,10 @@ export function AuthClient() {
           <header>
             <small>PLAYER VERIFIED</small>
             <h1>Finish your account</h1>
-            <p>{verification.username} is verified. Create your Mineacle.net password.</p>
+            <p>
+              {verification.username} is verified. Create your Mineacle.net
+              password.
+            </p>
           </header>
 
           <label>

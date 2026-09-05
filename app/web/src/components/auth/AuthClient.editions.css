@@ -1,0 +1,30 @@
+/* Shared Java/Bedrock selector for AuthClient */
+.auth-editions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 12px;
+}
+.auth-editions button {
+  min-height: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0 10px;
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 6px;
+  background: #111111;
+  color: #555555;
+  text-align: left;
+}
+.auth-editions button.is-active {
+  border-color: rgba(176,120,255,.38);
+  background: rgba(176,120,255,.07);
+  color: #f8f8f8;
+}
+.auth-editions button:disabled { cursor: not-allowed; opacity: .68; }
+.auth-editions span { font-size: 8px; font-weight: 750; letter-spacing: .045em; }
+.auth-editions small { margin-top: 3px; color: #666666; font-size: 7px; font-weight: 500; }
+.auth-editions button.is-active small { color: #d0afff; }
+@media (max-width: 520px) { .auth-editions { grid-template-columns: 1fr; } }
