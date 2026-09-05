@@ -11,7 +11,7 @@ import { homeContent } from "@/features/home/home-content";
 import styles from "./VisitorHome.module.css";
 
 const SERVER_ADDRESS = "mineacle.net";
-const SEARCH_ICON = "/shared/images/icons/streamline/core-solid/search.svg";
+const SEARCH_ICON = "/shared/images/icons/streamline/core-solid/search.png";
 const USER_ICON = "/shared/images/icons/streamline/core-solid/user.svg";
 const ICON_ROOT = "/shared/images/icons/streamline/core-solid";
 const JAVA_EDITION_ICON =
