@@ -1,6 +1,6 @@
 export const homeContent = {
   hero: {
-    media: "https://pub-a87f1944ab6f4788a1974177e59cf562.r2.dev/hero-bg.mp4",
+    media: "https://pub-a87f1944ab6f4788a1974177e59cf562.r2.dev/hero1.mp4",
     mediaLabel: "Mineacle seasonal world",
   },
   mineaclePlus: {
