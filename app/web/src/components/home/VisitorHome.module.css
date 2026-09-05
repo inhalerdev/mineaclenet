@@ -3,11 +3,11 @@
   height: 100dvh;
   min-width: 320px;
   display: grid;
-  grid-template-rows: 36px minmax(420px, 1fr) 246px;
-  gap: 16px;
-  padding: 16px;
+  grid-template-rows: var(--control-height) minmax(420px, 1fr) 246px;
+  gap: var(--section-gap);
+  padding: var(--page-gutter);
   overflow: auto;
-  background: #111111;
+  background: var(--brand-background);
 }
 
 .utilityBar {
@@ -15,164 +15,13 @@
   z-index: 40;
   min-width: 0;
   display: grid;
-  grid-template-columns: minmax(260px, 360px) minmax(16px, 1fr) auto;
+  grid-template-columns: minmax(280px, 360px) minmax(16px, 1fr) auto;
   align-items: center;
   gap: 16px;
 }
 
 .playerSearch {
-  position: relative;
   grid-column: 1;
-  width: 100%;
-  min-width: 0;
-}
-
-.searchForm {
-  width: 100%;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 0 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  background: #171717;
-  transition:
-    border-color var(--ease-fast),
-    background-color var(--ease-fast);
-}
-
-.searchForm:focus-within {
-  border-color: rgba(176, 120, 255, 0.48);
-  background: #1b1b1b;
-}
-
-.searchForm > img {
-  width: 16px;
-  height: 16px;
-  flex: 0 0 16px;
-  object-fit: contain;
-  image-rendering: pixelated;
-  opacity: 0.82;
-}
-
-.searchForm input {
-  min-width: 0;
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  border: 0;
-  outline: 0;
-  background: transparent;
-  color: #ffffff;
-  font: inherit;
-  font-size: 11px;
-  font-weight: 500;
-}
-
-.searchForm input::placeholder {
-  color: #777777;
-}
-
-.searchForm input::-webkit-search-cancel-button {
-  filter: brightness(0) invert(1);
-  opacity: 0.6;
-}
-
-.searching {
-  flex: 0 0 auto;
-  color: #777777;
-  font-size: 7px;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-}
-
-.searchResults {
-  position: absolute;
-  top: calc(100% + 6px);
-  right: 0;
-  left: 0;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  background: #171717;
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.34);
-}
-
-.searchResults a {
-  min-height: 54px;
-  display: grid;
-  grid-template-columns: 30px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 10px;
-  padding: 0 10px;
-  color: #ffffff;
-  transition: background-color var(--ease-fast);
-}
-
-.searchResults a + a {
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.searchResults a:hover {
-  background: #222222;
-}
-
-.resultIcon {
-  width: 30px;
-  height: 30px;
-  display: grid;
-  place-items: center;
-  border-radius: 4px;
-  background: #222222;
-}
-
-.resultIcon img {
-  width: 15px;
-  height: 15px;
-  filter: brightness(0) invert(1);
-  opacity: 0.8;
-}
-
-.resultCopy {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.resultCopy strong {
-  overflow: hidden;
-  color: #ffffff;
-  font-size: 10px;
-  font-weight: 650;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.resultCopy small {
-  margin-top: 2px;
-  overflow: hidden;
-  color: #777777;
-  font-size: 8px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.resultStatus {
-  color: #666666;
-  font-size: 7px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-}
-
-.resultOnline {
-  color: #62c249;
-}
-
-.noResults {
-  padding: 16px;
-  color: #777777;
-  font-size: 9px;
 }
 
 .accountActions {
@@ -184,42 +33,52 @@
 }
 
 .verifyLink {
+  min-height: var(--control-height);
+  display: inline-flex;
+  align-items: center;
   padding: 0;
   border: 0;
   background: transparent;
-  color: #f8f8f8;
+  color: var(--text);
   cursor: pointer;
   font: inherit;
-  font-size: 14px;
-  font-weight: 400;
+  font-size: 13px;
+  font-weight: 450;
   line-height: 1;
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 4px;
+  transition: color var(--ease-fast);
+}
+
+.verifyLink:hover {
+  color: var(--brand-hover);
 }
 
 .loginButton {
-  width: 92px;
-  height: 36px;
+  min-width: 92px;
+  height: var(--control-height);
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  padding: 0 16px;
   border: 0;
-  border-radius: 4px;
-  background: #b078ff;
-  color: #ffffff;
+  border-radius: var(--radius-control);
+  background: var(--brand-primary);
+  color: var(--brand-text);
   cursor: pointer;
   font: inherit;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1;
+  font-size: 13px;
+  font-weight: 650;
   transition:
     background-color var(--ease-fast),
-    transform var(--ease-fast);
+    transform var(--ease-fast),
+    box-shadow var(--ease-fast);
 }
 
 .loginButton:hover {
-  background: #d0afff;
+  background: var(--brand-secondary);
+  box-shadow: 0 8px 22px rgba(132, 54, 254, 0.18);
   transform: translateY(-1px);
 }
 
@@ -228,8 +87,9 @@
   min-width: 0;
   min-height: 0;
   overflow: hidden;
-  border-radius: 8px;
-  background: #333333;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface-raised);
 }
 
 .heroVideo {
@@ -237,10 +97,8 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  display: block;
   object-fit: cover;
   object-position: center;
-  background: #333333;
 }
 
 .heroShade {
@@ -250,23 +108,23 @@
   background:
     linear-gradient(
       180deg,
-      rgba(17, 17, 17, 0.12) 0%,
-      rgba(17, 17, 17, 0.02) 48%,
-      rgba(17, 17, 17, 0.34) 100%
+      rgba(17, 17, 17, 0.08) 0%,
+      rgba(17, 17, 17, 0.01) 44%,
+      rgba(17, 17, 17, 0.56) 100%
     ),
     linear-gradient(
       90deg,
-      rgba(17, 17, 17, 0.16) 0%,
-      transparent 36%,
+      rgba(17, 17, 17, 0.18),
+      transparent 38%,
       transparent 68%,
-      rgba(17, 17, 17, 0.08) 100%
+      rgba(17, 17, 17, 0.08)
     );
 }
 
 .heroLogoLink {
   position: absolute;
   z-index: 2;
-  top: 20px;
+  top: 16px;
   left: 50%;
   display: block;
   transform: translateX(-50%);
@@ -275,10 +133,10 @@
 .heroLogo {
   width: 270px;
   height: auto;
-  display: block;
   object-fit: contain;
   user-select: none;
-  animation: heroLogoBounce 620ms cubic-bezier(0.22, 0.78, 0.32, 1) both;
+  animation:
+    heroLogoBounce 620ms cubic-bezier(0.22, 0.78, 0.32, 1) both;
   transition: transform var(--ease-fast);
 }
 
@@ -327,9 +185,29 @@
   width: min(100%, 470px);
 }
 
+.betaStatus {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 8px;
+  color: var(--brand-accent-2);
+  font-size: 8px;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+}
+
+.betaStatus span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brand-accent-2);
+  box-shadow: 0 0 10px rgba(17, 252, 123, 0.38);
+}
+
 .heroCopy h1 {
   margin: 0;
-  color: #ffffff;
+  color: var(--text);
   font-size: 20px;
   font-weight: 700;
   line-height: 1.05;
@@ -337,16 +215,15 @@
 }
 
 .heroCopy h1 span {
-  color: #d0afff;
+  color: var(--brand-secondary);
 }
 
 .heroCopy p {
-  max-width: 470px;
-  margin: 5px 0 0;
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.28;
+  max-width: 430px;
+  margin: 6px 0 0;
+  color: var(--brand-text);
+  font-size: 13px;
+  line-height: 1.35;
 }
 
 .playGroup {
@@ -360,15 +237,18 @@
   padding: 0;
   border: 0;
   background: transparent;
-  color: #f8f8f8;
+  color: var(--brand-text);
   cursor: pointer;
   font: inherit;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1;
+  font-size: 13px;
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
+  transition: color var(--ease-fast);
+}
+
+.joinGuide:hover {
+  color: var(--brand-hover);
 }
 
 .playButton {
@@ -378,27 +258,28 @@
   place-items: center;
   padding: 0;
   border: 0;
-  border-radius: 4px;
-  background: #389222;
+  border-radius: var(--radius-control);
+  background: var(--brand-cta);
   color: #ffffff;
   cursor: pointer;
   font: inherit;
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 750;
   line-height: 1;
   transition:
-    background-color var(--ease-fast),
-    transform var(--ease-fast);
+    filter var(--ease-fast),
+    transform var(--ease-fast),
+    box-shadow var(--ease-fast);
 }
 
 .playButton:hover {
-  background: #43a62b;
+  filter: brightness(1.08);
+  box-shadow: 0 10px 26px rgba(98, 194, 73, 0.18);
   transform: translateY(-1px);
 }
 
-.playButtonCopied,
-.playButtonCopied:hover {
-  background: #389222;
+.playButtonCopied {
+  filter: none;
 }
 
 .cards {
@@ -413,52 +294,40 @@
   position: relative;
   min-width: 0;
   min-height: 0;
-  display: grid;
-  grid-template-rows: minmax(0, 1.35fr) minmax(96px, 0.65fr);
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  background: #171717;
-  color: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  color: var(--text);
+  isolation: isolate;
   transition:
     border-color var(--ease-fast),
-    transform var(--ease-fast);
+    transform var(--ease-fast),
+    box-shadow var(--ease-fast);
 }
 
 .mediaCard:hover {
-  border-color: rgba(176, 120, 255, 0.28);
-  transform: translateY(-1px);
+  border-color: rgba(132, 54, 254, 0.46);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+  transform: translateY(-2px);
 }
 
 .cardMedia {
-  position: relative;
-  min-width: 0;
-  min-height: 0;
-  display: block;
+  position: absolute;
+  inset: 0;
   overflow: hidden;
-  background: #222222;
+  background: var(--surface-raised);
 }
 
 .cardMedia > img:not(.fallbackIcon) {
   width: 100%;
   height: 100%;
-  display: block;
   object-fit: cover;
-  transition: transform 240ms ease;
+  transition: transform var(--ease-media);
 }
 
 .mediaCard:hover .cardMedia > img:not(.fallbackIcon) {
   transform: scale(1.025);
-}
-
-.mediaShade {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(17, 17, 17, 0.02) 40%,
-    rgba(17, 17, 17, 0.3) 100%
-  );
 }
 
 .mediaFallback {
@@ -467,48 +336,79 @@
   background:
     radial-gradient(
       circle at 50% 40%,
-      rgba(176, 120, 255, 0.11),
-      transparent 42%
+      rgba(132, 54, 254, 0.24),
+      transparent 38%
     ),
-    #222222;
+    linear-gradient(
+      145deg,
+      rgba(176, 120, 255, 0.08),
+      transparent 58%
+    ),
+    var(--surface-raised);
 }
 
 .fallbackIcon {
-  width: 42px;
-  height: 42px;
+  width: 54px;
+  height: 54px;
   object-fit: contain;
   filter: brightness(0) invert(1);
   opacity: 0.72;
+  transition:
+    opacity var(--ease-fast),
+    transform var(--ease-media);
+}
+
+.mediaCard:hover .fallbackIcon {
+  opacity: 0.92;
+  transform: scale(1.05);
+}
+
+.mediaShade {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(17, 17, 17, 0.03) 20%,
+      rgba(17, 17, 17, 0.34) 56%,
+      rgba(17, 17, 17, 0.96) 100%
+    );
+  pointer-events: none;
 }
 
 .cardContent {
-  min-width: 0;
+  position: absolute;
+  z-index: 2;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
   display: flex;
   flex-direction: column;
-  padding: 16px;
+  align-items: flex-start;
 }
 
 .cardContent small {
-  color: #b078ff;
+  color: var(--brand-secondary);
   font-size: 7px;
   font-weight: 750;
-  line-height: 1;
   letter-spacing: 0.08em;
 }
 
 .cardContent strong {
   margin-top: 5px;
-  color: #ffffff;
-  font-size: 15px;
+  color: var(--text);
+  font-size: 17px;
   font-weight: 650;
   line-height: 1.05;
   letter-spacing: -0.025em;
 }
 
 .cardContent > span {
-  margin-top: 4px;
+  width: 100%;
+  margin-top: 5px;
   overflow: hidden;
-  color: #888888;
+  color: var(--muted);
   font-size: 9px;
   line-height: 1.35;
   text-overflow: ellipsis;
@@ -516,12 +416,19 @@
 }
 
 .cardContent b {
-  margin-top: auto;
-  padding-top: 8px;
-  color: #d0afff;
+  margin-top: 10px;
+  color: var(--brand-hover);
   font-size: 8px;
-  font-weight: 700;
-  letter-spacing: 0.025em;
+  font-weight: 750;
+  letter-spacing: 0.03em;
+  transition:
+    color var(--ease-fast),
+    transform var(--ease-fast);
+}
+
+.mediaCard:hover .cardContent b {
+  color: var(--brand-text);
+  transform: translateX(2px);
 }
 
 .modalBackdrop {
@@ -531,76 +438,97 @@
   display: grid;
   place-items: center;
   padding: 16px;
-  background: rgba(0, 0, 0, 0.74);
+  background: rgba(0, 0, 0, 0.76);
   backdrop-filter: blur(8px);
 }
 
 .popup {
   position: relative;
   width: min(100%, 520px);
-  max-height: calc(100dvh - 48px);
+  max-height: calc(100dvh - 32px);
   overflow: auto;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  background: #171717;
-  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.42);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-modal);
+  background: var(--surface);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.46);
+  animation: popupIn 180ms var(--ease-fast) both;
 }
 
-.authPopup {
-  width: min(100%, 500px);
+@keyframes popupIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.99);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.authPopup,
+.joinModal {
   padding: 16px;
 }
 
 .modalClose {
   position: absolute;
   z-index: 5;
-  top: 14px;
-  right: 14px;
+  top: 16px;
+  right: 16px;
   width: 30px;
   height: 30px;
   display: grid;
   place-items: center;
   padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 4px;
-  background: #222222;
-  color: #bbbbbb;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--surface-raised);
+  color: var(--muted);
   cursor: pointer;
   font: inherit;
   font-size: 19px;
   line-height: 1;
+  transition:
+    color var(--ease-fast),
+    border-color var(--ease-fast);
 }
 
 .modalClose:hover {
-  color: #ffffff;
+  border-color: rgba(208, 175, 255, 0.3);
+  color: var(--brand-hover);
 }
 
-.editionHeader {
-  padding-right: 46px;
+.editionHeader,
+.modalHeader {
+  padding-right: 48px;
 }
 
-.editionHeader small {
-  color: #b078ff;
+.editionHeader small,
+.modalHeader > span {
+  color: var(--brand-secondary);
   font-size: 8px;
   font-weight: 750;
-  line-height: 1;
   letter-spacing: 0.09em;
 }
 
-.editionHeader h2 {
+.editionHeader h2,
+.modalHeader h2 {
   margin: 7px 0 0;
-  color: #ffffff;
+  color: var(--text);
   font-size: 26px;
   font-weight: 650;
   line-height: 1;
   letter-spacing: -0.04em;
 }
 
-.editionHeader p {
+.editionHeader p,
+.modalHeader p {
+  max-width: 46ch;
   margin: 8px 0 0;
-  color: #888888;
+  color: var(--muted-dim);
   font-size: 10px;
-  line-height: 1.45;
+  line-height: 1.5;
 }
 
 .editionGrid {
@@ -620,55 +548,34 @@
   justify-content: center;
   padding: 16px;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: var(--radius-card);
   font: inherit;
   text-align: center;
 }
 
 .javaEdition {
-  border: 1px solid rgba(176, 120, 255, 0.32);
+  border: 1px solid rgba(132, 54, 254, 0.42);
   background:
     radial-gradient(
       circle at 50% 34%,
-      rgba(176, 120, 255, 0.12),
+      rgba(132, 54, 254, 0.18),
       transparent 45%
     ),
-    #1a1a1a;
-  color: #ffffff;
+    var(--surface-soft);
+  color: var(--text);
   cursor: pointer;
   transition:
-    border-color 180ms ease,
-    background-color 180ms ease,
-    box-shadow 180ms ease,
-    transform 180ms cubic-bezier(0.2, 0.75, 0.25, 1);
-}
-
-.javaEdition::after {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(
-    135deg,
-    rgba(208, 175, 255, 0.08),
-    transparent 36%
-  );
-  content: "";
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 180ms ease;
+    border-color var(--ease-fast),
+    box-shadow var(--ease-fast),
+    transform var(--ease-fast);
 }
 
 .javaEdition:hover {
-  border-color: #b078ff;
-  background-color: #1d1d1d;
+  border-color: var(--brand-primary);
   box-shadow:
     0 12px 32px rgba(0, 0, 0, 0.3),
-    0 0 26px rgba(176, 120, 255, 0.12);
+    0 0 28px rgba(132, 54, 254, 0.14);
   transform: translateY(-3px);
-}
-
-.javaEdition:hover::after {
-  opacity: 1;
 }
 
 .javaEdition:active {
@@ -676,7 +583,7 @@
 }
 
 .bedrockEdition {
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
   background: #141414;
   color: #666666;
   cursor: not-allowed;
@@ -684,8 +591,6 @@
 }
 
 .editionVisual {
-  position: relative;
-  z-index: 1;
   width: 82px;
   height: 82px;
   display: grid;
@@ -698,24 +603,23 @@
   image-rendering: pixelated;
   image-rendering: crisp-edges;
   object-fit: contain;
-  transform: scale(1);
   transition:
-    filter 180ms ease,
-    transform 180ms cubic-bezier(0.2, 0.75, 0.25, 1);
+    filter var(--ease-fast),
+    transform var(--ease-media);
 }
 
 .javaEdition:hover .editionVisual img {
-  filter: drop-shadow(0 8px 12px rgba(176, 120, 255, 0.22));
-  transform: translateY(-4px) scale(1.12) rotate(-1deg);
+  filter: drop-shadow(
+    0 8px 12px rgba(132, 54, 254, 0.26)
+  );
+  transform: translateY(-4px) scale(1.1);
 }
 
 .bedrockEdition .editionVisual img {
-  filter: grayscale(1) brightness(0.72);
+  filter: grayscale(1) brightness(0.7);
 }
 
 .editionCopy {
-  position: relative;
-  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -729,11 +633,21 @@
 }
 
 .editionCopy small {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   margin-top: 6px;
-  color: #62c249;
+  color: var(--brand-accent-2);
   font-size: 7px;
   font-weight: 750;
   letter-spacing: 0.06em;
+}
+
+.editionCopy small i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--brand-accent-2);
 }
 
 .bedrockEdition .editionCopy small {
@@ -742,15 +656,15 @@
 
 .editionArrow {
   position: absolute;
-  right: 12px;
-  bottom: 11px;
-  color: #d0afff;
+  right: 16px;
+  bottom: 16px;
+  color: var(--brand-hover);
   font-size: 16px;
   opacity: 0;
   transform: translateX(-5px);
   transition:
-    opacity 180ms ease,
-    transform 180ms ease;
+    opacity var(--ease-fast),
+    transform var(--ease-fast);
 }
 
 .javaEdition:hover .editionArrow {
@@ -759,56 +673,25 @@
 }
 
 .authBack {
-  margin: 0 0 12px;
+  margin: 0 0 16px;
   padding: 0;
   border: 0;
   background: transparent;
-  color: #999999;
+  color: var(--muted-dim);
   cursor: pointer;
   font: inherit;
   font-size: 9px;
   font-weight: 600;
+  transition: color var(--ease-fast);
 }
 
 .authBack:hover {
-  color: #d0afff;
-}
-
-.joinModal {
-  padding: 16px;
-}
-
-.modalHeader {
-  padding-right: 48px;
-}
-
-.modalHeader > span {
-  color: #b078ff;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-}
-
-.modalHeader h2 {
-  margin: 7px 0 0;
-  color: #ffffff;
-  font-size: 28px;
-  font-weight: 650;
-  line-height: 1;
-  letter-spacing: -0.04em;
-}
-
-.modalHeader p {
-  max-width: 46ch;
-  margin: 10px 0 0;
-  color: #999999;
-  font-size: 12px;
-  line-height: 1.55;
+  color: var(--brand-hover);
 }
 
 .joinSteps {
   display: grid;
-  gap: 9px;
+  gap: 8px;
   margin: 16px 0 0;
   padding: 0;
   list-style: none;
@@ -820,9 +703,9 @@
   align-items: start;
   gap: 12px;
   padding: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 6px;
-  background: #111111;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--brand-background);
 }
 
 .joinSteps li > span {
@@ -831,21 +714,21 @@
   display: grid;
   place-items: center;
   border-radius: 4px;
-  background: #222222;
-  color: #d0afff;
+  background: rgba(132, 54, 254, 0.12);
+  color: var(--brand-hover);
   font-size: 11px;
   font-weight: 750;
 }
 
 .joinSteps strong {
-  color: #ffffff;
+  color: var(--text);
   font-size: 11px;
   font-weight: 650;
 }
 
 .joinSteps p {
   margin: 4px 0 0;
-  color: #777777;
+  color: var(--muted-dim);
   font-size: 10px;
   line-height: 1.4;
 }
@@ -857,9 +740,9 @@
   gap: 16px;
   margin-top: 16px;
   padding: 16px;
-  border: 1px solid rgba(98, 194, 73, 0.22);
-  border-radius: 6px;
-  background: rgba(56, 146, 34, 0.06);
+  border: 1px solid rgba(98, 194, 73, 0.24);
+  border-radius: var(--radius-control);
+  background: rgba(98, 194, 73, 0.06);
 }
 
 .serverAddress > div {
@@ -869,7 +752,7 @@
 }
 
 .serverAddress small {
-  color: #777777;
+  color: var(--muted-dim);
   font-size: 7px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -878,7 +761,7 @@
 .serverAddress strong {
   margin-top: 3px;
   overflow: hidden;
-  color: #ffffff;
+  color: var(--text);
   font-size: 15px;
   font-weight: 650;
   text-overflow: ellipsis;
@@ -889,17 +772,21 @@
   height: 34px;
   padding: 0 12px;
   border: 0;
-  border-radius: 4px;
-  background: #389222;
+  border-radius: var(--radius-control);
+  background: var(--brand-cta);
   color: #ffffff;
   cursor: pointer;
   font: inherit;
   font-size: 9px;
   font-weight: 750;
+  transition:
+    filter var(--ease-fast),
+    transform var(--ease-fast);
 }
 
 .serverAddress button:hover {
-  background: #43a62b;
+  filter: brightness(1.08);
+  transform: translateY(-1px);
 }
 
 .modalFooter {
@@ -907,13 +794,13 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-top: 18px;
+  margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  border-top: 1px solid var(--border);
 }
 
 .modalFooter span {
-  color: #777777;
+  color: var(--muted-dim);
   font-size: 9px;
 }
 
@@ -921,7 +808,7 @@
   padding: 0;
   border: 0;
   background: transparent;
-  color: #d0afff;
+  color: var(--brand-hover);
   cursor: pointer;
   font: inherit;
   font-size: 9px;
@@ -933,13 +820,10 @@
     height: auto;
     min-height: 100dvh;
     grid-template-rows: auto 560px auto;
-    gap: 16px;
-    padding: 16px;
   }
 
   .utilityBar {
     grid-template-columns: minmax(220px, 1fr) auto;
-    gap: 16px;
   }
 
   .playerSearch {
@@ -948,74 +832,33 @@
 
   .accountActions {
     grid-column: 2;
-    gap: 16px;
   }
 
   .cards {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-auto-rows: 250px;
-    gap: 16px;
+    grid-auto-rows: 260px;
   }
 }
 
 @media (max-width: 760px) {
   .utilityBar {
     grid-template-columns: 1fr;
-    gap: 16px;
   }
 
-  .playerSearch {
+  .playerSearch,
+  .accountActions {
     grid-column: 1;
-    width: 100%;
   }
 
   .accountActions {
-    grid-column: 1;
     width: 100%;
     justify-content: space-between;
-    gap: 16px;
-  }
-
-  .verifyLink {
-    display: inline-flex;
   }
 }
 
 @media (max-width: 680px) {
-  .page {
-    grid-template-rows: auto 560px auto;
-    gap: 16px;
-    padding: 16px;
-  }
-
-  .utilityBar {
-    min-height: 36px;
-    gap: 16px;
-  }
-
-  .playerSearch {
-    width: 100%;
-    min-width: 0;
-  }
-
-  .accountActions {
-    width: 100%;
-    justify-content: space-between;
-    gap: 16px;
-  }
-
-  .loginButton {
-    width: 74px;
-    height: 34px;
-    font-size: 12px;
-  }
-
   .hero {
-    border-radius: 7px;
-  }
-
-  .heroLogoLink {
-    top: 18px;
+    min-height: 560px;
   }
 
   .heroLogo {
@@ -1023,15 +866,8 @@
   }
 
   .heroFooter {
-    right: 14px;
-    bottom: 14px;
-    left: 14px;
     grid-template-columns: 1fr;
-    gap: 18px;
-  }
-
-  .heroCopy {
-    grid-row: 1;
+    gap: 16px;
   }
 
   .heroCopy h1 {
@@ -1054,29 +890,19 @@
 
   .playButton {
     width: 100%;
-    height: 48px;
-    font-size: 19px;
   }
 
   .cards {
     grid-template-columns: 1fr;
     grid-auto-rows: 280px;
-    gap: 16px;
   }
 
   .modalBackdrop {
     align-items: end;
-    padding: 16px;
   }
 
   .popup {
     width: 100%;
-    max-height: calc(100dvh - 20px);
-  }
-
-  .authPopup,
-  .joinModal {
-    padding: 16px;
   }
 
   .editionGrid {
@@ -1109,17 +935,18 @@
   .modalFooter {
     align-items: flex-start;
     flex-direction: column;
-    gap: 7px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .heroLogo {
+  .heroLogo,
+  .popup {
     animation: none;
   }
 
   .mediaCard,
   .cardMedia > img,
+  .fallbackIcon,
   .javaEdition,
   .editionVisual img,
   .editionArrow {

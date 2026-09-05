@@ -1,0 +1,98 @@
+:root {
+  /* Mineacle brand palette */
+  --brand-primary: #8436fe;
+  --brand-secondary: #b078ff;
+  --brand-hover: #d0afff;
+  --brand-cta: #62c249;
+  --brand-accent-2: #11fc7b;
+  --brand-background: #111111;
+  --brand-text: #f8f8f8;
+
+  /* Neutral product surfaces */
+  --surface: #171717;
+  --surface-soft: #1b1b1b;
+  --surface-raised: #222222;
+  --surface-muted: #555555;
+
+  --text: var(--brand-text);
+  --muted: #bbbbbb;
+  --muted-dim: #777777;
+
+  --border: rgba(248, 248, 248, 0.08);
+  --border-strong: rgba(248, 248, 248, 0.14);
+
+  /* Backwards-compatible aliases used throughout the current repo */
+  --bg: var(--brand-background);
+  --accent: var(--brand-primary);
+  --accent-soft: var(--brand-secondary);
+  --accent-hover: var(--brand-hover);
+  --play: var(--brand-cta);
+  --online: var(--brand-accent-2);
+
+  /* Layout / shape */
+  --page-gutter: 16px;
+  --section-gap: 16px;
+  --control-height: 36px;
+  --radius-control: 6px;
+  --radius-card: 8px;
+  --radius-modal: 8px;
+
+  /* Motion */
+  --ease-fast: 170ms cubic-bezier(0.2, 0.75, 0.25, 1);
+  --ease-media: 230ms cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+html {
+  background: var(--brand-background);
+  color: var(--brand-text);
+  accent-color: var(--brand-primary);
+}
+
+body,
+.mineacle-app {
+  background: var(--brand-background);
+}
+
+::selection {
+  background: rgba(132, 54, 254, 0.45);
+  color: var(--brand-text);
+}
+
+a,
+button,
+input {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--brand-hover);
+  outline-offset: 2px;
+}
+
+/* Standardize top-level product gutters at every viewport. */
+.visitor-home,
+.player-home,
+.auth-page,
+.utility-page,
+.system-page {
+  padding: var(--page-gutter);
+}
+
+@media (max-width: 900px) {
+  .system-page {
+    padding:
+      calc(var(--mobile-header) + var(--page-gutter))
+      var(--page-gutter)
+      var(--page-gutter);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+}
