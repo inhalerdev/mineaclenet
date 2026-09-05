@@ -1,17 +1,36 @@
 :root {
-  --bg: #111111;
+  --brand-primary: #8436fe;
+  --brand-secondary: #b078ff;
+  --brand-hover: #d0afff;
+  --brand-cta: #62c249;
+  --brand-online: #11fc7b;
+  --brand-background: #111111;
+  --brand-text: #f8f8f8;
+
+  --bg: var(--brand-background);
   --surface: #171717;
+  --surface-soft: #1b1b1b;
   --surface-raised: #222222;
   --surface-muted: #555555;
 
-  --text: #f8f8f8;
+  --text: var(--brand-text);
   --muted: #bbbbbb;
   --muted-dim: #777777;
 
-  --accent: #b078ff;
-  --accent-hover: #d0afff;
-  --play: #62c249;
+  --accent: var(--brand-primary);
+  --accent-soft: var(--brand-secondary);
+  --accent-hover: var(--brand-hover);
+  --play: var(--brand-cta);
+  --online: var(--brand-online);
   --danger: #ff5555;
+
+  --border: rgba(248, 248, 248, 0.08);
+  --border-strong: rgba(248, 248, 248, 0.14);
+  --radius-control: 6px;
+  --radius-card: 8px;
+  --page-gutter: 16px;
+  --section-gap: 16px;
+  --control-height: 36px;
 
   --sidebar-collapsed: 58px;
   --sidebar-expanded: 198px;
@@ -49,6 +68,8 @@ body {
 
 button,
 input,
+select,
+textarea,
 a {
   font: inherit;
 }
@@ -60,6 +81,34 @@ a {
 
 button {
   color: inherit;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:where(input, select, textarea):focus,
+:where(input, select, textarea):focus-visible {
+  outline: 0;
+  box-shadow: none;
+}
+
+:where(a, button):focus-visible {
+  outline: 1px solid var(--brand-hover);
+  outline-offset: 2px;
+}
+
+:where(button, a):active {
+  transition-duration: 70ms;
+}
+
+::selection {
+  background: rgba(132, 54, 254, 0.42);
+  color: var(--brand-text);
 }
 
 img,
@@ -90,14 +139,14 @@ video {
   filter: none;
   transition:
     width var(--ease-fast),
-    box-shadow var(--ease-fast);
+    border-color var(--ease-fast);
 }
 
 .site-sidebar:hover {
   width: var(--sidebar-expanded);
+  border-right-color: rgba(132, 54, 254, 0.32);
   background: var(--surface);
   filter: none;
-  box-shadow: 16px 0 38px rgba(0, 0, 0, 0.42);
 }
 
 .sidebar-head {
@@ -178,7 +227,8 @@ video {
   line-height: 1;
   transition:
     background var(--ease-fast),
-    color var(--ease-fast);
+    color var(--ease-fast),
+    transform var(--ease-fast);
 }
 
 .sidebar-nav__item {
@@ -210,12 +260,19 @@ video {
   color: var(--text);
 }
 
+.sidebar-nav__item:active,
+.sidebar-social-link:active,
+.sidebar-account-action:active,
+.sidebar-quick a:active {
+  transform: scale(0.985);
+}
+
 .sidebar-nav__item.is-active {
   color: var(--accent);
 }
 
 .site-sidebar:hover .sidebar-nav__item.is-active {
-  background: rgba(176, 120, 255, 0.06);
+  background: rgba(132, 54, 254, 0.1);
   color: var(--accent-hover);
 }
 
@@ -386,11 +443,11 @@ video {
 }
 
 .site-sidebar:hover .sidebar-account-action {
-  background: rgba(176, 120, 255, 0.09);
+  background: rgba(132, 54, 254, 0.1);
 }
 
 .site-sidebar:hover .sidebar-account-action:hover {
-  background: rgba(176, 120, 255, 0.16);
+  background: rgba(132, 54, 254, 0.16);
 }
 
 .site-sidebar:hover .sidebar-account-action__copy small {
@@ -446,7 +503,7 @@ video {
   margin-left: auto;
   place-items: center;
   border-radius: 9px;
-  background: rgba(176, 120, 255, 0.14);
+  background: rgba(132, 54, 254, 0.16);
   color: var(--accent-hover);
   font-size: 7px;
 }

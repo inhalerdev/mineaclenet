@@ -5,7 +5,7 @@
   place-items: center;
   padding: 28px 18px;
   overflow: auto;
-  background: #111111;
+  background: var(--brand-background);
 }
 
 .shell {
@@ -37,7 +37,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #b078ff;
+  color: var(--brand-secondary);
   font-size: 8px;
   font-weight: 700;
   letter-spacing: 0.11em;
@@ -48,13 +48,12 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #62c249;
-  box-shadow: 0 0 0 3px rgba(98, 194, 73, 0.09);
+  background: var(--brand-online);
 }
 
 .intro h1 {
   margin: 8px 0 0;
-  color: #ffffff;
+  color: var(--brand-text);
   font-size: clamp(26px, 5vw, 34px);
   line-height: 1.04;
   letter-spacing: -0.045em;
@@ -63,7 +62,7 @@
 .intro p {
   max-width: 48ch;
   margin: 10px auto 0;
-  color: #888888;
+  color: var(--muted);
   font-size: 9px;
   line-height: 1.6;
 }
@@ -71,10 +70,9 @@
 .loginPanel {
   width: 100%;
   padding: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 8px;
-  background: #171717;
-  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.24);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface);
 }
 
 .loginPanel :global(.auth-card) {
@@ -95,7 +93,7 @@
 }
 
 .loginPanel :global(.auth-submit:hover) {
-  background: #c49aff;
+  background: var(--brand-secondary);
 }
 
 .loginPanel :global(.auth-submit:disabled) {

@@ -16,14 +16,12 @@
   background: var(--surface);
   transition:
     border-color var(--ease-fast),
-    background-color var(--ease-fast),
-    box-shadow var(--ease-fast);
+    background-color var(--ease-fast);
 }
 
 .form:focus-within {
-  border-color: rgba(132, 54, 254, 0.58);
+  border-color: var(--brand-primary);
   background: var(--surface-soft);
-  box-shadow: 0 0 0 3px rgba(132, 54, 254, 0.08);
 }
 
 .searchIcon {
@@ -76,7 +74,6 @@
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-card);
   background: var(--surface);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.38);
 }
 
 .result {
@@ -98,6 +95,11 @@
 
 .result:hover {
   background: var(--surface-raised);
+  transform: translateX(2px);
+}
+
+.result:active {
+  transform: translateX(1px) scale(0.995);
 }
 
 .avatar {
@@ -150,12 +152,11 @@
 }
 
 .online {
-  color: var(--brand-accent-2);
+  color: var(--brand-online);
 }
 
 .online i {
-  background: var(--brand-accent-2);
-  box-shadow: 0 0 8px rgba(17, 252, 123, 0.32);
+  background: var(--brand-online);
 }
 
 .empty {

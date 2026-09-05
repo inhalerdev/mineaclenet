@@ -5,7 +5,7 @@
   place-items: center;
   padding: 28px 18px;
   overflow: auto;
-  background: #111111;
+  background: var(--brand-background);
 }
 
 .shell {
@@ -34,7 +34,7 @@
 
 .heading > small,
 .status {
-  color: #b078ff;
+  color: var(--brand-secondary);
   font-size: 8px;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -67,8 +67,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #62c249;
-  box-shadow: 0 0 0 3px rgba(98, 194, 73, 0.09);
+  background: var(--brand-online);
 }
 
 .card {
@@ -77,10 +76,9 @@
   flex-direction: column;
   margin-top: 20px;
   padding: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 8px;
-  background: #171717;
-  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.24);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface);
   gap: 12px;
 }
 
@@ -96,33 +94,45 @@
 .card input {
   height: 40px;
   padding: 0 11px;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 6px;
-  outline: 0;
-  background: #111111;
-  color: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--bg);
+  color: var(--text);
+  caret-color: var(--brand-hover);
   font: inherit;
   font-size: 10px;
+  transition:
+    border-color var(--ease-fast),
+    background-color var(--ease-fast);
 }
 
 .card input:focus {
-  border-color: rgba(176, 120, 255, 0.5);
+  border-color: var(--brand-primary);
+  background: var(--surface-soft);
+  box-shadow: none;
 }
 
 .card > button {
   min-height: 40px;
   margin-top: 2px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  background: #b078ff;
-  color: #111111;
+  border-radius: var(--radius-control);
+  background: var(--brand-primary);
+  color: var(--brand-text);
   cursor: pointer;
   font-size: 9px;
   font-weight: 800;
+  transition:
+    background-color var(--ease-fast),
+    transform var(--ease-fast);
 }
 
 .card > button:hover {
-  background: #d0afff;
+  background: var(--brand-secondary);
+}
+
+.card > button:active {
+  transform: scale(0.985);
 }
 
 .error {
@@ -160,10 +170,10 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 8px;
-  background: #171717;
-  color: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  color: var(--text);
   cursor: pointer;
   text-align: left;
   transition:
@@ -173,13 +183,17 @@
 }
 
 .previewCard:hover {
-  border-color: rgba(176, 120, 255, 0.28);
+  border-color: rgba(132, 54, 254, 0.5);
   background: #1d1d1d;
   transform: translateY(-1px);
 }
 
+.previewCard:active {
+  transform: scale(0.99);
+}
+
 .previewCard small {
-  color: #b078ff;
+  color: var(--brand-secondary);
   font-size: 7px;
   font-weight: 700;
   letter-spacing: 0.09em;
@@ -201,7 +215,7 @@
 .previewCard b {
   margin-top: auto;
   padding-top: 20px;
-  color: #d0afff;
+  color: var(--brand-hover);
   font-size: 8px;
 }
 
@@ -219,10 +233,22 @@
   cursor: pointer;
   font-size: 8px;
   font-weight: 650;
+  transition:
+    border-color var(--ease-fast),
+    background-color var(--ease-fast),
+    color var(--ease-fast),
+    transform var(--ease-fast);
 }
 
 .lockForm button:hover {
-  color: #bbbbbb;
+  border-color: rgba(132, 54, 254, 0.5);
+  background: var(--surface-raised);
+  color: var(--text);
+  transform: translateY(-1px);
+}
+
+.lockForm button:active {
+  transform: scale(0.985);
 }
 
 @media (max-width: 620px) {

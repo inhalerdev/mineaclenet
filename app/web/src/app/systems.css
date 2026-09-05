@@ -4,13 +4,13 @@
   margin-left: var(--sidebar-collapsed);
   padding: 14px;
   overflow: auto;
-  background: #111111;
+  background: var(--brand-background);
 }
 
 .system-card {
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  background: #171717;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface);
 }
 
 .system-page-header {
@@ -24,7 +24,7 @@
 .system-card > small,
 .player-profile-identity small,
 .account-security__section > small {
-  color: #b078ff;
+  color: var(--brand-secondary);
   font-size: 8px;
   font-weight: 700;
   letter-spacing: 0.09em;
@@ -34,7 +34,7 @@
 .system-page-header h1,
 .player-profile-identity h1 {
   margin: 5px 0 0;
-  color: #f8f8f8;
+  color: var(--text);
   font-size: 28px;
   letter-spacing: -0.035em;
 }
@@ -42,7 +42,7 @@
 .system-page-header p,
 .player-profile-identity p {
   margin: 6px 0 0;
-  color: #888888;
+  color: var(--muted);
   font-size: 9px;
   line-height: 1.55;
 }
@@ -70,18 +70,43 @@
   align-items: center;
   justify-content: center;
   padding: 0 11px;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 6px;
-  background: #222222;
-  color: #bbbbbb;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--surface-raised);
+  color: var(--muted);
   font-size: 8px;
   font-weight: 700;
+  cursor: pointer;
+  transition:
+    border-color var(--ease-fast),
+    background-color var(--ease-fast),
+    color var(--ease-fast),
+    transform var(--ease-fast);
+}
+
+.leaderboard-tabs a:hover,
+.system-inline-action:hover,
+.profile-account-actions > a:hover,
+.follow-toggle button:hover:not(:disabled),
+.account-security button:hover:not(:disabled) {
+  border-color: rgba(132, 54, 254, 0.5);
+  background: #262626;
+  color: var(--text);
+  transform: translateY(-1px);
+}
+
+.leaderboard-tabs a:active,
+.system-inline-action:active,
+.profile-account-actions > a:active,
+.follow-toggle button:active:not(:disabled),
+.account-security button:active:not(:disabled) {
+  transform: scale(0.985);
 }
 
 .leaderboard-tabs a.is-active,
 .follow-toggle button:not(.is-following) {
-  border-color: rgba(176, 120, 255, 0.28);
-  color: #d0afff;
+  border-color: rgba(132, 54, 254, 0.45);
+  color: var(--brand-hover);
 }
 
 .leaderboard-list {
@@ -96,13 +121,24 @@
   grid-template-columns: 36px 34px minmax(0, 1fr) auto;
   align-items: center;
   padding: 0 12px;
-  border-radius: 6px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
   background: #1e1e1e;
   gap: 9px;
+  transition:
+    border-color var(--ease-fast),
+    background-color var(--ease-fast),
+    transform var(--ease-fast);
 }
 
 .leaderboard-row:hover {
-  background: #222222;
+  border-color: var(--border-strong);
+  background: var(--surface-raised);
+  transform: translateX(2px);
+}
+
+.leaderboard-row:active {
+  transform: translateX(1px) scale(0.995);
 }
 
 .leaderboard-row > b {
@@ -115,7 +151,7 @@
   display: grid;
   place-items: center;
   background: #2a2a2a;
-  color: #d0afff;
+  color: var(--brand-hover);
   font-weight: 800;
 }
 
@@ -135,7 +171,7 @@
 
 .leaderboard-player strong,
 .leaderboard-value strong {
-  color: #f8f8f8;
+  color: var(--text);
   font-size: 9px;
 }
 
@@ -193,6 +229,16 @@
   flex-direction: column;
   justify-content: center;
   padding: 16px;
+  transition:
+    border-color var(--ease-fast),
+    background-color var(--ease-fast),
+    transform var(--ease-fast);
+}
+
+.player-stat-grid .system-card:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-soft);
+  transform: translateY(-1px);
 }
 
 .player-stat-grid strong {
@@ -264,9 +310,18 @@
   align-items: center;
   justify-content: space-between;
   padding: 8px 10px;
-  border-radius: 6px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
   background: #1e1e1e;
   gap: 12px;
+  transition:
+    border-color var(--ease-fast),
+    background-color var(--ease-fast);
+}
+
+.system-following-list article:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-raised);
 }
 
 .system-following-list article > a {
@@ -327,8 +382,17 @@
 .profile-account-stats > div {
   min-width: 0;
   padding: 12px;
-  border-radius: 6px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
   background: #1e1e1e;
+  transition:
+    border-color var(--ease-fast),
+    background-color var(--ease-fast);
+}
+
+.profile-account-stats > div:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-raised);
 }
 
 .profile-account-stats dt {
@@ -357,7 +421,8 @@
 
 .account-security__section {
   padding: 16px;
-  border-radius: 7px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
   background: #1e1e1e;
 }
 
@@ -392,15 +457,20 @@
 .account-security input {
   min-height: 36px;
   padding: 0 10px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 6px;
-  outline: none;
-  background: #111111;
-  color: #f8f8f8;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--bg);
+  color: var(--text);
+  caret-color: var(--brand-hover);
+  transition:
+    border-color var(--ease-fast),
+    background-color var(--ease-fast);
 }
 
 .account-security input:focus {
-  border-color: rgba(176, 120, 255, 0.45);
+  border-color: var(--brand-primary);
+  background: var(--surface-soft);
+  box-shadow: none;
 }
 
 .account-security button {
@@ -423,8 +493,8 @@
   margin: 0;
   padding: 9px 11px;
   border-radius: 6px;
-  background: rgba(176, 120, 255, 0.08);
-  color: #d0afff;
+  background: rgba(132, 54, 254, 0.1);
+  color: var(--brand-hover);
   font-size: 8px;
 }
 
@@ -433,7 +503,7 @@
 }
 
 .system-notification-list article.is-unread {
-  border-left: 2px solid #b078ff;
+  border-left: 2px solid var(--brand-primary);
 }
 
 @media (max-width: 900px) {
@@ -522,13 +592,27 @@ img.player-profile-avatar {
   flex-direction: column;
   justify-content: space-between;
   padding: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
   background: #1e1e1e;
+  transition:
+    border-color var(--ease-fast),
+    background-color var(--ease-fast),
+    transform var(--ease-fast);
+}
+
+.vote-card:hover {
+  border-color: rgba(132, 54, 254, 0.5);
+  background: var(--surface-raised);
+  transform: translateY(-1px);
+}
+
+.vote-card:active {
+  transform: scale(0.99);
 }
 
 .vote-card small {
-  color: #b078ff;
+  color: var(--brand-secondary);
   font-size: 8px;
   font-weight: 700;
   letter-spacing: .08em;
@@ -555,7 +639,7 @@ img.player-profile-avatar {
 .vote-card > b {
   width: fit-content;
   margin-top: 18px;
-  color: #d0afff;
+  color: var(--brand-hover);
   font-size: 8px;
 }
 
