@@ -1,14 +1,13 @@
 /*
  * Global navigation icon standard.
- * Icons stay pure white; active state belongs to text/background, not artwork.
+ * Default state remains clean and white.
+ * Uploaded animated GIFs appear only on desktop hover for primary nav items.
  */
 
 .site-sidebar .asset-icon,
-.site-sidebar .sidebar-nav__item:hover .asset-icon,
 .site-sidebar .sidebar-social-link:hover .asset-icon,
 .site-sidebar .sidebar-account-action:hover .asset-icon,
-.site-sidebar .sidebar-nav__item.is-active .asset-icon,
-.site-sidebar:hover .sidebar-nav__item.is-active .asset-icon,
+.site-sidebar .sidebar-nav__item.is-active .asset-icon--static,
 .mobile-drawer .asset-icon,
 .mobile-drawer a:hover .asset-icon,
 .mobile-drawer nav a.is-active .asset-icon {
@@ -16,10 +15,52 @@
   opacity: 1;
 }
 
-.sidebar-nav__icon .asset-icon,
-.sidebar-account-action__icon .asset-icon {
-  width: 17px;
-  height: 17px;
+.sidebar-nav__icon,
+.sidebar-account-action__icon {
+  width: 18px;
+  height: 18px;
+}
+
+.sidebar-nav__icon {
+  display: grid;
+  place-items: center;
+}
+
+.sidebar-nav__icon-stack {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.sidebar-nav__icon-stack .asset-icon {
+  position: absolute;
+  inset: 0;
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.sidebar-nav__icon-stack .asset-icon--static {
+  transition: opacity 170ms cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+.sidebar-nav__icon-stack .asset-icon--hover {
+  opacity: 0;
+  transition:
+    opacity 170ms cubic-bezier(0.2, 0.75, 0.25, 1),
+    transform 170ms cubic-bezier(0.2, 0.75, 0.25, 1);
+  transform: scale(0.92);
+}
+
+.site-sidebar .sidebar-nav__item:hover .asset-icon--static {
+  opacity: 0 !important;
+}
+
+.site-sidebar .sidebar-nav__item:hover .asset-icon--hover {
+  opacity: 1;
+  transform: scale(1);
+  filter: none !important;
 }
 
 .sidebar-social-link__icon .asset-icon,
@@ -40,4 +81,20 @@
 
 .sidebar-social-link {
   color: var(--brand-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-nav__item:hover .asset-icon--static {
+    opacity: 1 !important;
+  }
+
+  .sidebar-nav__item:hover .asset-icon--hover {
+    opacity: 0 !important;
+    transform: none !important;
+  }
+
+  .sidebar-nav__icon-stack .asset-icon--static,
+  .sidebar-nav__icon-stack .asset-icon--hover {
+    transition: none;
+  }
 }

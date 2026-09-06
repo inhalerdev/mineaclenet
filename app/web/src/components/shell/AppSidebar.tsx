@@ -14,12 +14,30 @@ const ICON_ROOT =
 const SOCIAL_ROOT =
   "/shared/images/icons/streamline/logos";
 
-const NAV_ICON_PATHS: Record<SiteNavIcon, string> = {
-  home: `${ICON_ROOT}/home.svg`,
-  leaderboard: `${ICON_ROOT}/leaderboards.svg`,
-  rewards: `${ICON_ROOT}/rewards.svg`,
-  punishments: `${ICON_ROOT}/punishments.svg`,
-  marketplace: `${ICON_ROOT}/marketplace.svg`,
+const NAV_ICON_PATHS: Record<
+  SiteNavIcon,
+  { static: string; hover: string }
+> = {
+  home: {
+    static: `${ICON_ROOT}/home.svg`,
+    hover: `${ICON_ROOT}/home-hover.gif`,
+  },
+  leaderboard: {
+    static: `${ICON_ROOT}/leaderboards.svg`,
+    hover: `${ICON_ROOT}/leaderboards-hover.gif`,
+  },
+  rewards: {
+    static: `${ICON_ROOT}/rewards.svg`,
+    hover: `${ICON_ROOT}/rewards-hover.gif`,
+  },
+  punishments: {
+    static: `${ICON_ROOT}/punishments.svg`,
+    hover: `${ICON_ROOT}/punishments-hover.gif`,
+  },
+  marketplace: {
+    static: `${ICON_ROOT}/marketplace.svg`,
+    hover: `${ICON_ROOT}/marketplace-hover.gif`,
+  },
 };
 
 const SOCIAL_LINKS = [
@@ -42,12 +60,14 @@ const SOCIAL_LINKS = [
 
 function AssetIcon({
   src,
+  className = "asset-icon",
 }: {
   src: string;
+  className?: string;
 }) {
   return (
     <img
-      className="asset-icon"
+      className={className}
       src={src}
       alt=""
       draggable={false}
@@ -127,6 +147,8 @@ export function AppSidebar({
               pathname,
               item,
             );
+            const icon =
+              NAV_ICON_PATHS[item.icon];
 
             return (
               <a
@@ -146,11 +168,16 @@ export function AppSidebar({
                   : {})}
               >
                 <span className="sidebar-nav__icon">
-                  <AssetIcon
-                    src={
-                      NAV_ICON_PATHS[item.icon]
-                    }
-                  />
+                  <span className="sidebar-nav__icon-stack">
+                    <AssetIcon
+                      className="asset-icon asset-icon--static"
+                      src={icon.static}
+                    />
+                    <AssetIcon
+                      className="asset-icon asset-icon--hover"
+                      src={icon.hover}
+                    />
+                  </span>
                 </span>
 
                 <span className="sidebar-nav__label">
@@ -212,9 +239,7 @@ export function AppSidebar({
                 rel="noreferrer"
               >
                 <span className="sidebar-social-link__icon">
-                  <AssetIcon
-                    src={social.icon}
-                  />
+                  <AssetIcon src={social.icon} />
                 </span>
 
                 <span className="sidebar-social-link__label">
@@ -362,7 +387,7 @@ export function AppSidebar({
                     src={
                       NAV_ICON_PATHS[
                         item.icon
-                      ]
+                      ].static
                     }
                   />
 

@@ -16,12 +16,30 @@ const SERVER_ADDRESS = "mineacle.net";
 const ICON_ROOT = "/shared/images/icons/streamline/core-solid";
 const SOCIAL_ROOT = "/shared/images/icons/streamline/logos";
 
-const NAV_ICON_PATHS: Record<SiteNavIcon, string> = {
-  home: `${ICON_ROOT}/home.svg`,
-  leaderboard: `${ICON_ROOT}/leaderboards.svg`,
-  rewards: `${ICON_ROOT}/rewards.svg`,
-  punishments: `${ICON_ROOT}/punishments.svg`,
-  marketplace: `${ICON_ROOT}/marketplace.svg`,
+const NAV_ICON_PATHS: Record<
+  SiteNavIcon,
+  { static: string; hover: string }
+> = {
+  home: {
+    static: `${ICON_ROOT}/home.svg`,
+    hover: `${ICON_ROOT}/home-hover.gif`,
+  },
+  leaderboard: {
+    static: `${ICON_ROOT}/leaderboards.svg`,
+    hover: `${ICON_ROOT}/leaderboards-hover.gif`,
+  },
+  rewards: {
+    static: `${ICON_ROOT}/rewards.svg`,
+    hover: `${ICON_ROOT}/rewards-hover.gif`,
+  },
+  punishments: {
+    static: `${ICON_ROOT}/punishments.svg`,
+    hover: `${ICON_ROOT}/punishments-hover.gif`,
+  },
+  marketplace: {
+    static: `${ICON_ROOT}/marketplace.svg`,
+    hover: `${ICON_ROOT}/marketplace-hover.gif`,
+  },
 };
 
 const JAVA_EDITION_ICON =
@@ -373,37 +391,48 @@ export function VisitorHome({
             className={styles.primaryNav}
             aria-label="Primary navigation"
           >
-            {siteNavigation.map((item) => (
-              <a
-                className={
-                  item.href === "/"
-                    ? styles.activeNavItem
-                    : undefined
-                }
-                href={item.href}
-                key={item.label}
-                {...(item.external
-                  ? {
-                      target: "_blank",
-                      rel: "noreferrer",
-                    }
-                  : {})}
-              >
-                <span className={styles.navIcon}>
-                  <img
-                    src={NAV_ICON_PATHS[item.icon]}
-                    alt=""
-                    draggable={false}
-                  />
-                </span>
+            {siteNavigation.map((item) => {
+              const icon = NAV_ICON_PATHS[item.icon];
 
-                <span>{item.label}</span>
+              return (
+                <a
+                  className={
+                    item.href === "/"
+                      ? styles.activeNavItem
+                      : undefined
+                  }
+                  href={item.href}
+                  key={item.label}
+                  {...(item.external
+                    ? {
+                        target: "_blank",
+                        rel: "noreferrer",
+                      }
+                    : {})}
+                >
+                  <span className={styles.navIcon}>
+                    <img
+                      className={styles.navIconStatic}
+                      src={icon.static}
+                      alt=""
+                      draggable={false}
+                    />
+                    <img
+                      className={styles.navIconHover}
+                      src={icon.hover}
+                      alt=""
+                      draggable={false}
+                    />
+                  </span>
 
-                {item.external ? (
-                  <small aria-hidden="true">↗</small>
-                ) : null}
-              </a>
-            ))}
+                  <span>{item.label}</span>
+
+                  {item.external ? (
+                    <small aria-hidden="true">↗</small>
+                  ) : null}
+                </a>
+              );
+            })}
           </nav>
 
           {viewer ? (

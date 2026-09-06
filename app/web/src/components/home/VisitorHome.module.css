@@ -93,18 +93,43 @@
 }
 
 .navIcon {
-  width: 22px;
-  height: 22px;
-  display: grid;
-  place-items: center;
+  position: relative;
+  width: 18px;
+  height: 18px;
+  display: block;
+  overflow: visible;
 }
 
-.navIcon img {
-  width: 17px;
-  height: 17px;
+.navIconStatic,
+.navIconHover {
+  position: absolute;
+  inset: 0;
+  width: 18px;
+  height: 18px;
   object-fit: contain;
+}
+
+.navIconStatic {
   filter: brightness(0) saturate(100%) invert(100%);
   opacity: 1;
+  transition: opacity var(--ease);
+}
+
+.navIconHover {
+  opacity: 0;
+  transition:
+    opacity var(--ease),
+    transform var(--ease);
+  transform: scale(0.92);
+}
+
+.primaryNav a:hover .navIconStatic {
+  opacity: 0;
+}
+
+.primaryNav a:hover .navIconHover {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .primaryNav small {
@@ -1299,9 +1324,11 @@
     padding: 0 10px;
   }
 
-  .navIcon {
-    width: 20px;
-    height: 20px;
+  .navIcon,
+  .navIconStatic,
+  .navIconHover {
+    width: 16px;
+    height: 16px;
   }
 
   .memberModule,
@@ -1465,7 +1492,22 @@
     animation: none;
   }
 
+  .navIconHover {
+    display: none;
+  }
+
+  .primaryNav a:hover .navIconStatic {
+    opacity: 1;
+  }
+
+  .primaryNav a:hover .navIconHover {
+    opacity: 0;
+    transform: none;
+  }
+
   .primaryNav a,
+  .navIconStatic,
+  .navIconHover,
   .loginButton,
   .heroLogo,
   .quickCard,
