@@ -62,28 +62,33 @@
 }
 
 .primaryNav a {
+  height: 44px;
   min-height: 44px;
   display: grid;
-  grid-template-columns: 22px minmax(0, 1fr) 12px;
+  grid-template-columns: 18px minmax(0, 1fr) 12px;
   align-items: center;
-  gap: 10px;
+  column-gap: 12px;
   padding: 0 10px;
   border: 1px solid transparent;
   border-radius: var(--control-radius);
   color: #d0d0d0;
   font-size: 12px;
   font-weight: 600;
+  line-height: 1;
   transition:
     background-color var(--ease),
     border-color var(--ease),
-    color var(--ease),
-    transform var(--ease);
+    color var(--ease);
 }
 
 .primaryNav a:hover {
   background: rgba(255, 255, 255, 0.035);
   color: #ffffff;
-  transform: translateX(1px);
+}
+
+.primaryNav a > span:not(.navIcon) {
+  min-width: 0;
+  line-height: 1;
 }
 
 .primaryNav .activeNavItem {
@@ -97,7 +102,8 @@
   height: 18px;
   display: grid;
   place-items: center;
-  overflow: visible;
+  overflow: hidden;
+  contain: layout paint;
 }
 
 .navIcon img {
@@ -105,112 +111,14 @@
   height: 18px;
   display: block;
   object-fit: contain;
-  transition:
-    transform var(--ease),
-    opacity var(--ease);
-}
-
-.primaryNav a:hover .navIcon img {
-  transform: translateY(-1px) scale(1.06);
+  pointer-events: none;
+  user-select: none;
 }
 
 .primaryNav small {
   justify-self: end;
   color: #999999;
   font-size: 10px;
-}
-
-.memberModule {
-  display: grid;
-  gap: 8px;
-  margin-top: 16px;
-  padding-top: 14px;
-  border-top: 1px solid var(--border);
-}
-
-.memberModule > small,
-.socialSection > small {
-  display: block;
-  padding: 0 8px 2px;
-  color: #8c8c8c;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-}
-
-.memberIdentity {
-  min-height: 48px;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 7px 8px;
-  border-radius: var(--control-radius);
-  background: #141414;
-}
-
-.memberHead {
-  width: 32px;
-  height: 32px;
-  flex: 0 0 32px;
-  border-radius: 4px;
-  object-fit: cover;
-  image-rendering: pixelated;
-}
-
-.memberIdentity > span {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.memberIdentity strong {
-  overflow: hidden;
-  color: var(--brand-text);
-  font-size: 11px;
-  font-weight: 600;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.memberIdentity small {
-  margin-top: 2px;
-  color: var(--brand-secondary);
-  font-size: 8px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-}
-
-.memberLinks {
-  display: grid;
-  gap: 2px;
-}
-
-.memberLinks a {
-  min-height: 34px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 8px;
-  border-radius: 5px;
-  color: var(--muted);
-  font-size: 10px;
-  font-weight: 500;
-  transition:
-    background-color var(--ease),
-    color var(--ease);
-}
-
-.memberLinks a:hover {
-  background: var(--surface-raised);
-  color: var(--brand-text);
-}
-
-.memberLinks span,
-.memberLinks b {
-  margin-left: auto;
-  color: var(--brand-hover);
-  font-size: 9px;
-  font-weight: 600;
 }
 
 .sideNavSpacer {
@@ -229,33 +137,37 @@
 }
 
 .socialLinks a {
+  height: 42px;
   min-height: 42px;
   display: grid;
-  grid-template-columns: 22px minmax(0, 1fr);
+  grid-template-columns: 18px minmax(0, 1fr);
   align-items: center;
-  gap: 10px;
+  column-gap: 12px;
   padding: 0 10px;
   border-radius: var(--control-radius);
   color: #ffffff;
   font-size: 12px;
   font-weight: 600;
+  line-height: 1;
   transition:
     background-color var(--ease),
-    color var(--ease),
-    transform var(--ease);
+    color var(--ease);
 }
 
 .socialLinks a:hover {
   background: rgba(255, 255, 255, 0.035);
   color: var(--brand-hover);
-  transform: translateX(1px);
 }
 
 .socialLinks img {
   width: 18px;
   height: 18px;
+  display: block;
   object-fit: contain;
+  pointer-events: none;
+  user-select: none;
 }
+
 
 .railLegal {
   margin-top: 12px;
@@ -1302,7 +1214,7 @@
 
   .primaryNav a {
     min-width: max-content;
-    grid-template-columns: 20px auto 10px;
+    grid-template-columns: 18px auto 10px;
     padding: 0 10px;
   }
 
@@ -1312,7 +1224,6 @@
     height: 16px;
   }
 
-  .memberModule,
   .socialSection,
   .railLegal,
   .sideNavSpacer {
@@ -1474,7 +1385,6 @@
   }
 
   .primaryNav a,
-  .navIcon img,
   .loginButton,
   .heroLogo,
   .quickCard,

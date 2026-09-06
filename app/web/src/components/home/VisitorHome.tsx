@@ -127,6 +127,23 @@ export function VisitorHome({
   }, []);
 
   useEffect(() => {
+    const preloaded = Object.values(NAV_ICON_PATHS).flatMap(
+      (src) =>
+        ["a", "b"].map((run) => {
+          const image = new Image();
+          image.src = `${src}?run=${run}`;
+          return image;
+        }),
+    );
+
+    return () => {
+      preloaded.forEach((image) => {
+        image.src = "";
+      });
+    };
+  }, []);
+
+  useEffect(() => {
     if (!modalOpen) {
       return;
     }
@@ -425,50 +442,6 @@ export function VisitorHome({
             })}
           </nav>
 
-          {viewer ? (
-            <section className={styles.memberModule}>
-              <small>MY MINEACLE</small>
-
-              <div className={styles.memberIdentity}>
-                <PlayerAvatar
-                  uuid={viewer.uuid}
-                  size={32}
-                  className={styles.memberHead}
-                  eager
-                />
-
-                <span>
-                  <strong>{viewer.username}</strong>
-                  <small>VERIFIED PLAYER</small>
-                </span>
-              </div>
-
-              <nav
-                className={styles.memberLinks}
-                aria-label="My Mineacle"
-              >
-                <a href="/profile">
-                  Profile
-                  <span>→</span>
-                </a>
-
-                <a href="/following">
-                  Following
-                  <b>{viewer.followingCount}</b>
-                </a>
-
-                <a href="/notifications">
-                  Notifications
-                  <b>{viewer.unreadNotifications}</b>
-                </a>
-
-                <a href="/team">
-                  My team
-                  <span>→</span>
-                </a>
-              </nav>
-            </section>
-          ) : null}
 
           <div className={styles.sideNavSpacer} />
 

@@ -86,14 +86,6 @@ export function AppSidebar({
   const [navAnimationRun, setNavAnimationRun] =
     useState<Partial<Record<SiteNavIcon, boolean>>>({});
 
-  const quickLinks = viewer
-    ? [
-        ["My profile", "/profile"],
-        ["Following", "/following"],
-        ["Notifications", "/notifications"],
-        ["My team", "/team"],
-      ]
-    : [];
 
   const closeMobile = () =>
     setMobileOpen(false);
@@ -185,36 +177,6 @@ export function AppSidebar({
           })}
         </nav>
 
-        {viewer ? (
-          <div className="sidebar-quick">
-            <small>MY MINEACLE</small>
-
-            {quickLinks.map(
-              ([label, href]) => (
-                <a
-                  aria-current={
-                    pathname === href
-                      ? "page"
-                      : undefined
-                  }
-                  href={href}
-                  key={href}
-                >
-                  <span>{label}</span>
-
-                  {href === "/notifications" &&
-                  viewer.unreadNotifications > 0 ? (
-                    <b>
-                      {
-                        viewer.unreadNotifications
-                      }
-                    </b>
-                  ) : null}
-                </a>
-              ),
-            )}
-          </div>
-        ) : null}
 
         <div className="sidebar-spacer" />
 
@@ -392,44 +354,6 @@ export function AppSidebar({
             })}
           </nav>
 
-          {viewer ? (
-            <div className="mobile-drawer__section">
-              <small>MY MINEACLE</small>
-
-              <nav>
-                {quickLinks.map(
-                  ([label, href]) => (
-                    <a
-                      aria-current={
-                        pathname === href
-                          ? "page"
-                          : undefined
-                      }
-                      href={href}
-                      key={href}
-                      onClick={
-                        closeMobile
-                      }
-                    >
-                      <span />
-                      <span>{label}</span>
-
-                      {href ===
-                        "/notifications" &&
-                      viewer.unreadNotifications >
-                        0 ? (
-                        <small>
-                          {
-                            viewer.unreadNotifications
-                          }
-                        </small>
-                      ) : null}
-                    </a>
-                  ),
-                )}
-              </nav>
-            </div>
-          ) : null}
 
           <div className="mobile-drawer__bottom">
             <div className="mobile-drawer__socials">
