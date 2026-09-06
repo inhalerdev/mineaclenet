@@ -1,6 +1,6 @@
 /*
- * Mineacle navigation icon standard:
- * artwork remains the existing repo asset; every nav/social icon renders #FFF.
+ * Global navigation icon standard.
+ * Icons stay pure white; active state belongs to text/background, not artwork.
  */
 
 .site-sidebar .asset-icon,
@@ -18,25 +18,26 @@
 
 .sidebar-nav__icon .asset-icon,
 .sidebar-account-action__icon .asset-icon {
+  width: 17px;
+  height: 17px;
+}
+
+.sidebar-social-link__icon .asset-icon,
+.mobile-drawer__socials .asset-icon {
   width: 18px;
   height: 18px;
 }
 
-.sidebar-social-link__icon .asset-icon {
-  width: 19px;
-  height: 19px;
+.sidebar-nav__label {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.sidebar-social-link__label {
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .sidebar-social-link {
   color: var(--brand-text);
-}
-
-.sidebar-social-link__label {
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.mobile-drawer__socials .asset-icon {
-  width: 18px;
-  height: 18px;
 }

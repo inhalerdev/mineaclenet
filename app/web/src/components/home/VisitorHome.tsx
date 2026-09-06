@@ -14,6 +14,7 @@ import styles from "./VisitorHome.module.css";
 
 const SERVER_ADDRESS = "mineacle.net";
 const ICON_ROOT = "/shared/images/icons/streamline/core-solid";
+const SOCIAL_ROOT = "/shared/images/icons/streamline/logos";
 
 const NAV_ICON_PATHS: Record<SiteNavIcon, string> = {
   home: `${ICON_ROOT}/home.svg`,
@@ -23,25 +24,34 @@ const NAV_ICON_PATHS: Record<SiteNavIcon, string> = {
   marketplace: `${ICON_ROOT}/marketplace.svg`,
 };
 
-const JAVA_EDITION_ICON = "/images/home/visitorhome/edition-java.png";
-const BEDROCK_EDITION_ICON = "/images/home/visitorhome/edition-bedrock.png";
+const JAVA_EDITION_ICON =
+  "/images/home/visitorhome/edition-java.png";
+const BEDROCK_EDITION_ICON =
+  "/images/home/visitorhome/edition-bedrock.png";
 
 const SOCIAL_LINKS = [
   {
     label: "Discord",
     href: "https://discord.gg/4xrYFxdSWg",
-    icon: "/images/home/visitorhome/discord.png",
+    icon: `${SOCIAL_ROOT}/discord-white.svg`,
   },
   {
     label: "YouTube",
     href: "https://www.youtube.com/@MineacleNetwork",
-    icon: "/images/home/visitorhome/youtube.png",
+    icon: `${SOCIAL_ROOT}/youtube-white.svg`,
   },
   {
     label: "X",
     href: "https://x.com/mineaclenetwork",
-    icon: "/images/home/visitorhome/x.png",
+    icon: `${SOCIAL_ROOT}/x-white.svg`,
   },
+] as const;
+
+const RELEASE_FEATURES = [
+  "Player Economy",
+  "Teams",
+  "Auction House",
+  "Live Rankings",
 ] as const;
 
 type AuthMode = "login" | "create";
@@ -51,17 +61,29 @@ type VisitorHomeProps = {
   viewer?: Viewer | null;
 };
 
+type ServerStatus = {
+  online: boolean;
+  currentlyPlaying: number;
+};
+
 function playerBodyUrl(uuid: string) {
   return `https://mc-heads.net/body/${encodeURIComponent(uuid)}/110.png`;
 }
 
-export function VisitorHome({ viewer = null }: VisitorHomeProps) {
+export function VisitorHome({
+  viewer = null,
+}: VisitorHomeProps) {
   const [copied, setCopied] = useState(false);
   const [joinOpen, setJoinOpen] = useState(false);
-  const [authMode, setAuthMode] = useState<AuthMode | null>(null);
-  const [authStage, setAuthStage] = useState<AuthStage>("edition");
+  const [authMode, setAuthMode] =
+    useState<AuthMode | null>(null);
+  const [authStage, setAuthStage] =
+    useState<AuthStage>("edition");
   const [profileOpen, setProfileOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [serverStatus, setServerStatus] =
+    useState<ServerStatus | null>(null);
+
   const profileRef = useRef<HTMLDivElement>(null);
 
   const modalOpen = joinOpen || authMode !== null;
@@ -108,6 +130,49 @@ export function VisitorHome({ viewer = null }: VisitorHomeProps) {
       document.body.style.overflow = previousOverflow;
     };
   }, [modalOpen]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadServerStatus() {
+      try {
+        const response = await fetch("/api/server/status", {
+          cache: "no-store",
+        });
+
+        if (!response.ok) {
+          return;
+        }
+
+        const data = (await response.json()) as ServerStatus;
+
+        if (!cancelled) {
+          setServerStatus({
+            online: data.online === true,
+            currentlyPlaying: Math.max(
+              0,
+              Number(data.currentlyPlaying || 0),
+            ),
+          });
+        }
+      } catch {
+        if (!cancelled) {
+          setServerStatus({
+            online: false,
+            currentlyPlaying: 0,
+          });
+        }
+      }
+    }
+
+    loadServerStatus();
+    const timer = window.setInterval(loadServerStatus, 30_000);
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
+  }, []);
 
   async function copyServerAddress() {
     try {
@@ -163,24 +228,41 @@ export function VisitorHome({ viewer = null }: VisitorHomeProps) {
     }
   }
 
+  const statusLabel = !serverStatus
+    ? "Checking server"
+    : serverStatus.online
+      ? "Server Online"
+      : "Server Offline";
+
+  const currentlyPlaying = serverStatus
+    ? serverStatus.currentlyPlaying.toLocaleString()
+    : "—";
+
   return (
     <>
       <main className={styles.page}>
-        <aside className={styles.sideNav} aria-label="Mineacle navigation">
-          <div className={styles.railHeading}>
-            <small>NAVIGATION</small>
-          </div>
-
-          <nav className={styles.primaryNav} aria-label="Primary navigation">
+        <aside
+          className={styles.sideNav}
+          aria-label="Mineacle navigation"
+        >
+          <nav
+            className={styles.primaryNav}
+            aria-label="Primary navigation"
+          >
             {siteNavigation.map((item) => (
               <a
                 className={
-                  item.href === "/" ? styles.activeNavItem : undefined
+                  item.href === "/"
+                    ? styles.activeNavItem
+                    : undefined
                 }
                 href={item.href}
                 key={item.label}
                 {...(item.external
-                  ? { target: "_blank", rel: "noreferrer" }
+                  ? {
+                      target: "_blank",
+                      rel: "noreferrer",
+                    }
                   : {})}
               >
                 <span className={styles.navIcon}>
@@ -190,87 +272,66 @@ export function VisitorHome({ viewer = null }: VisitorHomeProps) {
                     draggable={false}
                   />
                 </span>
+
                 <span>{item.label}</span>
-                {item.external ? <small aria-hidden="true">↗</small> : null}
+
+                {item.external ? (
+                  <small aria-hidden="true">↗</small>
+                ) : null}
               </a>
             ))}
           </nav>
 
-          <section className={styles.railModule}>
-            {!viewer ? (
-              <>
-                <small>OPEN BETA</small>
+          {viewer ? (
+            <section className={styles.memberModule}>
+              <small>MY MINEACLE</small>
 
-                <div className={styles.serverStatus}>
-                  <i aria-hidden="true" />
-                  <span>Java Edition</span>
-                  <b>LIVE</b>
-                </div>
+              <div className={styles.memberIdentity}>
+                <PlayerAvatar
+                  uuid={viewer.uuid}
+                  size={32}
+                  className={styles.memberHead}
+                  eager
+                />
 
-                <button
-                  className={styles.serverCopy}
-                  type="button"
-                  onClick={copyServerAddress}
-                >
-                  <span>{SERVER_ADDRESS}</span>
-                  <b>{copied ? "COPIED" : "COPY"}</b>
-                </button>
+                <span>
+                  <strong>{viewer.username}</strong>
+                  <small>VERIFIED PLAYER</small>
+                </span>
+              </div>
 
-                <button
-                  className={styles.railVerify}
-                  type="button"
-                  onClick={() => openAuth("create")}
-                >
-                  Verify your player
-                  <span aria-hidden="true">→</span>
-                </button>
-              </>
-            ) : (
-              <>
-                <small>MY MINEACLE</small>
+              <nav
+                className={styles.memberLinks}
+                aria-label="My Mineacle"
+              >
+                <a href="/profile">
+                  Profile
+                  <span>→</span>
+                </a>
 
-                <div className={styles.memberIdentity}>
-                  <PlayerAvatar
-                    uuid={viewer.uuid}
-                    size={30}
-                    className={styles.memberHead}
-                    eager
-                  />
-                  <span>
-                    <strong>{viewer.username}</strong>
-                    <small>VERIFIED PLAYER</small>
-                  </span>
-                </div>
+                <a href="/following">
+                  Following
+                  <b>{viewer.followingCount}</b>
+                </a>
 
-                <nav
-                  className={styles.memberLinks}
-                  aria-label="My Mineacle"
-                >
-                  <a href="/profile">
-                    <span>Profile</span>
-                    <b>→</b>
-                  </a>
-                  <a href="/following">
-                    <span>Following</span>
-                    <b>{viewer.followingCount}</b>
-                  </a>
-                  <a href="/notifications">
-                    <span>Notifications</span>
-                    <b>{viewer.unreadNotifications}</b>
-                  </a>
-                  <a href="/team">
-                    <span>My team</span>
-                    <b>→</b>
-                  </a>
-                </nav>
-              </>
-            )}
-          </section>
+                <a href="/notifications">
+                  Notifications
+                  <b>{viewer.unreadNotifications}</b>
+                </a>
+
+                <a href="/team">
+                  My team
+                  <span>→</span>
+                </a>
+              </nav>
+            </section>
+          ) : null}
 
           <div className={styles.sideNavSpacer} />
 
-          <div className={styles.socialSection}>
+          <section className={styles.socialSection}>
             <small>COMMUNITY</small>
+
             <div className={styles.socialLinks}>
               {SOCIAL_LINKS.map((social) => (
                 <a
@@ -280,24 +341,31 @@ export function VisitorHome({ viewer = null }: VisitorHomeProps) {
                   rel="noreferrer"
                   aria-label={social.label}
                 >
-                  <img src={social.icon} alt="" draggable={false} />
+                  <img
+                    src={social.icon}
+                    alt=""
+                    draggable={false}
+                  />
                   <span>{social.label}</span>
                 </a>
               ))}
             </div>
-          </div>
+          </section>
 
           <div className={styles.railLegal}>
             <strong>© 2026 Mineacle Studios</strong>
             <span>All Rights Reserved.</span>
             <p>
-              Mineacle is not affiliated with or endorsed by Mojang Studios
-              or Microsoft.
+              Not affiliated with or endorsed by Mojang
+              Studios or Microsoft.
             </p>
           </div>
         </aside>
 
-        <section className={styles.hero} aria-label="Mineacle open beta">
+        <section
+          className={styles.hero}
+          aria-label="Mineacle open beta"
+        >
           <video
             className={styles.heroVideo}
             autoPlay
@@ -307,16 +375,35 @@ export function VisitorHome({ viewer = null }: VisitorHomeProps) {
             preload="auto"
             aria-label={homeContent.hero.mediaLabel}
           >
-            <source src={homeContent.hero.media} type="video/mp4" />
+            <source
+              src={homeContent.hero.media}
+              type="video/mp4"
+            />
           </video>
 
-          <div className={styles.heroShade} aria-hidden="true" />
+          <div
+            className={styles.heroShade}
+            aria-hidden="true"
+          />
 
           <div className={styles.heroTop}>
             <PlayerSearch
               className={styles.heroSearch}
               placeholder="Search for a player"
             />
+
+            <a
+              className={styles.heroTopLogo}
+              href="/"
+              aria-label="Mineacle home"
+            >
+              <img
+                className={styles.heroLogo}
+                src="/shared/images/branding/mineacle-logo.png"
+                alt="Mineacle"
+                draggable={false}
+              />
+            </a>
 
             {!viewer ? (
               <div className={styles.accountActions}>
@@ -337,26 +424,35 @@ export function VisitorHome({ viewer = null }: VisitorHomeProps) {
                 </button>
               </div>
             ) : (
-              <div className={styles.profileMenu} ref={profileRef}>
+              <div
+                className={styles.profileMenu}
+                ref={profileRef}
+              >
                 <button
                   className={styles.profileTrigger}
                   type="button"
                   aria-expanded={profileOpen}
                   aria-haspopup="menu"
-                  onClick={() => setProfileOpen((value) => !value)}
+                  onClick={() =>
+                    setProfileOpen((value) => !value)
+                  }
                 >
                   <PlayerAvatar
                     uuid={viewer.uuid}
-                    size={30}
+                    size={32}
                     className={styles.profileHead}
                     eager
                   />
+
                   <span>{viewer.username}</span>
                   <small aria-hidden="true">⌄</small>
                 </button>
 
                 {profileOpen ? (
-                  <div className={styles.profileDropdown} role="menu">
+                  <div
+                    className={styles.profileDropdown}
+                    role="menu"
+                  >
                     <div className={styles.profileSkin}>
                       <img
                         src={playerBodyUrl(viewer.uuid)}
@@ -369,10 +465,11 @@ export function VisitorHome({ viewer = null }: VisitorHomeProps) {
                       <div className={styles.profileIdentity}>
                         <PlayerAvatar
                           uuid={viewer.uuid}
-                          size={36}
+                          size={38}
                           className={styles.dropdownHead}
                           eager
                         />
+
                         <span>
                           <small>VERIFIED PLAYER</small>
                           <strong>{viewer.username}</strong>
@@ -384,14 +481,18 @@ export function VisitorHome({ viewer = null }: VisitorHomeProps) {
                           Manage profile
                           <span>→</span>
                         </a>
+
                         <a href="/following">
                           Following
                           <b>{viewer.followingCount}</b>
                         </a>
+
                         <a href="/notifications">
                           Notifications
                           {viewer.unreadNotifications > 0 ? (
-                            <b>{viewer.unreadNotifications}</b>
+                            <b>
+                              {viewer.unreadNotifications}
+                            </b>
                           ) : (
                             <span>→</span>
                           )}
@@ -404,7 +505,9 @@ export function VisitorHome({ viewer = null }: VisitorHomeProps) {
                         onClick={logout}
                         disabled={loggingOut}
                       >
-                        {loggingOut ? "Logging out..." : "Log out"}
+                        {loggingOut
+                          ? "Logging out..."
+                          : "Log out"}
                       </button>
                     </div>
                   </div>
@@ -413,41 +516,49 @@ export function VisitorHome({ viewer = null }: VisitorHomeProps) {
             )}
           </div>
 
-          <a className={styles.heroLogoLink} href="/" aria-label="Mineacle home">
-            <img
-              className={styles.heroLogo}
-              src="/shared/images/branding/mineacle-logo.png"
-              alt="Mineacle"
-              draggable={false}
-            />
-          </a>
-
           <div className={styles.heroFooter}>
             <div className={styles.heroCopy}>
-              <div className={styles.betaStatus}>
-                <span aria-hidden="true" />
-                OPEN BETA LIVE
+              <div className={styles.serverSummary}>
+                <span
+                  className={`${styles.serverDot} ${
+                    serverStatus?.online
+                      ? styles.serverDotOnline
+                      : ""
+                  }`}
+                  aria-hidden="true"
+                />
+
+                <strong>{statusLabel}</strong>
+
+                <span className={styles.currentlyPlaying}>
+                  <b>{currentlyPlaying}</b>
+                  Currently Playing
+                </span>
               </div>
 
-              <h1>
-                MINEACLE <span>OPEN BETA</span>
-              </h1>
+              <small className={styles.heroEyebrow}>
+                MINEACLE OPEN BETA
+              </small>
+
+              <h1>Build. Trade. Compete.</h1>
 
               <p>
-                Build your name, grow your wealth, compete with others, and be
-                part of Mineacle before full release.
+                A competitive survival economy built around
+                player progression, teams, trading, and
+                reputation.
               </p>
+
+              <div
+                className={styles.featurePills}
+                aria-label="Open beta features"
+              >
+                {RELEASE_FEATURES.map((feature) => (
+                  <span key={feature}>{feature}</span>
+                ))}
+              </div>
             </div>
 
             <div className={styles.playGroup}>
-              <button
-                className={styles.joinGuide}
-                type="button"
-                onClick={() => setJoinOpen(true)}
-              >
-                How to join mineacle.net
-              </button>
-
               <button
                 className={`${styles.playButton} ${
                   copied ? styles.playButtonCopied : ""
@@ -458,14 +569,28 @@ export function VisitorHome({ viewer = null }: VisitorHomeProps) {
               >
                 {copied ? "COPIED" : "PLAY"}
               </button>
+
+              <button
+                className={styles.joinGuide}
+                type="button"
+                onClick={() => setJoinOpen(true)}
+              >
+                How to join mineacle.net
+              </button>
             </div>
 
             <div aria-hidden="true" />
           </div>
         </section>
 
-        <section className={styles.quickModules} aria-label="Quick access">
-          <a className={styles.quickCard} href="/leaderboards">
+        <section
+          className={styles.quickModules}
+          aria-label="Quick access"
+        >
+          <a
+            className={styles.quickCard}
+            href="/leaderboards"
+          >
             <div className={styles.quickMedia}>
               <img
                 src={homeContent.competitive.media}
@@ -473,14 +598,16 @@ export function VisitorHome({ viewer = null }: VisitorHomeProps) {
                 draggable={false}
               />
             </div>
-            <div className={styles.quickShade} aria-hidden="true" />
+
+            <div
+              className={styles.quickShade}
+              aria-hidden="true"
+            />
+
             <div className={styles.quickContent}>
               <small>COMPETE</small>
               <strong>Leaderboards</strong>
-              <p>
-                Jump straight into global rankings and compare Mineacle
-                players.
-              </p>
+              <p>See who is leading Mineacle.</p>
               <span>VIEW RANKINGS →</span>
             </div>
           </a>
@@ -496,18 +623,24 @@ export function VisitorHome({ viewer = null }: VisitorHomeProps) {
                 draggable={false}
               />
             </div>
-            <div className={styles.quickShade} aria-hidden="true" />
+
+            <div
+              className={styles.quickShade}
+              aria-hidden="true"
+            />
+
             <div className={styles.quickContent}>
               <small>REWARDS</small>
               <strong>Vote & earn</strong>
-              <p>
-                Support Mineacle and get to available voting rewards quickly.
-              </p>
+              <p>Support Mineacle and collect rewards.</p>
               <span>VIEW REWARDS →</span>
             </div>
           </a>
 
-          <a className={styles.quickCard} href="/punishments">
+          <a
+            className={styles.quickCard}
+            href="/punishments"
+          >
             <div
               className={`${styles.quickMedia} ${styles.quickFallback}`}
             >
@@ -518,13 +651,16 @@ export function VisitorHome({ viewer = null }: VisitorHomeProps) {
                 draggable={false}
               />
             </div>
-            <div className={styles.quickShade} aria-hidden="true" />
+
+            <div
+              className={styles.quickShade}
+              aria-hidden="true"
+            />
+
             <div className={styles.quickContent}>
               <small>PUBLIC RECORDS</small>
               <strong>Punishments</strong>
-              <p>
-                Search public actions and player punishment history.
-              </p>
+              <p>Search public player actions.</p>
               <span>VIEW RECORDS →</span>
             </div>
           </a>
@@ -568,10 +704,12 @@ export function VisitorHome({ viewer = null }: VisitorHomeProps) {
                       ? "MINEACLE ACCOUNT"
                       : "PLAYER VERIFICATION"}
                   </small>
+
                   <h2>Choose your edition</h2>
+
                   <p>
-                    Select the Minecraft edition connected to your Mineacle
-                    account.
+                    Select the Minecraft edition connected
+                    to your Mineacle account.
                   </p>
                 </header>
 
@@ -579,7 +717,9 @@ export function VisitorHome({ viewer = null }: VisitorHomeProps) {
                   <button
                     className={styles.javaEdition}
                     type="button"
-                    onClick={() => setAuthStage("form")}
+                    onClick={() =>
+                      setAuthStage("form")
+                    }
                   >
                     <span className={styles.editionVisual}>
                       <img
@@ -594,7 +734,10 @@ export function VisitorHome({ viewer = null }: VisitorHomeProps) {
                       <small>SUPPORTED</small>
                     </span>
 
-                    <span className={styles.editionArrow} aria-hidden="true">
+                    <span
+                      className={styles.editionArrow}
+                      aria-hidden="true"
+                    >
                       →
                     </span>
                   </button>
@@ -625,14 +768,18 @@ export function VisitorHome({ viewer = null }: VisitorHomeProps) {
                 <button
                   className={styles.authBack}
                   type="button"
-                  onClick={() => setAuthStage("edition")}
+                  onClick={() =>
+                    setAuthStage("edition")
+                  }
                 >
                   ← Change edition
                 </button>
 
                 <AuthClient
                   initialMode={authMode}
-                  onAuthenticated={finishPlayerAuthentication}
+                  onAuthenticated={
+                    finishPlayerAuthentication
+                  }
                 />
               </>
             )}
@@ -667,9 +814,13 @@ export function VisitorHome({ viewer = null }: VisitorHomeProps) {
 
             <header className={styles.modalHeader}>
               <span>HOW TO JOIN</span>
-              <h2 id="join-mineacle-title">Join Mineacle</h2>
+              <h2 id="join-mineacle-title">
+                Join Mineacle
+              </h2>
+
               <p>
-                Mineacle Open Beta currently supports Minecraft: Java Edition.
+                Mineacle Open Beta currently supports
+                Minecraft: Java Edition.
               </p>
             </header>
 
@@ -677,8 +828,12 @@ export function VisitorHome({ viewer = null }: VisitorHomeProps) {
               <li>
                 <span>1</span>
                 <div>
-                  <strong>Open Minecraft: Java Edition</strong>
-                  <p>Launch Minecraft and choose Multiplayer.</p>
+                  <strong>
+                    Open Minecraft: Java Edition
+                  </strong>
+                  <p>
+                    Launch Minecraft and choose Multiplayer.
+                  </p>
                 </div>
               </li>
 
@@ -686,7 +841,10 @@ export function VisitorHome({ viewer = null }: VisitorHomeProps) {
                 <span>2</span>
                 <div>
                   <strong>Add Mineacle</strong>
-                  <p>Choose Add Server and enter the address below.</p>
+                  <p>
+                    Choose Add Server and enter the address
+                    below.
+                  </p>
                 </div>
               </li>
 
@@ -694,7 +852,10 @@ export function VisitorHome({ viewer = null }: VisitorHomeProps) {
                 <span>3</span>
                 <div>
                   <strong>Join the world</strong>
-                  <p>Select Mineacle from your server list and connect.</p>
+                  <p>
+                    Select Mineacle from your server list
+                    and connect.
+                  </p>
                 </div>
               </li>
             </ol>
@@ -705,14 +866,21 @@ export function VisitorHome({ viewer = null }: VisitorHomeProps) {
                 <strong>{SERVER_ADDRESS}</strong>
               </div>
 
-              <button type="button" onClick={copyServerAddress}>
+              <button
+                type="button"
+                onClick={copyServerAddress}
+              >
                 {copied ? "COPIED" : "COPY"}
               </button>
             </div>
 
             <footer className={styles.modalFooter}>
               <span>Already joined Mineacle?</span>
-              <button type="button" onClick={() => openAuth("create")}>
+
+              <button
+                type="button"
+                onClick={() => openAuth("create")}
+              >
                 Verify your player →
               </button>
             </footer>

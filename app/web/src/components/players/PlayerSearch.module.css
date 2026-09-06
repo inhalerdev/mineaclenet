@@ -6,14 +6,14 @@
 
 .form {
   width: 100%;
-  height: var(--control-height);
+  height: 40px;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 0 16px;
+  gap: 11px;
+  padding: 0 14px;
   border: 1px solid var(--border);
   border-radius: var(--radius-control);
-  background: var(--surface);
+  background: rgba(23, 23, 23, 0.9);
   transition:
     border-color var(--ease-fast),
     background-color var(--ease-fast);
@@ -25,12 +25,13 @@
 }
 
 .searchIcon {
-  width: 16px;
-  height: 16px;
-  flex: 0 0 16px;
+  width: 17px;
+  height: 17px;
+  flex: 0 0 17px;
   object-fit: contain;
   image-rendering: pixelated;
-  opacity: 0.82;
+  filter: brightness(0) saturate(100%) invert(100%);
+  opacity: 1;
 }
 
 .form input {
@@ -43,25 +44,25 @@
   background: transparent;
   color: var(--text);
   font: inherit;
-  font-size: 11px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 400;
 }
 
 .form input::placeholder {
-  color: var(--muted-dim);
+  color: #8d8d8d;
 }
 
 .form input::-webkit-search-cancel-button {
   filter: brightness(0) invert(1);
-  opacity: 0.55;
+  opacity: 0.65;
 }
 
 .searching {
   flex: 0 0 auto;
-  color: var(--brand-secondary);
-  font-size: 7px;
-  font-weight: 700;
-  letter-spacing: 0.07em;
+  color: var(--brand-hover);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
 }
 
 .results {
@@ -74,15 +75,16 @@
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-card);
   background: var(--surface);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.34);
 }
 
 .result {
-  min-height: 56px;
+  min-height: 60px;
   display: grid;
-  grid-template-columns: 32px minmax(0, 1fr) auto;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
   align-items: center;
   gap: 12px;
-  padding: 0 12px;
+  padding: 0 13px;
   color: var(--text);
   transition:
     background-color var(--ease-fast),
@@ -103,8 +105,8 @@
 }
 
 .avatar {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 5px;
   image-rendering: pixelated;
 }
@@ -124,31 +126,31 @@
 
 .identity strong {
   color: var(--text);
-  font-size: 10px;
-  font-weight: 650;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .identity small {
   margin-top: 2px;
-  color: var(--muted-dim);
-  font-size: 8px;
+  color: #8d8d8d;
+  font-size: 10px;
 }
 
 .status {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  color: #666666;
-  font-size: 7px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
+  color: #777777;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
 }
 
 .status i {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: #555555;
+  background: #666666;
 }
 
 .online {
@@ -161,8 +163,8 @@
 
 .empty {
   padding: 16px;
-  color: var(--muted-dim);
-  font-size: 9px;
+  color: #999999;
+  font-size: 11px;
 }
 
 @media (max-width: 680px) {
