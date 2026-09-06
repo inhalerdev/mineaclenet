@@ -15,11 +15,11 @@ const SOCIAL_ROOT =
   "/shared/images/icons/streamline/logos";
 
 const NAV_ICON_PATHS: Record<SiteNavIcon, string> = {
-  home: `${ICON_ROOT}/home.gif`,
-  leaderboard: `${ICON_ROOT}/leaderboards.gif`,
-  rewards: `${ICON_ROOT}/rewards.gif`,
-  punishments: `${ICON_ROOT}/punishments.gif`,
-  marketplace: `${ICON_ROOT}/marketplace.gif`,
+  home: `${ICON_ROOT}/home-hover.gif`,
+  leaderboard: `${ICON_ROOT}/leaderboards-hover.gif`,
+  rewards: `${ICON_ROOT}/rewards-hover.gif`,
+  punishments: `${ICON_ROOT}/punishments-hover.gif`,
+  marketplace: `${ICON_ROOT}/marketplace-hover.gif`,
 };
 
 const SOCIAL_LINKS = [
@@ -83,6 +83,8 @@ export function AppSidebar({
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] =
     useState(false);
+  const [navAnimationRun, setNavAnimationRun] =
+    useState<Partial<Record<SiteNavIcon, boolean>>>({});
 
   const quickLinks = viewer
     ? [
@@ -95,6 +97,13 @@ export function AppSidebar({
 
   const closeMobile = () =>
     setMobileOpen(false);
+
+  function restartNavAnimation(icon: SiteNavIcon) {
+    setNavAnimationRun((current) => ({
+      ...current,
+      [icon]: !current[icon],
+    }));
+  }
 
   return (
     <>
@@ -131,6 +140,8 @@ export function AppSidebar({
             );
             const icon =
               NAV_ICON_PATHS[item.icon];
+            const run =
+              navAnimationRun[item.icon] === true;
 
             return (
               <a
@@ -142,6 +153,9 @@ export function AppSidebar({
                 }`}
                 href={item.href}
                 key={item.label}
+                onMouseEnter={() =>
+                  restartNavAnimation(item.icon)
+                }
                 {...(item.external
                   ? {
                       target: "_blank",
@@ -150,7 +164,11 @@ export function AppSidebar({
                   : {})}
               >
                 <span className="sidebar-nav__icon">
-                  <AssetIcon src={icon} />
+                  <AssetIcon
+                    className="asset-icon nav-gif-icon"
+                    key={`${item.icon}-${run ? "a" : "b"}`}
+                    src={`${icon}?run=${run ? "a" : "b"}`}
+                  />
                 </span>
 
                 <span className="sidebar-nav__label">

@@ -1,71 +1,22 @@
 /*
- * Primary navigation GIF icons are the actual icon assets.
- * All five GIFs are preprocessed to #FFF with transparent backgrounds.
- * No separate static icon layer is used.
+ * Mineacle primary navigation GIF normalization.
+ * The GIF files themselves are white + transparent. Keep every nav state white.
  */
 
-.sidebar-nav__icon,
-.sidebar-account-action__icon {
-  width: 18px;
-  height: 18px;
-}
-
-.sidebar-nav__icon {
-  display: grid;
-  place-items: center;
-}
-
-.sidebar-nav__icon .asset-icon {
-  width: 18px;
-  height: 18px;
-  object-fit: contain;
+.site-sidebar .sidebar-nav__item .nav-gif-icon,
+.site-sidebar .sidebar-nav__item:hover .nav-gif-icon,
+.site-sidebar .sidebar-nav__item.is-active .nav-gif-icon,
+.site-sidebar:hover .sidebar-nav__item.is-active .nav-gif-icon {
   filter: none !important;
   opacity: 1;
-  transition:
-    transform 170ms cubic-bezier(0.2, 0.75, 0.25, 1),
-    opacity 170ms cubic-bezier(0.2, 0.75, 0.25, 1);
 }
 
-.site-sidebar .sidebar-nav__item:hover .sidebar-nav__icon .asset-icon {
+.site-sidebar .sidebar-nav__item:hover .nav-gif-icon {
   transform: translateY(-1px) scale(1.06);
 }
 
-.sidebar-social-link__icon .asset-icon,
-.mobile-drawer__socials .asset-icon {
-  width: 18px;
-  height: 18px;
-  filter: none !important;
-  opacity: 1;
-}
-
-.sidebar-account-action__icon .asset-icon {
-  width: 17px;
-  height: 17px;
-  filter: brightness(0) saturate(100%) invert(100%) !important;
-}
-
-.sidebar-nav__label,
-.sidebar-social-link__label {
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.sidebar-social-link {
-  color: var(--brand-text);
-}
-
-.mobile-drawer > .mobile-drawer__panel > nav > a > .asset-icon {
-  width: 18px;
-  height: 18px;
-  filter: none !important;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .site-sidebar .sidebar-nav__item:hover .sidebar-nav__icon .asset-icon {
+  .site-sidebar .sidebar-nav__item:hover .nav-gif-icon {
     transform: none;
-  }
-
-  .sidebar-nav__icon .asset-icon {
-    transition: none;
   }
 }

@@ -17,11 +17,11 @@ const ICON_ROOT = "/shared/images/icons/streamline/core-solid";
 const SOCIAL_ROOT = "/shared/images/icons/streamline/logos";
 
 const NAV_ICON_PATHS: Record<SiteNavIcon, string> = {
-  home: `${ICON_ROOT}/home.gif`,
-  leaderboard: `${ICON_ROOT}/leaderboards.gif`,
-  rewards: `${ICON_ROOT}/rewards.gif`,
-  punishments: `${ICON_ROOT}/punishments.gif`,
-  marketplace: `${ICON_ROOT}/marketplace.gif`,
+  home: `${ICON_ROOT}/home-hover.gif`,
+  leaderboard: `${ICON_ROOT}/leaderboards-hover.gif`,
+  rewards: `${ICON_ROOT}/rewards-hover.gif`,
+  punishments: `${ICON_ROOT}/punishments-hover.gif`,
+  marketplace: `${ICON_ROOT}/marketplace-hover.gif`,
 };
 
 const JAVA_EDITION_ICON =
@@ -89,6 +89,8 @@ export function VisitorHome({
   const [loggingOut, setLoggingOut] = useState(false);
   const [serverStatus, setServerStatus] =
     useState<ServerStatus | null>(null);
+  const [navAnimationRun, setNavAnimationRun] =
+    useState<Partial<Record<SiteNavIcon, boolean>>>({});
 
   const profileRef = useRef<HTMLDivElement>(null);
 
@@ -292,6 +294,13 @@ export function VisitorHome({
     };
   }, []);
 
+  function restartNavAnimation(icon: SiteNavIcon) {
+    setNavAnimationRun((current) => ({
+      ...current,
+      [icon]: !current[icon],
+    }));
+  }
+
   async function copyServerAddress() {
     try {
       await navigator.clipboard.writeText(SERVER_ADDRESS);
@@ -373,37 +382,47 @@ export function VisitorHome({
             className={styles.primaryNav}
             aria-label="Primary navigation"
           >
-            {siteNavigation.map((item) => (
-              <a
-                className={
-                  item.href === "/"
-                    ? styles.activeNavItem
-                    : undefined
-                }
-                href={item.href}
-                key={item.label}
-                {...(item.external
-                  ? {
-                      target: "_blank",
-                      rel: "noreferrer",
-                    }
-                  : {})}
-              >
-                <span className={styles.navIcon}>
-                  <img
-                    src={NAV_ICON_PATHS[item.icon]}
-                    alt=""
-                    draggable={false}
-                  />
-                </span>
+            {siteNavigation.map((item) => {
+              const run = navAnimationRun[item.icon] === true;
 
-                <span>{item.label}</span>
+              return (
+                <a
+                  className={
+                    item.href === "/"
+                      ? styles.activeNavItem
+                      : undefined
+                  }
+                  href={item.href}
+                  key={item.label}
+                  onMouseEnter={() =>
+                    restartNavAnimation(item.icon)
+                  }
+                  {...(item.external
+                    ? {
+                        target: "_blank",
+                        rel: "noreferrer",
+                      }
+                    : {})}
+                >
+                  <span className={styles.navIcon}>
+                    <img
+                      key={`${item.icon}-${run ? "a" : "b"}`}
+                      src={`${NAV_ICON_PATHS[item.icon]}?run=${
+                        run ? "a" : "b"
+                      }`}
+                      alt=""
+                      draggable={false}
+                    />
+                  </span>
 
-                {item.external ? (
-                  <small aria-hidden="true">↗</small>
-                ) : null}
-              </a>
-            ))}
+                  <span>{item.label}</span>
+
+                  {item.external ? (
+                    <small aria-hidden="true">↗</small>
+                  ) : null}
+                </a>
+              );
+            })}
           </nav>
 
           {viewer ? (
