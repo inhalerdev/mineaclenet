@@ -47,8 +47,13 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
-  padding: 16px 12px;
-  overflow: hidden;
+  padding: 12px;
+  overflow: visible;
+  z-index: 20;
+}
+
+.railSearch {
+  margin-bottom: 12px;
 }
 
 .primaryNav {
@@ -316,29 +321,19 @@
   top: 14px;
   right: 16px;
   left: 16px;
-  display: grid;
-  grid-template-columns:
-    minmax(260px, 360px)
-    minmax(170px, 1fr)
-    auto;
-  grid-template-areas: "search logo account";
-  align-items: start;
-  gap: 16px;
-}
-
-.heroSearch {
-  grid-area: search;
+  min-height: 44px;
 }
 
 .heroTopLogo {
-  grid-area: logo;
-  justify-self: center;
-  align-self: start;
-  margin-top: -7px;
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  display: block;
+  transform: translateX(-50%);
 }
 
 .heroLogo {
-  width: min(195px, 19vw);
+  width: min(202px, 19vw);
   height: auto;
   object-fit: contain;
   user-select: none;
@@ -379,19 +374,25 @@
 }
 
 .accountActions {
-  grid-area: account;
-  min-height: 40px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-height: 42px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 14px;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid rgba(248, 248, 248, 0.12);
+  border-radius: 8px;
+  background: rgba(17, 17, 17, 0.92);
 }
 
 .verifyLink {
-  height: 40px;
+  height: 34px;
   display: inline-flex;
   align-items: center;
-  padding: 0;
+  padding: 0 10px;
   border: 0;
   background: transparent;
   color: var(--brand-text);
@@ -410,9 +411,9 @@
 }
 
 .loginButton {
-  min-width: 92px;
-  height: 40px;
-  padding: 0 16px;
+  min-width: 88px;
+  height: 34px;
+  padding: 0 14px;
   border: 0;
   border-radius: var(--control-radius);
   background: var(--brand-primary);
@@ -432,9 +433,9 @@
 }
 
 .profileMenu {
-  position: relative;
-  grid-area: account;
-  justify-self: end;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .profileTrigger {
@@ -633,13 +634,7 @@
   right: 16px;
   bottom: 16px;
   left: 16px;
-  display: grid;
-  grid-template-columns:
-    minmax(0, 1fr)
-    auto
-    minmax(0, 1fr);
-  align-items: end;
-  gap: 16px;
+  min-height: 178px;
 }
 
 .heroCopy {
@@ -743,9 +738,13 @@
 }
 
 .playGroup {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  transform: translateX(-50%);
 }
 
 .playButton {
@@ -1282,6 +1281,11 @@
     padding: 10px;
   }
 
+  .railSearch {
+    width: min(360px, 100%);
+    margin-bottom: 8px;
+  }
+
   .primaryNav {
     display: flex;
     min-width: 0;
@@ -1321,21 +1325,15 @@
 
 @media (max-width: 760px) {
   .page {
-    grid-template-rows: auto 680px auto;
+    grid-template-rows: auto 700px auto;
   }
 
   .heroTop {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "logo"
-      "search"
-      "account";
-    justify-items: stretch;
+    min-height: 106px;
   }
 
   .heroTopLogo {
-    justify-self: center;
-    margin-top: -5px;
+    top: -6px;
   }
 
   .heroLogo {
@@ -1343,11 +1341,15 @@
   }
 
   .accountActions {
+    top: 62px;
+    right: 0;
+    left: 0;
     justify-content: space-between;
   }
 
   .profileMenu {
-    justify-self: end;
+    top: 62px;
+    right: 0;
   }
 
   .profileDropdown {
@@ -1355,7 +1357,10 @@
   }
 
   .heroFooter {
-    grid-template-columns: 1fr;
+    display: flex;
+    min-height: 0;
+    flex-direction: column;
+    gap: 16px;
   }
 
   .heroCopy {
@@ -1363,7 +1368,10 @@
   }
 
   .playGroup {
+    position: static;
+    width: 100%;
     align-items: stretch;
+    transform: none;
   }
 
   .playButton {

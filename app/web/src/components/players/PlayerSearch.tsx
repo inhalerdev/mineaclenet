@@ -23,14 +23,17 @@ type PlayerSearchResult = {
 type PlayerSearchProps = {
   className?: string;
   placeholder?: string;
+  variant?: "default" | "rail";
 };
 
 export function PlayerSearch({
   className,
   placeholder = "Search for a player",
+  variant = "default",
 }: PlayerSearchProps) {
   const [query, setQuery] = useState("");
-  const [players, setPlayers] = useState<PlayerSearchResult[]>([]);
+  const [players, setPlayers] =
+    useState<PlayerSearchResult[]>([]);
   const [searching, setSearching] = useState(false);
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -39,7 +42,9 @@ export function PlayerSearch({
     function onPointerDown(event: MouseEvent) {
       if (
         rootRef.current &&
-        !rootRef.current.contains(event.target as Node)
+        !rootRef.current.contains(
+          event.target as Node,
+        )
       ) {
         setOpen(false);
       }
@@ -51,12 +56,21 @@ export function PlayerSearch({
       }
     }
 
-    document.addEventListener("mousedown", onPointerDown);
+    document.addEventListener(
+      "mousedown",
+      onPointerDown,
+    );
     window.addEventListener("keydown", onKeyDown);
 
     return () => {
-      document.removeEventListener("mousedown", onPointerDown);
-      window.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener(
+        "mousedown",
+        onPointerDown,
+      );
+      window.removeEventListener(
+        "keydown",
+        onKeyDown,
+      );
     };
   }, []);
 
@@ -76,7 +90,9 @@ export function PlayerSearch({
 
       try {
         const response = await fetch(
-          `/api/players/search?q=${encodeURIComponent(trimmed)}`,
+          `/api/players/search?q=${encodeURIComponent(
+            trimmed,
+          )}`,
           {
             cache: "no-store",
             signal: controller.signal,
@@ -92,7 +108,9 @@ export function PlayerSearch({
           players?: PlayerSearchResult[];
         };
 
-        setPlayers((data.players || []).slice(0, 6));
+        setPlayers(
+          (data.players || []).slice(0, 6),
+        );
         setOpen(true);
       } catch {
         if (!controller.signal.aborted) {
@@ -116,17 +134,27 @@ export function PlayerSearch({
 
     if (players[0]) {
       window.location.assign(
-        `/player/${encodeURIComponent(players[0].username)}`,
+        `/player/${encodeURIComponent(
+          players[0].username,
+        )}`,
       );
     }
   }
 
-  const rootClass = [styles.root, className]
+  const rootClass = [
+    styles.root,
+    variant === "rail" ? styles.railRoot : "",
+    className,
+  ]
     .filter(Boolean)
     .join(" ");
 
   return (
-    <div className={rootClass} ref={rootRef}>
+    <div
+      className={rootClass}
+      ref={rootRef}
+      data-search-variant={variant}
+    >
       <form
         className={styles.form}
         onSubmit={submit}
@@ -160,7 +188,9 @@ export function PlayerSearch({
         />
 
         {searching ? (
-          <span className={styles.searching}>SEARCHING</span>
+          <span className={styles.searching}>
+            SEARCHING
+          </span>
         ) : null}
       </form>
 
@@ -170,19 +200,23 @@ export function PlayerSearch({
             players.map((player) => (
               <a
                 className={styles.result}
-                href={`/player/${encodeURIComponent(player.username)}`}
+                href={`/player/${encodeURIComponent(
+                  player.username,
+                )}`}
                 key={player.uuid}
               >
                 <PlayerAvatar
                   uuid={player.uuid}
-                  size={32}
+                  size={34}
                   className={styles.avatar}
                 />
 
                 <span className={styles.identity}>
                   <strong>
-                    {player.displayName || player.username}
+                    {player.displayName ||
+                      player.username}
                   </strong>
+
                   <small>
                     {player.teamName
                       ? `${player.username} · ${player.teamName}`
@@ -192,11 +226,15 @@ export function PlayerSearch({
 
                 <span
                   className={`${styles.status} ${
-                    player.online ? styles.online : ""
+                    player.online
+                      ? styles.online
+                      : ""
                   }`}
                 >
                   <i aria-hidden="true" />
-                  {player.online ? "ONLINE" : "OFFLINE"}
+                  {player.online
+                    ? "ONLINE"
+                    : "OFFLINE"}
                 </span>
               </a>
             ))

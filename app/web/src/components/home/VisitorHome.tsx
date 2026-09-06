@@ -51,8 +51,12 @@ const RELEASE_FEATURES = [
   "Player Economy",
   "Teams",
   "Auction House",
-  "Live Rankings",
+  "Homes",
 ] as const;
+
+const STATUS_CACHE_KEY =
+  "mineacle:home-status:mineacle.net";
+const STATUS_CACHE_MAX_AGE = 15_000;
 
 type AuthMode = "login" | "create";
 type AuthStage = "edition" | "form";
@@ -64,6 +68,8 @@ type VisitorHomeProps = {
 type ServerStatus = {
   online: boolean;
   currentlyPlaying: number;
+  checked?: boolean;
+  source?: string;
 };
 
 function playerBodyUrl(uuid: string) {
@@ -133,44 +139,156 @@ export function VisitorHome({
 
   useEffect(() => {
     let cancelled = false;
+    let requestActive = false;
 
-    async function loadServerStatus() {
+    function normalizeStatus(
+      value: ServerStatus | null,
+    ): ServerStatus | null {
+      if (!value || typeof value !== "object") {
+        return null;
+      }
+
+      const count = Number(value.currentlyPlaying || 0);
+
+      return {
+        online: value.online === true,
+        currentlyPlaying:
+          Number.isFinite(count) && count > 0
+            ? Math.floor(count)
+            : 0,
+        checked: value.checked !== false,
+        source:
+          typeof value.source === "string"
+            ? value.source
+            : "",
+      };
+    }
+
+    function readCachedStatus() {
       try {
-        const response = await fetch("/api/server/status", {
-          cache: "no-store",
-        });
+        const cached = JSON.parse(
+          window.localStorage.getItem(
+            STATUS_CACHE_KEY,
+          ) || "null",
+        ) as
+          | (ServerStatus & {
+              updatedAt?: number;
+            })
+          | null;
 
-        if (!response.ok) {
-          return;
+        if (
+          !cached ||
+          typeof cached.updatedAt !== "number" ||
+          Date.now() - cached.updatedAt >
+            STATUS_CACHE_MAX_AGE
+        ) {
+          return null;
         }
 
-        const data = (await response.json()) as ServerStatus;
-
-        if (!cancelled) {
-          setServerStatus({
-            online: data.online === true,
-            currentlyPlaying: Math.max(
-              0,
-              Number(data.currentlyPlaying || 0),
-            ),
-          });
-        }
+        return normalizeStatus(cached);
       } catch {
-        if (!cancelled) {
-          setServerStatus({
-            online: false,
-            currentlyPlaying: 0,
-          });
-        }
+        return null;
       }
     }
 
+    function writeCachedStatus(status: ServerStatus) {
+      try {
+        window.localStorage.setItem(
+          STATUS_CACHE_KEY,
+          JSON.stringify({
+            ...status,
+            updatedAt: Date.now(),
+          }),
+        );
+      } catch {
+        // Storage may be unavailable in private browsing.
+      }
+    }
+
+    async function loadServerStatus() {
+      if (requestActive) {
+        return;
+      }
+
+      requestActive = true;
+
+      try {
+        const controller = new AbortController();
+        const timeout = window.setTimeout(
+          () => controller.abort(),
+          2_400,
+        );
+
+        try {
+          const response = await fetch(
+            `/api/server/status?t=${Date.now()}`,
+            {
+              cache: "no-store",
+              signal: controller.signal,
+            },
+          );
+
+          if (!response.ok) {
+            return;
+          }
+
+          const status = normalizeStatus(
+            (await response.json()) as ServerStatus,
+          );
+
+          if (
+            status &&
+            status.checked !== false &&
+            !cancelled
+          ) {
+            setServerStatus(status);
+            writeCachedStatus(status);
+          }
+        } finally {
+          window.clearTimeout(timeout);
+        }
+      } catch {
+        // Keep the last known state on transient failures.
+      } finally {
+        requestActive = false;
+      }
+    }
+
+    const cached = readCachedStatus();
+
+    if (cached) {
+      setServerStatus(cached);
+    }
+
     loadServerStatus();
-    const timer = window.setInterval(loadServerStatus, 30_000);
+
+    const timer = window.setInterval(() => {
+      if (!document.hidden) {
+        loadServerStatus();
+      }
+    }, 15_000);
+
+    const onFocus = () => loadServerStatus();
+    const onVisibilityChange = () => {
+      if (!document.hidden) {
+        loadServerStatus();
+      }
+    };
+
+    window.addEventListener("focus", onFocus);
+    document.addEventListener(
+      "visibilitychange",
+      onVisibilityChange,
+    );
 
     return () => {
       cancelled = true;
       window.clearInterval(timer);
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener(
+        "visibilitychange",
+        onVisibilityChange,
+      );
     };
   }, []);
 
@@ -245,6 +363,12 @@ export function VisitorHome({
           className={styles.sideNav}
           aria-label="Mineacle navigation"
         >
+          <PlayerSearch
+            className={styles.railSearch}
+            placeholder="Search for a player"
+            variant="rail"
+          />
+
           <nav
             className={styles.primaryNav}
             aria-label="Primary navigation"
@@ -387,11 +511,6 @@ export function VisitorHome({
           />
 
           <div className={styles.heroTop}>
-            <PlayerSearch
-              className={styles.heroSearch}
-              placeholder="Search for a player"
-            />
-
             <a
               className={styles.heroTopLogo}
               href="/"
@@ -578,8 +697,6 @@ export function VisitorHome({
                 How to join mineacle.net
               </button>
             </div>
-
-            <div aria-hidden="true" />
           </div>
         </section>
 
