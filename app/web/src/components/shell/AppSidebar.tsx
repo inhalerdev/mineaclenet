@@ -23,12 +23,17 @@ const NAV_ICON_PATHS: Record<SiteNavIcon, string> = {
 const SOCIAL_LINKS = [
   {
     label: "Discord",
-    href: "#",
+    href: "https://discord.gg/4xrYFxdSWg",
     icon: `${LOGO_ROOT}/discord.svg`,
   },
   {
+    label: "YouTube",
+    href: "https://www.youtube.com/@MineacleNetwork",
+    icon: "/images/home/visitorhome/youtube.png",
+  },
+  {
     label: "X",
-    href: "#",
+    href: "https://x.com/mineaclenetwork",
     icon: `${LOGO_ROOT}/x.svg`,
   },
 ] as const;
@@ -145,6 +150,8 @@ export function AppSidebar({
                 href={social.href}
                 key={social.label}
                 aria-label={social.label}
+                target="_blank"
+                rel="noreferrer"
               >
                 <span className="sidebar-social-link__icon">
                   <AssetIcon src={social.icon} />
@@ -272,7 +279,12 @@ export function AppSidebar({
           <div className="mobile-drawer__bottom">
             <div className="mobile-drawer__socials">
               {SOCIAL_LINKS.map((social) => (
-                <a href={social.href} key={social.label}>
+                <a
+                  href={social.href}
+                  key={social.label}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <AssetIcon src={social.icon} />
                   <span>{social.label}</span>
                 </a>

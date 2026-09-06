@@ -1,10 +1,17 @@
 import type { ReactNode } from "react";
+import { Rubik } from "next/font/google";
 import "./globals.css";
 import "./home.css";
 import "./systems.css";
 import "./predesign.css";
 import "./punishments.css";
-import "./brand.css";
+import "./navigation.css";
+
+const rubik = Rubik({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
 
 export const metadata = {
   title: "Home | Mineacle",
@@ -25,7 +32,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={rubik.className}>{children}</body>
     </html>
   );
 }

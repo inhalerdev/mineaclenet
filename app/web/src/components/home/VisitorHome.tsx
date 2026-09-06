@@ -29,12 +29,12 @@ const BEDROCK_EDITION_ICON = "/images/home/visitorhome/edition-bedrock.png";
 const SOCIAL_LINKS = [
   {
     label: "Discord",
-    href: "https://discord.gg/mineacle",
+    href: "https://discord.gg/4xrYFxdSWg",
     icon: "/images/home/visitorhome/discord.png",
   },
   {
     label: "YouTube",
-    href: "https://www.youtube.com/@mineaclenetwork",
+    href: "https://www.youtube.com/@MineacleNetwork",
     icon: "/images/home/visitorhome/youtube.png",
   },
   {
@@ -167,13 +167,9 @@ export function VisitorHome({ viewer = null }: VisitorHomeProps) {
     <>
       <main className={styles.page}>
         <aside className={styles.sideNav} aria-label="Mineacle navigation">
-          <a className={styles.sideBrand} href="/" aria-label="Mineacle home">
-            <img
-              src="/shared/images/branding/mineacle-logo.png"
-              alt="Mineacle"
-              draggable={false}
-            />
-          </a>
+          <div className={styles.railHeading}>
+            <small>NAVIGATION</small>
+          </div>
 
           <nav className={styles.primaryNav} aria-label="Primary navigation">
             {siteNavigation.map((item) => (
@@ -200,6 +196,77 @@ export function VisitorHome({ viewer = null }: VisitorHomeProps) {
             ))}
           </nav>
 
+          <section className={styles.railModule}>
+            {!viewer ? (
+              <>
+                <small>OPEN BETA</small>
+
+                <div className={styles.serverStatus}>
+                  <i aria-hidden="true" />
+                  <span>Java Edition</span>
+                  <b>LIVE</b>
+                </div>
+
+                <button
+                  className={styles.serverCopy}
+                  type="button"
+                  onClick={copyServerAddress}
+                >
+                  <span>{SERVER_ADDRESS}</span>
+                  <b>{copied ? "COPIED" : "COPY"}</b>
+                </button>
+
+                <button
+                  className={styles.railVerify}
+                  type="button"
+                  onClick={() => openAuth("create")}
+                >
+                  Verify your player
+                  <span aria-hidden="true">→</span>
+                </button>
+              </>
+            ) : (
+              <>
+                <small>MY MINEACLE</small>
+
+                <div className={styles.memberIdentity}>
+                  <PlayerAvatar
+                    uuid={viewer.uuid}
+                    size={30}
+                    className={styles.memberHead}
+                    eager
+                  />
+                  <span>
+                    <strong>{viewer.username}</strong>
+                    <small>VERIFIED PLAYER</small>
+                  </span>
+                </div>
+
+                <nav
+                  className={styles.memberLinks}
+                  aria-label="My Mineacle"
+                >
+                  <a href="/profile">
+                    <span>Profile</span>
+                    <b>→</b>
+                  </a>
+                  <a href="/following">
+                    <span>Following</span>
+                    <b>{viewer.followingCount}</b>
+                  </a>
+                  <a href="/notifications">
+                    <span>Notifications</span>
+                    <b>{viewer.unreadNotifications}</b>
+                  </a>
+                  <a href="/team">
+                    <span>My team</span>
+                    <b>→</b>
+                  </a>
+                </nav>
+              </>
+            )}
+          </section>
+
           <div className={styles.sideNavSpacer} />
 
           <div className={styles.socialSection}>
@@ -218,6 +285,15 @@ export function VisitorHome({ viewer = null }: VisitorHomeProps) {
                 </a>
               ))}
             </div>
+          </div>
+
+          <div className={styles.railLegal}>
+            <strong>© 2026 Mineacle Studios</strong>
+            <span>All Rights Reserved.</span>
+            <p>
+              Mineacle is not affiliated with or endorsed by Mojang Studios
+              or Microsoft.
+            </p>
           </div>
         </aside>
 
