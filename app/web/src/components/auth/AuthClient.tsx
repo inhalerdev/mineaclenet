@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
+import styles from "./AuthClient.module.css";
 
 type VerifyState = {
   challengeId: string;
@@ -47,6 +48,7 @@ export function AuthClient({
   const [verification, setVerification] = useState<VerifyState | null>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [commandCopied, setCommandCopied] = useState(false);
 
   useEffect(() => {
     const requestedMode =
@@ -54,10 +56,12 @@ export function AuthClient({
 
     setMode(requestedMode === "create" ? "create" : initialMode);
     setStep("username");
+    setUsername("");
     setVerification(null);
     setPassword("");
     setConfirm("");
     setError("");
+    setCommandCopied(false);
   }, [initialMode]);
 
   async function finishAuthentication() {
@@ -164,6 +168,7 @@ export function AuthClient({
       }
 
       setVerification(data);
+      setCommandCopied(false);
       setStep("verify");
     } catch {
       setError("Unable to connect to Mineacle");
@@ -214,6 +219,7 @@ export function AuthClient({
         setVerification(null);
         setPassword("");
         setConfirm("");
+        setCommandCopied(false);
         setError(
           data.error || "Account created. Log in with your new password",
         );
@@ -242,13 +248,48 @@ export function AuthClient({
     setPassword("");
     setConfirm("");
     setError("");
+    setCommandCopied(false);
   }
 
+  async function copyCommand() {
+    if (!verification) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(`/verify ${verification.code}`);
+      setCommandCopied(true);
+      window.setTimeout(() => setCommandCopied(false), 1400);
+    } catch {
+      setCommandCopied(false);
+    }
+  }
+
+  const createStepIndex =
+    step === "username" ? 1 : step === "verify" ? 2 : 3;
+
+  const verifyExpiresText = useMemo(() => {
+    if (!verification?.expiresAt) {
+      return null;
+    }
+
+    const expiresAt = new Date(verification.expiresAt);
+
+    if (Number.isNaN(expiresAt.getTime())) {
+      return null;
+    }
+
+    return expiresAt.toLocaleTimeString([], {
+      hour: "numeric",
+      minute: "2-digit",
+    });
+  }, [verification]);
+
   return (
-    <div className="auth-card">
-      <div className="auth-tabs">
+    <div className={styles.root}>
+      <div className={styles.tabs} role="tablist" aria-label="Account access">
         <button
-          className={mode === "login" ? "is-active" : ""}
+          className={mode === "login" ? styles.activeTab : ""}
           onClick={() => changeMode("login")}
           type="button"
         >
@@ -256,7 +297,7 @@ export function AuthClient({
         </button>
 
         <button
-          className={mode === "create" ? "is-active" : ""}
+          className={mode === "create" ? styles.activeTab : ""}
           onClick={() => changeMode("create")}
           type="button"
         >
@@ -264,136 +305,203 @@ export function AuthClient({
         </button>
       </div>
 
+      {mode === "create" ? (
+        <ol className={styles.steps} aria-label="Create account steps">
+          <li className={createStepIndex >= 1 ? styles.stepActive : ""}>
+            <span>1</span>
+            <strong>Player</strong>
+          </li>
+          <li className={createStepIndex >= 2 ? styles.stepActive : ""}>
+            <span>2</span>
+            <strong>Verify</strong>
+          </li>
+          <li className={createStepIndex >= 3 ? styles.stepActive : ""}>
+            <span>3</span>
+            <strong>Password</strong>
+          </li>
+        </ol>
+      ) : null}
+
       {mode === "login" ? (
-        <form className="auth-form" onSubmit={login}>
-          <header>
+        <form className={styles.panel} onSubmit={login}>
+          <header className={styles.header}>
             <small>MINEACLE ACCOUNT</small>
             <h1>Welcome back</h1>
             <p>
-              Your verified Minecraft account is your Mineacle.net identity.
+              Sign in with the Minecraft username tied to your
+              Mineacle account.
             </p>
           </header>
 
-          <label>
-            Minecraft username
-            <input
-              autoComplete="username"
-              maxLength={16}
-              value={username}
-              onChange={(event) => setUsername(event.target.value)}
-              required
-            />
-          </label>
+          <div className={styles.fieldGroup}>
+            <label className={styles.field}>
+              <span>Minecraft username</span>
+              <input
+                autoComplete="username"
+                maxLength={16}
+                value={username}
+                onChange={(event) => setUsername(event.target.value)}
+                placeholder="Enter your Java username"
+                required
+              />
+            </label>
 
-          <label>
-            Password
-            <input
-              autoComplete="current-password"
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              required
-            />
-          </label>
+            <label className={styles.field}>
+              <span>Password</span>
+              <input
+                autoComplete="current-password"
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                placeholder="Enter your password"
+                required
+              />
+            </label>
+          </div>
 
-          {error ? <div className="auth-error">{error}</div> : null}
+          {error ? <div className={styles.error}>{error}</div> : null}
 
-          <button className="auth-submit" disabled={busy} type="submit">
+          <button className={styles.submit} disabled={busy} type="submit">
             {busy ? "Logging in..." : "Log in"}
           </button>
         </form>
       ) : null}
 
       {mode === "create" && step === "username" ? (
-        <form className="auth-form" onSubmit={start}>
-          <header>
+        <form className={styles.panel} onSubmit={start}>
+          <header className={styles.header}>
             <small>PLAYER VERIFICATION</small>
             <h1>Connect your player</h1>
             <p>
-              Use a player that has joined Mineacle. You will prove ownership
-              in-game before creating a password.
+              Enter the Java username that has already joined
+              Mineacle. You will verify ownership in game before
+              creating your website password.
             </p>
           </header>
 
-          <label>
-            Minecraft username
+          <div className={styles.note}>
+            The player must have joined Mineacle at least once.
+          </div>
+
+          <label className={styles.field}>
+            <span>Minecraft username</span>
             <input
               maxLength={16}
               value={username}
               onChange={(event) => setUsername(event.target.value)}
+              placeholder="Enter your Java username"
               required
             />
           </label>
 
-          {error ? <div className="auth-error">{error}</div> : null}
+          {error ? <div className={styles.error}>{error}</div> : null}
 
-          <button className="auth-submit" disabled={busy} type="submit">
+          <button className={styles.submit} disabled={busy} type="submit">
             {busy ? "Checking player..." : "Generate verification code"}
           </button>
         </form>
       ) : null}
 
       {mode === "create" && step === "verify" && verification ? (
-        <div className="auth-form">
-          <header>
+        <div className={styles.panel}>
+          <header className={styles.header}>
             <small>VERIFY IN MINECRAFT</small>
-            <h1>{verification.username}</h1>
+            <h1>Verify {verification.username}</h1>
             <p>
-              Join Mineacle and enter this command. The page will update
-              automatically.
+              Join Mineacle on Java Edition, run the command
+              below, and this page will update automatically.
             </p>
           </header>
 
-          <div className="auth-command">
-            <small>IN GAME</small>
-            <strong>/verify {verification.code}</strong>
+          <div className={styles.commandCard}>
+            <div className={styles.commandLabel}>
+              <small>IN-GAME COMMAND</small>
+              {verifyExpiresText ? (
+                <span>Expires around {verifyExpiresText}</span>
+              ) : null}
+            </div>
+
+            <div className={styles.commandValue}>
+              <strong>/verify {verification.code}</strong>
+              <button
+                className={styles.commandCopy}
+                type="button"
+                onClick={copyCommand}
+              >
+                {commandCopied ? "Copied" : "Copy"}
+              </button>
+            </div>
           </div>
 
-          <div className="auth-wait">
-            <span />
+          <div className={styles.verifyGrid}>
+            <div className={styles.verifyCard}>
+              <small>STEP 1</small>
+              <strong>Join Mineacle</strong>
+              <p>Connect using the same Java username shown above.</p>
+            </div>
+
+            <div className={styles.verifyCard}>
+              <small>STEP 2</small>
+              <strong>Run the command</strong>
+              <p>Paste the verification command in Minecraft chat.</p>
+            </div>
+
+            <div className={styles.verifyCard}>
+              <small>STEP 3</small>
+              <strong>Return here</strong>
+              <p>This window will continue automatically when verified.</p>
+            </div>
+          </div>
+
+          <div className={styles.waiting}>
+            <span className={styles.waitingDot} aria-hidden="true" />
             Waiting for verification
           </div>
 
-          {error ? <div className="auth-error">{error}</div> : null}
+          {error ? <div className={styles.error}>{error}</div> : null}
         </div>
       ) : null}
 
       {mode === "create" && step === "password" && verification ? (
-        <form className="auth-form" onSubmit={complete}>
-          <header>
+        <form className={styles.panel} onSubmit={complete}>
+          <header className={styles.header}>
             <small>PLAYER VERIFIED</small>
-            <h1>Finish your account</h1>
+            <h1>Create your password</h1>
             <p>
-              {verification.username} is verified. Create your Mineacle.net
-              password.
+              {verification.username} is verified. Finish your
+              Mineacle account by setting a password.
             </p>
           </header>
 
-          <label>
-            Password
-            <input
-              type="password"
-              minLength={10}
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              required
-            />
-          </label>
+          <div className={styles.fieldGroup}>
+            <label className={styles.field}>
+              <span>Password</span>
+              <input
+                type="password"
+                minLength={10}
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                placeholder="Create a password"
+                required
+              />
+            </label>
 
-          <label>
-            Confirm password
-            <input
-              type="password"
-              minLength={10}
-              value={confirm}
-              onChange={(event) => setConfirm(event.target.value)}
-              required
-            />
-          </label>
+            <label className={styles.field}>
+              <span>Confirm password</span>
+              <input
+                type="password"
+                minLength={10}
+                value={confirm}
+                onChange={(event) => setConfirm(event.target.value)}
+                placeholder="Confirm your password"
+                required
+              />
+            </label>
+          </div>
 
-          {error ? <div className="auth-error">{error}</div> : null}
+          {error ? <div className={styles.error}>{error}</div> : null}
 
-          <button className="auth-submit" disabled={busy} type="submit">
+          <button className={styles.submit} disabled={busy} type="submit">
             {busy ? "Creating account..." : "Create account"}
           </button>
         </form>

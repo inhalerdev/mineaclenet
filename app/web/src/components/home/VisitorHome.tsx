@@ -803,7 +803,7 @@ export function VisitorHome({
             }
           >
             <button
-              className={styles.modalClose}
+              className={`${styles.modalClose} ${styles.authClose}`}
               type="button"
               onClick={closeAuth}
               aria-label="Close account window"
@@ -813,30 +813,43 @@ export function VisitorHome({
 
             {authStage === "edition" ? (
               <>
-                <header className={styles.editionHeader}>
-                  <small>
+                <header className={styles.authIntro}>
+                  <span>
                     {authMode === "login"
                       ? "MINEACLE ACCOUNT"
                       : "PLAYER VERIFICATION"}
-                  </small>
+                  </span>
 
                   <h2>Choose your edition</h2>
 
                   <p>
-                    Select the Minecraft edition connected
-                    to your Mineacle account.
+                    Mineacle account access currently supports
+                    Java Edition. Choose the platform connected
+                    to your player account to continue.
                   </p>
                 </header>
 
-                <div className={styles.editionGrid}>
-                  <button
-                    className={styles.javaEdition}
-                    type="button"
-                    onClick={() =>
-                      setAuthStage("form")
-                    }
+                <div className={styles.authSupportStrip}>
+                  <div className={styles.authSupportCard}>
+                    <strong>Java Edition</strong>
+                    <span>Supported now for account login and verification</span>
+                  </div>
+
+                  <div
+                    className={`${styles.authSupportCard} ${styles.authSupportMuted}`}
                   >
-                    <span className={styles.editionVisual}>
+                    <strong>Bedrock Edition</strong>
+                    <span>Account linking is not available yet</span>
+                  </div>
+                </div>
+
+                <div className={styles.authEditionGrid}>
+                  <button
+                    className={styles.authEditionPrimary}
+                    type="button"
+                    onClick={() => setAuthStage("form")}
+                  >
+                    <span className={styles.authEditionVisual}>
                       <img
                         src={JAVA_EDITION_ICON}
                         alt=""
@@ -844,26 +857,31 @@ export function VisitorHome({
                       />
                     </span>
 
-                    <span className={styles.editionCopy}>
-                      <strong>Java Edition</strong>
-                      <small>SUPPORTED</small>
+                    <span className={styles.authEditionContent}>
+                      <small>AVAILABLE NOW</small>
+                      <strong>Continue with Java Edition</strong>
+                      <p>
+                        Use your Java Minecraft username to
+                        log in or connect your Mineacle player
+                        account.
+                      </p>
                     </span>
 
                     <span
-                      className={styles.editionArrow}
+                      className={styles.authEditionAction}
                       aria-hidden="true"
                     >
-                      →
+                      Continue →
                     </span>
                   </button>
 
                   <button
-                    className={styles.bedrockEdition}
+                    className={styles.authEditionSecondary}
                     type="button"
                     disabled
                     aria-disabled="true"
                   >
-                    <span className={styles.editionVisual}>
+                    <span className={styles.authEditionVisual}>
                       <img
                         src={BEDROCK_EDITION_ICON}
                         alt=""
@@ -871,32 +889,48 @@ export function VisitorHome({
                       />
                     </span>
 
-                    <span className={styles.editionCopy}>
+                    <span className={styles.authEditionContent}>
+                      <small>COMING LATER</small>
                       <strong>Bedrock Edition</strong>
-                      <small>NOT SUPPORTED YET</small>
+                      <p>
+                        Bedrock support is planned, but player
+                        verification and account login are not
+                        supported yet.
+                      </p>
+                    </span>
+
+                    <span className={styles.authEditionDisabled}>
+                      Unavailable
                     </span>
                   </button>
                 </div>
               </>
             ) : (
-              <>
-                <button
-                  className={styles.authBack}
-                  type="button"
-                  onClick={() =>
-                    setAuthStage("edition")
-                  }
-                >
-                  ← Change edition
-                </button>
+              <div className={styles.authFlowShell}>
+                <div className={styles.authFlowTop}>
+                  <button
+                    className={styles.authBack}
+                    type="button"
+                    onClick={() => setAuthStage("edition")}
+                  >
+                    ← Change edition
+                  </button>
+
+                  <div className={styles.authFlowEditionTag}>
+                    <img
+                      src={JAVA_EDITION_ICON}
+                      alt=""
+                      draggable={false}
+                    />
+                    <span>Java Edition</span>
+                  </div>
+                </div>
 
                 <AuthClient
                   initialMode={authMode}
-                  onAuthenticated={
-                    finishPlayerAuthentication
-                  }
+                  onAuthenticated={finishPlayerAuthentication}
                 />
-              </>
+              </div>
             )}
           </section>
         </div>
@@ -919,7 +953,7 @@ export function VisitorHome({
             aria-labelledby="join-mineacle-title"
           >
             <button
-              className={styles.modalClose}
+              className={`${styles.modalClose} ${styles.joinClose}`}
               type="button"
               onClick={() => setJoinOpen(false)}
               aria-label="Close how to join"
@@ -927,76 +961,148 @@ export function VisitorHome({
               ×
             </button>
 
-            <header className={styles.modalHeader}>
-              <span>HOW TO JOIN</span>
+            <header className={styles.joinHeader}>
+              <span className={styles.joinEyebrow}>
+                HOW TO JOIN
+              </span>
+
               <h2 id="join-mineacle-title">
-                Join Mineacle
+                Play Mineacle
               </h2>
 
               <p>
-                Mineacle Open Beta currently supports
-                Minecraft: Java Edition.
+                Join the Open Beta in less than a minute.
               </p>
             </header>
 
-            <ol className={styles.joinSteps}>
+            <div
+              className={styles.joinEditions}
+              aria-label="Supported Minecraft editions"
+            >
+              <div className={styles.joinEditionActive}>
+                <img
+                  src={JAVA_EDITION_ICON}
+                  alt=""
+                  draggable={false}
+                />
+
+                <span>
+                  <strong>Java Edition</strong>
+                  <small>Available now</small>
+                </span>
+
+                <b>SUPPORTED</b>
+              </div>
+
+              <div
+                className={styles.joinEditionUnavailable}
+                aria-disabled="true"
+              >
+                <img
+                  src={BEDROCK_EDITION_ICON}
+                  alt=""
+                  draggable={false}
+                />
+
+                <span>
+                  <strong>Bedrock Edition</strong>
+                  <small>Coming later</small>
+                </span>
+              </div>
+            </div>
+
+            <button
+              className={`${styles.joinAddressCard} ${
+                copied ? styles.joinAddressCopied : ""
+              }`}
+              type="button"
+              onClick={copyServerAddress}
+              aria-label={`Copy Mineacle server address: ${SERVER_ADDRESS}`}
+            >
+              <span className={styles.joinAddressCopy}>
+                <small>JAVA SERVER ADDRESS</small>
+                <strong>{SERVER_ADDRESS}</strong>
+              </span>
+
+              <span className={styles.joinAddressAction}>
+                {copied ? "COPIED" : "COPY"}
+              </span>
+            </button>
+
+            <div className={styles.joinLiveStatus}>
+              <span
+                className={`${styles.joinStatusDot} ${
+                  serverStatus?.online
+                    ? styles.joinStatusDotOnline
+                    : ""
+                }`}
+                aria-hidden="true"
+              />
+
+              <strong>{statusLabel}</strong>
+
+              <span>
+                <b>{currentlyPlaying}</b>
+                Currently Playing
+              </span>
+            </div>
+
+            <ol className={styles.joinFlow}>
               <li>
-                <span>1</span>
-                <div>
-                  <strong>
-                    Open Minecraft: Java Edition
-                  </strong>
-                  <p>
-                    Launch Minecraft and choose Multiplayer.
-                  </p>
-                </div>
+                <span className={styles.joinStepNumber}>
+                  01
+                </span>
+
+                <strong>Open Multiplayer</strong>
+
+                <p>
+                  Launch Minecraft: Java Edition and open
+                  Multiplayer.
+                </p>
               </li>
 
               <li>
-                <span>2</span>
-                <div>
-                  <strong>Add Mineacle</strong>
-                  <p>
-                    Choose Add Server and enter the address
-                    below.
-                  </p>
-                </div>
+                <span className={styles.joinStepNumber}>
+                  02
+                </span>
+
+                <strong>Add Mineacle</strong>
+
+                <p>
+                  Choose Add Server and paste the server
+                  address above.
+                </p>
               </li>
 
               <li>
-                <span>3</span>
-                <div>
-                  <strong>Join the world</strong>
-                  <p>
-                    Select Mineacle from your server list
-                    and connect.
-                  </p>
-                </div>
+                <span className={styles.joinStepNumber}>
+                  03
+                </span>
+
+                <strong>Join the server</strong>
+
+                <p>
+                  Save Mineacle, select it from your server
+                  list, and connect.
+                </p>
               </li>
             </ol>
 
-            <div className={styles.serverAddress}>
+            <footer className={styles.joinFooter}>
               <div>
-                <small>JAVA SERVER ADDRESS</small>
-                <strong>{SERVER_ADDRESS}</strong>
+                <strong>Already playing Mineacle?</strong>
+                <span>
+                  Verify your in-game account to connect
+                  your website profile.
+                </span>
               </div>
-
-              <button
-                type="button"
-                onClick={copyServerAddress}
-              >
-                {copied ? "COPIED" : "COPY"}
-              </button>
-            </div>
-
-            <footer className={styles.modalFooter}>
-              <span>Already joined Mineacle?</span>
 
               <button
                 type="button"
                 onClick={() => openAuth("create")}
               >
-                Verify your player →
+                Verify account
+                <span aria-hidden="true">→</span>
               </button>
             </footer>
           </section>
