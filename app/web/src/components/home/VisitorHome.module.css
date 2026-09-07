@@ -195,6 +195,10 @@
   pointer-events: none;
   background:
     linear-gradient(
+      rgba(17, 17, 17, 0.14),
+      rgba(17, 17, 17, 0.14)
+    ),
+    linear-gradient(
       180deg,
       rgba(17, 17, 17, 0.38) 0%,
       rgba(17, 17, 17, 0.04) 28%,
@@ -265,15 +269,14 @@
   position: absolute;
   top: 0;
   right: 0;
-  min-height: 42px;
+  min-height: 34px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 4px;
-  padding: 4px;
-  border: 1px solid rgba(248, 248, 248, 0.12);
-  border-radius: 8px;
-  background: rgba(17, 17, 17, 0.92);
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: transparent;
 }
 
 .verifyLink {
