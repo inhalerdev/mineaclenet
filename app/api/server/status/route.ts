@@ -7,30 +7,108 @@ import { getCoreDb } from "@/lib/db";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const PUBLIC_SERVER = "mineacle.net";
-const DEFAULT_PORT = 25565;
-const STATUS_TIMEOUT_MS = 850;
-const EXTERNAL_TIMEOUT_MS = 1_250;
-const STATUS_PROTOCOL = 767;
+const PUBLIC_SERVER =
+  process.env.MINECRAFT_SERVER_ADDRESS?.trim() ||
+  "mineacle.net";
 
-type Target = {
+const DEFAULT_PORT = 25565;
+const STATUS_PROTOCOL = 767;
+const STATUS_TIMEOUT_MS = 800;
+const SRV_TIMEOUT_MS = 350;
+
+type ServerTarget = {
   host: string;
   port: number;
 };
 
-type MinecraftStatus = {
-  online: boolean;
+type DirectStatus = {
+  online: true;
   playersOnline: number;
   playersMax: number;
-  source: string;
 };
 
-function safeCount(value: unknown) {
+function statusNumber(value: unknown) {
   const parsed = Number(value);
 
-  return Number.isFinite(parsed) && parsed > 0
-    ? Math.floor(parsed)
-    : 0;
+  if (!Number.isFinite(parsed) || parsed <= 0) {
+    return 0;
+  }
+
+  return Math.floor(parsed);
+}
+
+function parseServerAddress(value: string): ServerTarget {
+  const normalized = value
+    .replace(/^minecraft:\/\//i, "")
+    .trim();
+
+  const match = normalized.match(/^([^:]+):(\d+)$/);
+
+  if (!match) {
+    return {
+      host: normalized || "mineacle.net",
+      port: DEFAULT_PORT,
+    };
+  }
+
+  const parsedPort = Number(match[2]);
+
+  return {
+    host: match[1],
+    port:
+      Number.isInteger(parsedPort) &&
+      parsedPort >= 1 &&
+      parsedPort <= 65535
+        ? parsedPort
+        : DEFAULT_PORT,
+  };
+}
+
+async function resolveServerTarget(): Promise<ServerTarget> {
+  const configured = parseServerAddress(PUBLIC_SERVER);
+
+  // A manually configured port should always win.
+  if (configured.port !== DEFAULT_PORT) {
+    return configured;
+  }
+
+  try {
+    const records = await Promise.race([
+      resolveSrv(`_minecraft._tcp.${configured.host}`),
+      new Promise<never>((_, reject) => {
+        setTimeout(
+          () => reject(new Error("SRV lookup timed out")),
+          SRV_TIMEOUT_MS,
+        );
+      }),
+    ]);
+
+    const record = records
+      .filter(
+        (item) =>
+          typeof item.name === "string" &&
+          item.name.length > 0 &&
+          Number.isInteger(item.port) &&
+          item.port >= 1 &&
+          item.port <= 65535,
+      )
+      .sort(
+        (left, right) =>
+          left.priority - right.priority ||
+          right.weight - left.weight,
+      )[0];
+
+    if (record) {
+      return {
+        host: record.name.replace(/\.$/, ""),
+        port: record.port,
+      };
+    }
+  } catch {
+    // Fall through to the normal Java port.
+  }
+
+  return configured;
 }
 
 function encodeVarInt(value: number) {
@@ -52,15 +130,15 @@ function encodeVarInt(value: number) {
 }
 
 function encodeString(value: string) {
-  const content = Buffer.from(value, "utf8");
+  const data = Buffer.from(value, "utf8");
 
   return Buffer.concat([
-    encodeVarInt(content.length),
-    content,
+    encodeVarInt(data.length),
+    data,
   ]);
 }
 
-function readVarInt(
+function readBufferVarInt(
   buffer: Buffer,
   offset: number,
 ): { value: number; size: number } | null {
@@ -90,88 +168,91 @@ function readVarInt(
   return null;
 }
 
-async function resolveTarget(): Promise<Target> {
-  const configuredHost =
-    process.env.MINECRAFT_SERVER_HOST?.trim();
+function parseMinecraftStatusPacket(
+  buffer: Buffer,
+): DirectStatus | null {
+  const packetLength = readBufferVarInt(buffer, 0);
 
-  const configuredPort = Number(
-    process.env.MINECRAFT_SERVER_PORT || 0,
+  if (!packetLength || packetLength.value <= 0) {
+    return null;
+  }
+
+  const packetStart = packetLength.size;
+  const packetEnd = packetStart + packetLength.value;
+
+  if (buffer.length < packetEnd) {
+    return null;
+  }
+
+  const packet = buffer.subarray(
+    packetStart,
+    packetEnd,
   );
 
-  if (configuredHost) {
-    return {
-      host: configuredHost,
-      port:
-        Number.isFinite(configuredPort) &&
-        configuredPort > 0
-          ? Math.min(
-              65_535,
-              Math.floor(configuredPort),
-            )
-          : DEFAULT_PORT,
-    };
+  const packetId = readBufferVarInt(packet, 0);
+
+  if (!packetId || packetId.value !== 0) {
+    return null;
+  }
+
+  const jsonLength = readBufferVarInt(
+    packet,
+    packetId.size,
+  );
+
+  if (!jsonLength || jsonLength.value <= 0) {
+    return null;
+  }
+
+  const jsonStart =
+    packetId.size + jsonLength.size;
+  const jsonEnd =
+    jsonStart + jsonLength.value;
+
+  if (packet.length < jsonEnd) {
+    return null;
   }
 
   try {
-    const records = await Promise.race([
-      resolveSrv(
-        `_minecraft._tcp.${PUBLIC_SERVER}`,
-      ),
-      new Promise<never>((_, reject) => {
-        setTimeout(
-          () => reject(new Error("SRV timeout")),
-          350,
-        );
-      }),
-    ]);
-
-    const record = records
-      .filter(
-        (item) =>
-          item.name &&
-          Number.isFinite(item.port) &&
-          item.port > 0,
-      )
-      .sort(
-        (left, right) =>
-          left.priority - right.priority ||
-          right.weight - left.weight,
-      )[0];
-
-    if (record) {
-      return {
-        host: record.name.replace(/\.$/, ""),
-        port: Math.min(
-          65_535,
-          Math.floor(record.port),
-        ),
+    const data = JSON.parse(
+      packet
+        .subarray(jsonStart, jsonEnd)
+        .toString("utf8"),
+    ) as {
+      players?: {
+        online?: unknown;
+        max?: unknown;
       };
-    }
-  } catch {
-    // No usable SRV record. Java's default port is valid.
-  }
+    };
 
-  return {
-    host: PUBLIC_SERVER,
-    port: DEFAULT_PORT,
-  };
+    return {
+      online: true,
+      playersOnline: statusNumber(
+        data.players?.online,
+      ),
+      playersMax: statusNumber(
+        data.players?.max,
+      ),
+    };
+  } catch {
+    return null;
+  }
 }
 
-function directMinecraftStatus({
-  host,
-  port,
-}: Target): Promise<MinecraftStatus | null> {
+async function directMinecraftStatus(
+  target: ServerTarget,
+): Promise<DirectStatus | null> {
   return new Promise((resolve) => {
     let settled = false;
     let received = Buffer.alloc(0);
 
     const socket = createConnection({
-      host,
-      port,
+      host: target.host,
+      port: target.port,
     });
 
     function finish(
-      value: MinecraftStatus | null,
+      status: DirectStatus | null,
     ) {
       if (settled) {
         return;
@@ -179,28 +260,39 @@ function directMinecraftStatus({
 
       settled = true;
       socket.destroy();
-      resolve(value);
+      resolve(status);
     }
 
     socket.setTimeout(STATUS_TIMEOUT_MS);
 
     socket.once("connect", () => {
-      const portBuffer = Buffer.alloc(2);
-      portBuffer.writeUInt16BE(port, 0);
+      const port = Buffer.alloc(2);
+      port.writeUInt16BE(target.port, 0);
 
       const handshake = Buffer.concat([
         encodeVarInt(0),
         encodeVarInt(STATUS_PROTOCOL),
-        encodeString(host),
-        portBuffer,
+        encodeString(target.host),
+        port,
         encodeVarInt(1),
+      ]);
+
+      const handshakePacket = Buffer.concat([
+        encodeVarInt(handshake.length),
+        handshake,
+      ]);
+
+      // Status request packet:
+      // packet length 1, packet id 0.
+      const statusRequest = Buffer.from([
+        0x01,
+        0x00,
       ]);
 
       socket.write(
         Buffer.concat([
-          encodeVarInt(handshake.length),
-          handshake,
-          Buffer.from([0x01, 0x00]),
+          handshakePacket,
+          statusRequest,
         ]),
       );
     });
@@ -211,113 +303,42 @@ function directMinecraftStatus({
         chunk,
       ]);
 
-      const packetLength = readVarInt(
-        received,
-        0,
-      );
+      const status =
+        parseMinecraftStatusPacket(received);
 
-      if (!packetLength) {
-        return;
-      }
-
-      const packetStart = packetLength.size;
-      const packetEnd =
-        packetStart + packetLength.value;
-
-      if (received.length < packetEnd) {
-        return;
-      }
-
-      const packet = received.subarray(
-        packetStart,
-        packetEnd,
-      );
-
-      const packetId = readVarInt(
-        packet,
-        0,
-      );
-
-      if (
-        !packetId ||
-        packetId.value !== 0
-      ) {
-        finish(null);
-        return;
-      }
-
-      const jsonLength = readVarInt(
-        packet,
-        packetId.size,
-      );
-
-      if (!jsonLength) {
-        return;
-      }
-
-      const jsonStart =
-        packetId.size + jsonLength.size;
-      const jsonEnd =
-        jsonStart + jsonLength.value;
-
-      if (packet.length < jsonEnd) {
-        return;
-      }
-
-      try {
-        const payload = JSON.parse(
-          packet
-            .subarray(jsonStart, jsonEnd)
-            .toString("utf8"),
-        ) as {
-          players?: {
-            online?: unknown;
-            max?: unknown;
-          };
-        };
-
-        finish({
-          online: true,
-          playersOnline: safeCount(
-            payload.players?.online,
-          ),
-          playersMax: safeCount(
-            payload.players?.max,
-          ),
-          source: "direct",
-        });
-      } catch {
-        finish(null);
+      if (status) {
+        finish(status);
       }
     });
 
-    socket.once(
-      "timeout",
-      () => finish(null),
-    );
-    socket.once(
-      "error",
-      () => finish(null),
-    );
-    socket.once(
-      "close",
-      () => finish(null),
-    );
+    socket.once("timeout", () => {
+      finish(null);
+    });
+
+    socket.once("error", () => {
+      finish(null);
+    });
+
+    socket.once("close", () => {
+      finish(null);
+    });
   });
 }
 
-async function profileOnlineCount() {
+async function webProfilesOnlineCount() {
   try {
     const [rows] =
       await getCoreDb().query<RowDataPacket[]>(
-        `SELECT COUNT(*) AS total
+        `SELECT COUNT(*) AS players_online
          FROM \`mineacle_web_profiles\`
          WHERE \`online\` = 1`,
       );
 
     return {
       available: true,
-      count: safeCount(rows[0]?.total),
+      count: statusNumber(
+        rows[0]?.players_online,
+      ),
     };
   } catch {
     return {
@@ -327,155 +348,49 @@ async function profileOnlineCount() {
   }
 }
 
-async function fetchJson(
-  url: string,
-  timeoutMs: number,
-) {
-  const controller = new AbortController();
-  const timer = setTimeout(
-    () => controller.abort(),
-    timeoutMs,
-  );
-
-  try {
-    const response = await fetch(url, {
-      cache: "no-store",
-      headers: {
-        Accept: "application/json",
-      },
-      signal: controller.signal,
-    });
-
-    return response.ok
-      ? ((await response.json()) as Record<
-          string,
-          unknown
-        >)
-      : null;
-  } catch {
-    return null;
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
-function normalizeExternal(
-  payload: Record<string, unknown> | null,
-  source: string,
-): MinecraftStatus | null {
-  if (!payload) {
-    return null;
-  }
-
-  const players =
-    payload.players &&
-    typeof payload.players === "object"
-      ? (payload.players as Record<
-          string,
-          unknown
-        >)
-      : {};
-
-  return {
-    online: payload.online === true,
-    playersOnline: safeCount(
-      players.online ??
-        payload.players_online ??
-        payload.online_players,
-    ),
-    playersMax: safeCount(
-      players.max ??
-        payload.players_max ??
-        payload.max_players,
-    ),
-    source,
-  };
-}
-
-async function externalStatus() {
-  const encoded =
-    encodeURIComponent(PUBLIC_SERVER);
-
-  const [mcsrv, mcstatus] =
-    await Promise.all([
-      fetchJson(
-        `https://api.mcsrvstat.us/3/${encoded}`,
-        EXTERNAL_TIMEOUT_MS,
-      ),
-      fetchJson(
-        `https://api.mcstatus.io/v2/status/java/${encoded}`,
-        EXTERNAL_TIMEOUT_MS,
-      ),
-    ]);
-
-  const statuses = [
-    normalizeExternal(mcsrv, "mcsrvstat"),
-    normalizeExternal(mcstatus, "mcstatus"),
-  ].filter(
-    (
-      status,
-    ): status is MinecraftStatus =>
-      status !== null,
-  );
-
-  return (
-    statuses.find(
-      (status) => status.online,
-    ) ??
-    statuses[0] ??
-    null
-  );
-}
-
 export async function GET() {
   const [target, profiles] =
     await Promise.all([
-      resolveTarget(),
-      profileOnlineCount(),
+      resolveServerTarget(),
+      webProfilesOnlineCount(),
     ]);
 
   const direct =
     await directMinecraftStatus(target);
 
-  let status = direct;
+  const online =
+    direct?.online === true ||
+    (!direct && profiles.available && profiles.count > 0);
 
-  if (!status) {
-    status = await externalStatus();
-  }
+  const currentlyPlaying =
+    profiles.available
+      ? profiles.count
+      : direct?.playersOnline ?? 0;
 
-  if (!status) {
-    return NextResponse.json(
-      {
-        online: false,
-        currentlyPlaying:
-          profiles.count,
-        maxPlayers: 0,
-        checked: false,
-        source: profiles.available
-          ? "web_profiles"
-          : "unavailable",
-      },
-      {
-        headers: {
-          "Cache-Control":
-            "no-store, max-age=0, must-revalidate",
-        },
-      },
-    );
-  }
+  const playersMax =
+    direct?.playersMax ?? 0;
+
+  const source = direct
+    ? profiles.available
+      ? "direct+web_profiles"
+      : "direct"
+    : profiles.available
+      ? "web_profiles"
+      : "unavailable";
 
   return NextResponse.json(
     {
-      online: status.online,
-      currentlyPlaying:
-        profiles.available
-          ? profiles.count
-          : status.playersOnline,
-      maxPlayers: status.playersMax,
+      // Current Next.js homepage contract.
+      online,
+      currentlyPlaying,
+      maxPlayers: playersMax,
       checked: true,
-      source: profiles.available
-        ? `${status.source}+web_profiles`
-        : status.source,
+      source,
+
+      // Old working endpoint contract retained for compatibility/debugging.
+      players_online: currentlyPlaying,
+      players_max: playersMax,
+      server_ip: PUBLIC_SERVER,
     },
     {
       headers: {
