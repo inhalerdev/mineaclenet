@@ -556,7 +556,13 @@ export function VisitorHome({
                   />
 
                   <span>{viewer.username}</span>
-                  <small aria-hidden="true">⌄</small>
+                  <img
+                    className={styles.profileChevron}
+                    src="/shared/images/icons/streamline/core-solid/profile-dropdown.png"
+                    alt=""
+                    aria-hidden="true"
+                    draggable={false}
+                  />
                 </button>
 
                 {profileOpen ? (
@@ -913,7 +919,7 @@ export function VisitorHome({
             aria-labelledby="join-mineacle-title"
           >
             <button
-              className={`${styles.modalClose} ${styles.joinClose}`}
+              className={styles.modalClose}
               type="button"
               onClick={() => setJoinOpen(false)}
               aria-label="Close how to join"
@@ -921,148 +927,76 @@ export function VisitorHome({
               ×
             </button>
 
-            <header className={styles.joinHeader}>
-              <span className={styles.joinEyebrow}>
-                HOW TO JOIN
-              </span>
-
+            <header className={styles.modalHeader}>
+              <span>HOW TO JOIN</span>
               <h2 id="join-mineacle-title">
-                Play Mineacle
+                Join Mineacle
               </h2>
 
               <p>
-                Join the Open Beta in less than a minute.
+                Mineacle Open Beta currently supports
+                Minecraft: Java Edition.
               </p>
             </header>
 
-            <div
-              className={styles.joinEditions}
-              aria-label="Supported Minecraft editions"
-            >
-              <div className={styles.joinEditionActive}>
-                <img
-                  src={JAVA_EDITION_ICON}
-                  alt=""
-                  draggable={false}
-                />
-
-                <span>
-                  <strong>Java Edition</strong>
-                  <small>Available now</small>
-                </span>
-
-                <b>SUPPORTED</b>
-              </div>
-
-              <div
-                className={styles.joinEditionUnavailable}
-                aria-disabled="true"
-              >
-                <img
-                  src={BEDROCK_EDITION_ICON}
-                  alt=""
-                  draggable={false}
-                />
-
-                <span>
-                  <strong>Bedrock Edition</strong>
-                  <small>Coming later</small>
-                </span>
-              </div>
-            </div>
-
-            <button
-              className={`${styles.joinAddressCard} ${
-                copied ? styles.joinAddressCopied : ""
-              }`}
-              type="button"
-              onClick={copyServerAddress}
-              aria-label={`Copy Mineacle server address: ${SERVER_ADDRESS}`}
-            >
-              <span className={styles.joinAddressCopy}>
-                <small>JAVA SERVER ADDRESS</small>
-                <strong>{SERVER_ADDRESS}</strong>
-              </span>
-
-              <span className={styles.joinAddressAction}>
-                {copied ? "COPIED" : "COPY"}
-              </span>
-            </button>
-
-            <div className={styles.joinLiveStatus}>
-              <span
-                className={`${styles.joinStatusDot} ${
-                  serverStatus?.online
-                    ? styles.joinStatusDotOnline
-                    : ""
-                }`}
-                aria-hidden="true"
-              />
-
-              <strong>{statusLabel}</strong>
-
-              <span>
-                <b>{currentlyPlaying}</b>
-                Currently Playing
-              </span>
-            </div>
-
-            <ol className={styles.joinFlow}>
+            <ol className={styles.joinSteps}>
               <li>
-                <span className={styles.joinStepNumber}>
-                  01
-                </span>
-
-                <strong>Open Multiplayer</strong>
-
-                <p>
-                  Launch Minecraft: Java Edition and open
-                  Multiplayer.
-                </p>
+                <span>1</span>
+                <div>
+                  <strong>
+                    Open Minecraft: Java Edition
+                  </strong>
+                  <p>
+                    Launch Minecraft and choose Multiplayer.
+                  </p>
+                </div>
               </li>
 
               <li>
-                <span className={styles.joinStepNumber}>
-                  02
-                </span>
-
-                <strong>Add Mineacle</strong>
-
-                <p>
-                  Choose Add Server and paste the server
-                  address above.
-                </p>
+                <span>2</span>
+                <div>
+                  <strong>Add Mineacle</strong>
+                  <p>
+                    Choose Add Server and enter the address
+                    below.
+                  </p>
+                </div>
               </li>
 
               <li>
-                <span className={styles.joinStepNumber}>
-                  03
-                </span>
-
-                <strong>Join the server</strong>
-
-                <p>
-                  Save Mineacle, select it from your server
-                  list, and connect.
-                </p>
+                <span>3</span>
+                <div>
+                  <strong>Join the world</strong>
+                  <p>
+                    Select Mineacle from your server list
+                    and connect.
+                  </p>
+                </div>
               </li>
             </ol>
 
-            <footer className={styles.joinFooter}>
+            <div className={styles.serverAddress}>
               <div>
-                <strong>Already playing Mineacle?</strong>
-                <span>
-                  Verify your in-game account to connect
-                  your website profile.
-                </span>
+                <small>JAVA SERVER ADDRESS</small>
+                <strong>{SERVER_ADDRESS}</strong>
               </div>
+
+              <button
+                type="button"
+                onClick={copyServerAddress}
+              >
+                {copied ? "COPIED" : "COPY"}
+              </button>
+            </div>
+
+            <footer className={styles.modalFooter}>
+              <span>Already joined Mineacle?</span>
 
               <button
                 type="button"
                 onClick={() => openAuth("create")}
               >
-                Verify account
-                <span aria-hidden="true">→</span>
+                Verify your player →
               </button>
             </footer>
           </section>
