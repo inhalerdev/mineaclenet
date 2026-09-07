@@ -340,17 +340,7 @@ export function VisitorHome({
     setAuthStage("edition");
   }
 
-  async function finishPlayerAuthentication() {
-    try {
-      await fetch("/api/admin/preview/exit", {
-        method: "POST",
-        cache: "no-store",
-        credentials: "same-origin",
-      });
-    } catch {
-      // Public visitors may not have a preview cookie.
-    }
-
+  function finishPlayerAuthentication() {
     window.location.replace("/");
   }
 
@@ -468,14 +458,6 @@ export function VisitorHome({
             </div>
           </section>
 
-          <div className={styles.railLegal}>
-            <strong>© 2026 Mineacle Studios</strong>
-            <span>All Rights Reserved.</span>
-            <p>
-              Not affiliated with or endorsed by Mojang
-              Studios or Microsoft.
-            </p>
-          </div>
         </aside>
 
         <section
