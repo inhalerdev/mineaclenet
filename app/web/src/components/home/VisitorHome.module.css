@@ -1863,4 +1863,489 @@
 .navIcon img {
   opacity: 1;
 }
+/* === Mineacle unified flat homepage pass === */
+/*
+ * Visual-only override layer.
+ * The existing homepage grid, breakpoints, markup, status logic, auth logic,
+ * and media remain untouched.
+ */
 
+.page,
+.modalBackdrop {
+  --home-panel: #202023;
+  --home-panel-strong: #26262a;
+  --home-panel-deep: #171719;
+  --home-border: #34343a;
+  --home-border-hover: #46464d;
+  --home-radius-panel: 12px;
+  --home-radius-control: 10px;
+  --home-nav-accent: #b078ff;
+}
+
+/* ---------- Rail ---------- */
+
+.sideNav {
+  border: 1px solid var(--home-border);
+  border-radius: var(--home-radius-panel);
+  background: #222224;
+}
+
+.railSearch form {
+  min-height: 40px;
+  border: 1px solid #303035;
+  border-radius: var(--home-radius-control);
+  background: #151517;
+}
+
+.railSearch form:focus-within {
+  border-color: #5b4279;
+  background: #151517;
+}
+
+.primaryNav {
+  gap: 5px;
+}
+
+.primaryNav a {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: var(--home-radius-control);
+  background: transparent;
+  color: #d7d7da;
+  font-size: 12px;
+  font-weight: 600;
+  transition:
+    border-color var(--ease),
+    background-color var(--ease),
+    color var(--ease);
+}
+
+.primaryNav a:hover {
+  border-color: #34343a;
+  background: #29292d;
+  color: #ffffff;
+}
+
+.primaryNav .activeNavItem,
+.primaryNav .activeNavItem:hover {
+  border: 1px solid #404048;
+  background: #29292e;
+  color: #ffffff;
+  box-shadow:
+    inset -26px 0 28px rgba(132, 54, 254, 0.12),
+    6px 0 20px rgba(132, 54, 254, 0.15);
+}
+
+.primaryNav .activeNavItem::after {
+  position: absolute;
+  top: 9px;
+  right: -1px;
+  bottom: 9px;
+  width: 4px;
+  border-radius: 4px 0 0 4px;
+  background: var(--home-nav-accent);
+  box-shadow:
+    0 0 8px rgba(176, 120, 255, 0.9),
+    0 0 18px rgba(132, 54, 254, 0.56);
+  content: "";
+}
+
+.primaryNav .activeNavItem small,
+.primaryNav .activeNavItem > span {
+  color: #ffffff;
+}
+
+.socialSection {
+  border-top-color: #34343a;
+}
+
+.socialSection > small {
+  color: #bdbdc3;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.socialLinks a {
+  border-radius: var(--home-radius-control);
+  color: #d7d7da;
+}
+
+.socialLinks a:hover {
+  background: #29292d;
+  color: #ffffff;
+}
+
+/* ---------- Hero ---------- */
+
+.hero {
+  border: 1px solid var(--home-border);
+  border-radius: var(--home-radius-panel);
+  background: #171719;
+}
+
+.heroVideo {
+  filter: brightness(0.78) saturate(1.04);
+}
+
+.heroShade {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(17, 17, 19, 0.18) 0%,
+      rgba(17, 17, 19, 0.02) 42%,
+      rgba(17, 17, 19, 0.22) 66%,
+      rgba(17, 17, 19, 0.86) 100%
+    );
+}
+
+.heroLogo {
+  animation: none;
+  transition: none;
+}
+
+.heroTopLogo:hover .heroLogo {
+  transform: none;
+}
+
+.verifyLink {
+  color: #ededf0;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.verifyLink:hover {
+  color: #ffffff;
+}
+
+.loginButton {
+  min-width: 92px;
+  height: 38px;
+  border: 1px solid #9c64f4;
+  border-radius: var(--home-radius-control);
+  background: #8436fe;
+  font-size: 12px;
+  font-weight: 700;
+  transition:
+    border-color var(--ease),
+    background-color var(--ease);
+}
+
+.loginButton:hover {
+  border-color: #b078ff;
+  background: #9552ff;
+  transform: none;
+}
+
+.profileTrigger {
+  min-height: 40px;
+  border: 1px solid var(--home-border);
+  border-radius: var(--home-radius-control);
+  background: #202023;
+  backdrop-filter: none;
+}
+
+.profileTrigger:hover,
+.profileTrigger[aria-expanded="true"] {
+  border-color: #4a3a60;
+  background: #29292d;
+}
+
+.profileDropdown {
+  border-color: var(--home-border);
+  border-radius: var(--home-radius-panel);
+  background: #202023;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.32);
+}
+
+.profileSkin {
+  background: #26212d;
+}
+
+.profileDetails nav a,
+.logoutButton {
+  border-radius: 8px;
+}
+
+.profileDetails nav a:hover {
+  background: #2b2b30;
+}
+
+.profileDetails nav b {
+  background: #8436fe;
+  color: #ffffff;
+}
+
+/* ---------- Hero information ---------- */
+
+.serverSummary {
+  min-height: 34px;
+  padding: 0 11px;
+  border: 1px solid var(--home-border);
+  border-radius: var(--home-radius-control);
+  background: #202023;
+  color: #d7d7da;
+  backdrop-filter: none;
+}
+
+.serverDotOnline {
+  box-shadow: none;
+}
+
+.currentlyPlaying {
+  border-left-color: #3d3d43;
+}
+
+.heroEyebrow {
+  color: #c6a4fb;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.heroCopy h1 {
+  font-size: clamp(28px, 2.35vw, 35px);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+
+.heroCopy p {
+  max-width: 510px;
+  color: #d7d7da;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.featurePills {
+  gap: 7px;
+}
+
+.featurePills span {
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--home-border);
+  border-radius: 8px;
+  background: #232327;
+  color: #e8e8eb;
+  font-size: 10px;
+  font-weight: 600;
+  backdrop-filter: none;
+}
+
+/* Keep PLAY as the one deliberate glow treatment. */
+.playButton {
+  width: 178px;
+  height: 52px;
+  border: 1px solid #78d662;
+  border-radius: var(--home-radius-control);
+  background: #62c249;
+  box-shadow:
+    0 0 16px rgba(98, 194, 73, 0.2),
+    0 8px 22px rgba(0, 0, 0, 0.2);
+  font-size: 19px;
+  font-weight: 700;
+  transition:
+    background-color var(--ease),
+    box-shadow var(--ease);
+}
+
+.playButton:hover {
+  filter: none;
+  background: #6acd52;
+  box-shadow:
+    0 0 20px rgba(98, 194, 73, 0.28),
+    0 8px 22px rgba(0, 0, 0, 0.22);
+  transform: none;
+}
+
+.joinGuide {
+  color: #dcdce0;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.joinGuide:hover {
+  color: #ffffff;
+}
+
+/* ---------- Lower homepage modules ---------- */
+
+.quickModules {
+  gap: 16px;
+}
+
+.quickCard {
+  border: 1px solid var(--home-border);
+  border-radius: var(--home-radius-panel);
+  background: #202023;
+  transition:
+    border-color var(--ease),
+    background-color var(--ease);
+}
+
+.quickCard:hover {
+  border-color: var(--home-border-hover);
+  transform: none;
+}
+
+.quickMedia {
+  top: 0;
+  right: 0;
+  bottom: 116px;
+  left: 0;
+  background: #242428;
+}
+
+.quickMedia > img:not(.quickIcon) {
+  filter: brightness(0.78) saturate(1.02);
+  transition: none;
+}
+
+.quickCard:hover .quickMedia > img:not(.quickIcon) {
+  transform: none;
+}
+
+.quickFallback {
+  background: #29292e;
+}
+
+.quickIcon,
+.quickCard:hover .quickIcon {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+.quickShade {
+  display: none;
+}
+
+.quickContent {
+  right: 0;
+  bottom: 0;
+  left: 0;
+  min-height: 116px;
+  padding: 14px 16px;
+  border-top: 1px solid var(--home-border);
+  background: #202023;
+}
+
+.quickContent small {
+  color: #c6a4fb;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.quickContent strong {
+  margin-top: 4px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.quickContent p {
+  margin-top: 6px;
+  color: #a9a9af;
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.quickContent > span {
+  margin-top: 8px;
+  color: #f0f0f2;
+  font-size: 10px;
+  font-weight: 600;
+  transition: none;
+}
+
+.quickCard:hover .quickContent > span {
+  transform: none;
+}
+
+/* ---------- Homepage modal surfaces ---------- */
+
+.popup,
+.authPopup,
+.joinModal {
+  border-color: var(--home-border);
+  border-radius: var(--home-radius-panel);
+  background: #202023;
+}
+
+.modalClose,
+.authEditionPrimary,
+.authEditionSecondary,
+.joinEditionActive,
+.joinEditionUnavailable,
+.joinAddressCard,
+.joinFlow li {
+  border-radius: var(--home-radius-control);
+}
+
+.modalClose {
+  border-color: var(--home-border);
+  background: #29292d;
+}
+
+.modalClose:hover {
+  border-color: var(--home-border-hover);
+  background: #303035;
+}
+
+.joinEditionActive {
+  background: #26212d;
+}
+
+.joinAddressCard {
+  background: #1d291c;
+}
+
+.joinAddressCard:hover {
+  background: #21301f;
+}
+
+/* ---------- Responsive consistency ---------- */
+
+@media (max-width: 760px) {
+  .sideNav,
+  .hero,
+  .quickCard {
+    border-radius: 10px;
+  }
+
+  .quickMedia {
+    bottom: 112px;
+  }
+
+  .quickContent {
+    min-height: 112px;
+  }
+
+  .playButton {
+    width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  .primaryNav a,
+  .socialLinks a {
+    border-radius: 8px;
+  }
+
+  .heroCopy h1 {
+    font-size: 25px;
+  }
+
+  .heroCopy p {
+    font-size: 12px;
+  }
+
+  .featurePills span {
+    min-height: 28px;
+    font-size: 9px;
+  }
+
+  .currentlyPlaying {
+    border-top-color: #3d3d43;
+  }
+}
