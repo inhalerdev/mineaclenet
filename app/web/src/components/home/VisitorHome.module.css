@@ -2349,76 +2349,101 @@
     border-top-color: #3d3d43;
   }
 }
-/* === Mineacle button glow interaction sync === */
+/* === Mineacle cohesive CTA system === */
 /*
- * Login and PLAY share one interaction model:
- * subtle idle glow -> lighter brand color + stronger glow on hover/focus
- * -> reduced glow while pressed.
+ * LOGIN and PLAY are the same visual component in two brand variants.
+ * No lift, no scale, no separate shadow language.
  */
 
 .loginButton,
 .playButton {
+  --cta-bg: #8436fe;
+  --cta-bg-hover: #9858ff;
+  --cta-bg-active: #8d48ff;
+  --cta-border: #9c68ef;
+  --cta-border-hover: #d0afff;
+  --cta-glow-idle: 0 0 9px rgba(132, 54, 254, 0.14);
+  --cta-glow-hover: 0 0 18px rgba(132, 54, 254, 0.34);
+  --cta-glow-active: 0 0 10px rgba(132, 54, 254, 0.2);
+
+  display: inline-grid;
+  place-items: center;
+  padding: 0 16px;
+  border: 1px solid var(--cta-border);
+  border-radius: var(--home-radius-control);
+  background: var(--cta-bg);
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  box-shadow: var(--cta-glow-idle);
+  filter: none;
   transform: none;
   transition:
-    border-color var(--ease),
     background-color var(--ease),
+    border-color var(--ease),
     box-shadow var(--ease);
 }
 
-/* Purple account CTA */
 .loginButton {
-  border-color: #9f68f6;
-  background: #8436fe;
-  box-shadow:
-    0 0 12px rgba(132, 54, 254, 0.16),
-    0 5px 14px rgba(0, 0, 0, 0.16);
+  min-width: 96px;
+  height: 40px;
+  font-size: 13px;
+}
+
+.playButton {
+  --cta-bg: #62c249;
+  --cta-bg-hover: #70d257;
+  --cta-bg-active: #67c94f;
+  --cta-border: #78d662;
+  --cta-border-hover: #a0e68e;
+  --cta-glow-idle: 0 0 9px rgba(98, 194, 73, 0.14);
+  --cta-glow-hover: 0 0 18px rgba(98, 194, 73, 0.34);
+  --cta-glow-active: 0 0 10px rgba(98, 194, 73, 0.2);
+
+  width: 178px;
+  height: 48px;
+  font-size: 16px;
 }
 
 .loginButton:hover,
-.loginButton:focus-visible {
-  border-color: #d0afff;
-  background: #9858ff;
-  box-shadow:
-    0 0 20px rgba(132, 54, 254, 0.34),
-    0 6px 16px rgba(0, 0, 0, 0.2);
-  transform: none;
-}
-
-.loginButton:active {
-  border-color: #b078ff;
-  background: #8d48ff;
-  box-shadow:
-    0 0 11px rgba(132, 54, 254, 0.2),
-    0 3px 10px rgba(0, 0, 0, 0.18);
-  transform: none;
-}
-
-/* Green play CTA */
-.playButton {
-  border-color: #78d662;
-  background: #62c249;
-  box-shadow:
-    0 0 12px rgba(98, 194, 73, 0.16),
-    0 5px 14px rgba(0, 0, 0, 0.16);
-}
-
+.loginButton:focus-visible,
 .playButton:hover,
 .playButton:focus-visible {
-  border-color: #96e181;
-  background: #70d257;
-  box-shadow:
-    0 0 20px rgba(98, 194, 73, 0.34),
-    0 6px 16px rgba(0, 0, 0, 0.2);
+  border-color: var(--cta-border-hover);
+  background: var(--cta-bg-hover);
+  box-shadow: var(--cta-glow-hover);
   filter: none;
   transform: none;
 }
 
+.loginButton:active,
 .playButton:active {
-  border-color: #7ed969;
-  background: #67c94f;
-  box-shadow:
-    0 0 11px rgba(98, 194, 73, 0.2),
-    0 3px 10px rgba(0, 0, 0, 0.18);
+  border-color: var(--cta-border);
+  background: var(--cta-bg-active);
+  box-shadow: var(--cta-glow-active);
   filter: none;
   transform: none;
+}
+
+@media (max-width: 760px) {
+  .playButton {
+    width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  .loginButton {
+    min-width: 82px;
+    height: 38px;
+    padding: 0 13px;
+    font-size: 12px;
+  }
+
+  .playButton {
+    height: 46px;
+    font-size: 15px;
+  }
 }
