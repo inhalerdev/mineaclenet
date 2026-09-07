@@ -1767,3 +1767,100 @@
     transition: none;
   }
 }
+
+
+/* ============================================================
+   Flat navigation direction
+   Visual-only overrides. Core homepage layout remains unchanged.
+   ============================================================ */
+
+.sideNav {
+  border-color: #2b2b2b;
+  border-radius: 0;
+  background: #222222;
+  box-shadow: none;
+}
+
+.railSearch {
+  margin-bottom: 12px;
+}
+
+.railSearch form {
+  border-color: #2f2f2f;
+  border-radius: 4px;
+  background: #111111;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.railSearch form:focus-within {
+  border-color: var(--brand-primary);
+  background: #111111;
+}
+
+.primaryNav {
+  gap: 2px;
+}
+
+.primaryNav a {
+  border: 0;
+  border-radius: 0;
+  color: #d6d6d6;
+  transition:
+    background-color var(--ease),
+    color var(--ease);
+}
+
+.primaryNav a:hover {
+  background: #2c2c2c;
+  color: #ffffff;
+}
+
+.primaryNav .activeNavItem {
+  border: 0;
+  background: var(--brand-primary);
+  color: #ffffff;
+}
+
+.primaryNav .activeNavItem:hover {
+  background: var(--brand-primary);
+  color: #ffffff;
+}
+
+.primaryNav .activeNavItem small,
+.primaryNav .activeNavItem > span {
+  color: #ffffff;
+}
+
+.socialSection {
+  padding-top: 14px;
+  border-top-color: #333333;
+}
+
+.socialSection > small {
+  color: #f8f8f8;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.socialLinks {
+  gap: 2px;
+  margin-top: 8px;
+}
+
+.socialLinks a {
+  border-radius: 0;
+  color: #f8f8f8;
+}
+
+.socialLinks a:hover {
+  background: #2c2c2c;
+  color: #ffffff;
+}
+
+.socialLinks img,
+.navIcon img {
+  opacity: 1;
+}
+

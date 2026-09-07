@@ -4,6 +4,7 @@ import "./home.css";
 import "./systems.css";
 import "./predesign.css";
 import "./punishments.css";
+import "./flat-navigation.css";
 
 export const metadata = {
   title: "Home | Mineacle",
