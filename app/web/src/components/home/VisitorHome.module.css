@@ -170,7 +170,7 @@
 
 
 .railLegal {
-  margin-top: 12px;
+  margin-top: 18px;
   padding: 12px 8px 0;
   border-top: 1px solid var(--border);
 }
@@ -406,18 +406,11 @@
   opacity: 0.82;
   pointer-events: none;
   user-select: none;
-  transition:
-    opacity var(--ease),
-    transform var(--ease);
 }
 
 .profileTrigger:hover .profileChevron,
 .profileTrigger[aria-expanded="true"] .profileChevron {
   opacity: 1;
-}
-
-.profileTrigger[aria-expanded="true"] .profileChevron {
-  transform: rotate(180deg);
 }
 
 .profileDropdown {
@@ -879,13 +872,52 @@
   border: 1px solid var(--border-strong);
   border-radius: var(--radius);
   background: var(--surface);
-  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.46);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.32);
+}
+
+.modalClose {
+  position: absolute;
+  z-index: 6;
+  top: 20px;
+  right: 20px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--control-radius);
+  background: #1b1b1b;
+  cursor: pointer;
+  transition:
+    border-color var(--ease),
+    background-color var(--ease);
+}
+
+.modalClose img {
+  width: 13px;
+  height: 13px;
+  display: block;
+  object-fit: contain;
+  filter: brightness(0) saturate(100%) invert(100%);
+  opacity: 0.78;
+  pointer-events: none;
+}
+
+.modalClose:hover {
+  border-color: rgba(248, 248, 248, 0.18);
+  background: #222222;
+}
+
+.modalClose:hover img {
+  opacity: 1;
 }
 
 .authPopup {
-  width: min(100%, 760px);
+  width: min(100%, 700px);
   max-height: calc(100dvh - 48px);
   padding: 24px;
+  background: #171717;
 }
 
 .authClose {
@@ -923,46 +955,6 @@
   line-height: 1.55;
 }
 
-.authSupportStrip {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 18px;
-}
-
-.authSupportCard {
-  min-height: 54px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 4px;
-  padding: 12px 14px;
-  border: 1px solid rgba(132, 54, 254, 0.18);
-  border-radius: var(--control-radius);
-  background: rgba(132, 54, 254, 0.08);
-}
-
-.authSupportCard strong {
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.authSupportCard span {
-  color: #b0b0b0;
-  font-size: 11px;
-  line-height: 1.35;
-}
-
-.authSupportMuted {
-  border-color: var(--border);
-  background: #141414;
-}
-
-.authSupportMuted strong {
-  color: #d0d0d0;
-}
-
 .authEditionGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -972,7 +964,7 @@
 
 .authEditionPrimary,
 .authEditionSecondary {
-  min-height: 248px;
+  min-height: 224px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -984,28 +976,18 @@
 }
 
 .authEditionPrimary {
-  border: 1px solid rgba(132, 54, 254, 0.42);
-  background:
-    radial-gradient(
-      circle at 50% 24%,
-      rgba(132, 54, 254, 0.16),
-      transparent 52%
-    ),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent 100%),
-    var(--surface-soft);
+  border: 1px solid rgba(176, 120, 255, 0.34);
+  background: #1d1a22;
   color: var(--brand-text);
   cursor: pointer;
   transition:
     border-color var(--ease),
-    background-color var(--ease),
-    box-shadow var(--ease);
+    background-color var(--ease);
 }
 
 .authEditionPrimary:hover {
-  border-color: rgba(208, 175, 255, 0.64);
-  box-shadow:
-    0 18px 40px rgba(0, 0, 0, 0.28),
-    0 0 26px rgba(132, 54, 254, 0.12);
+  border-color: rgba(208, 175, 255, 0.52);
+  background: #211d27;
 }
 
 .authEditionSecondary {
@@ -1021,8 +1003,8 @@
   height: 84px;
   display: grid;
   place-items: center;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.02);
+  border-radius: 0;
+  background: transparent;
 }
 
 .authEditionVisual img {
@@ -1087,13 +1069,13 @@
 }
 
 .authEditionAction {
-  background: rgba(98, 194, 73, 0.14);
-  color: #8ae06f;
+  background: #62c249;
+  color: #ffffff;
 }
 
 .authEditionDisabled {
-  background: rgba(255, 255, 255, 0.04);
-  color: #868686;
+  background: #202020;
+  color: #858585;
 }
 
 .authFlowShell {
@@ -1136,7 +1118,7 @@
   padding: 0 10px;
   border: 1px solid var(--border);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.03);
+  background: #1b1b1b;
   color: #d9d9d9;
   font-size: 11px;
   font-weight: 600;

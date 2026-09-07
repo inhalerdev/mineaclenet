@@ -558,7 +558,7 @@ export function VisitorHome({
                   <span>{viewer.username}</span>
                   <img
                     className={styles.profileChevron}
-                    src="/shared/images/icons/streamline/core-solid/profile-dropdown.png"
+                    src={`${ICON_ROOT}/profile-dropdown.png`}
                     alt=""
                     aria-hidden="true"
                     draggable={false}
@@ -808,7 +808,12 @@ export function VisitorHome({
               onClick={closeAuth}
               aria-label="Close account window"
             >
-              ×
+              <img
+                src={`${ICON_ROOT}/close.svg`}
+                alt=""
+                aria-hidden="true"
+                draggable={false}
+              />
             </button>
 
             {authStage === "edition" ? (
@@ -828,20 +833,6 @@ export function VisitorHome({
                     to your player account to continue.
                   </p>
                 </header>
-
-                <div className={styles.authSupportStrip}>
-                  <div className={styles.authSupportCard}>
-                    <strong>Java Edition</strong>
-                    <span>Supported now for account login and verification</span>
-                  </div>
-
-                  <div
-                    className={`${styles.authSupportCard} ${styles.authSupportMuted}`}
-                  >
-                    <strong>Bedrock Edition</strong>
-                    <span>Account linking is not available yet</span>
-                  </div>
-                </div>
 
                 <div className={styles.authEditionGrid}>
                   <button
@@ -958,7 +949,12 @@ export function VisitorHome({
               onClick={() => setJoinOpen(false)}
               aria-label="Close how to join"
             >
-              ×
+              <img
+                src={`${ICON_ROOT}/close.svg`}
+                alt=""
+                aria-hidden="true"
+                draggable={false}
+              />
             </button>
 
             <header className={styles.joinHeader}>

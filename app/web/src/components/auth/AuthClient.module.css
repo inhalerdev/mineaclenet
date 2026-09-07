@@ -32,9 +32,9 @@
 }
 
 .tabs .activeTab {
-  border-color: rgba(132, 54, 254, 0.42);
-  background: rgba(132, 54, 254, 0.12);
-  color: var(--brand-hover);
+  border-color: rgba(176, 120, 255, 0.34);
+  background: #211a2c;
+  color: #ffffff;
 }
 
 .steps {
@@ -76,13 +76,13 @@
 }
 
 .steps .stepActive {
-  border-color: rgba(132, 54, 254, 0.22);
-  background: rgba(132, 54, 254, 0.07);
+  border-color: rgba(176, 120, 255, 0.22);
+  background: #1f1a27;
 }
 
 .steps .stepActive span {
-  background: rgba(132, 54, 254, 0.18);
-  color: var(--brand-hover);
+  background: #2b2238;
+  color: #ffffff;
 }
 
 .steps .stepActive strong {
@@ -95,9 +95,7 @@
   padding: 22px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.012), transparent 100%),
-    #151515;
+  background: #151515;
 }
 
 .header small {
@@ -111,7 +109,7 @@
 .header h1 {
   margin: 8px 0 0;
   color: #ffffff;
-  font-size: 40px;
+  font-size: 34px;
   font-weight: 700;
   line-height: 0.96;
   letter-spacing: -0.05em;
@@ -130,10 +128,10 @@
   display: flex;
   align-items: center;
   padding: 0 12px;
-  border: 1px solid rgba(98, 194, 73, 0.18);
+  border: 1px solid rgba(98, 194, 73, 0.22);
   border-radius: var(--control-radius);
-  background: rgba(98, 194, 73, 0.08);
-  color: #cdddc8;
+  background: #192217;
+  color: #d4dfd0;
   font-size: 12px;
   line-height: 1.45;
 }
@@ -177,7 +175,18 @@
 .field input:focus {
   outline: none;
   border-color: rgba(132, 54, 254, 0.42);
-  box-shadow: 0 0 0 3px rgba(132, 54, 254, 0.12);
+  box-shadow: none;
+}
+
+
+.field input:-webkit-autofill,
+.field input:-webkit-autofill:hover,
+.field input:-webkit-autofill:focus,
+.field input:-webkit-autofill:active {
+  -webkit-text-fill-color: #ffffff;
+  caret-color: #ffffff;
+  -webkit-box-shadow: 0 0 0 1000px #111111 inset;
+  transition: background-color 9999s ease-out 0s;
 }
 
 .error {
@@ -195,20 +204,17 @@
   height: 48px;
   border: 0;
   border-radius: var(--control-radius);
-  background: linear-gradient(90deg, var(--brand-primary), var(--brand-secondary));
+  background: var(--brand-primary);
   color: #ffffff;
   cursor: pointer;
   font: inherit;
   font-size: 13px;
   font-weight: 700;
-  transition:
-    filter var(--ease),
-    transform var(--ease);
+  transition: background-color var(--ease);
 }
 
 .submit:hover:not(:disabled) {
-  filter: brightness(1.06);
-  transform: translateY(-1px);
+  background: var(--brand-secondary);
 }
 
 .submit:disabled {
@@ -220,9 +226,9 @@
   display: grid;
   gap: 10px;
   padding: 16px;
-  border: 1px solid rgba(132, 54, 254, 0.22);
+  border: 1px solid rgba(176, 120, 255, 0.22);
   border-radius: var(--radius);
-  background: rgba(132, 54, 254, 0.08);
+  background: #1a1820;
 }
 
 .commandLabel {
@@ -322,7 +328,7 @@
   padding: 0 14px;
   border: 1px solid var(--border);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.02);
+  background: #181818;
   color: #d2d2d2;
   font-size: 12px;
   font-weight: 600;
@@ -333,7 +339,7 @@
   height: 8px;
   border-radius: 50%;
   background: var(--brand-live);
-  box-shadow: 0 0 10px rgba(17, 252, 123, 0.28);
+  box-shadow: none;
   animation: pulse 1.2s ease-in-out infinite;
 }
 
