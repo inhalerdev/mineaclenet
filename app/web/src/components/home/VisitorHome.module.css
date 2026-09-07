@@ -2447,3 +2447,77 @@
     font-size: 15px;
   }
 }
+
+/* === Mineacle 8px / 4px radius system === */
+/*
+ * Large structural containers: 8px
+ * Small controls / nested modules: 4px
+ */
+
+.page,
+.modalBackdrop {
+  --home-radius-panel: 8px;
+  --home-radius-control: 4px;
+}
+
+/* Major containers */
+.sideNav,
+.hero,
+.quickCard,
+.profileDropdown,
+.popup,
+.authPopup,
+.joinModal {
+  border-radius: 8px;
+}
+
+/* Small interactive controls and nested sections */
+.railSearch form,
+.primaryNav a,
+.socialLinks a,
+.loginButton,
+.playButton,
+.profileTrigger,
+.serverSummary,
+.featurePills span,
+.profileDetails nav a,
+.logoutButton,
+.modalClose,
+.authEditionPrimary,
+.authEditionSecondary,
+.joinEditionActive,
+.joinEditionUnavailable,
+.joinAddressCard,
+.joinFlow li,
+.joinAddressAction,
+.joinFooter > button {
+  border-radius: 4px;
+}
+
+/* Small avatar/image corners stay sharp */
+.profileHead,
+.dropdownHead {
+  border-radius: 4px;
+}
+
+/* Keep status dots and number badges circular only where shape is semantic */
+.serverDot,
+.joinStatusDot,
+.profileDetails nav b {
+  border-radius: 999px;
+}
+
+@media (max-width: 760px) {
+  .sideNav,
+  .hero,
+  .quickCard {
+    border-radius: 8px;
+  }
+}
+
+@media (max-width: 520px) {
+  .primaryNav a,
+  .socialLinks a {
+    border-radius: 4px;
+  }
+}
