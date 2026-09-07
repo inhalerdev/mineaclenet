@@ -37,16 +37,21 @@ function statusNumber(value: unknown) {
   return Math.floor(parsed);
 }
 
-function parseServerAddress(value: string): ServerTarget {
+function parseServerAddress(
+  value: string,
+): ServerTarget {
   const normalized = value
     .replace(/^minecraft:\/\//i, "")
     .trim();
 
-  const match = normalized.match(/^([^:]+):(\d+)$/);
+  const match = normalized.match(
+    /^([^:]+):(\d+)$/,
+  );
 
   if (!match) {
     return {
-      host: normalized || "mineacle.net",
+      host:
+        normalized || "mineacle.net",
       port: DEFAULT_PORT,
     };
   }
@@ -65,19 +70,26 @@ function parseServerAddress(value: string): ServerTarget {
 }
 
 async function resolveServerTarget(): Promise<ServerTarget> {
-  const configured = parseServerAddress(PUBLIC_SERVER);
+  const configured =
+    parseServerAddress(PUBLIC_SERVER);
 
-  // A manually configured port should always win.
   if (configured.port !== DEFAULT_PORT) {
     return configured;
   }
 
   try {
     const records = await Promise.race([
-      resolveSrv(`_minecraft._tcp.${configured.host}`),
+      resolveSrv(
+        `_minecraft._tcp.${configured.host}`,
+      ),
       new Promise<never>((_, reject) => {
         setTimeout(
-          () => reject(new Error("SRV lookup timed out")),
+          () =>
+            reject(
+              new Error(
+                "SRV lookup timed out",
+              ),
+            ),
           SRV_TIMEOUT_MS,
         );
       }),
@@ -94,18 +106,22 @@ async function resolveServerTarget(): Promise<ServerTarget> {
       )
       .sort(
         (left, right) =>
-          left.priority - right.priority ||
+          left.priority -
+            right.priority ||
           right.weight - left.weight,
       )[0];
 
     if (record) {
       return {
-        host: record.name.replace(/\.$/, ""),
+        host: record.name.replace(
+          /\.$/,
+          "",
+        ),
         port: record.port,
       };
     }
   } catch {
-    // Fall through to the normal Java port.
+    // Fall through to the standard Java port.
   }
 
   return configured;
@@ -130,7 +146,10 @@ function encodeVarInt(value: number) {
 }
 
 function encodeString(value: string) {
-  const data = Buffer.from(value, "utf8");
+  const data = Buffer.from(
+    value,
+    "utf8",
+  );
 
   return Buffer.concat([
     encodeVarInt(data.length),
@@ -145,7 +164,11 @@ function readBufferVarInt(
   let value = 0;
   let shift = 0;
 
-  for (let index = 0; index < 5; index += 1) {
+  for (
+    let index = 0;
+    index < 5;
+    index += 1
+  ) {
     const position = offset + index;
 
     if (position >= buffer.length) {
@@ -153,7 +176,8 @@ function readBufferVarInt(
     }
 
     const current = buffer[position];
-    value |= (current & 0x7f) << shift;
+    value |=
+      (current & 0x7f) << shift;
 
     if ((current & 0x80) === 0) {
       return {
@@ -171,14 +195,20 @@ function readBufferVarInt(
 function parseMinecraftStatusPacket(
   buffer: Buffer,
 ): DirectStatus | null {
-  const packetLength = readBufferVarInt(buffer, 0);
+  const packetLength =
+    readBufferVarInt(buffer, 0);
 
-  if (!packetLength || packetLength.value <= 0) {
+  if (
+    !packetLength ||
+    packetLength.value <= 0
+  ) {
     return null;
   }
 
-  const packetStart = packetLength.size;
-  const packetEnd = packetStart + packetLength.value;
+  const packetStart =
+    packetLength.size;
+  const packetEnd =
+    packetStart + packetLength.value;
 
   if (buffer.length < packetEnd) {
     return null;
@@ -189,23 +219,32 @@ function parseMinecraftStatusPacket(
     packetEnd,
   );
 
-  const packetId = readBufferVarInt(packet, 0);
+  const packetId =
+    readBufferVarInt(packet, 0);
 
-  if (!packetId || packetId.value !== 0) {
+  if (
+    !packetId ||
+    packetId.value !== 0
+  ) {
     return null;
   }
 
-  const jsonLength = readBufferVarInt(
-    packet,
-    packetId.size,
-  );
+  const jsonLength =
+    readBufferVarInt(
+      packet,
+      packetId.size,
+    );
 
-  if (!jsonLength || jsonLength.value <= 0) {
+  if (
+    !jsonLength ||
+    jsonLength.value <= 0
+  ) {
     return null;
   }
 
   const jsonStart =
-    packetId.size + jsonLength.size;
+    packetId.size +
+    jsonLength.size;
   const jsonEnd =
     jsonStart + jsonLength.value;
 
@@ -216,7 +255,10 @@ function parseMinecraftStatusPacket(
   try {
     const data = JSON.parse(
       packet
-        .subarray(jsonStart, jsonEnd)
+        .subarray(
+          jsonStart,
+          jsonEnd,
+        )
         .toString("utf8"),
     ) as {
       players?: {
@@ -227,12 +269,14 @@ function parseMinecraftStatusPacket(
 
     return {
       online: true,
-      playersOnline: statusNumber(
-        data.players?.online,
-      ),
-      playersMax: statusNumber(
-        data.players?.max,
-      ),
+      playersOnline:
+        statusNumber(
+          data.players?.online,
+        ),
+      playersMax:
+        statusNumber(
+          data.players?.max,
+        ),
     };
   } catch {
     return null;
@@ -246,10 +290,11 @@ async function directMinecraftStatus(
     let settled = false;
     let received = Buffer.alloc(0);
 
-    const socket = createConnection({
-      host: target.host,
-      port: target.port,
-    });
+    const socket =
+      createConnection({
+        host: target.host,
+        port: target.port,
+      });
 
     function finish(
       status: DirectStatus | null,
@@ -263,31 +308,41 @@ async function directMinecraftStatus(
       resolve(status);
     }
 
-    socket.setTimeout(STATUS_TIMEOUT_MS);
+    socket.setTimeout(
+      STATUS_TIMEOUT_MS,
+    );
 
     socket.once("connect", () => {
       const port = Buffer.alloc(2);
-      port.writeUInt16BE(target.port, 0);
+      port.writeUInt16BE(
+        target.port,
+        0,
+      );
 
-      const handshake = Buffer.concat([
-        encodeVarInt(0),
-        encodeVarInt(STATUS_PROTOCOL),
-        encodeString(target.host),
-        port,
-        encodeVarInt(1),
-      ]);
+      const handshake =
+        Buffer.concat([
+          encodeVarInt(0),
+          encodeVarInt(
+            STATUS_PROTOCOL,
+          ),
+          encodeString(
+            target.host,
+          ),
+          port,
+          encodeVarInt(1),
+        ]);
 
-      const handshakePacket = Buffer.concat([
-        encodeVarInt(handshake.length),
-        handshake,
-      ]);
+      const handshakePacket =
+        Buffer.concat([
+          encodeVarInt(
+            handshake.length,
+          ),
+          handshake,
+        ]);
 
-      // Status request packet:
-      // packet length 1, packet id 0.
-      const statusRequest = Buffer.from([
-        0x01,
-        0x00,
-      ]);
+      // Packet length 1, packet id 0.
+      const statusRequest =
+        Buffer.from([0x01, 0x00]);
 
       socket.write(
         Buffer.concat([
@@ -298,37 +353,43 @@ async function directMinecraftStatus(
     });
 
     socket.on("data", (chunk) => {
-      received = Buffer.concat([
-        received,
-        chunk,
-      ]);
+      received =
+        Buffer.concat([
+          received,
+          chunk,
+        ]);
 
       const status =
-        parseMinecraftStatusPacket(received);
+        parseMinecraftStatusPacket(
+          received,
+        );
 
       if (status) {
         finish(status);
       }
     });
 
-    socket.once("timeout", () => {
-      finish(null);
-    });
-
-    socket.once("error", () => {
-      finish(null);
-    });
-
-    socket.once("close", () => {
-      finish(null);
-    });
+    socket.once(
+      "timeout",
+      () => finish(null),
+    );
+    socket.once(
+      "error",
+      () => finish(null),
+    );
+    socket.once(
+      "close",
+      () => finish(null),
+    );
   });
 }
 
 async function webProfilesOnlineCount() {
   try {
     const [rows] =
-      await getCoreDb().query<RowDataPacket[]>(
+      await getCoreDb().query<
+        RowDataPacket[]
+      >(
         `SELECT COUNT(*) AS players_online
          FROM \`mineacle_web_profiles\`
          WHERE \`online\` = 1`,
@@ -356,11 +417,12 @@ export async function GET() {
     ]);
 
   const direct =
-    await directMinecraftStatus(target);
+    await directMinecraftStatus(
+      target,
+    );
 
   const online =
-    direct?.online === true ||
-    (!direct && profiles.available && profiles.count > 0);
+    direct?.online === true;
 
   const currentlyPlaying =
     profiles.available
@@ -380,15 +442,15 @@ export async function GET() {
 
   return NextResponse.json(
     {
-      // Current Next.js homepage contract.
       online,
       currentlyPlaying,
       maxPlayers: playersMax,
       checked: true,
       source,
 
-      // Old working endpoint contract retained for compatibility/debugging.
-      players_online: currentlyPlaying,
+      // Compatibility with the previous working PHP response.
+      players_online:
+        currentlyPlaying,
       players_max: playersMax,
       server_ip: PUBLIC_SERVER,
     },
