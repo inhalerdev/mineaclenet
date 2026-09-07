@@ -1,12 +1,22 @@
 .page,
 .modalBackdrop {
-  position: fixed;
-  z-index: 1000;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  padding: 16px;
-  background: #0d0d0d;
+  --brand-primary: #8436fe;
+  --brand-secondary: #b078ff;
+  --brand-hover: #d0afff;
+  --brand-cta: #62c249;
+  --brand-live: #11fc7b;
+  --brand-bg: #111111;
+  --brand-text: #f8f8f8;
+  --surface: #171717;
+  --surface-raised: #222222;
+  --surface-soft: #1d1d1d;
+  --muted: #bbbbbb;
+  --muted-dim: #777777;
+  --border: rgba(248, 248, 248, 0.09);
+  --border-strong: rgba(248, 248, 248, 0.14);
+  --radius: 8px;
+  --control-radius: 6px;
+  --ease: 170ms cubic-bezier(0.2, 0.75, 0.25, 1);
 }
 
 .page {
@@ -25,15 +35,9 @@
 .sideNav,
 .hero,
 .quickCard {
-  position: relative;
-  min-width: 0;
-  min-height: 0;
-  overflow: hidden;
-  color: var(--brand-text);
-  isolation: isolate;
-  transition:
-    border-color var(--ease),
-    background-color var(--ease);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
 }
 
 .sideNav {
@@ -45,7 +49,6 @@
   flex-direction: column;
   padding: 12px;
   overflow: visible;
-  background: #222222;
   z-index: 20;
 }
 
@@ -79,7 +82,7 @@
 }
 
 .primaryNav a:hover {
-  background: #2c2c2c;
+  background: rgba(255, 255, 255, 0.035);
   color: #ffffff;
 }
 
@@ -89,9 +92,9 @@
 }
 
 .primaryNav .activeNavItem {
-  border-color: var(--brand-primary);
-  background: var(--brand-primary);
-  color: #ffffff;
+  border-color: rgba(132, 54, 254, 0.42);
+  background: rgba(132, 54, 254, 0.12);
+  color: var(--brand-hover);
 }
 
 .navIcon {
@@ -152,8 +155,8 @@
 }
 
 .socialLinks a:hover {
-  background: #2c2c2c;
-  color: #ffffff;
+  background: rgba(255, 255, 255, 0.035);
+  color: var(--brand-hover);
 }
 
 .socialLinks img {
@@ -184,11 +187,24 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
-  filter: brightness(0.72) saturate(1.06);
 }
 
 .heroShade {
-  display: none;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      rgba(17, 17, 17, 0.14),
+      rgba(17, 17, 17, 0.14)
+    ),
+    linear-gradient(
+      180deg,
+      rgba(17, 17, 17, 0.38) 0%,
+      rgba(17, 17, 17, 0.04) 28%,
+      rgba(17, 17, 17, 0.08) 58%,
+      rgba(17, 17, 17, 0.72) 100%
+    );
 }
 
 .heroTop {
@@ -213,9 +229,41 @@
   height: auto;
   object-fit: contain;
   user-select: none;
+  animation:
+    heroLogoBounce 620ms
+    cubic-bezier(0.22, 0.78, 0.32, 1)
+    both;
+  transition: transform var(--ease);
 }
 
+@keyframes heroLogoBounce {
+  0% {
+    opacity: 0;
+    transform: translateY(4px) scale(0.95);
+  }
 
+  28% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  55% {
+    transform: translateY(-5px) scale(1.02);
+  }
+
+  76% {
+    transform: translateY(1px) scale(0.995);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.heroTopLogo:hover .heroLogo {
+  transform: translateY(-1px);
+}
 
 .accountActions {
   position: absolute;
@@ -265,11 +313,14 @@
   font: inherit;
   font-size: 13px;
   font-weight: 600;
-  transition: background-color var(--ease);
+  transition:
+    background-color var(--ease),
+    transform var(--ease);
 }
 
 .loginButton:hover {
   background: var(--brand-secondary);
+  transform: translateY(-1px);
 }
 
 .profileMenu {
@@ -285,14 +336,15 @@
   align-items: center;
   gap: 8px;
   padding: 3px 10px 3px 3px;
-  border: 1px solid #383838;
+  border: 1px solid rgba(248, 248, 248, 0.14);
   border-radius: var(--control-radius);
-  background: #171717;
+  background: rgba(17, 17, 17, 0.82);
   color: var(--brand-text);
   cursor: pointer;
   font: inherit;
   font-size: 12px;
   font-weight: 600;
+  backdrop-filter: blur(8px);
   transition:
     border-color var(--ease),
     background-color var(--ease);
@@ -300,8 +352,8 @@
 
 .profileTrigger:hover,
 .profileTrigger[aria-expanded="true"] {
-  border-color: var(--brand-secondary);
-  background: #222222;
+  border-color: rgba(208, 175, 255, 0.42);
+  background: rgba(23, 23, 23, 0.96);
 }
 
 .profileHead,
@@ -344,8 +396,8 @@
   overflow: hidden;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius);
-  background: #171717;
-  box-shadow: none;
+  background: var(--surface);
+  box-shadow: 0 20px 46px rgba(0, 0, 0, 0.42);
 }
 
 .profileSkin {
@@ -354,7 +406,13 @@
   place-items: end center;
   padding: 14px 8px 0;
   overflow: hidden;
-  background: #251936;
+  background:
+    radial-gradient(
+      circle at 50% 35%,
+      rgba(132, 54, 254, 0.16),
+      transparent 48%
+    ),
+    #141414;
 }
 
 .profileSkin img {
@@ -445,8 +503,8 @@
   display: grid;
   place-items: center;
   border-radius: 10px;
-  background: var(--brand-primary);
-  color: #ffffff;
+  background: rgba(132, 54, 254, 0.16);
+  color: var(--brand-hover);
   font-size: 8px;
 }
 
@@ -492,10 +550,11 @@
   gap: 8px;
   margin-bottom: 10px;
   padding: 7px 10px;
-  border: 1px solid #383838;
-  border-radius: var(--control-radius);
-  background: #171717;
+  border: 1px solid rgba(248, 248, 248, 0.12);
+  border-radius: 999px;
+  background: rgba(17, 17, 17, 0.66);
   color: #d7d7d7;
+  backdrop-filter: blur(6px);
 }
 
 .serverDot {
@@ -508,7 +567,7 @@
 
 .serverDotOnline {
   background: var(--brand-live);
-  box-shadow: none;
+  box-shadow: 0 0 8px rgba(17, 252, 123, 0.32);
 }
 
 .serverSummary > strong {
@@ -521,7 +580,7 @@
   align-items: center;
   gap: 4px;
   padding-left: 8px;
-  border-left: 1px solid #383838;
+  border-left: 1px solid rgba(248, 248, 248, 0.14);
   color: #c4c4c4;
   font-size: 10px;
   font-weight: 500;
@@ -535,7 +594,7 @@
 .heroEyebrow {
   display: block;
   margin-bottom: 5px;
-  color: #ffffff;
+  color: var(--brand-hover);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -571,12 +630,13 @@
   display: inline-flex;
   align-items: center;
   padding: 0 9px;
-  border: 1px solid #383838;
-  border-radius: var(--control-radius);
-  background: #222222;
+  border: 1px solid rgba(248, 248, 248, 0.14);
+  border-radius: 999px;
+  background: rgba(17, 17, 17, 0.6);
   color: #f3f3f3;
   font-size: 10px;
   font-weight: 500;
+  backdrop-filter: blur(5px);
 }
 
 .playGroup {
@@ -595,7 +655,7 @@
   display: grid;
   place-items: center;
   padding: 0;
-  border: 1px solid #79d864;
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: var(--control-radius);
   background: var(--brand-cta);
   color: #ffffff;
@@ -604,15 +664,17 @@
   font-size: 20px;
   font-weight: 700;
   letter-spacing: 0.01em;
-  box-shadow: 0 0 18px rgba(98, 194, 73, 0.2);
+  box-shadow: 0 8px 22px rgba(98, 194, 73, 0.18);
   transition:
-    background-color var(--ease),
+    filter var(--ease),
+    transform var(--ease),
     box-shadow var(--ease);
 }
 
 .playButton:hover {
-  background: #6bcf53;
-  box-shadow: 0 0 22px rgba(98, 194, 73, 0.28);
+  filter: brightness(1.08);
+  box-shadow: 0 10px 26px rgba(98, 194, 73, 0.24);
+  transform: translateY(-2px);
 }
 
 .playButtonCopied {
@@ -662,36 +724,31 @@
 }
 
 .quickCard:hover {
-  border-color: var(--brand-primary);
+  border-color: rgba(208, 175, 255, 0.3);
+  transform: translateY(-2px);
 }
 
 .quickMedia {
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 122px;
-  left: 0;
-  background: #222222;
+  inset: 0;
+  background: var(--surface-raised);
 }
 
 .quickMedia > img:not(.quickIcon) {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 230ms ease;
 }
 
 .quickCard:hover .quickMedia > img:not(.quickIcon) {
-  transform: none;
+  transform: scale(1.025);
 }
 
 .quickFallback {
   display: grid;
   place-items: center;
-  background: var(--brand-primary);
-}
-
-.quickCard:nth-child(3) .quickFallback {
-  background: var(--brand-secondary);
+  background: var(--surface-raised);
 }
 
 .quickIcon {
@@ -699,40 +756,40 @@
   height: 48px;
   object-fit: contain;
   filter: brightness(0) saturate(100%) invert(100%);
-  opacity: 1;
+  opacity: 0.7;
+  transition:
+    opacity var(--ease),
+    transform var(--ease);
 }
 
 .quickCard:hover .quickIcon {
-  opacity: 1;
-  transform: none;
+  opacity: 0.9;
+  transform: translateY(-2px);
 }
 
 .quickShade {
-  display: none;
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(17, 17, 17, 0.04) 18%,
+      rgba(17, 17, 17, 0.22) 52%,
+      rgba(17, 17, 17, 0.94) 100%
+    );
 }
 
 .quickContent {
   position: absolute;
   z-index: 2;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  min-height: 122px;
-  padding: 14px 16px;
-  border-top: 3px solid var(--brand-primary);
-  background: #1a1a1a;
-}
-
-.quickCard:nth-child(2) .quickContent {
-  border-top-color: var(--brand-cta);
-}
-
-.quickCard:nth-child(3) .quickContent {
-  border-top-color: var(--brand-secondary);
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
 }
 
 .quickContent small {
-  color: var(--brand-secondary);
+  color: var(--brand-hover);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -765,7 +822,7 @@
 }
 
 .quickCard:hover .quickContent > span {
-  transform: none;
+  transform: translateX(2px);
 }
 
 .modalBackdrop {
@@ -787,7 +844,7 @@
   border: 1px solid var(--border-strong);
   border-radius: var(--radius);
   background: var(--surface);
-  box-shadow: none;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.32);
 }
 
 .modalClose {
@@ -820,7 +877,7 @@
 }
 
 .modalClose:hover {
-  border-color: #4a4a4a;
+  border-color: rgba(248, 248, 248, 0.18);
   background: #222222;
 }
 
@@ -891,7 +948,7 @@
 }
 
 .authEditionPrimary {
-  border: 1px solid #6f4a9f;
+  border: 1px solid rgba(176, 120, 255, 0.34);
   background: #1d1a22;
   color: var(--brand-text);
   cursor: pointer;
@@ -901,7 +958,7 @@
 }
 
 .authEditionPrimary:hover {
-  border-color: var(--brand-secondary);
+  border-color: rgba(208, 175, 255, 0.52);
   background: #211d27;
 }
 
@@ -1106,8 +1163,8 @@
 }
 
 .joinEditionActive {
-  border-color: var(--brand-primary);
-  background: #211a2c;
+  border-color: rgba(132, 54, 254, 0.4);
+  background: rgba(132, 54, 254, 0.08);
 }
 
 .joinEditionActive img,
@@ -1168,9 +1225,9 @@
   gap: 16px;
   margin-top: 10px;
   padding: 14px 16px;
-  border: 1px solid #497a3e;
+  border: 1px solid rgba(98, 194, 73, 0.38);
   border-radius: var(--radius);
-  background: #192217;
+  background: rgba(98, 194, 73, 0.07);
   color: var(--brand-text);
   cursor: pointer;
   font: inherit;
@@ -1181,8 +1238,8 @@
 }
 
 .joinAddressCard:hover {
-  border-color: var(--brand-cta);
-  background: #1e2b1b;
+  border-color: rgba(98, 194, 73, 0.62);
+  background: rgba(98, 194, 73, 0.1);
 }
 
 .joinAddressCopy {
@@ -1268,7 +1325,7 @@
 
 .joinStatusDotOnline {
   background: var(--brand-live);
-  box-shadow: none;
+  box-shadow: 0 0 7px rgba(17, 252, 123, 0.28);
 }
 
 .joinFlow {
@@ -1350,9 +1407,9 @@
   gap: 9px;
   flex: 0 0 auto;
   padding: 0 13px;
-  border: 1px solid #5e3f86;
+  border: 1px solid rgba(132, 54, 254, 0.36);
   border-radius: var(--control-radius);
-  background: #211a2c;
+  background: rgba(132, 54, 254, 0.1);
   color: var(--brand-hover);
   cursor: pointer;
   font: inherit;
@@ -1364,8 +1421,8 @@
 }
 
 .joinFooter > button:hover {
-  border-color: var(--brand-secondary);
-  background: #2a2037;
+  border-color: rgba(208, 175, 255, 0.52);
+  background: rgba(132, 54, 254, 0.16);
 }
 
 .joinFooter > button span {
@@ -1654,7 +1711,7 @@
     width: 100%;
     padding-top: 5px;
     padding-left: 0;
-    border-top: 1px solid #383838;
+    border-top: 1px solid rgba(248, 248, 248, 0.12);
     border-left: 0;
   }
 
