@@ -3237,3 +3237,148 @@
       12px;
   }
 }
+
+/* === Homepage full-width / no navigation rail === */
+/*
+ * Homepage is deliberately navigation-free.
+ * Users enter the site through the hero and large clickable modules.
+ * AppSidebar appears only after navigating to an internal page.
+ */
+
+/* The old homepage-specific rail remains in markup only for now; never display it. */
+.sideNav {
+  display: none !important;
+}
+
+.page {
+  width: 100%;
+  min-width: 320px;
+  min-height: 100dvh;
+  height: auto;
+  margin-left: 0;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(560px, 72dvh) auto;
+  align-content: start;
+
+  gap: 16px;
+  padding: 16px;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: #111111;
+}
+
+/* Hero now uses the entire homepage content width. */
+.hero {
+  grid-column: 1;
+  grid-row: 1;
+  width: 100%;
+  min-height: 560px;
+}
+
+/* Lower click-through modules use all freed horizontal space. */
+.quickModules {
+  grid-column: 1;
+  grid-row: 2;
+  width: 100%;
+  grid-template-columns: 1.25fr 1fr 1fr;
+  grid-auto-rows: 310px;
+  gap: 16px;
+}
+
+.quickCard {
+  min-height: 310px;
+}
+
+/*
+ * Current Rewards/Punishments <img> paths point at SVGs that do not exist.
+ * Hide those broken image nodes and use the canonical repo GIF assets instead.
+ */
+.quickFallback .quickIcon {
+  display: none;
+}
+
+.quickCard:nth-child(2) .quickFallback,
+.quickCard:nth-child(3) .quickFallback {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 54px 54px;
+  image-rendering: pixelated;
+}
+
+.quickCard:nth-child(2) .quickFallback {
+  background-image:
+    url("/shared/images/icons/streamline/core-solid/rewards-hover.gif");
+}
+
+.quickCard:nth-child(3) .quickFallback {
+  background-image:
+    url("/shared/images/icons/streamline/core-solid/punishments-hover.gif");
+}
+
+/* No shared mobile-header offset exists on Home because AppSidebar is absent. */
+@media (max-width: 900px) {
+  .page {
+    width: 100%;
+    margin-left: 0;
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(620px, auto) auto;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .hero {
+    grid-column: 1;
+    grid-row: 1;
+    min-height: 620px;
+  }
+
+  .quickModules {
+    grid-column: 1;
+    grid-row: 2;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-auto-rows: 280px;
+    gap: 12px;
+  }
+
+  .quickCard {
+    min-height: 280px;
+  }
+}
+
+@media (max-width: 760px) {
+  .page {
+    grid-template-rows: auto auto;
+    padding: 12px;
+  }
+
+  .hero {
+    min-height: 760px;
+  }
+
+  .quickModules {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 290px;
+  }
+
+  .quickCard {
+    min-height: 290px;
+  }
+}
+
+@media (max-width: 520px) {
+  .page {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .hero {
+    min-height: 730px;
+  }
+
+  .quickModules {
+    gap: 10px;
+  }
+}

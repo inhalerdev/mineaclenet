@@ -504,3 +504,89 @@
       12px;
   }
 }
+
+/* === Internal-page wider floating rail === */
+/*
+ * Home intentionally does not render AppSidebar.
+ * Every non-home route continues to use this same shared floating rail.
+ */
+
+:root {
+  --sidebar-collapsed: 220px;
+  --sidebar-expanded: 220px;
+
+  --mineacle-rail-left: 16px;
+  --mineacle-rail-width: 220px;
+  --mineacle-rail-gap: 16px;
+  --mineacle-content-left:
+    calc(
+      var(--mineacle-rail-left) +
+      var(--mineacle-rail-width) +
+      var(--mineacle-rail-gap)
+    );
+}
+
+.site-sidebar,
+.site-sidebar:hover {
+  width: var(--mineacle-rail-width);
+}
+
+/* Center the Mineacle wordmark inside the rail rather than offsetting it left. */
+.sidebar-brand__wordmark,
+.site-sidebar:hover .sidebar-brand__wordmark {
+  top: 2px;
+  left: 50%;
+  width: 174px;
+  height: 54px;
+  object-fit: contain;
+  object-position: center;
+  opacity: 1;
+  transform: translateX(-50%);
+}
+
+/* Fill the wider inner rail cleanly. */
+.sidebar-nav__item,
+.sidebar-social-link,
+.sidebar-account-action {
+  width: 198px;
+  min-width: 198px;
+}
+
+.sidebar-nav__item {
+  grid-template-columns: 46px minmax(0, 1fr) 24px;
+}
+
+.sidebar-social-link {
+  grid-template-columns: 46px minmax(0, 1fr);
+}
+
+.sidebar-account-action {
+  grid-template-columns: 46px minmax(0, 1fr) 24px;
+}
+
+.sidebar-nav__icon,
+.sidebar-social-link__icon,
+.sidebar-account-action__icon {
+  width: 46px;
+}
+
+/* All internal pages reserve the exact same rail + gap. */
+.system-page,
+.auth-page {
+  width: calc(100vw - var(--mineacle-content-left));
+  margin-left: var(--mineacle-content-left);
+}
+
+@media (max-width: 800px) {
+  :root {
+    --sidebar-collapsed: 0px;
+    --sidebar-expanded: 0px;
+    --mineacle-content-left: 0px;
+  }
+
+  .system-page,
+  .auth-page {
+    width: 100%;
+    margin-left: 0;
+  }
+}
