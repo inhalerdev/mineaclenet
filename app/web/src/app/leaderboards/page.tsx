@@ -1,4 +1,5 @@
 import { PlayerAvatar } from "@/components/players/PlayerAvatar";
+import { PlayerSearch } from "@/components/players/PlayerSearch";
 import { AppSidebar } from "@/components/shell/AppSidebar";
 import { getCurrentViewer } from "@/features/auth/session";
 import { getPlayerLeaderboard } from "@/features/players/repository";
@@ -60,18 +61,26 @@ export default async function LeaderboardsPage({
       <AppSidebar viewer={viewer} />
 
       <main className="system-page">
-        <section className="system-card leaderboard-shell">
+        <section className="leaderboard-shell">
           <header className="system-page-header">
             <div>
               <small>GLOBAL</small>
               <h1>Leaderboards</h1>
-              <p>Live player rankings from Mineacle server data.</p>
+              <p>
+                Live Mineacle rankings. Change the metric, then
+                open any player to view their profile.
+              </p>
             </div>
 
-            <nav className="leaderboard-tabs" aria-label="Leaderboard metric">
+            <nav
+              className="leaderboard-tabs"
+              aria-label="Leaderboard metric"
+            >
               {SORTS.map((item) => (
                 <a
-                  className={item.key === sort ? "is-active" : ""}
+                  className={
+                    item.key === sort ? "is-active" : ""
+                  }
                   href={`/leaderboards?sort=${item.key}`}
                   key={item.key}
                 >
@@ -81,27 +90,41 @@ export default async function LeaderboardsPage({
             </nav>
           </header>
 
+          <PlayerSearch
+            className="leaderboard-player-search"
+            placeholder="Search any Mineacle player"
+          />
+
           <div className="leaderboard-list">
             {players.map((player, index) => (
               <a
                 className="leaderboard-row"
-                href={`/player/${encodeURIComponent(player.username)}`}
+                href={`/player/${encodeURIComponent(
+                  player.username,
+                )}`}
                 key={player.uuid}
               >
                 <b>#{index + 1}</b>
+
                 <PlayerAvatar
                   uuid={player.uuid}
-                  size={34}
+                  size={38}
                   className="leaderboard-avatar"
                 />
+
                 <span className="leaderboard-player">
-                  <strong>{player.displayName || player.username}</strong>
+                  <strong>
+                    {player.displayName || player.username}
+                  </strong>
                   <small>
                     {player.online
                       ? "Online"
-                      : player.teamName || player.rankName || "Player"}
+                      : player.teamName ||
+                        player.rankName ||
+                        "Player"}
                   </small>
                 </span>
+
                 <span className="leaderboard-value">
                   <strong>{primaryValue(sort, player)}</strong>
                   <small>

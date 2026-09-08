@@ -1,7 +1,7 @@
 .root {
   position: relative;
-  min-width: 0;
   width: 100%;
+  min-width: 0;
 }
 
 .form {
@@ -9,28 +9,32 @@
   height: 40px;
   display: flex;
   align-items: center;
-  gap: 11px;
-  padding: 0 14px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-control);
-  background: rgba(23, 23, 23, 0.9);
+  gap: 10px;
+  padding: 0 12px;
+  border: 1px solid rgba(248, 248, 248, 0.10);
+  border-radius: 4px;
+  background: #171717;
   transition:
     border-color var(--ease-fast),
     background-color var(--ease-fast);
 }
 
 .form:focus-within {
-  border-color: var(--brand-primary);
-  background: var(--surface-soft);
+  border-color: rgba(176, 120, 255, 0.60);
+  background: #1b1b1b;
 }
 
 .searchIcon {
-  width: 17px;
-  height: 17px;
-  flex: 0 0 17px;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
   object-fit: contain;
   image-rendering: pixelated;
   filter: brightness(0) saturate(100%) invert(100%);
+  opacity: 0.84;
+}
+
+.form:focus-within .searchIcon {
   opacity: 1;
 }
 
@@ -42,72 +46,71 @@
   border: 0;
   outline: 0;
   background: transparent;
-  color: var(--text);
+  color: #f8f8f8;
   font: inherit;
   font-size: 13px;
   font-weight: 400;
 }
 
 .form input::placeholder {
-  color: #8d8d8d;
+  color: #777777;
 }
 
 .form input::-webkit-search-cancel-button {
   filter: brightness(0) invert(1);
-  opacity: 0.65;
+  opacity: 0.55;
 }
 
 .searching {
   flex: 0 0 auto;
-  color: var(--brand-hover);
-  font-size: 9px;
+  color: #d0afff;
+  font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.04em;
 }
 
 .results {
   position: absolute;
-  z-index: 80;
-  top: calc(100% + 8px);
+  z-index: 180;
+  top: calc(100% + 6px);
   right: 0;
   left: 0;
   overflow: hidden;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-card);
-  background: var(--surface);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.34);
+  border: 1px solid rgba(248, 248, 248, 0.16);
+  border-radius: 8px;
+  background: #171717;
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.34);
 }
 
 .result {
-  min-height: 60px;
+  min-height: 62px;
   display: grid;
-  grid-template-columns: 34px minmax(0, 1fr) auto;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
   align-items: center;
-  gap: 12px;
-  padding: 0 13px;
-  color: var(--text);
+  gap: 11px;
+  padding: 0 12px;
+  color: #f8f8f8;
   transition:
     background-color var(--ease-fast),
-    transform var(--ease-fast);
+    color var(--ease-fast);
 }
 
 .result + .result {
-  border-top: 1px solid var(--border);
+  border-top: 1px solid rgba(248, 248, 248, 0.08);
 }
 
 .result:hover {
-  background: var(--surface-raised);
-  transform: translateX(2px);
+  background: #222222;
+  transform: none;
 }
 
 .result:active {
-  transform: translateX(1px) scale(0.995);
+  transform: none;
 }
 
 .avatar {
-  width: 34px;
-  height: 34px;
-  border-radius: 5px;
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
   image-rendering: pixelated;
 }
 
@@ -125,25 +128,24 @@
 }
 
 .identity strong {
-  color: var(--text);
+  color: #f8f8f8;
   font-size: 12px;
   font-weight: 600;
 }
 
 .identity small {
-  margin-top: 2px;
-  color: #8d8d8d;
+  margin-top: 3px;
+  color: #888888;
   font-size: 10px;
 }
 
 .status {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   color: #777777;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.03em;
 }
 
 .status i {
@@ -154,11 +156,11 @@
 }
 
 .online {
-  color: var(--brand-online);
+  color: #11fc7b;
 }
 
 .online i {
-  background: var(--brand-online);
+  background: #11fc7b;
 }
 
 .empty {
@@ -167,15 +169,8 @@
   font-size: 11px;
 }
 
-@media (max-width: 680px) {
-  .status {
-    display: none;
-  }
-}
-
-
 .railRoot {
-  z-index: 90;
+  z-index: 160;
 }
 
 .railRoot .form {
@@ -186,9 +181,9 @@
 }
 
 .railRoot .searchIcon {
-  width: 16px;
-  height: 16px;
-  flex-basis: 16px;
+  width: 17px;
+  height: 17px;
+  flex-basis: 17px;
 }
 
 .railRoot .form input {
@@ -205,8 +200,14 @@
   left: 0;
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 800px) {
   .railRoot .results {
-    width: min(360px, calc(100vw - 52px));
+    width: 100%;
+  }
+}
+
+@media (max-width: 680px) {
+  .status {
+    display: none;
   }
 }

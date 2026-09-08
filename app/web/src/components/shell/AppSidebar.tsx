@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { PlayerSearch } from "@/components/players/PlayerSearch";
 import type { Viewer } from "@/features/auth/types";
 import {
   siteNavigation,
@@ -86,7 +87,6 @@ export function AppSidebar({
   const [navAnimationRun, setNavAnimationRun] =
     useState<Partial<Record<SiteNavIcon, boolean>>>({});
 
-
   const closeMobile = () =>
     setMobileOpen(false);
 
@@ -120,6 +120,12 @@ export function AppSidebar({
             />
           </a>
         </div>
+
+        <PlayerSearch
+          className="sidebar-player-search"
+          placeholder="Search player"
+          variant="rail"
+        />
 
         <nav
           className="sidebar-nav"
@@ -177,7 +183,6 @@ export function AppSidebar({
           })}
         </nav>
 
-
         <div className="sidebar-spacer" />
 
         <div className="sidebar-actions">
@@ -204,9 +209,7 @@ export function AppSidebar({
 
           <a
             className="sidebar-account-action"
-            href={
-              viewer ? "/profile" : "/login"
-            }
+            href={viewer ? "/profile" : "/login"}
           >
             <span className="sidebar-account-action__icon">
               {viewer ? (
@@ -282,9 +285,7 @@ export function AppSidebar({
 
         <a
           className="mobile-account-button"
-          href={
-            viewer ? "/profile" : "/login"
-          }
+          href={viewer ? "/profile" : "/login"}
         >
           {viewer
             ? viewer.username
@@ -308,6 +309,12 @@ export function AppSidebar({
           className="mobile-drawer__panel"
           aria-label="Mobile navigation"
         >
+          <PlayerSearch
+            className="mobile-player-search"
+            placeholder="Search player"
+            variant="rail"
+          />
+
           <nav>
             {siteNavigation.map((item) => {
               const active =
@@ -353,7 +360,6 @@ export function AppSidebar({
               );
             })}
           </nav>
-
 
           <div className="mobile-drawer__bottom">
             <div className="mobile-drawer__socials">

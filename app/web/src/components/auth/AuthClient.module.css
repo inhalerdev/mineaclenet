@@ -1,60 +1,63 @@
 .root {
   display: grid;
-  gap: 16px;
+  gap: 14px;
 }
 
 .tabs {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  gap: 6px;
 }
 
 .tabs button {
-  min-height: 46px;
-  padding: 0 14px;
-  border: 1px solid var(--border);
-  border-radius: var(--control-radius);
+  min-height: 40px;
+  padding: 0 13px;
+  border: 1px solid rgba(248, 248, 248, 0.10);
+  border-radius: 4px;
   background: #111111;
-  color: #8f8f8f;
+  color: #888888;
   cursor: pointer;
   font: inherit;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   transition:
     border-color var(--ease),
     background-color var(--ease),
-    color var(--ease);
+    color var(--ease),
+    box-shadow var(--ease);
 }
 
 .tabs button:hover {
-  color: #ffffff;
   border-color: rgba(248, 248, 248, 0.18);
+  color: #ffffff;
 }
 
 .tabs .activeTab {
+  position: relative;
   border-color: rgba(176, 120, 255, 0.34);
-  background: #211a2c;
+  background: #1d1d1d;
   color: #ffffff;
+  box-shadow: inset 0 -2px #b078ff;
 }
 
 .steps {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
+  gap: 6px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .steps li {
-  min-height: 58px;
+  min-height: 56px;
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 0 12px;
-  border: 1px solid var(--border);
-  border-radius: var(--control-radius);
-  background: #141414;
+  border: 1px solid rgba(248, 248, 248, 0.10);
+  border-radius: 4px;
+  background: #171717;
 }
 
 .steps li span {
@@ -62,26 +65,26 @@
   height: 24px;
   display: grid;
   place-items: center;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.05);
-  color: #7f7f7f;
+  border-radius: 4px;
+  background: #222222;
+  color: #888888;
   font-size: 11px;
   font-weight: 700;
 }
 
 .steps li strong {
-  color: #a5a5a5;
-  font-size: 12px;
+  color: #999999;
+  font-size: 11px;
   font-weight: 600;
 }
 
 .steps .stepActive {
-  border-color: rgba(176, 120, 255, 0.22);
-  background: #1f1a27;
+  border-color: rgba(176, 120, 255, 0.24);
+  background: #1d1d1d;
 }
 
 .steps .stepActive span {
-  background: #2b2238;
+  background: #8436fe;
   color: #ffffff;
 }
 
@@ -91,45 +94,45 @@
 
 .panel {
   display: grid;
-  gap: 18px;
-  padding: 22px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: #151515;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid rgba(248, 248, 248, 0.10);
+  border-radius: 8px;
+  background: #171717;
 }
 
 .header small {
   display: block;
-  color: var(--brand-secondary);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  color: #b078ff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
 }
 
 .header h1 {
-  margin: 8px 0 0;
+  margin: 7px 0 0;
   color: #ffffff;
-  font-size: 34px;
+  font-size: clamp(28px, 4vw, 36px);
   font-weight: 700;
-  line-height: 0.96;
-  letter-spacing: -0.05em;
+  line-height: 0.98;
+  letter-spacing: -0.04em;
 }
 
 .header p {
-  max-width: 52ch;
-  margin: 10px 0 0;
-  color: #a2a2a2;
+  max-width: 54ch;
+  margin: 9px 0 0;
+  color: #bbbbbb;
   font-size: 13px;
-  line-height: 1.55;
+  line-height: 1.5;
 }
 
 .note {
   min-height: 42px;
   display: flex;
   align-items: center;
-  padding: 0 12px;
+  padding: 9px 12px;
   border: 1px solid rgba(98, 194, 73, 0.22);
-  border-radius: var(--control-radius);
+  border-radius: 4px;
   background: #192217;
   color: #d4dfd0;
   font-size: 12px;
@@ -138,33 +141,32 @@
 
 .fieldGroup {
   display: grid;
-  gap: 14px;
+  gap: 13px;
 }
 
 .field {
   display: grid;
-  gap: 8px;
+  gap: 6px;
 }
 
 .field span {
   color: #cfcfcf;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 500;
 }
 
 .field input {
   width: 100%;
-  height: 48px;
-  padding: 0 14px;
-  border: 1px solid var(--border);
-  border-radius: var(--control-radius);
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid rgba(248, 248, 248, 0.10);
+  border-radius: 4px;
   background: #111111;
   color: #ffffff;
   font: inherit;
-  font-size: 14px;
+  font-size: 13px;
   transition:
     border-color var(--ease),
-    box-shadow var(--ease),
     background-color var(--ease);
 }
 
@@ -174,10 +176,10 @@
 
 .field input:focus {
   outline: none;
-  border-color: rgba(132, 54, 254, 0.42);
+  border-color: rgba(176, 120, 255, 0.60);
+  background: #111111;
   box-shadow: none;
 }
-
 
 .field input:-webkit-autofill,
 .field input:-webkit-autofill:hover,
@@ -190,45 +192,51 @@
 }
 
 .error {
-  padding: 12px 14px;
+  padding: 11px 12px;
   border: 1px solid rgba(255, 85, 85, 0.22);
-  border-radius: var(--control-radius);
-  background: rgba(255, 85, 85, 0.08);
+  border-radius: 4px;
+  background: #231919;
   color: #ffb2b2;
-  font-size: 12px;
-  line-height: 1.5;
+  font-size: 11px;
+  line-height: 1.45;
 }
 
 .submit {
   width: 100%;
-  height: 48px;
-  border: 0;
-  border-radius: var(--control-radius);
-  background: var(--brand-primary);
+  height: 44px;
+  border: 1px solid rgba(208, 175, 255, 0.56);
+  border-radius: 4px;
+  background: #8436fe;
   color: #ffffff;
   cursor: pointer;
   font: inherit;
   font-size: 13px;
-  font-weight: 700;
-  transition: background-color var(--ease);
+  font-weight: 600;
+  box-shadow: 0 0 9px rgba(132, 54, 254, 0.13);
+  transition:
+    border-color var(--ease),
+    background-color var(--ease),
+    box-shadow var(--ease);
 }
 
 .submit:hover:not(:disabled) {
-  background: var(--brand-secondary);
+  border-color: #d0afff;
+  background: #9858ff;
+  box-shadow: 0 0 18px rgba(132, 54, 254, 0.30);
 }
 
 .submit:disabled {
   cursor: wait;
-  opacity: 0.75;
+  opacity: 0.72;
 }
 
 .commandCard {
   display: grid;
   gap: 10px;
-  padding: 16px;
+  padding: 15px;
   border: 1px solid rgba(176, 120, 255, 0.22);
-  border-radius: var(--radius);
-  background: #1a1820;
+  border-radius: 8px;
+  background: #1d1d1d;
 }
 
 .commandLabel {
@@ -239,14 +247,13 @@
 }
 
 .commandLabel small {
-  color: var(--brand-hover);
+  color: #d0afff;
   font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.07em;
+  font-weight: 600;
 }
 
 .commandLabel span {
-  color: #9f9f9f;
+  color: #999999;
   font-size: 10px;
   line-height: 1.4;
 }
@@ -261,7 +268,7 @@
 .commandValue strong {
   overflow: auto;
   color: #ffffff;
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.03em;
@@ -273,38 +280,37 @@
   height: 38px;
   flex: 0 0 auto;
   padding: 0 12px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--control-radius);
+  border: 1px solid rgba(248, 248, 248, 0.10);
+  border-radius: 4px;
   background: #111111;
   color: #ffffff;
   cursor: pointer;
   font: inherit;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .verifyGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
+  gap: 7px;
 }
 
 .verifyCard {
-  min-height: 120px;
+  min-height: 118px;
   display: flex;
   flex-direction: column;
   gap: 6px;
   padding: 14px;
-  border: 1px solid var(--border);
-  border-radius: var(--control-radius);
-  background: #141414;
+  border: 1px solid rgba(248, 248, 248, 0.10);
+  border-radius: 4px;
+  background: #171717;
 }
 
 .verifyCard small {
-  color: var(--brand-secondary);
+  color: #b078ff;
   font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-weight: 600;
 }
 
 .verifyCard strong {
@@ -315,20 +321,20 @@
 
 .verifyCard p {
   margin: 0;
-  color: #9a9a9a;
+  color: #999999;
   font-size: 11px;
   line-height: 1.45;
 }
 
 .waiting {
-  min-height: 42px;
+  min-height: 40px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 0 14px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: #181818;
+  padding: 0 12px;
+  border: 1px solid rgba(248, 248, 248, 0.10);
+  border-radius: 4px;
+  background: #1d1d1d;
   color: #d2d2d2;
   font-size: 12px;
   font-weight: 600;
@@ -338,7 +344,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--brand-live);
+  background: #11fc7b;
   box-shadow: none;
   animation: pulse 1.2s ease-in-out infinite;
 }
@@ -347,22 +353,16 @@
   0%,
   100% {
     opacity: 0.55;
-    transform: scale(0.92);
   }
 
   50% {
     opacity: 1;
-    transform: scale(1);
   }
 }
 
 @media (max-width: 640px) {
   .panel {
     padding: 16px;
-  }
-
-  .header h1 {
-    font-size: 32px;
   }
 
   .steps,

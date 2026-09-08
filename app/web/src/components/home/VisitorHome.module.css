@@ -2627,3 +2627,373 @@
     transition: none;
   }
 }
+
+/* === Mineacle image-driven homepage wireframe v2 === */
+/*
+ * Changes the homepage composition without changing its content, data,
+ * brand palette, auth behavior, server-status behavior, or route behavior.
+ *
+ * Desktop:
+ *   fixed-height left rail / large video hero
+ *   lower image-first cards stay aligned with hero (not under the rail)
+ *
+ * Mobile:
+ *   search + horizontal navigation
+ *   full-width hero
+ *   stacked image-first modules
+ */
+
+.page {
+  min-height: 100dvh;
+  height: auto;
+  grid-template-columns: 188px minmax(0, 1fr);
+  grid-template-rows: minmax(560px, 72dvh) auto;
+  align-content: start;
+  gap: 16px;
+  padding: 16px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* The homepage rail becomes a stable product-navigation column. */
+.sideNav {
+  position: sticky;
+  top: 16px;
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  height: calc(100dvh - 32px);
+  min-height: 560px;
+  align-self: start;
+}
+
+/* Hero is now the dominant image/media object. */
+.hero {
+  grid-column: 2;
+  grid-row: 1;
+  min-height: 560px;
+}
+
+/*
+ * Hero content is split into two solid utility panels over the video.
+ * This keeps the page image-driven while making interaction areas easy
+ * to scan and click.
+ */
+.heroFooter {
+  right: 20px;
+  bottom: 20px;
+  left: 20px;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 560px) minmax(210px, 286px);
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.heroCopy {
+  width: 100%;
+  padding: 18px;
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+  background: #171717;
+}
+
+.serverSummary {
+  margin-bottom: 12px;
+}
+
+.heroCopy h1 {
+  font-size: clamp(32px, 3vw, 42px);
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+}
+
+.heroCopy p {
+  max-width: 47ch;
+  margin-top: 10px;
+  color: #cfcfcf;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.featurePills {
+  margin-top: 14px;
+}
+
+.playGroup {
+  position: static;
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  align-items: stretch;
+  gap: 9px;
+  padding: 14px;
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+  background: #171717;
+  transform: none;
+}
+
+.playButton {
+  width: 100%;
+}
+
+.joinGuide {
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  text-align: center;
+}
+
+/* Quick access becomes an image-first editorial grid beside the rail. */
+.quickModules {
+  grid-column: 2;
+  grid-row: 2;
+  grid-template-columns: 1.28fr 1fr 1fr;
+  grid-auto-rows: 300px;
+  gap: 16px;
+}
+
+.quickCard {
+  min-height: 300px;
+}
+
+.quickMedia {
+  inset: 0 0 124px;
+}
+
+.quickContent {
+  min-height: 124px;
+  padding: 16px 18px;
+}
+
+.quickContent strong {
+  font-size: 19px;
+}
+
+.quickContent p {
+  max-width: 36ch;
+  font-size: 12px;
+}
+
+/* First module carries more visual weight without changing its content. */
+.quickCard:first-child .quickMedia {
+  filter: saturate(1.04);
+}
+
+.quickCard:first-child .quickContent {
+  border-top-color: rgba(176, 120, 255, 0.28);
+}
+
+/* More deliberate content-area hover: border + media brightness only. */
+.quickCard:hover {
+  border-color: var(--ui-border-hover);
+}
+
+.quickCard:hover .quickMedia > img:not(.quickIcon) {
+  filter: brightness(0.86) saturate(1.04);
+}
+
+/* Large desktop: preserve the visual hierarchy without oversized cards. */
+@media (min-width: 1480px) {
+  .page {
+    grid-template-rows: minmax(600px, 74dvh) auto;
+  }
+
+  .quickModules {
+    grid-auto-rows: 320px;
+  }
+
+  .quickCard {
+    min-height: 320px;
+  }
+}
+
+/* Compact desktop / tablet landscape. */
+@media (max-width: 1180px) {
+  .page {
+    grid-template-columns: 174px minmax(0, 1fr);
+  }
+
+  .sideNav {
+    padding: 10px;
+  }
+
+  .heroFooter {
+    grid-template-columns: minmax(0, 1fr) 220px;
+  }
+
+  .heroCopy {
+    padding: 16px;
+  }
+
+  .quickModules {
+    grid-template-columns: 1.15fr 1fr 1fr;
+    grid-auto-rows: 286px;
+  }
+
+  .quickCard {
+    min-height: 286px;
+  }
+}
+
+/*
+ * Mobile/tablet portrait keeps the homepage-specific navigation because
+ * VisitorHome owns its own rail. It becomes a compact horizontal launcher.
+ */
+@media (max-width: 900px) {
+  .page {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(620px, auto) auto;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .sideNav {
+    position: relative;
+    top: auto;
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    padding: 10px;
+  }
+
+  .railSearch {
+    width: min(440px, 100%);
+  }
+
+  .primaryNav {
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 1px;
+    gap: 4px;
+    scrollbar-width: none;
+  }
+
+  .primaryNav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .primaryNav a {
+    min-width: max-content;
+    grid-template-columns: 20px auto 10px;
+  }
+
+  .socialSection,
+  .sideNavSpacer {
+    display: none;
+  }
+
+  .hero {
+    grid-column: 1;
+    grid-row: 2;
+    min-height: 620px;
+  }
+
+  .heroFooter {
+    grid-template-columns: minmax(0, 1fr) 210px;
+  }
+
+  .quickModules {
+    grid-column: 1;
+    grid-row: 3;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-auto-rows: 270px;
+  }
+
+  .quickCard {
+    min-height: 270px;
+  }
+}
+
+@media (max-width: 760px) {
+  .page {
+    grid-template-rows: auto auto auto;
+  }
+
+  .hero {
+    min-height: 760px;
+  }
+
+  .heroFooter {
+    right: 14px;
+    bottom: 14px;
+    left: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .heroCopy {
+    padding: 16px;
+  }
+
+  .playGroup {
+    width: 100%;
+  }
+
+  .quickModules {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 290px;
+  }
+
+  .quickCard {
+    min-height: 290px;
+  }
+
+  .quickMedia {
+    bottom: 120px;
+  }
+
+  .quickContent {
+    min-height: 120px;
+  }
+}
+
+@media (max-width: 520px) {
+  .page {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .sideNav,
+  .hero,
+  .quickCard {
+    border-radius: 8px;
+  }
+
+  .hero {
+    min-height: 730px;
+  }
+
+  .heroFooter {
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+  }
+
+  .heroCopy {
+    padding: 14px;
+  }
+
+  .heroCopy h1 {
+    font-size: 29px;
+  }
+
+  .heroCopy p {
+    font-size: 12px;
+  }
+
+  .playGroup {
+    padding: 10px;
+  }
+
+  .quickModules {
+    gap: 10px;
+  }
+}
