@@ -3722,3 +3722,467 @@
     font-size: 10px;
   }
 }
+
+/* === Deliberate homepage content composition === */
+/*
+ * Hero content belongs to the media, not inside large floating cards.
+ * Only compact utility/status controls retain their own surfaces.
+ */
+
+/* Build legibility into the media itself instead of boxing the copy. */
+.heroShade {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(17, 17, 17, 0.64) 0%,
+      rgba(17, 17, 17, 0.36) 30%,
+      rgba(17, 17, 17, 0.08) 58%,
+      rgba(17, 17, 17, 0.02) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(17, 17, 17, 0.18) 0%,
+      rgba(17, 17, 17, 0.02) 38%,
+      rgba(17, 17, 17, 0.16) 62%,
+      rgba(17, 17, 17, 0.78) 100%
+    );
+}
+
+.heroTop {
+  top: 18px;
+  right: 22px;
+  left: 22px;
+}
+
+.heroLogo {
+  width: min(220px, 18vw);
+}
+
+/* Compose the lower hero as content, not two cards. */
+.heroFooter {
+  right: 30px;
+  bottom: 28px;
+  left: 34px;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 640px) minmax(190px, 230px);
+  align-items: end;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.heroCopy,
+.playGroup {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.heroCopy {
+  width: min(100%, 640px);
+  padding: 0 !important;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.66);
+}
+
+.serverSummary {
+  min-height: 32px;
+  margin-bottom: 14px;
+  padding: 0 10px;
+  border: 1px solid rgba(248, 248, 248, 0.18);
+  border-radius: 4px;
+  background: rgba(17, 17, 17, 0.58);
+  color: #eeeeee;
+  backdrop-filter: none;
+  text-shadow: none;
+}
+
+.serverSummary > strong,
+.currentlyPlaying {
+  font-size: 10px;
+}
+
+.heroEyebrow {
+  margin-bottom: 8px;
+  color: #d0afff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.heroCopy h1 {
+  max-width: 640px;
+  color: #ffffff;
+  font-size: clamp(38px, 4.2vw, 58px);
+  font-weight: 700;
+  line-height: 0.94;
+  letter-spacing: -0.05em;
+}
+
+.heroCopy p {
+  max-width: 580px;
+  margin-top: 13px;
+  color: rgba(248, 248, 248, 0.90);
+  font-size: 15px;
+  line-height: 1.48;
+}
+
+/* Features become quiet metadata instead of four boxed chips. */
+.featurePills {
+  gap: 17px;
+  margin-top: 17px;
+}
+
+.featurePills span {
+  position: relative;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: rgba(248, 248, 248, 0.78);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  backdrop-filter: none;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.62);
+}
+
+.featurePills span:not(:last-child)::after {
+  position: absolute;
+  top: 50%;
+  right: -10px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #b078ff;
+  content: "";
+  transform: translateY(-50%);
+}
+
+/* PLAY is intentionally isolated and visually dominant. */
+.playGroup {
+  position: static;
+  width: 100%;
+  display: grid;
+  align-items: stretch;
+  gap: 9px;
+  padding: 0 !important;
+  transform: none;
+}
+
+.playButton {
+  width: 100%;
+  min-width: 190px;
+  height: 50px;
+  font-size: 16px;
+}
+
+.joinGuide {
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  color: rgba(248, 248, 248, 0.88);
+  font-size: 11px;
+}
+
+/* ------------------------------------------------------------
+   Image-driven entry modules
+   The media fills the card; copy is composed over it.
+   ------------------------------------------------------------ */
+
+.quickModules {
+  grid-template-columns: 1.32fr 1fr 1fr;
+}
+
+.quickCard {
+  background: #171717;
+  box-shadow: none;
+}
+
+.quickMedia {
+  inset: 0 !important;
+  background: #1b1b1b;
+}
+
+.quickMedia > img:not(.quickIcon) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.76) saturate(1.04);
+  transition:
+    filter var(--ui-ease),
+    opacity var(--ui-ease);
+}
+
+.quickCard:hover .quickMedia > img:not(.quickIcon) {
+  filter: brightness(0.86) saturate(1.06);
+  transform: none;
+}
+
+.quickFallback {
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      rgba(132, 54, 254, 0.18),
+      rgba(132, 54, 254, 0.04) 34%,
+      transparent 62%
+    ),
+    #1b1b1b;
+}
+
+.quickFallback .quickIcon {
+  display: block;
+  width: 66px;
+  height: 66px;
+  object-fit: contain;
+  filter: brightness(0) saturate(100%) invert(100%);
+  opacity: 0.92;
+  image-rendering: pixelated;
+}
+
+.quickCard:hover .quickIcon {
+  opacity: 1;
+  transform: none;
+}
+
+/* Override the previous CSS fallback backgrounds now that TSX uses real assets. */
+.quickCard:nth-child(2) .quickFallback,
+.quickCard:nth-child(3) .quickFallback {
+  background-image:
+    radial-gradient(
+      circle at 50% 42%,
+      rgba(132, 54, 254, 0.18),
+      rgba(132, 54, 254, 0.04) 34%,
+      transparent 62%
+    );
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: auto;
+}
+
+.quickShade {
+  display: block;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(17, 17, 17, 0.02) 18%,
+      rgba(17, 17, 17, 0.16) 44%,
+      rgba(17, 17, 17, 0.86) 76%,
+      rgba(17, 17, 17, 0.98) 100%
+    );
+}
+
+.quickContent {
+  top: auto;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  min-height: 0;
+  padding: 54px 18px 17px;
+  border-top: 0;
+  background: transparent;
+}
+
+.quickContent small {
+  color: #d0afff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+}
+
+.quickContent strong {
+  margin-top: 5px;
+  color: #ffffff;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.quickContent p {
+  max-width: 38ch;
+  margin-top: 7px;
+  color: rgba(248, 248, 248, 0.76);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.quickContent > span {
+  margin-top: 10px;
+  color: #d0afff;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.quickCard:hover .quickContent > span {
+  color: #ffffff;
+  transform: none;
+}
+
+/* First card is the visual lead. */
+.quickCard:first-child .quickContent strong {
+  font-size: 22px;
+}
+
+.quickCard:first-child .quickContent p {
+  max-width: 42ch;
+}
+
+/* ------------------------------------------------------------
+   Responsive hero composition
+   ------------------------------------------------------------ */
+
+@media (min-width: 901px) and (max-width: 1180px) {
+  .heroFooter {
+    right: 20px;
+    bottom: 20px;
+    left: 22px;
+    grid-template-columns: minmax(0, 1fr) 204px;
+    gap: 20px;
+  }
+
+  .heroCopy h1 {
+    font-size: clamp(34px, 4.5vw, 48px);
+  }
+
+  .heroCopy p {
+    max-width: 500px;
+    font-size: 13px;
+  }
+
+  .featurePills {
+    gap: 15px;
+    margin-top: 14px;
+  }
+
+  .featurePills span {
+    font-size: 10px;
+  }
+
+  .playButton {
+    min-width: 0;
+  }
+
+  .quickContent {
+    padding: 48px 14px 14px;
+  }
+
+  .quickContent strong,
+  .quickCard:first-child .quickContent strong {
+    font-size: 17px;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 900px) {
+  .heroFooter {
+    right: 18px;
+    bottom: 18px;
+    left: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .heroCopy {
+    width: min(100%, 620px);
+  }
+
+  .playGroup {
+    width: min(100%, 420px);
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .joinGuide {
+    padding: 0 8px;
+  }
+
+  .quickContent {
+    padding: 44px 13px 13px;
+  }
+}
+
+@media (max-width: 760px) {
+  .heroTop {
+    top: 12px;
+    right: 14px;
+    left: 14px;
+  }
+
+  .heroFooter {
+    right: 18px;
+    bottom: 18px;
+    left: 18px;
+    gap: 14px;
+  }
+
+  .heroCopy {
+    padding: 0 !important;
+  }
+
+  .heroCopy h1 {
+    font-size: clamp(32px, 10vw, 44px);
+  }
+
+  .heroCopy p {
+    max-width: 46ch;
+    font-size: 13px;
+  }
+
+  .featurePills {
+    gap: 13px 17px;
+  }
+
+  .playGroup {
+    width: 100%;
+  }
+
+  .quickContent {
+    padding: 50px 16px 16px;
+  }
+
+  .quickContent strong,
+  .quickCard:first-child .quickContent strong {
+    font-size: 19px;
+  }
+
+  .quickContent p {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 520px) {
+  .heroFooter {
+    right: 14px;
+    bottom: 14px;
+    left: 14px;
+  }
+
+  .serverSummary {
+    margin-bottom: 12px;
+  }
+
+  .heroCopy h1 {
+    font-size: clamp(30px, 10.5vw, 39px);
+  }
+
+  .featurePills {
+    gap: 11px 15px;
+  }
+
+  .featurePills span {
+    font-size: 9px;
+  }
+
+  .featurePills span:not(:last-child)::after {
+    right: -9px;
+  }
+
+  .quickContent {
+    padding: 46px 14px 14px;
+  }
+}

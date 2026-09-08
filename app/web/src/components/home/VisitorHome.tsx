@@ -642,9 +642,9 @@ export function VisitorHome({
               <h1>Build. Trade. Compete.</h1>
 
               <p>
-                A competitive survival economy built around
-                player progression, teams, trading, and
-                reputation.
+                Start with nothing. Build an economy, grow a
+                team, trade with players, and earn your place
+                on Mineacle.
               </p>
 
               <div
@@ -702,10 +702,13 @@ export function VisitorHome({
             />
 
             <div className={styles.quickContent}>
-              <small>COMPETE</small>
+              <small>LIVE RANKINGS</small>
               <strong>Leaderboards</strong>
-              <p>See who is leading Mineacle.</p>
-              <span>VIEW RANKINGS →</span>
+              <p>
+                Track the players setting the pace across
+                Mineacle.
+              </p>
+              <span>EXPLORE LEADERBOARDS →</span>
             </div>
           </a>
 
@@ -715,7 +718,7 @@ export function VisitorHome({
             >
               <img
                 className={styles.quickIcon}
-                src={`${ICON_ROOT}/rewards.svg`}
+                src={`${ICON_ROOT}/rewards-hover.gif`}
                 alt=""
                 draggable={false}
               />
@@ -727,10 +730,13 @@ export function VisitorHome({
             />
 
             <div className={styles.quickContent}>
-              <small>REWARDS</small>
+              <small>SUPPORT & EARN</small>
               <strong>Vote & earn</strong>
-              <p>Support Mineacle and collect rewards.</p>
-              <span>VIEW REWARDS →</span>
+              <p>
+                Vote for Mineacle and turn your support into
+                in-game rewards.
+              </p>
+              <span>CLAIM REWARDS →</span>
             </div>
           </a>
 
@@ -743,7 +749,7 @@ export function VisitorHome({
             >
               <img
                 className={styles.quickIcon}
-                src={`${ICON_ROOT}/punishments.svg`}
+                src={`${ICON_ROOT}/punishments-hover.gif`}
                 alt=""
                 draggable={false}
               />
@@ -757,8 +763,11 @@ export function VisitorHome({
             <div className={styles.quickContent}>
               <small>PUBLIC RECORDS</small>
               <strong>Punishments</strong>
-              <p>Search public player actions.</p>
-              <span>VIEW RECORDS →</span>
+              <p>
+                Search transparent public moderation records
+                across the network.
+              </p>
+              <span>SEARCH RECORDS →</span>
             </div>
           </a>
         </section>
