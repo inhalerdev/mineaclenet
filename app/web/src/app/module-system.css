@@ -1,0 +1,221 @@
+/*
+ * Mineacle floating content module system
+ *
+ * Non-negotiable page rule:
+ * every meaningful content section sits inside a discrete floating module.
+ *
+ * Major module:
+ * - solid dark surface
+ * - 1px border
+ * - 8px radius
+ * - subtle neutral shadow
+ * - 16px separation
+ *
+ * Nested controls:
+ * - 4px radius
+ * - no independent floating shadow
+ *
+ * Lists/tables:
+ * - one floating parent module
+ * - rows use dividers, not separate cards
+ */
+
+:root {
+  --module-bg: #171717;
+  --module-bg-hover: #1d1d1d;
+  --module-bg-raised: #222222;
+  --module-border: rgba(248, 248, 248, 0.10);
+  --module-border-strong: rgba(248, 248, 248, 0.16);
+  --module-radius: 8px;
+  --module-control-radius: 4px;
+  --module-gap: 16px;
+  --module-padding: 20px;
+  --module-shadow: 0 10px 28px rgba(0, 0, 0, 0.16);
+}
+
+/* ------------------------------------------------------------
+   Universal internal-page module surfaces
+   ------------------------------------------------------------ */
+
+.system-card,
+.system-page-header,
+.leaderboard-list,
+.player-profile-hero,
+.player-profile-details,
+.profile-account-stats,
+.account-security__section,
+.system-following-list,
+.notification-list,
+.system-empty,
+.vote-card,
+.punishments-filters,
+.punishments-list,
+.punishments-empty,
+.auth-art,
+.auth-panel {
+  border: 1px solid var(--module-border);
+  border-radius: var(--module-radius);
+  background: var(--module-bg);
+  box-shadow: var(--module-shadow);
+}
+
+/*
+ * Parent containers that only organize modules must stay transparent.
+ * This prevents "container inside container inside container" card soup.
+ */
+.leaderboard-shell,
+.profile-account-card,
+.vote-shell,
+.punishments-shell,
+.system-card.is-wide {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* Consistent vertical rhythm between page modules. */
+.player-profile-page {
+  gap: var(--module-gap);
+}
+
+.leaderboard-player-search,
+.leaderboard-list,
+.vote-grid,
+.punishments-filters,
+.punishments-list,
+.profile-account-stats,
+.account-security,
+.system-following-list,
+.system-notification-list {
+  margin-top: var(--module-gap);
+}
+
+/* Page headers are always their own floating module. */
+.system-page-header {
+  padding: 22px 24px;
+}
+
+/* ------------------------------------------------------------
+   List/data module rule
+   One floating parent. Rows themselves do not float.
+   ------------------------------------------------------------ */
+
+.leaderboard-row,
+.punishment-row,
+.system-following-list article,
+.notification-list article {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.leaderboard-row + .leaderboard-row,
+.punishment-row + .punishment-row,
+.system-following-list article + article,
+.notification-list article + article {
+  border-top: 1px solid rgba(248, 248, 248, 0.08);
+}
+
+/* ------------------------------------------------------------
+   Grid module rule
+   Each independent stat/action tile may float, but uses the same recipe.
+   ------------------------------------------------------------ */
+
+.player-stat-grid .system-card,
+.vote-card {
+  border: 1px solid var(--module-border);
+  border-radius: var(--module-radius);
+  background: var(--module-bg);
+  box-shadow: var(--module-shadow);
+}
+
+.player-stat-grid .system-card:hover,
+.vote-card:hover {
+  border-color: var(--module-border-strong);
+  background: var(--module-bg-hover);
+}
+
+/* ------------------------------------------------------------
+   Controls never get large-module geometry.
+   ------------------------------------------------------------ */
+
+.leaderboard-tabs a,
+.system-inline-action,
+.profile-account-actions > a,
+.profile-logout,
+.follow-toggle button,
+.account-security button,
+.punishments-filters input,
+.punishments-filters select,
+.punishments-filters button,
+.punishments-filters > a,
+.punishments-pagination a,
+.mobile-menu-button,
+.mobile-account-button {
+  border-radius: var(--module-control-radius);
+}
+
+/* ------------------------------------------------------------
+   Search / filter modules
+   Search fields remain controls; filter collections are modules.
+   ------------------------------------------------------------ */
+
+.punishments-filters {
+  padding: 14px;
+}
+
+.leaderboard-player-search {
+  /*
+   * Search is intentionally not given a second outer card because
+   * the search field itself is the control. Spacing makes it a
+   * separate page module without redundant nesting.
+   */
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.10));
+}
+
+/* ------------------------------------------------------------
+   Account segmented data surface
+   One module, internal sections divided rather than individually carded.
+   ------------------------------------------------------------ */
+
+.profile-account-stats > div {
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+/* ------------------------------------------------------------
+   Responsive module rhythm
+   ------------------------------------------------------------ */
+
+@media (max-width: 800px) {
+  :root {
+    --module-gap: 12px;
+    --module-padding: 16px;
+    --module-shadow: 0 8px 22px rgba(0, 0, 0, 0.14);
+  }
+
+  .system-page-header {
+    padding: 18px;
+  }
+
+  .leaderboard-player-search,
+  .leaderboard-list,
+  .vote-grid,
+  .punishments-filters,
+  .punishments-list,
+  .profile-account-stats,
+  .account-security,
+  .system-following-list,
+  .system-notification-list {
+    margin-top: var(--module-gap);
+  }
+}
+
+@media (max-width: 560px) {
+  .system-page-header,
+  .account-security__section,
+  .punishments-filters {
+    padding: 16px;
+  }
+}

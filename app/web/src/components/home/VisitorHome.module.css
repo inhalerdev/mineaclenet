@@ -2997,3 +2997,148 @@
     gap: 10px;
   }
 }
+
+/* === Mineacle floating homepage module rule === */
+/*
+ * Homepage follows the same site-wide rule:
+ * meaningful sections are discrete floating modules.
+ *
+ * Parent layout is the #111111 canvas.
+ * Major sections use #171717 + 1px border + 8px radius + subtle shadow.
+ * Nested controls remain 4px and never get major-module shadows.
+ */
+
+.page,
+.modalBackdrop {
+  --home-module-bg: #171717;
+  --home-module-bg-hover: #1d1d1d;
+  --home-module-border: rgba(248, 248, 248, 0.10);
+  --home-module-border-strong: rgba(248, 248, 248, 0.16);
+  --home-module-radius: 8px;
+  --home-module-control-radius: 4px;
+  --home-module-gap: 16px;
+  --home-module-shadow: 0 10px 28px rgba(0, 0, 0, 0.16);
+}
+
+/* Primary homepage modules */
+.sideNav,
+.hero,
+.quickCard,
+.heroCopy,
+.playGroup,
+.profileDropdown,
+.popup,
+.authPopup,
+.joinModal {
+  border: 1px solid var(--home-module-border);
+  border-radius: var(--home-module-radius);
+  background-color: var(--home-module-bg);
+  box-shadow: var(--home-module-shadow);
+}
+
+/*
+ * Hero is media-driven, so only its frame follows module background.
+ * The video remains the surface content.
+ */
+.hero {
+  background: #171717;
+}
+
+/* The two hero utility modules are intentionally independent. */
+.heroCopy,
+.playGroup {
+  background: #171717;
+}
+
+/* Lower content cards are each independent floating modules. */
+.quickModules {
+  gap: var(--home-module-gap);
+}
+
+.quickCard {
+  background: var(--home-module-bg);
+}
+
+.quickCard:hover {
+  border-color: var(--home-module-border-strong);
+  background: var(--home-module-bg-hover);
+}
+
+/* Media and content remain one module, not two nested cards. */
+.quickMedia,
+.quickContent {
+  box-shadow: none;
+}
+
+.quickContent {
+  border-radius: 0;
+  background: var(--home-module-bg);
+}
+
+/* Navigation/search/buttons are controls, never mini floating cards. */
+.railSearch form,
+.primaryNav a,
+.socialLinks a,
+.loginButton,
+.playButton,
+.profileTrigger,
+.serverSummary,
+.featurePills span,
+.profileDetails nav a,
+.logoutButton,
+.modalClose,
+.authEditionPrimary,
+.authEditionSecondary,
+.joinEditionActive,
+.joinEditionUnavailable,
+.joinAddressCard,
+.joinFlow li,
+.joinAddressAction,
+.joinFooter > button {
+  border-radius: var(--home-module-control-radius);
+}
+
+/* Selected nav remains a control state, not its own raised module. */
+.primaryNav .activeNavItem {
+  box-shadow:
+    inset -24px 0 26px rgba(132, 54, 254, 0.10),
+    5px 0 16px rgba(132, 54, 254, 0.10);
+}
+
+/* Modal inner sections can be modules only when they represent a distinct step. */
+.authEditionPrimary,
+.authEditionSecondary,
+.joinEditionActive,
+.joinEditionUnavailable,
+.joinAddressCard,
+.joinFlow li {
+  box-shadow: none;
+}
+
+/* Responsive: same rule, tighter spacing rather than a different visual system. */
+@media (max-width: 900px) {
+  .page,
+  .modalBackdrop {
+    --home-module-gap: 12px;
+    --home-module-shadow: 0 8px 22px rgba(0, 0, 0, 0.14);
+  }
+
+  .page,
+  .quickModules {
+    gap: var(--home-module-gap);
+  }
+}
+
+@media (max-width: 520px) {
+  .sideNav,
+  .hero,
+  .quickCard,
+  .heroCopy,
+  .playGroup,
+  .profileDropdown,
+  .popup,
+  .authPopup,
+  .joinModal {
+    border-radius: 8px;
+  }
+}
