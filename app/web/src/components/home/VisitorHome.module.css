@@ -2521,3 +2521,58 @@
     border-radius: 4px;
   }
 }
+
+/* === Mineacle nav icon size normalization === */
+
+.primaryNav a {
+  grid-template-columns: 22px minmax(0, 1fr) 12px;
+  column-gap: 11px;
+}
+
+.navIcon,
+.navIcon img {
+  width: 22px;
+  height: 22px;
+}
+
+.navIcon {
+  place-items: center;
+}
+
+.navIcon img {
+  object-fit: contain;
+  object-position: center;
+}
+
+.socialLinks a {
+  grid-template-columns: 22px minmax(0, 1fr);
+  column-gap: 11px;
+}
+
+.socialLinks img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  object-position: center;
+}
+
+@media (max-width: 1080px) {
+  .primaryNav a {
+    grid-template-columns: 20px auto 10px;
+  }
+
+  .navIcon,
+  .navIcon img {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 520px) {
+  .navIcon,
+  .navIcon img,
+  .socialLinks img {
+    width: 20px;
+    height: 20px;
+  }
+}
