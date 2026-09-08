@@ -3142,3 +3142,98 @@
     border-radius: 8px;
   }
 }
+
+/* === Shared AppSidebar homepage geometry === */
+/*
+ * VisitorHome no longer supplies the visible navigation.
+ * HomeExperience renders the same AppSidebar used by every internal page.
+ */
+
+.sideNav {
+  display: none !important;
+}
+
+.page {
+  width: calc(100vw - var(--mineacle-content-left));
+  min-height: 100dvh;
+  height: auto;
+  margin-left: var(--mineacle-content-left);
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(560px, 72dvh) auto;
+  align-content: start;
+
+  gap: 16px;
+  padding:
+    16px
+    16px
+    16px
+    0;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: #111111;
+}
+
+.hero {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.quickModules {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+/*
+ * The shared floating rail is the first module.
+ * Hero and lower modules use the same 16px layout rhythm beside it.
+ */
+.hero,
+.quickCard {
+  border-radius: 8px;
+}
+
+/* AppSidebar handles mobile navigation for Home as well. */
+@media (max-width: 800px) {
+  .page {
+    width: 100%;
+    margin-left: 0;
+
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(620px, auto) auto;
+
+    gap: 12px;
+    padding:
+      calc(var(--mobile-header) + 16px)
+      16px
+      16px;
+  }
+
+  .hero {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .quickModules {
+    grid-column: 1;
+    grid-row: 2;
+  }
+}
+
+@media (max-width: 760px) {
+  .page {
+    grid-template-rows: auto auto;
+  }
+}
+
+@media (max-width: 560px) {
+  .page {
+    gap: 12px;
+    padding:
+      calc(var(--mobile-header) + 12px)
+      12px
+      12px;
+  }
+}

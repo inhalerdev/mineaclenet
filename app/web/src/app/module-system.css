@@ -219,3 +219,22 @@
     padding: 16px;
   }
 }
+
+/* === Navigation is module zero === */
+/*
+ * Site rule:
+ * the shared desktop AppSidebar is the first floating module on every page.
+ * It is not a chrome strip attached to the viewport edge.
+ */
+
+.site-sidebar {
+  border: 1px solid var(--module-border);
+  border-radius: var(--module-radius);
+  box-shadow: var(--module-shadow);
+}
+
+/* Page content itself remains canvas. Only its children float. */
+.system-page,
+.auth-page {
+  background: #111111;
+}

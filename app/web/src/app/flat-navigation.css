@@ -381,3 +381,126 @@
     background: #1d1d1d;
   }
 }
+
+/* === Unified floating rail geometry === */
+/*
+ * One rail, one component, every desktop page.
+ *
+ * The rail is itself a floating content module:
+ * 16px from viewport edges
+ * 198px wide
+ * 8px radius
+ * 1px border
+ * neutral module shadow
+ * 16px gap to page content
+ */
+
+:root {
+  --mineacle-rail-left: 16px;
+  --mineacle-rail-width: 198px;
+  --mineacle-rail-gap: 16px;
+  --mineacle-content-left:
+    calc(
+      var(--mineacle-rail-left) +
+      var(--mineacle-rail-width) +
+      var(--mineacle-rail-gap)
+    );
+}
+
+.site-sidebar,
+.site-sidebar:hover {
+  inset:
+    16px
+    auto
+    16px
+    var(--mineacle-rail-left);
+  width: var(--mineacle-rail-width);
+  height: auto;
+  min-height: 0;
+  padding: 10px;
+  overflow: visible;
+
+  border: 1px solid rgba(248, 248, 248, 0.10);
+  border-radius: 8px;
+
+  background: #222222;
+
+  box-shadow:
+    0 10px 28px rgba(0, 0, 0, 0.16);
+
+  filter: none;
+  transition: none;
+}
+
+/* No attached-to-edge visual remnants. */
+.site-sidebar::before,
+.site-sidebar::after {
+  display: none;
+}
+
+/* Search dropdown may leave the rail without changing rail geometry. */
+.sidebar-player-search {
+  position: relative;
+  z-index: 160;
+}
+
+/* Desktop page canvas starts after the same floating rail everywhere. */
+.system-page,
+.auth-page {
+  width: calc(100vw - var(--mineacle-content-left));
+  margin-left: var(--mineacle-content-left);
+}
+
+/* Keep equal outside breathing room around page modules. */
+.system-page {
+  padding:
+    16px
+    16px
+    16px
+    0;
+}
+
+.auth-page {
+  padding:
+    16px
+    16px
+    16px
+    0;
+}
+
+/* Mobile uses the shared header/drawer instead of a desktop rail. */
+@media (max-width: 800px) {
+  :root {
+    --mineacle-content-left: 0px;
+  }
+
+  .system-page,
+  .auth-page {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .system-page {
+    padding:
+      calc(var(--mobile-header) + 16px)
+      16px
+      16px;
+  }
+
+  .auth-page {
+    padding:
+      calc(var(--mobile-header) + 16px)
+      16px
+      16px;
+  }
+}
+
+@media (max-width: 560px) {
+  .system-page,
+  .auth-page {
+    padding:
+      calc(var(--mobile-header) + 12px)
+      12px
+      12px;
+  }
+}
