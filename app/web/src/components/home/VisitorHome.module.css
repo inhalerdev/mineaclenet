@@ -4186,3 +4186,51 @@
     padding: 46px 14px 14px;
   }
 }
+
+/* === Restore logo bounce + cohesive PLAY stroke === */
+
+/*
+ * Hero logo:
+ * restore the original small one-time page-load bounce.
+ * No looping and no hover movement.
+ */
+.heroLogo {
+  animation:
+    heroLogoBounce 620ms
+    cubic-bezier(0.22, 0.78, 0.32, 1)
+    both;
+}
+
+.heroTopLogo:hover .heroLogo {
+  transform: none;
+}
+
+/*
+ * PLAY:
+ * use the same structural treatment as Login:
+ * solid brand fill + a clearly lighter 1px brand-family stroke.
+ */
+.playButton {
+  border-color: rgba(160, 230, 142, 0.72);
+}
+
+.playButton:hover,
+.playButton:focus-visible {
+  border-color: rgba(191, 244, 178, 0.92);
+}
+
+.playButton:active {
+  border-color: rgba(160, 230, 142, 0.82);
+}
+
+/* Copied remains visually part of the same CTA component. */
+.playButtonCopied,
+.playButtonCopied:hover {
+  border-color: rgba(160, 230, 142, 0.72);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroLogo {
+    animation: none;
+  }
+}
