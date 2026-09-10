@@ -3723,114 +3723,510 @@
   }
 }
 
-/* === Deliberate homepage content composition === */
-/*
- * Hero content belongs to the media, not inside large floating cards.
- * Only compact utility/status controls retain their own surfaces.
- */
+/* ============================================================
+   Mineacle homepage — 12 × 12 wireframe system
+   Desktop base: 32px outer margin / 24px grid gutter
+   ============================================================ */
 
-/* Build legibility into the media itself instead of boxing the copy. */
+.page,
+.modalBackdrop {
+  --home-margin: 32px;
+  --home-gutter: 24px;
+  --home-radius: 8px;
+  --home-control-radius: 4px;
+  --home-panel: #171717;
+  --home-panel-raised: #222222;
+  --home-border: rgba(248, 248, 248, 0.10);
+  --home-border-hover: rgba(248, 248, 248, 0.20);
+  --home-shadow: 0 10px 28px rgba(0, 0, 0, 0.16);
+}
+
+.page {
+  position: relative;
+  width: 100%;
+  height: 100dvh;
+  min-width: 320px;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: repeat(12, minmax(0, 1fr));
+  gap: var(--home-gutter);
+  padding: var(--home-margin);
+  overflow: auto;
+  background: #111111;
+}
+
+/* ---------- 12 × 12 placement ---------- */
+
+.sideNav {
+  grid-column: 1 / span 1;
+  grid-row: 1 / span 8;
+}
+
+.searchDock {
+  grid-column: 2 / span 3;
+  grid-row: 1;
+}
+
+.socialSection {
+  grid-column: 5 / span 2;
+  grid-row: 1;
+}
+
+.accountDock {
+  grid-column: 10 / span 3;
+  grid-row: 1;
+}
+
+.hero {
+  grid-column: 2 / span 8;
+  grid-row: 2 / span 7;
+}
+
+.rewardsPanel {
+  grid-column: 10 / span 3;
+  grid-row: 2 / span 7;
+}
+
+.marketplacePanel {
+  grid-column: 1 / span 5;
+  grid-row: 9 / span 4;
+}
+
+.leaderboardsPanel {
+  grid-column: 6 / span 3;
+  grid-row: 9 / span 4;
+}
+
+.punishmentsPanel {
+  grid-column: 9 / span 4;
+  grid-row: 9 / span 4;
+}
+
+/* ---------- Floating panel language ---------- */
+
+.sideNav,
+.hero,
+.homePanel {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--home-border);
+  border-radius: var(--home-radius);
+  background: var(--home-panel);
+  box-shadow: var(--home-shadow);
+}
+
+/* ---------- Search ---------- */
+
+.searchDock {
+  z-index: 80;
+  width: 100%;
+  min-width: 0;
+  align-self: center;
+}
+
+.searchDock form {
+  height: 40px;
+  border: 1px solid var(--home-border);
+  border-radius: var(--home-control-radius);
+  background: #171717;
+  box-shadow: none;
+}
+
+.searchDock form:focus-within {
+  border-color: rgba(176, 120, 255, 0.58);
+  background: #1b1b1b;
+}
+
+/* ---------- Navigation panel ---------- */
+
+.sideNav {
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 8px;
+  background: #1d1d1d;
+}
+
+.primaryNav {
+  width: 100%;
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+}
+
+.primaryNav a {
+  position: relative;
+  width: min(48px, 100%);
+  height: 48px;
+  min-height: 48px;
+  display: grid;
+  grid-template-columns: 1fr;
+  place-items: center;
+  padding: 0;
+  overflow: visible;
+  border: 1px solid transparent;
+  border-radius: var(--home-control-radius);
+  background: transparent;
+  color: #bbbbbb;
+  transform: none;
+  transition:
+    border-color var(--ease),
+    background-color var(--ease),
+    color var(--ease),
+    box-shadow var(--ease);
+}
+
+.primaryNav a:hover {
+  border-color: rgba(248, 248, 248, 0.10);
+  background: #252525;
+  color: #ffffff;
+  transform: none;
+}
+
+.primaryNav .activeNavItem,
+.primaryNav .activeNavItem:hover {
+  border-color: rgba(176, 120, 255, 0.34);
+  background: #252128;
+  color: #ffffff;
+  box-shadow:
+    inset 0 0 0 1px rgba(132, 54, 254, 0.06),
+    0 0 16px rgba(132, 54, 254, 0.10);
+}
+
+.primaryNav .activeNavItem::after {
+  position: absolute;
+  top: 9px;
+  right: -1px;
+  bottom: 9px;
+  width: 3px;
+  border-radius: 3px 0 0 3px;
+  background: #b078ff;
+  box-shadow: 0 0 10px rgba(176, 120, 255, 0.68);
+  content: "";
+}
+
+.navIcon,
+.navIcon img {
+  width: 22px;
+  height: 22px;
+}
+
+.navIcon {
+  display: grid;
+  place-items: center;
+}
+
+.navIcon img {
+  object-fit: contain;
+  filter: brightness(0) saturate(100%) invert(100%);
+}
+
+.navLabel {
+  position: absolute;
+  z-index: 100;
+  left: calc(100% + 10px);
+  top: 50%;
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+  padding: 0 9px;
+  border: 1px solid var(--home-border);
+  border-radius: 4px;
+  background: #222222;
+  color: #f8f8f8;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.26);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(4px, -50%);
+  transition:
+    opacity var(--ease),
+    transform var(--ease);
+  white-space: nowrap;
+}
+
+.primaryNav a:hover .navLabel,
+.primaryNav a:focus-visible .navLabel {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+
+.primaryNav a > small {
+  display: none;
+}
+
+/* ---------- Social dock ---------- */
+
+.socialSection {
+  z-index: 60;
+  min-width: 0;
+  align-self: center;
+  padding: 0;
+  border: 0;
+}
+
+.socialLinks {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+}
+
+.socialLinks a {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
+  display: grid;
+  grid-template-columns: 1fr;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--home-border);
+  border-radius: var(--home-control-radius);
+  background: #1d1d1d;
+  color: #ffffff;
+  transform: none;
+  transition:
+    border-color var(--ease),
+    background-color var(--ease);
+}
+
+.socialLinks a:hover {
+  border-color: rgba(176, 120, 255, 0.34);
+  background: #252525;
+  color: #ffffff;
+}
+
+.socialLinks img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.socialLinks span {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  z-index: 100;
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  border: 1px solid var(--home-border);
+  border-radius: 4px;
+  background: #222222;
+  color: #f8f8f8;
+  font-size: 9px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -3px);
+  transition:
+    opacity var(--ease),
+    transform var(--ease);
+  white-space: nowrap;
+}
+
+.socialLinks a:hover span,
+.socialLinks a:focus-visible span {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* ---------- Account dock ---------- */
+
+.accountDock {
+  position: relative;
+  z-index: 90;
+  min-width: 0;
+  align-self: center;
+  justify-self: stretch;
+}
+
+.accountActions {
+  position: static;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+}
+
+.verifyLink {
+  height: 40px;
+  padding: 0;
+  color: #f1f1f1;
+  font-size: 12px;
+  font-weight: 500;
+  text-underline-offset: 4px;
+}
+
+.loginButton {
+  min-width: 112px;
+  height: 40px;
+  padding: 0 16px;
+  border: 1px solid rgba(208, 175, 255, 0.58);
+  border-radius: var(--home-control-radius);
+  background: #8436fe;
+  box-shadow: 0 0 10px rgba(132, 54, 254, 0.12);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  transform: none;
+}
+
+.loginButton:hover,
+.loginButton:focus-visible {
+  border-color: #d0afff;
+  background: #9a5dff;
+  box-shadow: 0 0 18px rgba(132, 54, 254, 0.28);
+  transform: none;
+}
+
+.profileMenu {
+  position: relative;
+  top: auto;
+  right: auto;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ---------- Hero ---------- */
+
+.hero {
+  position: relative;
+  background: #171717;
+}
+
+.heroVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: brightness(0.74) saturate(1.04);
+}
+
 .heroShade {
+  position: absolute;
+  inset: 0;
   background:
     linear-gradient(
       90deg,
-      rgba(17, 17, 17, 0.64) 0%,
-      rgba(17, 17, 17, 0.36) 30%,
-      rgba(17, 17, 17, 0.08) 58%,
+      rgba(17, 17, 17, 0.58) 0%,
+      rgba(17, 17, 17, 0.26) 32%,
+      rgba(17, 17, 17, 0.04) 62%,
       rgba(17, 17, 17, 0.02) 100%
     ),
     linear-gradient(
       180deg,
-      rgba(17, 17, 17, 0.18) 0%,
-      rgba(17, 17, 17, 0.02) 38%,
-      rgba(17, 17, 17, 0.16) 62%,
-      rgba(17, 17, 17, 0.78) 100%
+      rgba(17, 17, 17, 0.12) 0%,
+      rgba(17, 17, 17, 0.02) 42%,
+      rgba(17, 17, 17, 0.18) 68%,
+      rgba(17, 17, 17, 0.70) 100%
     );
 }
 
-.heroTop {
-  top: 18px;
-  right: 22px;
-  left: 22px;
+.heroTopLogo {
+  position: absolute;
+  z-index: 8;
+  top: 22px;
+  left: 50%;
+  display: block;
+  transform: translateX(-50%);
 }
 
 .heroLogo {
-  width: min(220px, 18vw);
+  width: clamp(150px, 15vw, 218px);
+  height: auto;
+  object-fit: contain;
+  animation:
+    heroLogoBounce 620ms
+    cubic-bezier(0.22, 0.78, 0.32, 1)
+    both;
+  transition: none;
 }
 
-/* Compose the lower hero as content, not two cards. */
-.heroFooter {
-  right: 30px;
-  bottom: 28px;
-  left: 34px;
-  min-height: 0;
-  display: grid;
-  grid-template-columns: minmax(0, 640px) minmax(190px, 230px);
-  align-items: end;
-  justify-content: space-between;
-  gap: 28px;
+.heroTopLogo:hover .heroLogo {
+  transform: none;
 }
 
-.heroCopy,
-.playGroup {
-  border: 0 !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-.heroCopy {
-  width: min(100%, 640px);
-  padding: 0 !important;
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.66);
+.heroContent {
+  position: absolute;
+  z-index: 7;
+  left: 28px;
+  bottom: 82px;
+  width: min(58%, 560px);
+  color: #ffffff;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.62);
 }
 
 .serverSummary {
-  min-height: 32px;
-  margin-bottom: 14px;
-  padding: 0 10px;
-  border: 1px solid rgba(248, 248, 248, 0.18);
+  width: fit-content;
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 11px;
+  padding: 0 9px;
+  border: 1px solid rgba(248, 248, 248, 0.16);
   border-radius: 4px;
-  background: rgba(17, 17, 17, 0.58);
-  color: #eeeeee;
+  background: rgba(17, 17, 17, 0.62);
+  color: #e6e6e6;
   backdrop-filter: none;
   text-shadow: none;
 }
 
 .serverSummary > strong,
 .currentlyPlaying {
-  font-size: 10px;
+  font-size: 9px;
+}
+
+.serverSummary > strong {
+  font-weight: 600;
+}
+
+.currentlyPlaying {
+  border-left-color: rgba(248, 248, 248, 0.14);
+  color: #bdbdbd;
 }
 
 .heroEyebrow {
-  margin-bottom: 8px;
+  display: block;
+  margin: 0 0 7px;
   color: #d0afff;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.07em;
 }
 
-.heroCopy h1 {
-  max-width: 640px;
+.heroContent h1 {
+  margin: 0;
+  max-width: 560px;
   color: #ffffff;
-  font-size: clamp(38px, 4.2vw, 58px);
+  font-size: clamp(30px, 3vw, 48px);
   font-weight: 700;
-  line-height: 0.94;
-  letter-spacing: -0.05em;
+  line-height: 0.96;
+  letter-spacing: -0.045em;
 }
 
-.heroCopy p {
-  max-width: 580px;
-  margin-top: 13px;
-  color: rgba(248, 248, 248, 0.90);
-  font-size: 15px;
+.heroContent p {
+  max-width: 520px;
+  margin: 10px 0 0;
+  color: rgba(248, 248, 248, 0.84);
+  font-size: clamp(11px, 0.9vw, 14px);
   line-height: 1.48;
 }
 
-/* Features become quiet metadata instead of four boxed chips. */
 .featurePills {
-  gap: 17px;
-  margin-top: 17px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 15px;
+  margin-top: 12px;
 }
 
 .featurePills span {
@@ -3840,18 +4236,15 @@
   border: 0;
   border-radius: 0;
   background: transparent;
-  color: rgba(248, 248, 248, 0.78);
-  font-size: 11px;
+  color: rgba(248, 248, 248, 0.72);
+  font-size: 9px;
   font-weight: 600;
-  letter-spacing: 0.01em;
-  backdrop-filter: none;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.62);
 }
 
 .featurePills span:not(:last-child)::after {
   position: absolute;
   top: 50%;
-  right: -10px;
+  right: -9px;
   width: 3px;
   height: 3px;
   border-radius: 50%;
@@ -3860,377 +4253,612 @@
   transform: translateY(-50%);
 }
 
-/* PLAY is intentionally isolated and visually dominant. */
 .playGroup {
-  position: static;
-  width: 100%;
+  position: absolute;
+  z-index: 9;
+  bottom: 16px;
+  left: 50%;
+  width: min(180px, 28%);
   display: grid;
-  align-items: stretch;
-  gap: 9px;
-  padding: 0 !important;
-  transform: none;
+  justify-items: stretch;
+  gap: 5px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  transform: translateX(-50%);
 }
 
 .playButton {
   width: 100%;
-  min-width: 190px;
-  height: 50px;
-  font-size: 16px;
+  min-width: 0;
+  height: 42px;
+  border: 1px solid rgba(160, 230, 142, 0.76);
+  border-radius: var(--home-control-radius);
+  background: #389222;
+  box-shadow: 0 0 10px rgba(56, 146, 34, 0.14);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.playButton:hover,
+.playButton:focus-visible {
+  border-color: rgba(191, 244, 178, 0.92);
+  background: #46a92d;
+  box-shadow: 0 0 18px rgba(56, 146, 34, 0.28);
+  transform: none;
+}
+
+.playButtonCopied,
+.playButtonCopied:hover {
+  border-color: rgba(160, 230, 142, 0.76);
+  background: #389222;
 }
 
 .joinGuide {
-  min-height: 28px;
+  min-height: 24px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   margin: 0;
-  color: rgba(248, 248, 248, 0.88);
-  font-size: 11px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: rgba(248, 248, 248, 0.82);
+  font-size: 9px;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
-/* ------------------------------------------------------------
-   Image-driven entry modules
-   The media fills the card; copy is composed over it.
-   ------------------------------------------------------------ */
-
-.quickModules {
-  grid-template-columns: 1.32fr 1fr 1fr;
+.joinGuide:hover {
+  color: #ffffff;
 }
 
-.quickCard {
-  background: #171717;
-  box-shadow: none;
-}
+/* ---------- Shared homepage content panels ---------- */
 
-.quickMedia {
-  inset: 0 !important;
-  background: #1b1b1b;
-}
-
-.quickMedia > img:not(.quickIcon) {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: brightness(0.76) saturate(1.04);
+.homePanel {
+  position: relative;
+  display: block;
+  color: #ffffff;
+  transform: none;
   transition:
-    filter var(--ui-ease),
-    opacity var(--ui-ease);
+    border-color var(--ease),
+    background-color var(--ease),
+    box-shadow var(--ease);
 }
 
-.quickCard:hover .quickMedia > img:not(.quickIcon) {
-  filter: brightness(0.86) saturate(1.06);
+.homePanel:hover {
+  border-color: var(--home-border-hover);
   transform: none;
 }
 
-.quickFallback {
+.panelMedia,
+.panelIconStage,
+.panelShade {
+  position: absolute;
+  inset: 0;
+}
+
+.panelMedia {
+  overflow: hidden;
+  background: #202020;
+}
+
+.panelMedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: brightness(0.70) saturate(1.02);
+  transition: filter var(--ease);
+}
+
+.homePanel:hover .panelMedia img {
+  filter: brightness(0.80) saturate(1.05);
+}
+
+.panelIconStage {
   display: grid;
   place-items: center;
   background:
     radial-gradient(
       circle at 50% 42%,
       rgba(132, 54, 254, 0.18),
-      rgba(132, 54, 254, 0.04) 34%,
+      rgba(132, 54, 254, 0.05) 34%,
       transparent 62%
     ),
-    #1b1b1b;
+    #1d1d1d;
 }
 
-.quickFallback .quickIcon {
-  display: block;
-  width: 66px;
-  height: 66px;
+.panelIconStage img {
+  width: clamp(48px, 5vw, 72px);
+  height: clamp(48px, 5vw, 72px);
   object-fit: contain;
   filter: brightness(0) saturate(100%) invert(100%);
   opacity: 0.92;
-  image-rendering: pixelated;
 }
 
-.quickCard:hover .quickIcon {
-  opacity: 1;
-  transform: none;
-}
-
-/* Override the previous CSS fallback backgrounds now that TSX uses real assets. */
-.quickCard:nth-child(2) .quickFallback,
-.quickCard:nth-child(3) .quickFallback {
-  background-image:
-    radial-gradient(
-      circle at 50% 42%,
-      rgba(132, 54, 254, 0.18),
-      rgba(132, 54, 254, 0.04) 34%,
-      transparent 62%
-    );
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: auto;
-}
-
-.quickShade {
-  display: block;
+.panelShade {
+  pointer-events: none;
   background:
     linear-gradient(
       180deg,
-      rgba(17, 17, 17, 0.02) 18%,
-      rgba(17, 17, 17, 0.16) 44%,
-      rgba(17, 17, 17, 0.86) 76%,
+      rgba(17, 17, 17, 0.02) 22%,
+      rgba(17, 17, 17, 0.12) 48%,
+      rgba(17, 17, 17, 0.86) 78%,
       rgba(17, 17, 17, 0.98) 100%
     );
 }
 
-.quickContent {
-  top: auto;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  min-height: 0;
-  padding: 54px 18px 17px;
-  border-top: 0;
-  background: transparent;
+.panelContent {
+  position: absolute;
+  z-index: 5;
+  right: 18px;
+  bottom: 17px;
+  left: 18px;
 }
 
-.quickContent small {
+.panelContent small {
+  display: block;
   color: #d0afff;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.07em;
 }
 
-.quickContent strong {
+.panelContent strong {
+  display: block;
   margin-top: 5px;
   color: #ffffff;
-  font-size: 20px;
+  font-size: clamp(16px, 1.35vw, 22px);
+  font-weight: 700;
   line-height: 1;
+  letter-spacing: -0.025em;
 }
 
-.quickContent p {
-  max-width: 38ch;
-  margin-top: 7px;
-  color: rgba(248, 248, 248, 0.76);
-  font-size: 11px;
+.panelContent p {
+  max-width: 44ch;
+  margin: 7px 0 0;
+  color: rgba(248, 248, 248, 0.72);
+  font-size: clamp(9px, 0.72vw, 11px);
   line-height: 1.4;
 }
 
-.quickContent > span {
-  margin-top: 10px;
+.panelContent > span {
+  display: inline-block;
+  margin-top: 9px;
   color: #d0afff;
-  font-size: 10px;
-  font-weight: 600;
+  font-size: 9px;
+  font-weight: 700;
+  transition: color var(--ease);
 }
 
-.quickCard:hover .quickContent > span {
+.homePanel:hover .panelContent > span {
   color: #ffffff;
-  transform: none;
 }
 
-/* First card is the visual lead. */
-.quickCard:first-child .quickContent strong {
-  font-size: 22px;
+.marketplacePanel .panelMedia img {
+  object-position: center 42%;
 }
 
-.quickCard:first-child .quickContent p {
-  max-width: 42ch;
+.marketplacePanel .panelContent strong {
+  font-size: clamp(19px, 1.7vw, 28px);
 }
 
-/* ------------------------------------------------------------
-   Responsive hero composition
-   ------------------------------------------------------------ */
+.rewardsPanel .panelContent {
+  right: 20px;
+  bottom: 20px;
+  left: 20px;
+}
 
-@media (min-width: 901px) and (max-width: 1180px) {
-  .heroFooter {
-    right: 20px;
-    bottom: 20px;
-    left: 22px;
-    grid-template-columns: minmax(0, 1fr) 204px;
-    gap: 20px;
+.rewardsPanel .panelContent strong {
+  font-size: clamp(20px, 1.8vw, 30px);
+  line-height: 0.98;
+}
+
+/* ============================================================
+   Responsive — preserve the desktop wireframe, then simplify
+   ============================================================ */
+
+@media (max-width: 1180px) and (min-width: 881px) {
+  .page,
+  .modalBackdrop {
+    --home-margin: 24px;
+    --home-gutter: 18px;
   }
 
-  .heroCopy h1 {
-    font-size: clamp(34px, 4.5vw, 48px);
+  .primaryNav a {
+    width: min(44px, 100%);
+    height: 44px;
+    min-height: 44px;
   }
 
-  .heroCopy p {
-    max-width: 500px;
-    font-size: 13px;
+  .navIcon,
+  .navIcon img {
+    width: 20px;
+    height: 20px;
   }
 
-  .featurePills {
-    gap: 15px;
-    margin-top: 14px;
+  .socialLinks {
+    gap: 7px;
   }
 
-  .featurePills span {
+  .socialLinks a {
+    width: 36px;
+    height: 36px;
+    min-height: 36px;
+  }
+
+  .accountActions {
+    gap: 10px;
+  }
+
+  .verifyLink {
     font-size: 10px;
   }
 
-  .playButton {
-    min-width: 0;
+  .loginButton {
+    min-width: 92px;
+    height: 38px;
+    font-size: 11px;
   }
 
-  .quickContent {
-    padding: 48px 14px 14px;
+  .heroContent {
+    left: 22px;
+    bottom: 76px;
+    width: min(62%, 470px);
   }
 
-  .quickContent strong,
-  .quickCard:first-child .quickContent strong {
-    font-size: 17px;
-  }
-}
-
-@media (min-width: 761px) and (max-width: 900px) {
-  .heroFooter {
-    right: 18px;
-    bottom: 18px;
-    left: 18px;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 16px;
+  .heroContent h1 {
+    font-size: clamp(28px, 3.3vw, 40px);
   }
 
-  .heroCopy {
-    width: min(100%, 620px);
-  }
-
-  .playGroup {
-    width: min(100%, 420px);
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-  }
-
-  .joinGuide {
-    padding: 0 8px;
-  }
-
-  .quickContent {
-    padding: 44px 13px 13px;
-  }
-}
-
-@media (max-width: 760px) {
-  .heroTop {
-    top: 12px;
-    right: 14px;
-    left: 14px;
-  }
-
-  .heroFooter {
-    right: 18px;
-    bottom: 18px;
-    left: 18px;
-    gap: 14px;
-  }
-
-  .heroCopy {
-    padding: 0 !important;
-  }
-
-  .heroCopy h1 {
-    font-size: clamp(32px, 10vw, 44px);
-  }
-
-  .heroCopy p {
-    max-width: 46ch;
-    font-size: 13px;
+  .heroContent p {
+    font-size: 11px;
   }
 
   .featurePills {
-    gap: 13px 17px;
+    gap: 5px 13px;
   }
 
-  .playGroup {
-    width: 100%;
+  .featurePills span {
+    font-size: 8px;
   }
 
-  .quickContent {
-    padding: 50px 16px 16px;
-  }
-
-  .quickContent strong,
-  .quickCard:first-child .quickContent strong {
-    font-size: 19px;
-  }
-
-  .quickContent p {
-    font-size: 11px;
-  }
-}
-
-@media (max-width: 520px) {
-  .heroFooter {
+  .panelContent {
     right: 14px;
     bottom: 14px;
     left: 14px;
   }
 
-  .serverSummary {
-    margin-bottom: 12px;
+  .panelContent p {
+    font-size: 9px;
+  }
+}
+
+/* Tablet: keep the panel idea, stop forcing 12 desktop tracks. */
+@media (max-width: 880px) {
+  .page,
+  .modalBackdrop {
+    --home-margin: 16px;
+    --home-gutter: 16px;
   }
 
-  .heroCopy h1 {
-    font-size: clamp(30px, 10.5vw, 39px);
+  .page {
+    height: 100dvh;
+    min-height: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows:
+      40px
+      40px
+      auto
+      minmax(500px, 62dvh)
+      280px
+      280px
+      280px;
+    gap: var(--home-gutter);
+    padding: var(--home-margin);
+    overflow-y: auto;
+  }
+
+  .searchDock,
+  .socialSection,
+  .accountDock,
+  .sideNav,
+  .hero,
+  .rewardsPanel,
+  .marketplacePanel,
+  .leaderboardsPanel,
+  .punishmentsPanel {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .searchDock {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .socialSection {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+  }
+
+  .accountDock {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .sideNav {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    height: 58px;
+    padding: 6px;
+  }
+
+  .primaryNav {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .primaryNav a {
+    width: 44px;
+    height: 44px;
+    min-height: 44px;
+  }
+
+  .navLabel {
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translate(-50%, -3px);
+  }
+
+  .primaryNav a:hover .navLabel,
+  .primaryNav a:focus-visible .navLabel {
+    transform: translate(-50%, 0);
+  }
+
+  .hero {
+    grid-column: 1 / -1;
+    grid-row: 4;
+  }
+
+  .marketplacePanel {
+    grid-column: 1 / -1;
+    grid-row: 5;
+  }
+
+  .rewardsPanel {
+    grid-column: 1;
+    grid-row: 6;
+  }
+
+  .leaderboardsPanel {
+    grid-column: 2;
+    grid-row: 6;
+  }
+
+  .punishmentsPanel {
+    grid-column: 1 / -1;
+    grid-row: 7;
+  }
+
+  .heroLogo {
+    width: clamp(160px, 30vw, 210px);
+  }
+
+  .heroContent {
+    left: 22px;
+    bottom: 86px;
+    width: min(68%, 500px);
+  }
+
+  .playGroup {
+    width: min(180px, 34%);
+  }
+
+  .panelContent strong {
+    font-size: 18px;
+  }
+
+  .marketplacePanel .panelContent strong,
+  .rewardsPanel .panelContent strong {
+    font-size: 22px;
+  }
+}
+
+/* Phone: single fast-scanning stream of large tap targets. */
+@media (max-width: 600px) {
+  .page,
+  .modalBackdrop {
+    --home-margin: 12px;
+    --home-gutter: 12px;
+  }
+
+  .page {
+    grid-template-columns: 1fr;
+    grid-template-rows:
+      40px
+      auto
+      56px
+      minmax(520px, 72dvh)
+      230px
+      230px
+      230px
+      230px;
+    padding: var(--home-margin);
+  }
+
+  .searchDock {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .accountDock {
+    grid-column: 1;
+    grid-row: 2;
+    min-height: 40px;
+  }
+
+  .socialSection {
+    display: none;
+  }
+
+  .sideNav {
+    grid-column: 1;
+    grid-row: 3;
+    height: 56px;
+  }
+
+  .primaryNav {
+    justify-content: flex-start;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .primaryNav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hero {
+    grid-column: 1;
+    grid-row: 4;
+  }
+
+  .rewardsPanel {
+    grid-column: 1;
+    grid-row: 5;
+  }
+
+  .marketplacePanel {
+    grid-column: 1;
+    grid-row: 6;
+  }
+
+  .leaderboardsPanel {
+    grid-column: 1;
+    grid-row: 7;
+  }
+
+  .punishmentsPanel {
+    grid-column: 1;
+    grid-row: 8;
+  }
+
+  .accountActions {
+    justify-content: space-between;
+  }
+
+  .verifyLink {
+    font-size: 10px;
+  }
+
+  .loginButton {
+    min-width: 90px;
+  }
+
+  .heroTopLogo {
+    top: 16px;
+  }
+
+  .heroLogo {
+    width: min(190px, 50vw);
+  }
+
+  .heroContent {
+    right: 16px;
+    bottom: 92px;
+    left: 16px;
+    width: auto;
+  }
+
+  .heroContent h1 {
+    font-size: clamp(30px, 10vw, 40px);
+  }
+
+  .heroContent p {
+    max-width: 42ch;
+    font-size: 11px;
   }
 
   .featurePills {
-    gap: 11px 15px;
+    display: none;
   }
 
-  .featurePills span {
-    font-size: 9px;
+  .playGroup {
+    bottom: 16px;
+    width: min(180px, 54%);
   }
 
-  .featurePills span:not(:last-child)::after {
-    right: -9px;
+  .panelContent {
+    right: 16px;
+    bottom: 15px;
+    left: 16px;
   }
 
-  .quickContent {
-    padding: 46px 14px 14px;
+  .panelContent strong,
+  .marketplacePanel .panelContent strong,
+  .rewardsPanel .panelContent strong {
+    font-size: 20px;
+  }
+
+  .panelContent p {
+    font-size: 10px;
   }
 }
 
-/* === Restore logo bounce + cohesive PLAY stroke === */
+@media (max-height: 720px) and (min-width: 881px) {
+  .heroContent {
+    bottom: 68px;
+  }
 
-/*
- * Hero logo:
- * restore the original small one-time page-load bounce.
- * No looping and no hover movement.
- */
-.heroLogo {
-  animation:
-    heroLogoBounce 620ms
-    cubic-bezier(0.22, 0.78, 0.32, 1)
-    both;
-}
+  .serverSummary {
+    margin-bottom: 8px;
+  }
 
-.heroTopLogo:hover .heroLogo {
-  transform: none;
-}
+  .heroEyebrow {
+    margin-bottom: 5px;
+    font-size: 8px;
+  }
 
-/*
- * PLAY:
- * use the same structural treatment as Login:
- * solid brand fill + a clearly lighter 1px brand-family stroke.
- */
-.playButton {
-  border-color: rgba(160, 230, 142, 0.72);
-}
+  .heroContent h1 {
+    font-size: clamp(26px, 2.5vw, 38px);
+  }
 
-.playButton:hover,
-.playButton:focus-visible {
-  border-color: rgba(191, 244, 178, 0.92);
-}
+  .heroContent p {
+    margin-top: 7px;
+    font-size: 10px;
+  }
 
-.playButton:active {
-  border-color: rgba(160, 230, 142, 0.82);
-}
+  .featurePills {
+    display: none;
+  }
 
-/* Copied remains visually part of the same CTA component. */
-.playButtonCopied,
-.playButtonCopied:hover {
-  border-color: rgba(160, 230, 142, 0.72);
+  .panelContent p {
+    display: none;
+  }
+
+  .panelContent > span {
+    margin-top: 6px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .heroLogo {
     animation: none;
+  }
+
+  .navLabel,
+  .socialLinks span,
+  .panelMedia img,
+  .homePanel,
+  .loginButton,
+  .playButton {
+    transition: none;
   }
 }

@@ -379,12 +379,6 @@ export function VisitorHome({
           className={styles.sideNav}
           aria-label="Mineacle navigation"
         >
-          <PlayerSearch
-            className={styles.railSearch}
-            placeholder="Search for a player"
-            variant="rail"
-          />
-
           <nav
             className={styles.primaryNav}
             aria-label="Primary navigation"
@@ -404,6 +398,7 @@ export function VisitorHome({
                   onMouseEnter={() =>
                     restartNavAnimation(item.icon)
                   }
+                  aria-label={item.label}
                   {...(item.external
                     ? {
                         target: "_blank",
@@ -422,7 +417,9 @@ export function VisitorHome({
                     />
                   </span>
 
-                  <span>{item.label}</span>
+                  <span className={styles.navLabel}>
+                    {item.label}
+                  </span>
 
                   {item.external ? (
                     <small aria-hidden="true">↗</small>
@@ -431,34 +428,154 @@ export function VisitorHome({
               );
             })}
           </nav>
-
-
-          <div className={styles.sideNavSpacer} />
-
-          <section className={styles.socialSection}>
-            <small>COMMUNITY</small>
-
-            <div className={styles.socialLinks}>
-              {SOCIAL_LINKS.map((social) => (
-                <a
-                  href={social.href}
-                  key={social.label}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={social.label}
-                >
-                  <img
-                    src={social.icon}
-                    alt=""
-                    draggable={false}
-                  />
-                  <span>{social.label}</span>
-                </a>
-              ))}
-            </div>
-          </section>
-
         </aside>
+
+        <PlayerSearch
+          className={styles.searchDock}
+          placeholder="Search players"
+        />
+
+        <section
+          className={styles.socialSection}
+          aria-label="Mineacle social links"
+        >
+          <div className={styles.socialLinks}>
+            {SOCIAL_LINKS.map((social) => (
+              <a
+                href={social.href}
+                key={social.label}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={social.label}
+              >
+                <img
+                  src={social.icon}
+                  alt=""
+                  draggable={false}
+                />
+                <span>{social.label}</span>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <div className={styles.accountDock}>
+          {!viewer ? (
+            <div className={styles.accountActions}>
+              <button
+                className={styles.verifyLink}
+                type="button"
+                onClick={() => openAuth("create")}
+              >
+                Verify in-game account
+              </button>
+
+              <button
+                className={styles.loginButton}
+                type="button"
+                onClick={() => openAuth("login")}
+              >
+                Sign in
+              </button>
+            </div>
+          ) : (
+            <div
+              className={styles.profileMenu}
+              ref={profileRef}
+            >
+              <button
+                className={styles.profileTrigger}
+                type="button"
+                aria-expanded={profileOpen}
+                aria-haspopup="menu"
+                onClick={() =>
+                  setProfileOpen((value) => !value)
+                }
+              >
+                <PlayerAvatar
+                  uuid={viewer.uuid}
+                  size={32}
+                  className={styles.profileHead}
+                  eager
+                />
+
+                <span>{viewer.username}</span>
+                <img
+                  className={styles.profileChevron}
+                  src={`${ICON_ROOT}/profile-dropdown.png`}
+                  alt=""
+                  aria-hidden="true"
+                  draggable={false}
+                />
+              </button>
+
+              {profileOpen ? (
+                <div
+                  className={styles.profileDropdown}
+                  role="menu"
+                >
+                  <div className={styles.profileSkin}>
+                    <img
+                      src={playerBodyUrl(viewer.uuid)}
+                      alt={`${viewer.username} skin`}
+                      draggable={false}
+                    />
+                  </div>
+
+                  <div className={styles.profileDetails}>
+                    <div className={styles.profileIdentity}>
+                      <PlayerAvatar
+                        uuid={viewer.uuid}
+                        size={38}
+                        className={styles.dropdownHead}
+                        eager
+                      />
+
+                      <span>
+                        <small>VERIFIED PLAYER</small>
+                        <strong>{viewer.username}</strong>
+                      </span>
+                    </div>
+
+                    <nav>
+                      <a href="/profile">
+                        Manage profile
+                        <span>→</span>
+                      </a>
+
+                      <a href="/following">
+                        Following
+                        <b>{viewer.followingCount}</b>
+                      </a>
+
+                      <a href="/notifications">
+                        Notifications
+                        {viewer.unreadNotifications > 0 ? (
+                          <b>
+                            {viewer.unreadNotifications}
+                          </b>
+                        ) : (
+                          <span>→</span>
+                        )}
+                      </a>
+                    </nav>
+
+                    <button
+                      className={styles.logoutButton}
+                      type="button"
+                      onClick={logout}
+                      disabled={loggingOut}
+                    >
+                      {loggingOut
+                        ? "Logging out..."
+                        : "Log out"}
+                    </button>
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          )}
+        </div>
 
         <section
           className={styles.hero}
@@ -484,293 +601,166 @@ export function VisitorHome({
             aria-hidden="true"
           />
 
-          <div className={styles.heroTop}>
-            <a
-              className={styles.heroTopLogo}
-              href="/"
-              aria-label="Mineacle home"
-            >
-              <img
-                className={styles.heroLogo}
-                src="/shared/images/branding/mineacle-logo.png"
-                alt="Mineacle"
-                draggable={false}
-              />
-            </a>
+          <a
+            className={styles.heroTopLogo}
+            href="/"
+            aria-label="Mineacle home"
+          >
+            <img
+              className={styles.heroLogo}
+              src="/shared/images/branding/mineacle-logo.png"
+              alt="Mineacle"
+              draggable={false}
+            />
+          </a>
 
-            {!viewer ? (
-              <div className={styles.accountActions}>
-                <button
-                  className={styles.verifyLink}
-                  type="button"
-                  onClick={() => openAuth("create")}
-                >
-                  Verify in-game account
-                </button>
-
-                <button
-                  className={styles.loginButton}
-                  type="button"
-                  onClick={() => openAuth("login")}
-                >
-                  Login
-                </button>
-              </div>
-            ) : (
-              <div
-                className={styles.profileMenu}
-                ref={profileRef}
-              >
-                <button
-                  className={styles.profileTrigger}
-                  type="button"
-                  aria-expanded={profileOpen}
-                  aria-haspopup="menu"
-                  onClick={() =>
-                    setProfileOpen((value) => !value)
-                  }
-                >
-                  <PlayerAvatar
-                    uuid={viewer.uuid}
-                    size={32}
-                    className={styles.profileHead}
-                    eager
-                  />
-
-                  <span>{viewer.username}</span>
-                  <img
-                    className={styles.profileChevron}
-                    src={`${ICON_ROOT}/profile-dropdown.png`}
-                    alt=""
-                    aria-hidden="true"
-                    draggable={false}
-                  />
-                </button>
-
-                {profileOpen ? (
-                  <div
-                    className={styles.profileDropdown}
-                    role="menu"
-                  >
-                    <div className={styles.profileSkin}>
-                      <img
-                        src={playerBodyUrl(viewer.uuid)}
-                        alt={`${viewer.username} skin`}
-                        draggable={false}
-                      />
-                    </div>
-
-                    <div className={styles.profileDetails}>
-                      <div className={styles.profileIdentity}>
-                        <PlayerAvatar
-                          uuid={viewer.uuid}
-                          size={38}
-                          className={styles.dropdownHead}
-                          eager
-                        />
-
-                        <span>
-                          <small>VERIFIED PLAYER</small>
-                          <strong>{viewer.username}</strong>
-                        </span>
-                      </div>
-
-                      <nav>
-                        <a href="/profile">
-                          Manage profile
-                          <span>→</span>
-                        </a>
-
-                        <a href="/following">
-                          Following
-                          <b>{viewer.followingCount}</b>
-                        </a>
-
-                        <a href="/notifications">
-                          Notifications
-                          {viewer.unreadNotifications > 0 ? (
-                            <b>
-                              {viewer.unreadNotifications}
-                            </b>
-                          ) : (
-                            <span>→</span>
-                          )}
-                        </a>
-                      </nav>
-
-                      <button
-                        className={styles.logoutButton}
-                        type="button"
-                        onClick={logout}
-                        disabled={loggingOut}
-                      >
-                        {loggingOut
-                          ? "Logging out..."
-                          : "Log out"}
-                      </button>
-                    </div>
-                  </div>
-                ) : null}
-              </div>
-            )}
-          </div>
-
-          <div className={styles.heroFooter}>
-            <div className={styles.heroCopy}>
-              <div className={styles.serverSummary}>
-                <span
-                  className={`${styles.serverDot} ${
-                    serverStatus?.online
-                      ? styles.serverDotOnline
-                      : ""
-                  }`}
-                  aria-hidden="true"
-                />
-
-                <strong>{statusLabel}</strong>
-
-                <span className={styles.currentlyPlaying}>
-                  <b>{currentlyPlaying}</b>
-                  Currently Playing
-                </span>
-              </div>
-
-              <small className={styles.heroEyebrow}>
-                MINEACLE OPEN BETA
-              </small>
-
-              <h1>Build. Trade. Compete.</h1>
-
-              <p>
-                Start with nothing. Build an economy, grow a
-                team, trade with players, and earn your place
-                on Mineacle.
-              </p>
-
-              <div
-                className={styles.featurePills}
-                aria-label="Open beta features"
-              >
-                {RELEASE_FEATURES.map((feature) => (
-                  <span key={feature}>{feature}</span>
-                ))}
-              </div>
-            </div>
-
-            <div className={styles.playGroup}>
-              <button
-                className={`${styles.playButton} ${
-                  copied ? styles.playButtonCopied : ""
+          <div className={styles.heroContent}>
+            <div className={styles.serverSummary}>
+              <span
+                className={`${styles.serverDot} ${
+                  serverStatus?.online
+                    ? styles.serverDotOnline
+                    : ""
                 }`}
-                type="button"
-                onClick={copyServerAddress}
-                aria-label={`Copy Mineacle server address: ${SERVER_ADDRESS}`}
-              >
-                {copied ? "COPIED" : "PLAY"}
-              </button>
+                aria-hidden="true"
+              />
 
-              <button
-                className={styles.joinGuide}
-                type="button"
-                onClick={() => setJoinOpen(true)}
-              >
-                How to join mineacle.net
-              </button>
+              <strong>{statusLabel}</strong>
+
+              <span className={styles.currentlyPlaying}>
+                <b>{currentlyPlaying}</b>
+                playing
+              </span>
             </div>
+
+            <small className={styles.heroEyebrow}>
+              MINEACLE OPEN BETA
+            </small>
+
+            <h1>Build. Trade. Compete.</h1>
+
+            <p>
+              A competitive survival economy where progression,
+              teams, trading, and reputation all matter.
+            </p>
+
+            <div
+              className={styles.featurePills}
+              aria-label="Open beta features"
+            >
+              {RELEASE_FEATURES.map((feature) => (
+                <span key={feature}>{feature}</span>
+              ))}
+            </div>
+          </div>
+
+          <div className={styles.playGroup}>
+            <button
+              className={`${styles.playButton} ${
+                copied ? styles.playButtonCopied : ""
+              }`}
+              type="button"
+              onClick={copyServerAddress}
+              aria-label={`Copy Mineacle server address: ${SERVER_ADDRESS}`}
+            >
+              {copied ? "COPIED" : "PLAY"}
+            </button>
+
+            <button
+              className={styles.joinGuide}
+              type="button"
+              onClick={() => setJoinOpen(true)}
+            >
+              How to join
+            </button>
           </div>
         </section>
 
-        <section
-          className={styles.quickModules}
-          aria-label="Quick access"
+        <a
+          className={`${styles.homePanel} ${styles.rewardsPanel}`}
+          href="/vote"
         >
-          <a
-            className={styles.quickCard}
-            href="/leaderboards"
-          >
-            <div className={styles.quickMedia}>
-              <img
-                src={homeContent.competitive.media}
-                alt=""
-                draggable={false}
-              />
-            </div>
-
-            <div
-              className={styles.quickShade}
-              aria-hidden="true"
+          <div className={styles.panelIconStage}>
+            <img
+              src={`${ICON_ROOT}/rewards-hover.gif`}
+              alt=""
+              draggable={false}
             />
+          </div>
+          <div className={styles.panelShade} aria-hidden="true" />
+          <div className={styles.panelContent}>
+            <small>VOTE REWARDS</small>
+            <strong>Vote. Earn. Repeat.</strong>
+            <p>
+              Support Mineacle and collect rewards for showing up.
+            </p>
+            <span>VIEW REWARDS →</span>
+          </div>
+        </a>
 
-            <div className={styles.quickContent}>
-              <small>LIVE RANKINGS</small>
-              <strong>Leaderboards</strong>
-              <p>
-                Track the players setting the pace across
-                Mineacle.
-              </p>
-              <span>EXPLORE LEADERBOARDS →</span>
-            </div>
-          </a>
-
-          <a className={styles.quickCard} href="/vote">
-            <div
-              className={`${styles.quickMedia} ${styles.quickFallback}`}
-            >
-              <img
-                className={styles.quickIcon}
-                src={`${ICON_ROOT}/rewards-hover.gif`}
-                alt=""
-                draggable={false}
-              />
-            </div>
-
-            <div
-              className={styles.quickShade}
-              aria-hidden="true"
+        <a
+          className={`${styles.homePanel} ${styles.marketplacePanel}`}
+          href="https://store.mineacle.net/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <div className={styles.panelMedia}>
+            <img
+              src={homeContent.mineaclePlus.media}
+              alt={homeContent.mineaclePlus.mediaLabel}
+              draggable={false}
             />
+          </div>
+          <div className={styles.panelShade} aria-hidden="true" />
+          <div className={styles.panelContent}>
+            <small>MINEACLE STORE</small>
+            <strong>Marketplace</strong>
+            <p>
+              Support the network and browse server upgrades.
+            </p>
+            <span>OPEN STORE ↗</span>
+          </div>
+        </a>
 
-            <div className={styles.quickContent}>
-              <small>SUPPORT & EARN</small>
-              <strong>Vote & earn</strong>
-              <p>
-                Vote for Mineacle and turn your support into
-                in-game rewards.
-              </p>
-              <span>CLAIM REWARDS →</span>
-            </div>
-          </a>
-
-          <a
-            className={styles.quickCard}
-            href="/punishments"
-          >
-            <div
-              className={`${styles.quickMedia} ${styles.quickFallback}`}
-            >
-              <img
-                className={styles.quickIcon}
-                src={`${ICON_ROOT}/punishments-hover.gif`}
-                alt=""
-                draggable={false}
-              />
-            </div>
-
-            <div
-              className={styles.quickShade}
-              aria-hidden="true"
+        <a
+          className={`${styles.homePanel} ${styles.leaderboardsPanel}`}
+          href="/leaderboards"
+        >
+          <div className={styles.panelMedia}>
+            <img
+              src={homeContent.competitive.media}
+              alt={homeContent.competitive.mediaLabel}
+              draggable={false}
             />
+          </div>
+          <div className={styles.panelShade} aria-hidden="true" />
+          <div className={styles.panelContent}>
+            <small>LIVE RANKINGS</small>
+            <strong>Leaderboards</strong>
+            <p>See who is setting the pace across Mineacle.</p>
+            <span>VIEW RANKINGS →</span>
+          </div>
+        </a>
 
-            <div className={styles.quickContent}>
-              <small>PUBLIC RECORDS</small>
-              <strong>Punishments</strong>
-              <p>
-                Search transparent public moderation records
-                across the network.
-              </p>
-              <span>SEARCH RECORDS →</span>
-            </div>
-          </a>
-        </section>
+        <a
+          className={`${styles.homePanel} ${styles.punishmentsPanel}`}
+          href="/punishments"
+        >
+          <div className={styles.panelIconStage}>
+            <img
+              src={`${ICON_ROOT}/punishments-hover.gif`}
+              alt=""
+              draggable={false}
+            />
+          </div>
+          <div className={styles.panelShade} aria-hidden="true" />
+          <div className={styles.panelContent}>
+            <small>PUBLIC RECORDS</small>
+            <strong>Public bans</strong>
+            <p>Search moderation records across the network.</p>
+            <span>SEARCH RECORDS →</span>
+          </div>
+        </a>
       </main>
 
       {authMode ? (
