@@ -28,6 +28,10 @@ const JAVA_EDITION_ICON =
   "/images/home/visitorhome/edition-java.png";
 const BEDROCK_EDITION_ICON =
   "/images/home/visitorhome/edition-bedrock.png";
+const PLAY_BUTTON_ICON =
+  "/images/home/visitorhome/play-button-arrowhead.png";
+const PLAY_BUTTON_COPIED_ICON =
+  "/images/home/visitorhome/check.png";
 
 const SOCIAL_LINKS = [
   {
@@ -315,7 +319,7 @@ export function VisitorHome({
     try {
       await navigator.clipboard.writeText(SERVER_ADDRESS);
       setCopied(true);
-      window.setTimeout(() => setCopied(false), 1400);
+      window.setTimeout(() => setCopied(false), 1800);
     } catch {
       setCopied(false);
     }
@@ -629,14 +633,32 @@ export function VisitorHome({
 
           <div className={styles.playGroup}>
             <button
-              className={styles.playButton}
+              className={`${styles.playButton} ${
+                copied ? styles.playButtonCopied : ""
+              }`}
               type="button"
-              onClick={() => setJoinOpen(true)}
-              aria-haspopup="dialog"
-              aria-expanded={joinOpen}
-              aria-label="Open instructions to play Mineacle"
+              onClick={copyServerAddress}
+              aria-label={
+                copied
+                  ? "Mineacle server address copied to clipboard"
+                  : `Copy Mineacle server address: ${SERVER_ADDRESS}`
+              }
             >
-              PLAY
+              <img
+                src={
+                  copied
+                    ? PLAY_BUTTON_COPIED_ICON
+                    : PLAY_BUTTON_ICON
+                }
+                alt=""
+                aria-hidden="true"
+                draggable={false}
+              />
+              <span aria-live="polite">
+                {copied
+                  ? "Copied to Clipboard"
+                  : `${currentlyPlaying} Currently Playing`}
+              </span>
             </button>
           </div>
         </section>
