@@ -47,13 +47,6 @@ const SOCIAL_LINKS = [
   },
 ] as const;
 
-const RELEASE_FEATURES = [
-  "Player Economy",
-  "Teams",
-  "Auction House",
-  "Homes",
-] as const;
-
 const STATUS_CACHE_KEY =
   "mineacle:home-status:mineacle.net";
 const STATUS_CACHE_MAX_AGE = 15_000;
@@ -632,26 +625,6 @@ export function VisitorHome({
                 playing
               </span>
             </div>
-
-            <small className={styles.heroEyebrow}>
-              MINEACLE OPEN BETA
-            </small>
-
-            <h1>Build. Trade. Compete.</h1>
-
-            <p>
-              A competitive survival economy where progression,
-              teams, trading, and reputation all matter.
-            </p>
-
-            <div
-              className={styles.featurePills}
-              aria-label="Open beta features"
-            >
-              {RELEASE_FEATURES.map((feature) => (
-                <span key={feature}>{feature}</span>
-              ))}
-            </div>
           </div>
 
           <div className={styles.playGroup}>
@@ -666,13 +639,7 @@ export function VisitorHome({
               {copied ? "COPIED" : "PLAY"}
             </button>
 
-            <button
-              className={styles.joinGuide}
-              type="button"
-              onClick={() => setJoinOpen(true)}
-            >
-              How to join
-            </button>
+
           </div>
         </section>
 
@@ -690,11 +657,7 @@ export function VisitorHome({
           <div className={styles.panelShade} aria-hidden="true" />
           <div className={styles.panelContent}>
             <small>VOTE REWARDS</small>
-            <strong>Vote. Earn. Repeat.</strong>
-            <p>
-              Support Mineacle and collect rewards for showing up.
-            </p>
-            <span>VIEW REWARDS →</span>
+            <strong>Vote & Rewards</strong>
           </div>
         </a>
 
@@ -715,10 +678,6 @@ export function VisitorHome({
           <div className={styles.panelContent}>
             <small>MINEACLE STORE</small>
             <strong>Marketplace</strong>
-            <p>
-              Support the network and browse server upgrades.
-            </p>
-            <span>OPEN STORE ↗</span>
           </div>
         </a>
 
@@ -737,8 +696,6 @@ export function VisitorHome({
           <div className={styles.panelContent}>
             <small>LIVE RANKINGS</small>
             <strong>Leaderboards</strong>
-            <p>See who is setting the pace across Mineacle.</p>
-            <span>VIEW RANKINGS →</span>
           </div>
         </a>
 
@@ -757,8 +714,6 @@ export function VisitorHome({
           <div className={styles.panelContent}>
             <small>PUBLIC RECORDS</small>
             <strong>Public bans</strong>
-            <p>Search moderation records across the network.</p>
-            <span>SEARCH RECORDS →</span>
           </div>
         </a>
       </main>
