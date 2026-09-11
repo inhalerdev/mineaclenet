@@ -629,17 +629,15 @@ export function VisitorHome({
 
           <div className={styles.playGroup}>
             <button
-              className={`${styles.playButton} ${
-                copied ? styles.playButtonCopied : ""
-              }`}
+              className={styles.playButton}
               type="button"
-              onClick={copyServerAddress}
-              aria-label={`Copy Mineacle server address: ${SERVER_ADDRESS}`}
+              onClick={() => setJoinOpen(true)}
+              aria-haspopup="dialog"
+              aria-expanded={joinOpen}
+              aria-label="Open instructions to play Mineacle"
             >
-              {copied ? "COPIED" : "PLAY"}
+              PLAY
             </button>
-
-
           </div>
         </section>
 
