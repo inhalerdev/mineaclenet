@@ -3072,6 +3072,7 @@
 /* ---------- Navigation rail: icon-only ---------- */
 
 .sideNav {
+  flex-direction: column;
   justify-content: flex-start;
   padding: 10px 6px;
 }
@@ -3117,11 +3118,22 @@
   width: 2px;
 }
 
-/* ---------- Social links: icons only, no containers ---------- */
+/* ---------- Social links: bottom of the rail ---------- */
+
+.socialSection {
+  width: 100%;
+  margin-top: auto;
+  align-self: stretch;
+  padding: 0 0 4px;
+}
 
 .socialLinks {
+  width: 100%;
+  display: grid;
+  justify-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 10px;
+  margin: 0;
 }
 
 .socialLinks a {
@@ -3195,11 +3207,11 @@
 }
 
 .playButton {
+  position: relative;
   height: 42px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
   padding: 0 16px;
   border: 1px solid #24a162;
   border-radius: 4px;
@@ -3214,15 +3226,49 @@
     transform var(--ease);
 }
 
+.playButtonDefault,
+.playButtonHover,
+.playButtonSuccess {
+  grid-area: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease;
+}
+
+.playButtonDefault {
+  opacity: 1;
+}
+
+.playButtonHover {
+  opacity: 0;
+  transform: translateY(3px);
+}
+
+.playButton:hover .playButtonDefault,
+.playButton:focus-visible .playButtonDefault {
+  opacity: 0;
+  transform: translateY(-3px);
+}
+
+.playButton:hover .playButtonHover,
+.playButton:focus-visible .playButtonHover {
+  opacity: 1;
+  transform: none;
+}
+
 .playButton:hover,
 .playButton:focus-visible {
-  border-color: #38b671;
-  background: #04914a;
+  border-color: #24a162;
+  background: #008743;
 }
 
 .playButton:active {
   border-color: #24a162;
-  background: #007a3d;
+  background: #008743;
 }
 
 .playButtonCopied,
@@ -3233,7 +3279,8 @@
   background: #008743;
 }
 
-.playButton img {
+.playButtonHover img,
+.playButtonSuccess img {
   width: 15px;
   height: 15px;
   flex: 0 0 15px;
@@ -3242,14 +3289,14 @@
   transition: transform var(--ease);
 }
 
-.playButton:hover img,
-.playButton:focus-visible img {
+.playButton:hover .playButtonHover img,
+.playButton:focus-visible .playButtonHover img {
   transform: translateX(1px) scale(1.05);
 }
 
-.playButtonCopied img,
-.playButtonCopied:hover img,
-.playButtonCopied:focus-visible img {
+.playButtonSuccess img,
+.playButtonCopied:hover .playButtonSuccess img,
+.playButtonCopied:focus-visible .playButtonSuccess img {
   transform: none;
 }
 

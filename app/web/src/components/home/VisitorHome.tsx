@@ -425,36 +425,36 @@ export function VisitorHome({
               );
             })}
           </nav>
+
+          <section
+            className={styles.socialSection}
+            aria-label="Mineacle social links"
+          >
+            <div className={styles.socialLinks}>
+              {SOCIAL_LINKS.map((social) => (
+                <a
+                  href={social.href}
+                  key={social.label}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={social.label}
+                >
+                  <img
+                    src={social.icon}
+                    alt=""
+                    draggable={false}
+                  />
+                  <span>{social.label}</span>
+                </a>
+              ))}
+            </div>
+          </section>
         </aside>
 
         <PlayerSearch
           className={styles.searchDock}
           placeholder="Search players"
         />
-
-        <section
-          className={styles.socialSection}
-          aria-label="Mineacle social links"
-        >
-          <div className={styles.socialLinks}>
-            {SOCIAL_LINKS.map((social) => (
-              <a
-                href={social.href}
-                key={social.label}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={social.label}
-              >
-                <img
-                  src={social.icon}
-                  alt=""
-                  draggable={false}
-                />
-                <span>{social.label}</span>
-              </a>
-            ))}
-          </div>
-        </section>
 
         <div className={styles.accountDock}>
           {!viewer ? (
@@ -644,21 +644,39 @@ export function VisitorHome({
                   : `Copy Mineacle server address: ${SERVER_ADDRESS}`
               }
             >
-              <img
-                src={
-                  copied
-                    ? PLAY_BUTTON_COPIED_ICON
-                    : PLAY_BUTTON_ICON
-                }
-                alt=""
-                aria-hidden="true"
-                draggable={false}
-              />
-              <span aria-live="polite">
-                {copied
-                  ? "Copied to Clipboard"
-                  : `${currentlyPlaying} Currently Playing`}
-              </span>
+              {copied ? (
+                <span
+                  className={styles.playButtonSuccess}
+                  aria-live="polite"
+                >
+                  <img
+                    src={PLAY_BUTTON_COPIED_ICON}
+                    alt=""
+                    aria-hidden="true"
+                    draggable={false}
+                  />
+                  <span>Copied to Clipboard</span>
+                </span>
+              ) : (
+                <>
+                  <span className={styles.playButtonDefault}>
+                    PLAY
+                  </span>
+                  <span
+                    className={styles.playButtonHover}
+                    aria-hidden="true"
+                  >
+                    <img
+                      src={PLAY_BUTTON_ICON}
+                      alt=""
+                      draggable={false}
+                    />
+                    <span>
+                      {currentlyPlaying} Currently Playing
+                    </span>
+                  </span>
+                </>
+              )}
             </button>
           </div>
         </section>
