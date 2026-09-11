@@ -658,6 +658,7 @@ export function VisitorHome({
           <div className={styles.panelContent}>
             <small>VOTE REWARDS</small>
             <strong>Vote & Rewards</strong>
+            <span className={styles.panelCta}>VIEW REWARDS</span>
           </div>
         </a>
 
@@ -678,6 +679,7 @@ export function VisitorHome({
           <div className={styles.panelContent}>
             <small>MINEACLE STORE</small>
             <strong>Marketplace</strong>
+            <span className={styles.panelCta}>OPEN STORE ↗</span>
           </div>
         </a>
 
@@ -696,6 +698,7 @@ export function VisitorHome({
           <div className={styles.panelContent}>
             <small>LIVE RANKINGS</small>
             <strong>Leaderboards</strong>
+            <span className={styles.panelCta}>VIEW RANKINGS</span>
           </div>
         </a>
 
@@ -714,6 +717,7 @@ export function VisitorHome({
           <div className={styles.panelContent}>
             <small>PUBLIC RECORDS</small>
             <strong>Public bans</strong>
+            <span className={styles.panelCta}>SEARCH RECORDS</span>
           </div>
         </a>
       </main>

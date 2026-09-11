@@ -3513,3 +3513,309 @@
     animation: none;
   }
 }
+
+/* === Compact esports homepage refinement === */
+/*
+ * Requested refinement:
+ * - desktop nav = icons only and materially narrower
+ * - hero/search expand left into the reclaimed nav space
+ * - socials = raw icons, no button boxes
+ * - bottom three modules = equal width
+ * - all destination modules get small CTA controls
+ * - controls become slightly tighter across the homepage
+ */
+
+.page,
+.modalBackdrop {
+  --home-nav-width: 64px;
+  --home-content-offset:
+    calc(var(--home-nav-width) + var(--home-gutter));
+}
+
+/* ---------- Desktop geometry ---------- */
+
+@media (min-width: 961px) {
+  .sideNav {
+    width: var(--home-nav-width);
+    justify-self: start;
+  }
+
+  /*
+   * Hero and search now begin directly after the slim rail instead of
+   * waiting for the full first grid column to end.
+   */
+  .searchDock {
+    grid-column: 1 / span 4;
+    margin-left: var(--home-content-offset);
+  }
+
+  .hero {
+    grid-column: 1 / span 9;
+    margin-left: var(--home-content-offset);
+  }
+
+  /* Equal thirds across the bottom row. */
+  .marketplacePanel {
+    grid-column: 1 / span 4;
+  }
+
+  .leaderboardsPanel {
+    grid-column: 5 / span 4;
+  }
+
+  .punishmentsPanel {
+    grid-column: 9 / span 4;
+  }
+}
+
+/* ---------- Navigation rail: icon-only ---------- */
+
+.sideNav {
+  padding: 7px 6px;
+}
+
+.primaryNav {
+  justify-items: center;
+  gap: 7px;
+}
+
+.primaryNav a {
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  min-height: 36px;
+  grid-template-columns: 1fr;
+  place-items: center;
+  gap: 0;
+  padding: 0;
+}
+
+.navIcon,
+.navIcon img {
+  width: 19px;
+  height: 19px;
+}
+
+.navLabel,
+.primaryNav small {
+  display: none;
+}
+
+.primaryNav .activeNavItem::after {
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+}
+
+/* ---------- Social links: icons only, no containers ---------- */
+
+.socialLinks {
+  gap: 14px;
+}
+
+.socialLinks a {
+  width: 22px;
+  height: 22px;
+  min-height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  opacity: 0.82;
+  transition: opacity var(--ease);
+}
+
+.socialLinks a:hover {
+  border: 0;
+  background: transparent;
+  opacity: 1;
+}
+
+.socialLinks img {
+  width: 22px;
+  height: 22px;
+}
+
+/* ---------- Tighter top controls ---------- */
+
+.searchDock form {
+  height: 38px;
+}
+
+.accountActions {
+  min-height: 34px;
+  gap: 12px;
+}
+
+.verifyLink {
+  height: 34px;
+  font-size: 11px;
+}
+
+.loginButton {
+  min-width: 82px;
+  height: 34px;
+  padding: 0 13px;
+  font-size: 11px;
+}
+
+.profileTrigger {
+  height: 36px;
+}
+
+/* ---------- Hero CTA ---------- */
+
+.serverSummary {
+  min-height: 28px;
+  padding: 0 8px;
+}
+
+.serverSummary > strong,
+.currentlyPlaying {
+  font-size: 8px;
+}
+
+.playGroup {
+  bottom: 15px;
+  width: clamp(128px, 13vw, 156px);
+}
+
+.playButton {
+  height: 38px;
+  font-size: 12px;
+}
+
+/* ---------- Content modules + CTAs ---------- */
+
+.panelContent {
+  right: 14px;
+  bottom: 13px;
+  left: 14px;
+}
+
+.panelContent small {
+  margin-bottom: 3px;
+  font-size: 8px;
+}
+
+.panelContent strong {
+  font-size: clamp(16px, 1.28vw, 20px);
+}
+
+.panelContent > .panelCta {
+  width: fit-content;
+  min-height: 27px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  padding: 0 9px;
+  border: 1px solid rgba(208, 175, 255, 0.50);
+  border-radius: var(--home-control-radius);
+  background: #8436fe;
+  color: #ffffff;
+  font-size: 8px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.025em;
+  white-space: nowrap;
+  transition:
+    border-color var(--ease),
+    background-color var(--ease);
+}
+
+.homePanel:hover .panelCta {
+  border-color: rgba(208, 175, 255, 0.84);
+  background: #9858ff;
+}
+
+/* Slightly smaller destination icon art to preserve negative space. */
+.panelIconStage img {
+  width: 42px;
+  height: 42px;
+}
+
+.rewardsPanel .panelIconStage img {
+  width: 47px;
+  height: 47px;
+}
+
+/* ---------- Tablet ---------- */
+
+@media (max-width: 960px) {
+  .navLabel {
+    display: none;
+  }
+
+  .primaryNav a {
+    width: 38px;
+    min-width: 38px;
+    height: 38px;
+    min-height: 38px;
+    grid-template-columns: 1fr;
+    padding: 0;
+  }
+
+  .socialLinks {
+    gap: 12px;
+  }
+
+  .playGroup {
+    width: 140px;
+  }
+
+  .panelContent > .panelCta {
+    min-height: 26px;
+    margin-top: 8px;
+    padding: 0 8px;
+  }
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 640px) {
+  .accountActions {
+    min-height: 32px;
+  }
+
+  .verifyLink,
+  .loginButton {
+    height: 32px;
+  }
+
+  .loginButton {
+    min-width: 74px;
+    padding: 0 10px;
+  }
+
+  .sideNav {
+    padding: 4px;
+  }
+
+  .primaryNav a {
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
+    min-height: 34px;
+  }
+
+  .navIcon,
+  .navIcon img {
+    width: 18px;
+    height: 18px;
+  }
+
+  .playGroup {
+    width: 132px;
+  }
+
+  .playButton {
+    height: 36px;
+    font-size: 11px;
+  }
+
+  .panelContent > .panelCta {
+    min-height: 25px;
+    font-size: 7px;
+  }
+}
