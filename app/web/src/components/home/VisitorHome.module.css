@@ -3085,10 +3085,10 @@
 }
 
 .primaryNav a {
-  width: 38px;
-  min-width: 38px;
-  height: 38px;
-  min-height: 38px;
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  min-height: 40px;
   grid-template-columns: 1fr;
   place-items: center;
   gap: 0;
@@ -3097,8 +3097,8 @@
 
 .navIcon,
 .navIcon img {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
 }
 
 .navIcon img {
@@ -3107,15 +3107,47 @@
   object-position: center;
 }
 
+/* Normalize the different transparent bounds in the supplied GIFs. */
+.primaryNav a:nth-child(1) .navIcon img,
+.primaryNav a:nth-child(2) .navIcon img {
+  transform: scale(1.08);
+}
+
+.primaryNav a:nth-child(4) .navIcon img {
+  transform: scale(1.06);
+}
+
+.primaryNav a:nth-child(5) .navIcon img {
+  transform: scale(0.92);
+}
+
 .navLabel,
 .primaryNav small {
   display: none;
 }
 
+.primaryNav .activeNavItem,
+.primaryNav .activeNavItem:hover {
+  border-color: rgba(208, 175, 255, 0.46);
+  background: #242126;
+  color: #d0afff;
+}
+
+.primaryNav .activeNavItem .navIcon img {
+  filter:
+    brightness(0)
+    saturate(100%)
+    invert(79%)
+    sepia(32%)
+    saturate(1627%)
+    hue-rotate(211deg)
+    brightness(103%)
+    contrast(102%);
+}
+
 .primaryNav .activeNavItem::after {
-  top: 8px;
-  bottom: 8px;
-  width: 2px;
+  display: none;
+  content: none;
 }
 
 /* ---------- Social links: bottom of the rail ---------- */
@@ -3137,29 +3169,33 @@
 }
 
 .socialLinks a {
-  width: 24px;
-  height: 24px;
-  min-height: 24px;
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  min-height: 40px;
   padding: 0;
-  border: 0;
-  border-radius: 0;
+  border: 1px solid transparent;
+  border-radius: var(--home-control-radius);
   background: transparent;
-  opacity: 0.78;
+  opacity: 0.82;
   transition:
+    border-color var(--ease),
+    background-color var(--ease),
     opacity var(--ease),
     transform var(--ease);
 }
 
 .socialLinks a:hover {
-  border: 0;
-  background: transparent;
+  border-color: rgba(248, 248, 248, 0.10);
+  background: #252525;
   opacity: 1;
-  transform: translateY(-1px);
+  transform: none;
 }
 
 .socialLinks img {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
 }
 
 /* ---------- Tighter top controls ---------- */
@@ -3407,16 +3443,16 @@
   }
 
   .primaryNav a {
-    width: 34px;
-    min-width: 34px;
-    height: 34px;
-    min-height: 34px;
+    width: 38px;
+    min-width: 38px;
+    height: 38px;
+    min-height: 38px;
   }
 
   .navIcon,
   .navIcon img {
-    width: 19px;
-    height: 19px;
+    width: 20px;
+    height: 20px;
   }
 
   .playGroup {
