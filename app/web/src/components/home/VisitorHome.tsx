@@ -623,11 +623,6 @@ export function VisitorHome({
               />
 
               <strong>{statusLabel}</strong>
-
-              <span className={styles.currentlyPlaying}>
-                <b>{currentlyPlaying}</b>
-                playing
-              </span>
             </div>
           </div>
 
@@ -644,39 +639,40 @@ export function VisitorHome({
                   : `Copy Mineacle server address: ${SERVER_ADDRESS}`
               }
             >
-              {copied ? (
-                <span
-                  className={styles.playButtonSuccess}
-                  aria-live="polite"
-                >
-                  <img
-                    src={PLAY_BUTTON_COPIED_ICON}
-                    alt=""
-                    aria-hidden="true"
-                    draggable={false}
-                  />
-                  <span>Copied to Clipboard</span>
+              <span
+                className={styles.playButtonDefault}
+                aria-hidden="true"
+              >
+                PLAY NOW
+              </span>
+
+              <span
+                className={styles.playButtonHover}
+                aria-hidden="true"
+              >
+                <img
+                  src={PLAY_BUTTON_ICON}
+                  alt=""
+                  draggable={false}
+                />
+                <span>
+                  {currentlyPlaying} Currently Playing
                 </span>
-              ) : (
-                <>
-                  <span className={styles.playButtonDefault}>
-                    PLAY
-                  </span>
-                  <span
-                    className={styles.playButtonHover}
-                    aria-hidden="true"
-                  >
-                    <img
-                      src={PLAY_BUTTON_ICON}
-                      alt=""
-                      draggable={false}
-                    />
-                    <span>
-                      {currentlyPlaying} Currently Playing
-                    </span>
-                  </span>
-                </>
-              )}
+              </span>
+
+              <span
+                className={styles.playButtonSuccess}
+                aria-hidden={!copied}
+                aria-live="polite"
+              >
+                <img
+                  src={PLAY_BUTTON_COPIED_ICON}
+                  alt=""
+                  aria-hidden="true"
+                  draggable={false}
+                />
+                <span>Copied to Clipboard</span>
+              </span>
             </button>
           </div>
         </section>
