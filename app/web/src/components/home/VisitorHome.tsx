@@ -611,21 +611,6 @@ export function VisitorHome({
             />
           </a>
 
-          <div className={styles.heroContent}>
-            <div className={styles.serverSummary}>
-              <span
-                className={`${styles.serverDot} ${
-                  serverStatus?.online
-                    ? styles.serverDotOnline
-                    : ""
-                }`}
-                aria-hidden="true"
-              />
-
-              <strong>{statusLabel}</strong>
-            </div>
-          </div>
-
           <div className={styles.playGroup}>
             <button
               className={`${styles.playButton} ${
