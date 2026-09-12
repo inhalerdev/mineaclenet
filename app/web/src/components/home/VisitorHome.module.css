@@ -3153,10 +3153,13 @@
 /* ---------- Social links: bottom of the rail ---------- */
 
 .socialSection {
-  width: 100%;
+  width: 40px;
+  max-width: 40px;
   margin-top: auto;
-  align-self: stretch;
+  align-self: center;
+  justify-self: center;
   padding: 0 0 4px;
+  box-sizing: border-box;
 }
 
 .socialLinks {
@@ -3166,7 +3169,8 @@
   justify-items: center;
   justify-content: center;
   gap: 8px;
-  margin: 0 auto;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 .socialLinks a {
@@ -3174,10 +3178,13 @@
   min-width: 40px;
   height: 40px;
   min-height: 40px;
+  display: grid;
+  place-items: center;
   padding: 0;
   border: 1px solid transparent;
   border-radius: var(--home-control-radius);
   background: transparent;
+  box-sizing: border-box;
   opacity: 0.82;
   transition:
     border-color var(--ease),
@@ -3196,6 +3203,8 @@
 .socialLinks img {
   width: 22px;
   height: 22px;
+  display: block;
+  margin: 0;
   object-fit: contain;
 }
 
