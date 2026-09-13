@@ -37,7 +37,7 @@ const SOCIAL_LINKS = [
   {
     label: "Discord",
     href: "https://discord.gg/4xrYFxdSWg",
-    icon: `${SOCIAL_ROOT}/discord-white.svg`,
+    icon: `${SOCIAL_ROOT}/discord-white-idle.png`,
     hoverIcon: `${SOCIAL_ROOT}/discord-white.gif`,
   },
   {
