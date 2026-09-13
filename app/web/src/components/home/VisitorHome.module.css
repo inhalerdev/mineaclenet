@@ -2317,6 +2317,7 @@
 }
 
 .socialLinks a {
+  position: relative;
   width: 40px;
   height: 40px;
   min-height: 40px;
@@ -3203,11 +3204,17 @@
 }
 
 .socialLinks img {
+  position: absolute;
+  inset: 0;
   width: 22px;
   height: 22px;
   display: block;
-  margin: 0;
+  margin: auto;
   object-fit: contain;
+}
+
+.socialLinks img[src*="discord-white.gif"] {
+  transform: translateX(-1px);
 }
 
 /* ---------- Tighter top controls ---------- */
