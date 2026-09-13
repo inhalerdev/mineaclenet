@@ -37,20 +37,20 @@ const SOCIAL_LINKS = [
   {
     label: "Discord",
     href: "https://discord.gg/4xrYFxdSWg",
-    icon: `${SOCIAL_ROOT}/discord-white.gif`,
-    animated: true,
+    icon: `${SOCIAL_ROOT}/discord-white.svg`,
+    hoverIcon: `${SOCIAL_ROOT}/discord-white.gif`,
   },
   {
     label: "YouTube",
     href: "https://www.youtube.com/@MineacleNetwork",
     icon: `${SOCIAL_ROOT}/youtube-white.svg`,
-    animated: false,
+    hoverIcon: null,
   },
   {
     label: "X",
     href: "https://x.com/mineaclenetwork",
     icon: `${SOCIAL_ROOT}/x-white.svg`,
-    animated: false,
+    hoverIcon: null,
   },
 ] as const;
 
@@ -91,6 +91,8 @@ export function VisitorHome({
     useState<ServerStatus | null>(null);
   const [navAnimationRun, setNavAnimationRun] =
     useState<Partial<Record<SiteNavIcon, boolean>>>({});
+  const [discordHovered, setDiscordHovered] =
+    useState(false);
   const [discordAnimationRun, setDiscordAnimationRun] =
     useState(false);
 
@@ -436,43 +438,61 @@ export function VisitorHome({
             aria-label="Mineacle social links"
           >
             <div className={styles.socialLinks}>
-              {SOCIAL_LINKS.map((social) => (
-                <a
-                  href={social.href}
-                  key={social.label}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={social.label}
-                onMouseEnter={
-                  social.animated
-                    ? () =>
-                        setDiscordAnimationRun(
-                          (current) => !current,
-                        )
-                    : undefined
-                }
-              >
-                <img
-                  key={
-                    social.animated
-                      ? `discord-${
-                          discordAnimationRun ? "a" : "b"
-                        }`
-                      : social.icon
-                  }
-                  src={`${social.icon}${
-                    social.animated
-                      ? `?run=${
-                          discordAnimationRun ? "a" : "b"
-                        }`
-                      : ""
-                  }`}
-                  alt=""
-                  draggable={false}
-                />
-                  <span>{social.label}</span>
-                </a>
-              ))}
+              {SOCIAL_LINKS.map((social) => {
+                const showHoverAnimation =
+                  Boolean(social.hoverIcon) &&
+                  discordHovered;
+
+                return (
+                  <a
+                    href={social.href}
+                    key={social.label}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={social.label}
+                    onMouseEnter={
+                      social.hoverIcon
+                        ? () => {
+                            setDiscordHovered(true);
+                            setDiscordAnimationRun(
+                              (current) => !current,
+                            );
+                          }
+                        : undefined
+                    }
+                    onMouseLeave={
+                      social.hoverIcon
+                        ? () => setDiscordHovered(false)
+                        : undefined
+                    }
+                  >
+                    <img
+                      key={
+                        showHoverAnimation
+                          ? `discord-hover-${
+                              discordAnimationRun
+                                ? "a"
+                                : "b"
+                            }`
+                          : `${social.label}-static`
+                      }
+                      src={
+                        showHoverAnimation &&
+                        social.hoverIcon
+                          ? `${social.hoverIcon}?run=${
+                              discordAnimationRun
+                                ? "a"
+                                : "b"
+                            }`
+                          : social.icon
+                      }
+                      alt=""
+                      draggable={false}
+                    />
+                    <span>{social.label}</span>
+                  </a>
+                );
+              })}
             </div>
           </section>
         </aside>
