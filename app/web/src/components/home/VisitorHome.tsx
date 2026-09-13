@@ -57,6 +57,7 @@ const SOCIAL_LINKS = [
 const STATUS_CACHE_KEY =
   "mineacle:home-status:mineacle.net";
 const STATUS_CACHE_MAX_AGE = 15_000;
+const DISCORD_ANIMATION_CYCLE_MS = 3_000;
 
 type AuthMode = "login" | "create";
 type AuthStage = "edition" | "form";
@@ -91,7 +92,7 @@ export function VisitorHome({
     useState<ServerStatus | null>(null);
   const [navAnimationRun, setNavAnimationRun] =
     useState<Partial<Record<SiteNavIcon, boolean>>>({});
-  const [discordHovered, setDiscordHovered] =
+  const [discordAnimationPlaying, setDiscordAnimationPlaying] =
     useState(false);
   const [discordAnimationRun, setDiscordAnimationRun] =
     useState(false);
@@ -146,6 +147,18 @@ export function VisitorHome({
       });
     };
   }, []);
+
+  useEffect(() => {
+    if (!discordAnimationPlaying) {
+      return;
+    }
+
+    const cycleTimer = window.setTimeout(() => {
+      setDiscordAnimationPlaying(false);
+    }, DISCORD_ANIMATION_CYCLE_MS);
+
+    return () => window.clearTimeout(cycleTimer);
+  }, [discordAnimationPlaying, discordAnimationRun]);
 
   useEffect(() => {
     if (!modalOpen) {
@@ -441,7 +454,7 @@ export function VisitorHome({
               {SOCIAL_LINKS.map((social) => {
                 const showHoverAnimation =
                   Boolean(social.hoverIcon) &&
-                  discordHovered;
+                  discordAnimationPlaying;
 
                 return (
                   <a
@@ -453,16 +466,11 @@ export function VisitorHome({
                     onMouseEnter={
                       social.hoverIcon
                         ? () => {
-                            setDiscordHovered(true);
+                            setDiscordAnimationPlaying(true);
                             setDiscordAnimationRun(
                               (current) => !current,
                             );
                           }
-                        : undefined
-                    }
-                    onMouseLeave={
-                      social.hoverIcon
-                        ? () => setDiscordHovered(false)
                         : undefined
                     }
                   >
