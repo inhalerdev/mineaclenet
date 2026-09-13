@@ -37,17 +37,20 @@ const SOCIAL_LINKS = [
   {
     label: "Discord",
     href: "https://discord.gg/4xrYFxdSWg",
-    icon: `${SOCIAL_ROOT}/discord-white.svg`,
+    icon: `${SOCIAL_ROOT}/discord-white.gif`,
+    animated: true,
   },
   {
     label: "YouTube",
     href: "https://www.youtube.com/@MineacleNetwork",
     icon: `${SOCIAL_ROOT}/youtube-white.svg`,
+    animated: false,
   },
   {
     label: "X",
     href: "https://x.com/mineaclenetwork",
     icon: `${SOCIAL_ROOT}/x-white.svg`,
+    animated: false,
   },
 ] as const;
 
@@ -88,6 +91,8 @@ export function VisitorHome({
     useState<ServerStatus | null>(null);
   const [navAnimationRun, setNavAnimationRun] =
     useState<Partial<Record<SiteNavIcon, boolean>>>({});
+  const [discordAnimationRun, setDiscordAnimationRun] =
+    useState(false);
 
   const profileRef = useRef<HTMLDivElement>(null);
 
@@ -435,15 +440,36 @@ export function VisitorHome({
                 <a
                   href={social.href}
                   key={social.label}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={social.label}
-                >
-                  <img
-                    src={social.icon}
-                    alt=""
-                    draggable={false}
-                  />
+                target="_blank"
+                rel="noreferrer"
+                aria-label={social.label}
+                onMouseEnter={
+                  social.animated
+                    ? () =>
+                        setDiscordAnimationRun(
+                          (current) => !current,
+                        )
+                    : undefined
+                }
+              >
+                <img
+                  key={
+                    social.animated
+                      ? `discord-${
+                          discordAnimationRun ? "a" : "b"
+                        }`
+                      : social.icon
+                  }
+                  src={`${social.icon}${
+                    social.animated
+                      ? `?run=${
+                          discordAnimationRun ? "a" : "b"
+                        }`
+                      : ""
+                  }`}
+                  alt=""
+                  draggable={false}
+                />
                   <span>{social.label}</span>
                 </a>
               ))}
