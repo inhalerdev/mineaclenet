@@ -3213,10 +3213,6 @@
   object-fit: contain;
 }
 
-.socialLinks img[src*="discord-white.gif"] {
-  transform: translateX(0);
-}
-
 /* ---------- Tighter top controls ---------- */
 
 .searchDock form {
