@@ -3214,7 +3214,7 @@
 }
 
 .socialLinks img[src*="discord-white.gif"] {
-  transform: translateX(0px);
+  transform: translateX(0);
 }
 
 /* ---------- Tighter top controls ---------- */
