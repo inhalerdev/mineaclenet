@@ -32,6 +32,7 @@ const PLAY_BUTTON_ICON =
   "/images/home/visitorhome/play-button-arrowhead.png";
 const PLAY_BUTTON_COPIED_ICON =
   "/images/home/visitorhome/check.png";
+const DISCORD_ICON_VERSION = "20260914-1";
 
 const SOCIAL_LINKS = [
   {
@@ -464,7 +465,7 @@ export function VisitorHome({
                     }
                     src={`${social.icon}${
                       social.animated
-                        ? `?run=${
+                        ? `?v=${DISCORD_ICON_VERSION}&run=${
                             discordAnimationRun
                               ? "a"
                               : "b"
