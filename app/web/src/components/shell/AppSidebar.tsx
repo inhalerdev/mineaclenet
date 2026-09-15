@@ -4,6 +4,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { PlayerSearch } from "@/components/players/PlayerSearch";
 import type { Viewer } from "@/features/auth/types";
+import { useOneShotGif } from "@/shared/media/use-one-shot-gif";
 import {
   siteNavigation,
   type SiteNavIcon,
@@ -28,12 +29,12 @@ const SOCIAL_LINKS = [
   {
     label: "Discord",
     href: "https://discord.gg/4xrYFxdSWg",
-    icon: `${SOCIAL_ROOT}/discord-white.svg`,
+    icon: `${SOCIAL_ROOT}/discord-white.gif`,
   },
   {
     label: "X",
     href: "https://x.com/mineaclenetwork",
-    icon: `${SOCIAL_ROOT}/x-white.svg`,
+    icon: `${SOCIAL_ROOT}/x.gif`,
   },
 ] as const;
 
@@ -51,6 +52,54 @@ function AssetIcon({
       alt=""
       draggable={false}
     />
+  );
+}
+
+function SidebarSocialLink({
+  social,
+  mobile = false,
+  onClick,
+}: {
+  social: (typeof SOCIAL_LINKS)[number];
+  mobile?: boolean;
+  onClick?: () => void;
+}) {
+  const animation = useOneShotGif(social.icon);
+
+  return (
+    <a
+      className={mobile ? undefined : "sidebar-social-link"}
+      href={social.href}
+      aria-label={social.label}
+      target="_blank"
+      rel="noreferrer"
+      onClick={onClick}
+      onMouseEnter={animation.start}
+      onMouseLeave={animation.stop}
+    >
+      {mobile ? (
+        <>
+          <AssetIcon
+            key={animation.src}
+            src={animation.src}
+          />
+          <span>{social.label}</span>
+        </>
+      ) : (
+        <>
+          <span className="sidebar-social-link__icon">
+            <AssetIcon
+              key={animation.src}
+              src={animation.src}
+            />
+          </span>
+
+          <span className="sidebar-social-link__label">
+            {social.label}
+          </span>
+        </>
+      )}
+    </a>
   );
 }
 
@@ -213,22 +262,10 @@ export function AppSidebar({
         <div className="sidebar-actions">
           <div className="sidebar-socials">
             {SOCIAL_LINKS.map((social) => (
-              <a
-                className="sidebar-social-link"
-                href={social.href}
+              <SidebarSocialLink
                 key={social.label}
-                aria-label={social.label}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <span className="sidebar-social-link__icon">
-                  <AssetIcon src={social.icon} />
-                </span>
-
-                <span className="sidebar-social-link__label">
-                  {social.label}
-                </span>
-              </a>
+                social={social}
+              />
             ))}
           </div>
 
@@ -390,19 +427,12 @@ export function AppSidebar({
             <div className="mobile-drawer__socials">
               {SOCIAL_LINKS.map(
                 (social) => (
-                  <a
-                    href={social.href}
+                  <SidebarSocialLink
                     key={social.label}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <AssetIcon
-                      src={social.icon}
-                    />
-                    <span>
-                      {social.label}
-                    </span>
-                  </a>
+                    mobile
+                    onClick={closeMobile}
+                    social={social}
+                  />
                 ),
               )}
             </div>

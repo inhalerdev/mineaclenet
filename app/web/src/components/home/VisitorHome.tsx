@@ -6,6 +6,7 @@ import { PlayerAvatar } from "@/components/players/PlayerAvatar";
 import { PlayerSearch } from "@/components/players/PlayerSearch";
 import type { Viewer } from "@/features/auth/types";
 import { homeContent } from "@/features/home/home-content";
+import { useOneShotGif } from "@/shared/media/use-one-shot-gif";
 import {
   siteNavigation,
   type SiteNavIcon,
@@ -53,13 +54,11 @@ const SOCIAL_LINKS = [
     label: "Discord",
     href: "https://discord.gg/4xrYFxdSWg",
     icon: DISCORD_ICON,
-    animated: true,
   },
   {
     label: "X",
     href: "https://x.com/mineaclenetwork",
-    icon: `${SOCIAL_ROOT}/x-white.svg`,
-    animated: false,
+    icon: `${SOCIAL_ROOT}/x.gif`,
   },
 ] as const;
 
@@ -85,55 +84,6 @@ function playerBodyUrl(uuid: string) {
   return `https://mc-heads.net/body/${encodeURIComponent(uuid)}/110.png`;
 }
 
-function removeGifLoopExtension(data: ArrayBuffer) {
-  const bytes = new Uint8Array(data);
-  const signatures = ["NETSCAPE2.0", "ANIMEXTS1.0"];
-
-  for (let index = 3; index <= bytes.length - 11; index += 1) {
-    if (
-      bytes[index - 3] !== 0x21 ||
-      bytes[index - 2] !== 0xff ||
-      bytes[index - 1] !== 0x0b
-    ) {
-      continue;
-    }
-
-    const signature = String.fromCharCode(
-      ...bytes.slice(index, index + 11),
-    );
-
-    if (!signatures.includes(signature)) {
-      continue;
-    }
-
-    const extensionStart = index - 3;
-    let extensionEnd = index + 11;
-
-    while (extensionEnd < bytes.length) {
-      const blockSize = bytes[extensionEnd];
-      extensionEnd += 1;
-
-      if (blockSize === 0) {
-        break;
-      }
-
-      extensionEnd += blockSize;
-    }
-
-    const singlePlayGif = new Uint8Array(
-      bytes.length - (extensionEnd - extensionStart),
-    );
-    singlePlayGif.set(bytes.slice(0, extensionStart));
-    singlePlayGif.set(
-      bytes.slice(extensionEnd),
-      extensionStart,
-    );
-    return singlePlayGif.buffer;
-  }
-
-  return data;
-}
-
 function AccountActionLink({
   href,
   icon,
@@ -143,62 +93,7 @@ function AccountActionLink({
   icon: string;
   label: string;
 }) {
-  const [animationSrc, setAnimationSrc] =
-    useState<string | null>(null);
-  const gifRef = useRef<Blob | null>(null);
-  const hoveredRef = useRef(false);
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    async function prepareAnimation() {
-      try {
-        const response = await fetch(icon, {
-          signal: controller.signal,
-        });
-
-        if (!response.ok) {
-          return;
-        }
-
-        const gifData = removeGifLoopExtension(
-          await response.arrayBuffer(),
-        );
-        const gif = new Blob([gifData], { type: "image/gif" });
-
-        gifRef.current = gif;
-        setAnimationSrc(URL.createObjectURL(gif));
-      } catch (error) {
-        if (!(error instanceof DOMException && error.name === "AbortError")) {
-          console.error(`Unable to prepare ${label} animation`, error);
-        }
-      }
-    }
-
-    void prepareAnimation();
-
-    return () => controller.abort();
-  }, [icon, label]);
-
-  useEffect(() => {
-    if (!animationSrc?.startsWith("blob:")) {
-      return;
-    }
-
-    return () => URL.revokeObjectURL(animationSrc);
-  }, [animationSrc]);
-
-  function startAnimation() {
-    if (hoveredRef.current) {
-      return;
-    }
-
-    hoveredRef.current = true;
-
-    if (gifRef.current) {
-      setAnimationSrc(URL.createObjectURL(gifRef.current));
-    }
-  }
+  const animation = useOneShotGif(icon);
 
   return (
     <a
@@ -206,18 +101,47 @@ function AccountActionLink({
       href={href}
       aria-label={label}
       title={label}
-      onMouseEnter={startAnimation}
-      onMouseLeave={() => {
-        hoveredRef.current = false;
-      }}
+      onMouseEnter={animation.start}
+      onMouseLeave={animation.stop}
     >
       <img
-        key={animationSrc}
-        src={animationSrc ?? icon}
+        key={animation.src}
+        src={animation.src}
         alt=""
         aria-hidden="true"
         draggable={false}
       />
+    </a>
+  );
+}
+
+function SocialLink({
+  href,
+  icon,
+  label,
+}: {
+  href: string;
+  icon: string;
+  label: string;
+}) {
+  const animation = useOneShotGif(icon);
+
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      aria-label={label}
+      onMouseEnter={animation.start}
+      onMouseLeave={animation.stop}
+    >
+      <img
+        key={animation.src}
+        src={animation.src}
+        alt=""
+        draggable={false}
+      />
+      <span>{label}</span>
     </a>
   );
 }
@@ -241,55 +165,10 @@ export function VisitorHome({
     useState<ServerStatus | null>(null);
   const [navAnimationRun, setNavAnimationRun] =
     useState<Partial<Record<SiteNavIcon, boolean>>>({});
-  const [discordAnimationSrc, setDiscordAnimationSrc] =
-    useState<string | null>(null);
 
   const profileRef = useRef<HTMLDivElement>(null);
-  const discordHoveredRef = useRef(false);
-  const discordGifRef = useRef<Blob | null>(null);
 
   const modalOpen = joinOpen || authMode !== null;
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    async function prepareDiscordAnimation() {
-      try {
-        const response = await fetch(DISCORD_ICON, {
-          signal: controller.signal,
-        });
-
-        if (!response.ok) {
-          return;
-        }
-
-        const gifData = removeGifLoopExtension(
-          await response.arrayBuffer(),
-        );
-        const gif = new Blob([gifData], { type: "image/gif" });
-        const animationUrl = URL.createObjectURL(gif);
-
-        discordGifRef.current = gif;
-        setDiscordAnimationSrc(animationUrl);
-      } catch (error) {
-        if (!(error instanceof DOMException && error.name === "AbortError")) {
-          console.error("Unable to prepare Discord animation", error);
-        }
-      }
-    }
-
-    void prepareDiscordAnimation();
-
-    return () => controller.abort();
-  }, []);
-
-  useEffect(() => {
-    if (!discordAnimationSrc?.startsWith("blob:")) {
-      return;
-    }
-
-    return () => URL.revokeObjectURL(discordAnimationSrc);
-  }, [discordAnimationSrc]);
 
   useEffect(() => {
     function closeProfile(event: MouseEvent) {
@@ -513,24 +392,6 @@ export function VisitorHome({
     }));
   }
 
-  function startDiscordAnimation() {
-    if (discordHoveredRef.current) {
-      return;
-    }
-
-    discordHoveredRef.current = true;
-
-    if (discordGifRef.current) {
-      setDiscordAnimationSrc(
-        URL.createObjectURL(discordGifRef.current),
-      );
-    }
-  }
-
-  function stopDiscordHover() {
-    discordHoveredRef.current = false;
-  }
-
   async function copyServerAddress() {
     try {
       await navigator.clipboard.writeText(SERVER_ADDRESS);
@@ -693,39 +554,12 @@ export function VisitorHome({
           >
             <div className={styles.socialLinks}>
               {SOCIAL_LINKS.map((social) => (
-                <a
+                <SocialLink
                   href={social.href}
+                  icon={social.icon}
                   key={social.label}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={social.label}
-                  onMouseEnter={
-                    social.animated
-                      ? startDiscordAnimation
-                      : undefined
-                  }
-                  onMouseLeave={
-                    social.animated
-                      ? stopDiscordHover
-                      : undefined
-                  }
-                >
-                  <img
-                    key={
-                      social.animated
-                        ? discordAnimationSrc
-                        : social.icon
-                    }
-                    src={
-                      social.animated
-                        ? (discordAnimationSrc ?? social.icon)
-                        : social.icon
-                    }
-                    alt=""
-                    draggable={false}
-                  />
-                  <span>{social.label}</span>
-                </a>
+                  label={social.label}
+                />
               ))}
             </div>
           </section>
