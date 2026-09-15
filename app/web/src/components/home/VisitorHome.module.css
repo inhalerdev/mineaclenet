@@ -3854,6 +3854,10 @@
     margin: 0;
   }
 
+  .socialLinks a[data-social="x"] img {
+    filter: invert(1);
+  }
+
   .socialLinks span {
     min-width: 0;
     display: block;
@@ -3923,4 +3927,8 @@
     width: 50px;
     align-self: center;
   }
+}
+
+.socialLinks a[data-social="x"] img {
+  filter: invert(1);
 }

@@ -132,6 +132,7 @@ function SocialLink({
       target="_blank"
       rel="noreferrer"
       aria-label={label}
+      data-social={label.toLowerCase()}
       onMouseEnter={animation.start}
       onMouseLeave={animation.stop}
     >

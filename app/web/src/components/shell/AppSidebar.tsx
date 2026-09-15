@@ -71,6 +71,7 @@ function SidebarSocialLink({
       className={mobile ? undefined : "sidebar-social-link"}
       href={social.href}
       aria-label={social.label}
+      data-social={social.label.toLowerCase()}
       target="_blank"
       rel="noreferrer"
       onClick={onClick}
