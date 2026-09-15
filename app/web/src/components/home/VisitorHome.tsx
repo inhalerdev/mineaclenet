@@ -10,6 +10,7 @@ import {
   siteNavigation,
   type SiteNavIcon,
 } from "@/shared/navigation/site-navigation";
+import { useNavigationDrawer } from "@/shared/navigation/use-navigation-drawer";
 import styles from "./VisitorHome.module.css";
 
 const SERVER_ADDRESS = "mineacle.net";
@@ -224,6 +225,10 @@ function AccountActionLink({
 export function VisitorHome({
   viewer = null,
 }: VisitorHomeProps) {
+  const {
+    collapsed: navigationCollapsed,
+    toggle: toggleNavigation,
+  } = useNavigationDrawer();
   const [copied, setCopied] = useState(false);
   const [joinOpen, setJoinOpen] = useState(false);
   const [authMode, setAuthMode] =
@@ -582,11 +587,56 @@ export function VisitorHome({
 
   return (
     <>
-      <main className={styles.page}>
+      <main
+        className={`${styles.page} ${
+          navigationCollapsed ? styles.navCollapsed : ""
+        }`}
+      >
         <aside
           className={styles.sideNav}
           aria-label="Mineacle navigation"
         >
+          <a
+            className={styles.navBrand}
+            href="/"
+            aria-label="Mineacle home"
+          >
+            <img
+              className={styles.navBrandWordmark}
+              src="/shared/images/branding/mineacle-logo.png"
+              alt="Mineacle"
+              draggable={false}
+            />
+            <img
+              className={styles.navBrandMark}
+              src="/shared/images/branding/mineacle-mark.png"
+              alt=""
+              aria-hidden="true"
+              draggable={false}
+            />
+          </a>
+
+          <button
+            className={styles.navDrawerToggle}
+            type="button"
+            aria-expanded={!navigationCollapsed}
+            aria-label={
+              navigationCollapsed
+                ? "Expand navigation"
+                : "Collapse navigation"
+            }
+            title={
+              navigationCollapsed
+                ? "Expand navigation"
+                : "Collapse navigation"
+            }
+            onClick={toggleNavigation}
+          >
+            <span aria-hidden="true">
+              {navigationCollapsed ? "›" : "‹"}
+            </span>
+          </button>
+
           <nav
             className={styles.primaryNav}
             aria-label="Primary navigation"

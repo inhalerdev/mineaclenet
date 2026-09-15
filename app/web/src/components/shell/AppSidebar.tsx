@@ -9,6 +9,7 @@ import {
   type SiteNavIcon,
   type SiteNavItem,
 } from "@/shared/navigation/site-navigation";
+import { useNavigationDrawer } from "@/shared/navigation/use-navigation-drawer";
 
 const ICON_ROOT =
   "/shared/images/icons/streamline/core-solid";
@@ -28,11 +29,6 @@ const SOCIAL_LINKS = [
     label: "Discord",
     href: "https://discord.gg/4xrYFxdSWg",
     icon: `${SOCIAL_ROOT}/discord-white.svg`,
-  },
-  {
-    label: "YouTube",
-    href: "https://www.youtube.com/@MineacleNetwork",
-    icon: `${SOCIAL_ROOT}/youtube-white.svg`,
   },
   {
     label: "X",
@@ -82,6 +78,10 @@ export function AppSidebar({
   viewer?: Viewer | null;
 }) {
   const pathname = usePathname();
+  const {
+    collapsed: navigationCollapsed,
+    toggle: toggleNavigation,
+  } = useNavigationDrawer();
   const [mobileOpen, setMobileOpen] =
     useState(false);
   const [navAnimationRun, setNavAnimationRun] =
@@ -99,7 +99,11 @@ export function AppSidebar({
 
   return (
     <>
-      <aside className="site-sidebar">
+      <aside
+        className={`site-sidebar ${
+          navigationCollapsed ? "is-collapsed" : ""
+        }`}
+      >
         <div className="sidebar-head">
           <a
             className="sidebar-brand"
@@ -119,6 +123,27 @@ export function AppSidebar({
               alt="Mineacle"
             />
           </a>
+
+          <button
+            className="sidebar-drawer-toggle"
+            type="button"
+            aria-expanded={!navigationCollapsed}
+            aria-label={
+              navigationCollapsed
+                ? "Expand navigation"
+                : "Collapse navigation"
+            }
+            title={
+              navigationCollapsed
+                ? "Expand navigation"
+                : "Collapse navigation"
+            }
+            onClick={toggleNavigation}
+          >
+            <span aria-hidden="true">
+              {navigationCollapsed ? "›" : "‹"}
+            </span>
+          </button>
         </div>
 
         <PlayerSearch

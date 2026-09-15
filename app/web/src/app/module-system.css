@@ -228,9 +228,10 @@
  */
 
 .site-sidebar {
-  border: 1px solid var(--module-border);
-  border-radius: var(--module-radius);
-  box-shadow: var(--module-shadow);
+  border: 0;
+  border-right: 1px solid var(--module-border);
+  border-radius: 0;
+  box-shadow: none;
 }
 
 /* Page content itself remains canvas. Only its children float. */
