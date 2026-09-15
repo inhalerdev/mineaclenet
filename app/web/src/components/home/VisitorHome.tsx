@@ -32,13 +32,13 @@ const PLAY_BUTTON_ICON =
   "/images/home/visitorhome/play-button-arrowhead.png";
 const PLAY_BUTTON_COPIED_ICON =
   "/images/home/visitorhome/check.png";
-const DISCORD_ICON_VERSION = "20260914-1";
+const DISCORD_ICON = `${SOCIAL_ROOT}/discord-white.gif`;
 
 const SOCIAL_LINKS = [
   {
     label: "Discord",
     href: "https://discord.gg/4xrYFxdSWg",
-    icon: `${SOCIAL_ROOT}/discord-white.gif`,
+    icon: DISCORD_ICON,
     animated: true,
   },
   {
@@ -77,6 +77,55 @@ function playerBodyUrl(uuid: string) {
   return `https://mc-heads.net/body/${encodeURIComponent(uuid)}/110.png`;
 }
 
+function removeGifLoopExtension(data: ArrayBuffer) {
+  const bytes = new Uint8Array(data);
+  const signatures = ["NETSCAPE2.0", "ANIMEXTS1.0"];
+
+  for (let index = 3; index <= bytes.length - 11; index += 1) {
+    if (
+      bytes[index - 3] !== 0x21 ||
+      bytes[index - 2] !== 0xff ||
+      bytes[index - 1] !== 0x0b
+    ) {
+      continue;
+    }
+
+    const signature = String.fromCharCode(
+      ...bytes.slice(index, index + 11),
+    );
+
+    if (!signatures.includes(signature)) {
+      continue;
+    }
+
+    const extensionStart = index - 3;
+    let extensionEnd = index + 11;
+
+    while (extensionEnd < bytes.length) {
+      const blockSize = bytes[extensionEnd];
+      extensionEnd += 1;
+
+      if (blockSize === 0) {
+        break;
+      }
+
+      extensionEnd += blockSize;
+    }
+
+    const singlePlayGif = new Uint8Array(
+      bytes.length - (extensionEnd - extensionStart),
+    );
+    singlePlayGif.set(bytes.slice(0, extensionStart));
+    singlePlayGif.set(
+      bytes.slice(extensionEnd),
+      extensionStart,
+    );
+    return singlePlayGif.buffer;
+  }
+
+  return data;
+}
+
 export function VisitorHome({
   viewer = null,
 }: VisitorHomeProps) {
@@ -92,12 +141,55 @@ export function VisitorHome({
     useState<ServerStatus | null>(null);
   const [navAnimationRun, setNavAnimationRun] =
     useState<Partial<Record<SiteNavIcon, boolean>>>({});
-  const [discordAnimationRun, setDiscordAnimationRun] =
-    useState(false);
+  const [discordAnimationSrc, setDiscordAnimationSrc] =
+    useState<string | null>(null);
 
   const profileRef = useRef<HTMLDivElement>(null);
+  const discordHoveredRef = useRef(false);
+  const discordGifRef = useRef<Blob | null>(null);
 
   const modalOpen = joinOpen || authMode !== null;
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function prepareDiscordAnimation() {
+      try {
+        const response = await fetch(DISCORD_ICON, {
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          return;
+        }
+
+        const gifData = removeGifLoopExtension(
+          await response.arrayBuffer(),
+        );
+        const gif = new Blob([gifData], { type: "image/gif" });
+        const animationUrl = URL.createObjectURL(gif);
+
+        discordGifRef.current = gif;
+        setDiscordAnimationSrc(animationUrl);
+      } catch (error) {
+        if (!(error instanceof DOMException && error.name === "AbortError")) {
+          console.error("Unable to prepare Discord animation", error);
+        }
+      }
+    }
+
+    void prepareDiscordAnimation();
+
+    return () => controller.abort();
+  }, []);
+
+  useEffect(() => {
+    if (!discordAnimationSrc?.startsWith("blob:")) {
+      return;
+    }
+
+    return () => URL.revokeObjectURL(discordAnimationSrc);
+  }, [discordAnimationSrc]);
 
   useEffect(() => {
     function closeProfile(event: MouseEvent) {
@@ -321,6 +413,24 @@ export function VisitorHome({
     }));
   }
 
+  function startDiscordAnimation() {
+    if (discordHoveredRef.current) {
+      return;
+    }
+
+    discordHoveredRef.current = true;
+
+    if (discordGifRef.current) {
+      setDiscordAnimationSrc(
+        URL.createObjectURL(discordGifRef.current),
+      );
+    }
+  }
+
+  function stopDiscordHover() {
+    discordHoveredRef.current = false;
+  }
+
   async function copyServerAddress() {
     try {
       await navigator.clipboard.writeText(SERVER_ADDRESS);
@@ -446,32 +556,26 @@ export function VisitorHome({
                   aria-label={social.label}
                   onMouseEnter={
                     social.animated
-                      ? () =>
-                          setDiscordAnimationRun(
-                            (current) => !current,
-                          )
+                      ? startDiscordAnimation
+                      : undefined
+                  }
+                  onMouseLeave={
+                    social.animated
+                      ? stopDiscordHover
                       : undefined
                   }
                 >
                   <img
                     key={
                       social.animated
-                        ? `discord-${
-                            discordAnimationRun
-                              ? "a"
-                              : "b"
-                          }`
+                        ? discordAnimationSrc
                         : social.icon
                     }
-                    src={`${social.icon}${
+                    src={
                       social.animated
-                        ? `?v=${DISCORD_ICON_VERSION}&run=${
-                            discordAnimationRun
-                              ? "a"
-                              : "b"
-                          }`
-                        : ""
-                    }`}
+                        ? (discordAnimationSrc ?? social.icon)
+                        : social.icon
+                    }
                     alt=""
                     draggable={false}
                   />
