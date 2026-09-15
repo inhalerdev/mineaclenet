@@ -55,12 +55,6 @@ const SOCIAL_LINKS = [
     animated: true,
   },
   {
-    label: "YouTube",
-    href: "https://www.youtube.com/@MineacleNetwork",
-    icon: `${SOCIAL_ROOT}/youtube-white.svg`,
-    animated: false,
-  },
-  {
     label: "X",
     href: "https://x.com/mineaclenetwork",
     icon: `${SOCIAL_ROOT}/x-white.svg`,
