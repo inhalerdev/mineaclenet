@@ -34,6 +34,19 @@ const PLAY_BUTTON_COPIED_ICON =
   "/images/home/visitorhome/check.png";
 const DISCORD_ICON = `${SOCIAL_ROOT}/discord-white.gif`;
 
+const ACCOUNT_ACTIONS = [
+  {
+    label: "Friends",
+    href: "/following",
+    icon: `${ICON_ROOT}/social.gif`,
+  },
+  {
+    label: "Settings",
+    href: "/profile",
+    icon: `${ICON_ROOT}/settings.gif`,
+  },
+] as const;
+
 const SOCIAL_LINKS = [
   {
     label: "Discord",
@@ -124,6 +137,94 @@ function removeGifLoopExtension(data: ArrayBuffer) {
   }
 
   return data;
+}
+
+function AccountActionLink({
+  href,
+  icon,
+  label,
+}: {
+  href: string;
+  icon: string;
+  label: string;
+}) {
+  const [animationSrc, setAnimationSrc] =
+    useState<string | null>(null);
+  const gifRef = useRef<Blob | null>(null);
+  const hoveredRef = useRef(false);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function prepareAnimation() {
+      try {
+        const response = await fetch(icon, {
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          return;
+        }
+
+        const gifData = removeGifLoopExtension(
+          await response.arrayBuffer(),
+        );
+        const gif = new Blob([gifData], { type: "image/gif" });
+
+        gifRef.current = gif;
+        setAnimationSrc(URL.createObjectURL(gif));
+      } catch (error) {
+        if (!(error instanceof DOMException && error.name === "AbortError")) {
+          console.error(`Unable to prepare ${label} animation`, error);
+        }
+      }
+    }
+
+    void prepareAnimation();
+
+    return () => controller.abort();
+  }, [icon, label]);
+
+  useEffect(() => {
+    if (!animationSrc?.startsWith("blob:")) {
+      return;
+    }
+
+    return () => URL.revokeObjectURL(animationSrc);
+  }, [animationSrc]);
+
+  function startAnimation() {
+    if (hoveredRef.current) {
+      return;
+    }
+
+    hoveredRef.current = true;
+
+    if (gifRef.current) {
+      setAnimationSrc(URL.createObjectURL(gifRef.current));
+    }
+  }
+
+  return (
+    <a
+      className={styles.accountActionLink}
+      href={href}
+      aria-label={label}
+      title={label}
+      onMouseEnter={startAnimation}
+      onMouseLeave={() => {
+        hoveredRef.current = false;
+      }}
+    >
+      <img
+        key={animationSrc}
+        src={animationSrc ?? icon}
+        alt=""
+        aria-hidden="true"
+        draggable={false}
+      />
+    </a>
+  );
 }
 
 export function VisitorHome({
@@ -611,100 +712,116 @@ export function VisitorHome({
               </button>
             </div>
           ) : (
-            <div
-              className={styles.profileMenu}
-              ref={profileRef}
-            >
-              <button
-                className={styles.profileTrigger}
-                type="button"
-                aria-expanded={profileOpen}
-                aria-haspopup="menu"
-                onClick={() =>
-                  setProfileOpen((value) => !value)
-                }
+            <div className={styles.signedInActions}>
+              <nav
+                className={styles.accountActionLinks}
+                aria-label="Player shortcuts"
               >
-                <PlayerAvatar
-                  uuid={viewer.uuid}
-                  size={32}
-                  className={styles.profileHead}
-                  eager
-                />
+                {ACCOUNT_ACTIONS.map((action) => (
+                  <AccountActionLink
+                    href={action.href}
+                    icon={action.icon}
+                    label={action.label}
+                    key={action.label}
+                  />
+                ))}
+              </nav>
 
-                <span>{viewer.username}</span>
-                <img
-                  className={styles.profileChevron}
-                  src={`${ICON_ROOT}/profile-dropdown.png`}
-                  alt=""
-                  aria-hidden="true"
-                  draggable={false}
-                />
-              </button>
-
-              {profileOpen ? (
-                <div
-                  className={styles.profileDropdown}
-                  role="menu"
+              <div
+                className={styles.profileMenu}
+                ref={profileRef}
+              >
+                <button
+                  className={styles.profileTrigger}
+                  type="button"
+                  aria-expanded={profileOpen}
+                  aria-haspopup="menu"
+                  onClick={() =>
+                    setProfileOpen((value) => !value)
+                  }
                 >
-                  <div className={styles.profileSkin}>
-                    <img
-                      src={playerBodyUrl(viewer.uuid)}
-                      alt={`${viewer.username} skin`}
-                      draggable={false}
-                    />
-                  </div>
+                  <PlayerAvatar
+                    uuid={viewer.uuid}
+                    size={32}
+                    className={styles.profileHead}
+                    eager
+                  />
 
-                  <div className={styles.profileDetails}>
-                    <div className={styles.profileIdentity}>
-                      <PlayerAvatar
-                        uuid={viewer.uuid}
-                        size={38}
-                        className={styles.dropdownHead}
-                        eager
+                  <span>{viewer.username}</span>
+                  <img
+                    className={styles.profileChevron}
+                    src={`${ICON_ROOT}/profile-dropdown.png`}
+                    alt=""
+                    aria-hidden="true"
+                    draggable={false}
+                  />
+                </button>
+
+                {profileOpen ? (
+                  <div
+                    className={styles.profileDropdown}
+                    role="menu"
+                  >
+                    <div className={styles.profileSkin}>
+                      <img
+                        src={playerBodyUrl(viewer.uuid)}
+                        alt={`${viewer.username} skin`}
+                        draggable={false}
                       />
-
-                      <span>
-                        <small>VERIFIED PLAYER</small>
-                        <strong>{viewer.username}</strong>
-                      </span>
                     </div>
 
-                    <nav>
-                      <a href="/profile">
-                        Manage profile
-                        <span>→</span>
-                      </a>
+                    <div className={styles.profileDetails}>
+                      <div className={styles.profileIdentity}>
+                        <PlayerAvatar
+                          uuid={viewer.uuid}
+                          size={38}
+                          className={styles.dropdownHead}
+                          eager
+                        />
 
-                      <a href="/following">
-                        Following
-                        <b>{viewer.followingCount}</b>
-                      </a>
+                        <span>
+                          <small>VERIFIED PLAYER</small>
+                          <strong>{viewer.username}</strong>
+                        </span>
+                      </div>
 
-                      <a href="/notifications">
-                        Notifications
-                        {viewer.unreadNotifications > 0 ? (
-                          <b>
-                            {viewer.unreadNotifications}
-                          </b>
-                        ) : (
+                      <nav>
+                        <a href="/profile">
+                          Manage profile
                           <span>→</span>
-                        )}
-                      </a>
-                    </nav>
+                        </a>
 
-                    <button
-                      className={styles.logoutButton}
-                      type="button"
-                      onClick={logout}
-                      disabled={loggingOut}
-                    >
-                      {loggingOut
-                        ? "Logging out..."
-                        : "Log out"}
-                    </button>
+                        <a href="/following">
+                          Following
+                          <b>{viewer.followingCount}</b>
+                        </a>
+
+                        <a href="/notifications">
+                          Notifications
+                          {viewer.unreadNotifications > 0 ? (
+                            <b>
+                              {viewer.unreadNotifications}
+                            </b>
+                          ) : (
+                            <span>→</span>
+                          )}
+                        </a>
+                      </nav>
+
+                      <button
+                        className={styles.logoutButton}
+                        type="button"
+                        onClick={logout}
+                        disabled={loggingOut}
+                      >
+                        {loggingOut
+                          ? "Logging out..."
+                          : "Log out"}
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ) : null}
+                ) : null}
+              </div>
             </div>
           )}
         </div>

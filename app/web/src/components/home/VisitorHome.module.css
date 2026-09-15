@@ -3505,3 +3505,74 @@
     font-size: 9px;
   }
 }
+
+/* ---------- Signed-in shortcuts ---------- */
+
+.signedInActions {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.accountActionLinks {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.accountActionLink {
+  position: relative;
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  min-height: 36px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid var(--home-border);
+  border-radius: var(--home-control-radius);
+  background: #171717;
+  isolation: isolate;
+  transition:
+    border-color var(--ease),
+    background-color var(--ease);
+}
+
+.accountActionLink:hover,
+.accountActionLink:focus-visible {
+  border-color: var(--home-border-hover);
+  background: #202020;
+}
+
+.accountActionLink img {
+  width: 22px;
+  height: 22px;
+  display: block;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  filter: invert(1);
+  mix-blend-mode: screen;
+}
+
+@media (max-width: 520px) {
+  .signedInActions,
+  .accountActionLinks {
+    gap: 6px;
+  }
+
+  .accountActionLink {
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
+    min-height: 34px;
+  }
+
+  .accountActionLink img {
+    width: 20px;
+    height: 20px;
+  }
+}
