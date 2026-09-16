@@ -30,11 +30,13 @@ const SOCIAL_LINKS = [
     label: "Discord",
     href: "https://discord.gg/4xrYFxdSWg",
     icon: `${SOCIAL_ROOT}/discord-white.gif`,
+    sourceIsOneShot: false,
   },
   {
     label: "X",
     href: "https://x.com/mineaclenetwork",
     icon: `${SOCIAL_ROOT}/x.gif`,
+    sourceIsOneShot: true,
   },
 ] as const;
 
@@ -64,7 +66,10 @@ function SidebarSocialLink({
   mobile?: boolean;
   onClick?: () => void;
 }) {
-  const animation = useOneShotGif(social.icon);
+  const animation = useOneShotGif(
+    social.icon,
+    social.sourceIsOneShot,
+  );
 
   return (
     <a

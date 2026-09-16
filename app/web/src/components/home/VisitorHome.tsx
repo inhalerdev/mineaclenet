@@ -54,11 +54,13 @@ const SOCIAL_LINKS = [
     label: "Discord",
     href: "https://discord.gg/4xrYFxdSWg",
     icon: DISCORD_ICON,
+    sourceIsOneShot: false,
   },
   {
     label: "X",
     href: "https://x.com/mineaclenetwork",
     icon: `${SOCIAL_ROOT}/x.gif`,
+    sourceIsOneShot: true,
   },
 ] as const;
 
@@ -119,12 +121,17 @@ function SocialLink({
   href,
   icon,
   label,
+  sourceIsOneShot,
 }: {
   href: string;
   icon: string;
   label: string;
+  sourceIsOneShot: boolean;
 }) {
-  const animation = useOneShotGif(icon);
+  const animation = useOneShotGif(
+    icon,
+    sourceIsOneShot,
+  );
 
   return (
     <a
@@ -560,6 +567,9 @@ export function VisitorHome({
                   icon={social.icon}
                   key={social.label}
                   label={social.label}
+                  sourceIsOneShot={
+                    social.sourceIsOneShot
+                  }
                 />
               ))}
             </div>
