@@ -171,6 +171,8 @@ export function VisitorHome({
   const [loggingOut, setLoggingOut] = useState(false);
   const [serverStatus, setServerStatus] =
     useState<ServerStatus | null>(null);
+  const [brandAnimationRun, setBrandAnimationRun] =
+    useState(false);
   const [navAnimationRun, setNavAnimationRun] =
     useState<Partial<Record<SiteNavIcon, boolean>>>({});
 
@@ -469,20 +471,29 @@ export function VisitorHome({
             className={styles.navBrand}
             href="/"
             aria-label="Mineacle home"
+            onClick={(event) => {
+              event.preventDefault();
+              setBrandAnimationRun((current) => !current);
+            }}
           >
-            <img
-              className={styles.navBrandWordmark}
-              src="/shared/images/branding/mineacle-logo.png"
-              alt="Mineacle"
-              draggable={false}
-            />
-            <img
-              className={styles.navBrandMark}
-              src="/shared/images/branding/mineacle-mark.png"
-              alt=""
-              aria-hidden="true"
-              draggable={false}
-            />
+            <span
+              className={styles.navBrandAnimation}
+              key={brandAnimationRun ? "brand-a" : "brand-b"}
+            >
+              <img
+                className={styles.navBrandWordmark}
+                src="/shared/images/branding/mineacle-logo.png"
+                alt="Mineacle"
+                draggable={false}
+              />
+              <img
+                className={styles.navBrandMark}
+                src="/shared/images/branding/mineacle-mark.png"
+                alt=""
+                aria-hidden="true"
+                draggable={false}
+              />
+            </span>
           </a>
 
           <button
@@ -738,19 +749,6 @@ export function VisitorHome({
             className={styles.heroShade}
             aria-hidden="true"
           />
-
-          <a
-            className={styles.heroTopLogo}
-            href="/"
-            aria-label="Mineacle home"
-          >
-            <img
-              className={styles.heroLogo}
-              src="/shared/images/branding/mineacle-logo.png"
-              alt="Mineacle"
-              draggable={false}
-            />
-          </a>
 
           <div className={styles.playGroup}>
             <button

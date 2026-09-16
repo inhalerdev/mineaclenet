@@ -139,6 +139,8 @@ export function AppSidebar({
   } = useNavigationDrawer();
   const [mobileOpen, setMobileOpen] =
     useState(false);
+  const [brandAnimationRun, setBrandAnimationRun] =
+    useState(false);
   const [navAnimationRun, setNavAnimationRun] =
     useState<Partial<Record<SiteNavIcon, boolean>>>({});
 
@@ -164,19 +166,27 @@ export function AppSidebar({
             className="sidebar-brand"
             href="/"
             aria-label="Mineacle home"
+            onClick={() =>
+              setBrandAnimationRun((current) => !current)
+            }
           >
-            <span className="sidebar-brand__mark">
+            <span
+              className="sidebar-brand__animation"
+              key={brandAnimationRun ? "brand-a" : "brand-b"}
+            >
+              <span className="sidebar-brand__mark">
+                <img
+                  src="/shared/images/branding/mineacle-mark.png"
+                  alt=""
+                />
+              </span>
+
               <img
-                src="/shared/images/branding/mineacle-mark.png"
-                alt=""
+                className="sidebar-brand__wordmark"
+                src="/shared/images/branding/mineacle-logo.png"
+                alt="Mineacle"
               />
             </span>
-
-            <img
-              className="sidebar-brand__wordmark"
-              src="/shared/images/branding/mineacle-logo.png"
-              alt="Mineacle"
-            />
           </a>
 
           <button
