@@ -34,6 +34,8 @@ const PLAY_BUTTON_ICON =
   "/images/home/visitorhome/play-button-arrowhead.png";
 const PLAY_BUTTON_COPIED_ICON =
   "/images/home/visitorhome/check.png";
+const NAV_DRAWER_ARROW =
+  "/images/home/visitorhome/right-arrow.png";
 const DISCORD_ICON = `${SOCIAL_ROOT}/discord-white.gif`;
 
 const ACCOUNT_ACTIONS = [
@@ -512,9 +514,17 @@ export function VisitorHome({
             }
             onClick={toggleNavigation}
           >
-            <span aria-hidden="true">
-              {navigationCollapsed ? "›" : "‹"}
-            </span>
+            <img
+              className={`${styles.navDrawerArrow} ${
+                navigationCollapsed
+                  ? ""
+                  : styles.navDrawerArrowExpanded
+              }`}
+              src={NAV_DRAWER_ARROW}
+              alt=""
+              aria-hidden="true"
+              draggable={false}
+            />
           </button>
 
           <nav
@@ -815,10 +825,14 @@ export function VisitorHome({
           <div className={styles.panelShade} aria-hidden="true" />
           <div className={styles.panelContent}>
             <small>VOTE REWARDS</small>
-            <strong>Vote & Rewards</strong>
+            <strong>Earn a Reward</strong>
             <span className={styles.panelCta}>VIEW REWARDS</span>
           </div>
         </a>
+
+        <h2 className={styles.quickLinksHeading}>
+          Mineacle Quick Links
+        </h2>
 
         <a
           className={`${styles.homePanel} ${styles.marketplacePanel}`}
@@ -842,25 +856,6 @@ export function VisitorHome({
         </a>
 
         <a
-          className={`${styles.homePanel} ${styles.leaderboardsPanel}`}
-          href="/leaderboards"
-        >
-          <div className={styles.panelMedia}>
-            <img
-              src={homeContent.competitive.media}
-              alt={homeContent.competitive.mediaLabel}
-              draggable={false}
-            />
-          </div>
-          <div className={styles.panelShade} aria-hidden="true" />
-          <div className={styles.panelContent}>
-            <small>LIVE RANKINGS</small>
-            <strong>Leaderboards</strong>
-            <span className={styles.panelCta}>VIEW RANKINGS</span>
-          </div>
-        </a>
-
-        <a
           className={`${styles.homePanel} ${styles.punishmentsPanel}`}
           href="/punishments"
         >
@@ -876,6 +871,25 @@ export function VisitorHome({
             <small>PUBLIC RECORDS</small>
             <strong>Public bans</strong>
             <span className={styles.panelCta}>SEARCH RECORDS</span>
+          </div>
+        </a>
+
+        <a
+          className={`${styles.homePanel} ${styles.leaderboardsPanel}`}
+          href="/leaderboards"
+        >
+          <div className={styles.panelMedia}>
+            <img
+              src={homeContent.competitive.media}
+              alt={homeContent.competitive.mediaLabel}
+              draggable={false}
+            />
+          </div>
+          <div className={styles.panelShade} aria-hidden="true" />
+          <div className={styles.panelContent}>
+            <small>LIVE RANKINGS</small>
+            <strong>Leaderboards</strong>
+            <span className={styles.panelCta}>VIEW RANKINGS</span>
           </div>
         </a>
       </main>
