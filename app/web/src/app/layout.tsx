@@ -7,6 +7,17 @@ import "./punishments.css";
 import "./flat-navigation.css";
 import "./module-system.css";
 
+const navigationDrawerBootstrap = `
+  try {
+    document.documentElement.dataset.navigationCollapsed =
+      window.localStorage.getItem("mineacle:navigation-collapsed") === "true"
+        ? "true"
+        : "false";
+  } catch {
+    document.documentElement.dataset.navigationCollapsed = "false";
+  }
+`;
+
 export const metadata = {
   title: "Home | Mineacle",
   description: "Mineacle SMP — play, compete, vote, and connect with the community.",
@@ -24,7 +35,15 @@ export default function RootLayout({
   children: ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          id="mineacle-navigation-state"
+          dangerouslySetInnerHTML={{
+            __html: navigationDrawerBootstrap,
+          }}
+        />
+      </head>
       <body>{children}</body>
     </html>
   );

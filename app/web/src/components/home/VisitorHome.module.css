@@ -3987,6 +3987,7 @@
 
 @media (min-width: 961px) {
   .page {
+    --home-nav-axis: 35px;
     --home-drawer-left: 32px;
     --home-drawer-width: 288px;
     --home-drawer-gap: 32px;
@@ -4029,7 +4030,8 @@
     transition: padding-left 280ms cubic-bezier(0.2, 0.78, 0.25, 1);
   }
 
-  .page.navCollapsed {
+  .page.navCollapsed,
+  :global(html[data-navigation-collapsed="true"]) .page {
     --home-drawer-width: 96px;
     grid-template-columns:
       minmax(0, 1fr)
@@ -4087,6 +4089,7 @@
     will-change: opacity, transform, filter;
     transition:
       opacity 220ms ease,
+      left 300ms cubic-bezier(0.2, 0.78, 0.25, 1),
       transform 300ms cubic-bezier(0.2, 0.78, 0.25, 1),
       filter 220ms ease;
   }
@@ -4100,6 +4103,7 @@
   }
 
   .navBrandMark {
+    left: var(--home-nav-axis);
     width: 62px;
     height: 62px;
     opacity: 0;
@@ -4107,19 +4111,27 @@
     transform: translate(-50%, -50%) scale(0.58);
   }
 
-  .page.navCollapsed .navBrand {
+  .page.navCollapsed .navBrand,
+  :global(html[data-navigation-collapsed="true"]) .page .navBrand {
     height: 88px;
     min-height: 88px;
   }
 
-  .page.navCollapsed .navBrandWordmark {
+  .page.navCollapsed .navBrandWordmark,
+  :global(html[data-navigation-collapsed="true"])
+    .page
+    .navBrandWordmark {
+    left: var(--home-nav-axis);
     opacity: 0;
     filter: blur(4px);
     pointer-events: none;
     transform: translate(-50%, -50%) scale(0.34);
   }
 
-  .page.navCollapsed .navBrandMark {
+  .page.navCollapsed .navBrandMark,
+  :global(html[data-navigation-collapsed="true"])
+    .page
+    .navBrandMark {
     opacity: 1;
     filter: blur(0);
     transform: translate(-50%, -50%) scale(1);
@@ -4158,6 +4170,12 @@
     transform: rotate(180deg);
   }
 
+  :global(html[data-navigation-collapsed="true"])
+    .page
+    .navDrawerArrowExpanded {
+    transform: rotate(0deg);
+  }
+
   .primaryNav {
     gap: 6px;
   }
@@ -4165,13 +4183,14 @@
   .primaryNav a {
     height: 46px;
     min-height: 46px;
-    grid-template-columns: 44px minmax(0, 1fr) 18px;
-    padding: 0 12px 0 8px;
+    grid-template-columns: 68px minmax(0, 1fr) 18px;
+    padding: 0 12px 0 0;
   }
 
   .navIcon {
     width: 44px;
     height: 44px;
+    justify-self: center;
   }
 
   .navIcon img {
@@ -4179,18 +4198,68 @@
     height: 24px;
   }
 
-  .page.navCollapsed .primaryNav a,
-  .page.navCollapsed .socialLinks a {
-    width: 58px;
-    min-width: 58px;
+  .socialLinks a {
+    grid-template-columns: 68px minmax(0, 1fr);
+    padding: 0 12px 0 0;
   }
 
-  .page.navCollapsed .navIcon {
+  .socialLinks img {
+    justify-self: center;
+  }
+
+  .page.navCollapsed .primaryNav a,
+  .page.navCollapsed .socialLinks a,
+  :global(html[data-navigation-collapsed="true"])
+    .page
+    .primaryNav
+    a,
+  :global(html[data-navigation-collapsed="true"])
+    .page
+    .socialLinks
+    a {
+    width: 58px;
+    min-width: 58px;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 0;
+    margin-inline: auto;
+    padding: 0;
+  }
+
+  .page.navCollapsed .navIcon,
+  :global(html[data-navigation-collapsed="true"])
+    .page
+    .navIcon {
     width: 44px;
   }
 
-  .page.navCollapsed .socialSection {
+  .page.navCollapsed .navLabel,
+  .page.navCollapsed .primaryNav small,
+  .page.navCollapsed .socialLinks span,
+  .page.navCollapsed .socialSection::before,
+  :global(html[data-navigation-collapsed="true"])
+    .page
+    .navLabel,
+  :global(html[data-navigation-collapsed="true"])
+    .page
+    .primaryNav
+    small,
+  :global(html[data-navigation-collapsed="true"])
+    .page
+    .socialLinks
+    span,
+  :global(html[data-navigation-collapsed="true"])
+    .page
+    .socialSection::before {
+    display: none;
+  }
+
+  .page.navCollapsed .socialSection,
+  :global(html[data-navigation-collapsed="true"])
+    .page
+    .socialSection {
     width: 58px;
+    align-self: center;
   }
 
   .searchDock {
@@ -4229,22 +4298,19 @@
   }
 
   .verifyLink {
-    width: auto;
-    min-width: 0;
-    padding: 0 2px;
-    border: 0;
-    background: transparent;
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 4px;
+    min-width: 211px;
+    padding: 0 16px;
+    border: 1px solid rgba(248, 248, 248, 0.10);
+    background: #2d2d2d;
+    text-decoration: none;
     white-space: nowrap;
   }
 
   .verifyLink:hover,
   .verifyLink:focus-visible {
-    border-color: transparent;
-    background: transparent;
-    color: var(--brand-hover);
+    border-color: rgba(248, 248, 248, 0.18);
+    background: #343434;
+    color: #ffffff;
   }
 
   .loginButton {
@@ -4252,11 +4318,17 @@
     padding: 0 20px;
   }
 
-  .page.navCollapsed .verifyLink {
-    min-width: 0;
+  .page.navCollapsed .verifyLink,
+  :global(html[data-navigation-collapsed="true"])
+    .page
+    .verifyLink {
+    min-width: 207px;
   }
 
-  .page.navCollapsed .loginButton {
+  .page.navCollapsed .loginButton,
+  :global(html[data-navigation-collapsed="true"])
+    .page
+    .loginButton {
     min-width: 128px;
   }
 
@@ -4404,14 +4476,20 @@
   .verifyLink {
     width: auto;
     min-width: 0;
-    padding: 0 2px;
-    border: 0;
-    background: transparent;
+    padding: 0 14px;
+    border: 1px solid rgba(248, 248, 248, 0.10);
+    border-radius: 4px;
+    background: #2d2d2d;
     color: #f8f8f8;
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 4px;
+    text-decoration: none;
     white-space: nowrap;
+  }
+
+  .verifyLink:hover,
+  .verifyLink:focus-visible {
+    border-color: rgba(248, 248, 248, 0.18);
+    background: #343434;
+    color: #ffffff;
   }
 
   .sideNav {
