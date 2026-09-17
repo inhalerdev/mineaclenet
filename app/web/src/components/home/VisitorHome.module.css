@@ -4113,8 +4113,8 @@
 
   .page.navCollapsed .navBrand,
   :global(html[data-navigation-collapsed="true"]) .page .navBrand {
-    height: 88px;
-    min-height: 88px;
+    height: 128px;
+    min-height: 128px;
   }
 
   .page.navCollapsed .navBrandWordmark,
@@ -4786,6 +4786,256 @@
 @media (max-width: 640px) and (max-height: 620px) {
   .panelContent > .panelCta {
     display: none;
+  }
+}
+
+/* ============================================================
+   Compact fixed homepage geometry
+   Expanded and collapsed rails share one vertical/icon axis.
+   ============================================================ */
+
+@media (min-width: 961px) {
+  .page {
+    --home-nav-axis: 27px;
+    --home-drawer-left: 24px;
+    --home-drawer-width: 232px;
+    --home-drawer-gap: 20px;
+    --home-content-right: 32px;
+    --home-column-gap: 20px;
+    --home-vertical-padding: clamp(14px, 2.35dvh, 24px);
+    --home-header-gap: clamp(10px, 2dvh, 20px);
+    --home-section-gap: clamp(10px, 1.5dvh, 17px);
+    --home-heading-gap: clamp(6px, 0.9dvh, 10px);
+
+    grid-template-columns:
+      minmax(0, 1.55fr)
+      minmax(0, 1fr)
+      minmax(0, 1fr);
+    grid-template-rows:
+      40px
+      var(--home-header-gap)
+      min(48dvh, 540px)
+      var(--home-section-gap)
+      25px
+      var(--home-heading-gap)
+      min(27dvh, 310px)
+      minmax(0, 1fr);
+  }
+
+  .page.navCollapsed,
+  :global(html[data-navigation-collapsed="true"]) .page {
+    --home-drawer-width: 76px;
+    grid-template-columns:
+      minmax(0, 1.55fr)
+      minmax(0, 1fr)
+      minmax(0, 1fr);
+  }
+
+  .sideNav {
+    padding: 12px 10px;
+  }
+
+  .navBrand,
+  .page.navCollapsed .navBrand,
+  :global(html[data-navigation-collapsed="true"]) .page .navBrand {
+    height: 100px;
+    min-height: 100px;
+    max-height: 100px;
+    flex: 0 0 100px;
+    margin-bottom: 12px;
+  }
+
+  .navBrandWordmark {
+    width: 186px;
+    height: 82px;
+  }
+
+  .navBrandMark {
+    width: 50px;
+    height: 50px;
+  }
+
+  .navDrawerToggle {
+    right: -25px;
+    width: 25px;
+    height: 42px;
+  }
+
+  .navDrawerArrow {
+    width: 12px;
+    height: 12px;
+  }
+
+  .primaryNav {
+    gap: 4px;
+  }
+
+  .primaryNav a {
+    height: 40px;
+    min-height: 40px;
+    grid-template-columns: 52px minmax(0, 1fr) 16px;
+    gap: 7px;
+    padding: 0 10px 0 0;
+  }
+
+  .navIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .navIcon img {
+    width: 22px;
+    height: 22px;
+  }
+
+  .navLabel,
+  .socialLinks span {
+    font-size: 11px;
+  }
+
+  .socialSection {
+    padding-top: 10px;
+  }
+
+  .socialSection::before {
+    margin: 0 6px 6px;
+    font-size: 8px;
+  }
+
+  .socialLinks {
+    gap: 4px;
+  }
+
+  .socialLinks a {
+    height: 36px;
+    min-height: 36px;
+    grid-template-columns: 52px minmax(0, 1fr);
+    gap: 7px;
+    padding: 0 10px 0 0;
+  }
+
+  .socialLinks img {
+    width: 21px;
+    height: 21px;
+  }
+
+  .page.navCollapsed .primaryNav a,
+  .page.navCollapsed .socialLinks a,
+  :global(html[data-navigation-collapsed="true"])
+    .page
+    .primaryNav
+    a,
+  :global(html[data-navigation-collapsed="true"])
+    .page
+    .socialLinks
+    a {
+    width: 46px;
+    min-width: 46px;
+  }
+
+  .page.navCollapsed .navIcon,
+  :global(html[data-navigation-collapsed="true"])
+    .page
+    .navIcon {
+    width: 40px;
+  }
+
+  .page.navCollapsed .socialSection,
+  :global(html[data-navigation-collapsed="true"])
+    .page
+    .socialSection {
+    width: 46px;
+  }
+
+  .searchDock {
+    width: min(330px, 100%);
+    max-width: 330px;
+    height: 40px;
+  }
+
+  .searchDock form {
+    height: 40px;
+    border-radius: 6px;
+  }
+
+  .accountActions,
+  .signedInActions {
+    min-height: 40px;
+  }
+
+  .accountActions {
+    gap: 12px;
+  }
+
+  .verifyLink,
+  .loginButton {
+    height: 40px;
+    font-size: 13px;
+  }
+
+  .verifyLink,
+  .page.navCollapsed .verifyLink,
+  :global(html[data-navigation-collapsed="true"])
+    .page
+    .verifyLink {
+    min-width: 184px;
+    padding: 0 14px;
+  }
+
+  .loginButton,
+  .page.navCollapsed .loginButton,
+  :global(html[data-navigation-collapsed="true"])
+    .page
+    .loginButton {
+    min-width: 106px;
+    padding: 0 16px;
+  }
+
+  .quickLinksHeading {
+    font-size: 20px;
+    line-height: 25px;
+  }
+
+  .playGroup {
+    bottom: 12px;
+    width: 204px;
+  }
+
+  .playButton {
+    height: 40px;
+    font-size: 13px;
+  }
+
+  .panelContent {
+    right: 12px;
+    bottom: 11px;
+    left: 12px;
+  }
+
+  .panelContent small {
+    margin-bottom: 3px;
+    font-size: 9px;
+  }
+
+  .panelContent strong {
+    font-size: clamp(16px, 1.2vw, 20px);
+  }
+
+  .panelContent > .panelCta {
+    min-height: 28px;
+    margin-top: 8px;
+    padding: 0 9px;
+    font-size: 9px;
+  }
+
+  .panelIconStage img {
+    width: 46px;
+    height: 46px;
+  }
+
+  .rewardsPanel .panelIconStage img {
+    width: 50px;
+    height: 50px;
   }
 }
 
