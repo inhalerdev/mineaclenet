@@ -4818,7 +4818,6 @@
       var(--home-section-gap)
       25px
       var(--home-heading-gap)
-      min(27dvh, 310px)
       minmax(0, 1fr);
   }
 
@@ -4979,7 +4978,12 @@
     .page
     .verifyLink {
     min-width: 184px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 0 14px;
+    line-height: 1;
+    text-align: center;
   }
 
   .loginButton,
@@ -5037,6 +5041,33 @@
     width: 50px;
     height: 50px;
   }
+}
+
+/* Content panels stay visually static until their playful artwork is ready. */
+.homePanel {
+  transition: none;
+}
+
+.homePanel:hover {
+  border-color: var(--home-border);
+}
+
+.panelMedia img {
+  transition: none;
+}
+
+.homePanel:hover .panelMedia img {
+  filter: brightness(0.64) saturate(0.96);
+  transform: none;
+}
+
+.panelContent > .panelCta {
+  transition: none;
+}
+
+.homePanel:hover .panelCta {
+  border-color: rgba(208, 175, 255, 0.50);
+  background: #8436fe;
 }
 
 @media (prefers-reduced-motion: reduce) {
