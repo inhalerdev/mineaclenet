@@ -15,8 +15,8 @@ export type SiteNavItem = {
 export const siteNavigation: SiteNavItem[] = [
   { label: "Home", href: "/", icon: "home" },
   { label: "Leaderboards", href: "/leaderboards", icon: "leaderboard" },
-  { label: "Rewards", href: "/vote", icon: "rewards" },
-  { label: "Punishments", href: "/punishments", icon: "punishments" },
+  { label: "Vote & Rewards", href: "/vote", icon: "rewards" },
+  { label: "Public Records", href: "/punishments", icon: "punishments" },
   {
     label: "Marketplace",
     href: "https://store.mineacle.net/",

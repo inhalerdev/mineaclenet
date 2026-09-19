@@ -14,15 +14,17 @@ import { useNavigationDrawer } from "@/shared/navigation/use-navigation-drawer";
 
 const ICON_ROOT =
   "/shared/images/icons/streamline/core-solid";
+const NAV_ICON_ROOT =
+  "/shared/images/icons/mineacle-playful";
 const SOCIAL_ROOT =
   "/shared/images/icons/streamline/logos";
 
 const NAV_ICON_PATHS: Record<SiteNavIcon, string> = {
-  home: `${ICON_ROOT}/home-hover.gif`,
-  leaderboard: `${ICON_ROOT}/leaderboards-hover.gif`,
-  rewards: `${ICON_ROOT}/rewards-hover.gif`,
-  punishments: `${ICON_ROOT}/punishments-hover.gif`,
-  marketplace: `${ICON_ROOT}/marketplace-hover.gif`,
+  home: `${NAV_ICON_ROOT}/home.svg`,
+  leaderboard: `${NAV_ICON_ROOT}/leaderboards.svg`,
+  rewards: `${NAV_ICON_ROOT}/rewards.svg`,
+  punishments: `${NAV_ICON_ROOT}/punishments.svg`,
+  marketplace: `${NAV_ICON_ROOT}/marketplace.svg`,
 };
 
 const SOCIAL_LINKS = [
@@ -141,18 +143,9 @@ export function AppSidebar({
     useState(false);
   const [brandAnimationRun, setBrandAnimationRun] =
     useState(false);
-  const [navAnimationRun, setNavAnimationRun] =
-    useState<Partial<Record<SiteNavIcon, boolean>>>({});
 
   const closeMobile = () =>
     setMobileOpen(false);
-
-  function restartNavAnimation(icon: SiteNavIcon) {
-    setNavAnimationRun((current) => ({
-      ...current,
-      [icon]: !current[icon],
-    }));
-  }
 
   return (
     <>
@@ -228,9 +221,6 @@ export function AppSidebar({
             );
             const icon =
               NAV_ICON_PATHS[item.icon];
-            const run =
-              navAnimationRun[item.icon] === true;
-
             return (
               <a
                 aria-current={
@@ -239,11 +229,9 @@ export function AppSidebar({
                 className={`sidebar-nav__item ${
                   active ? "is-active" : ""
                 }`}
+                data-nav-icon={item.icon}
                 href={item.href}
                 key={item.label}
-                onMouseEnter={() =>
-                  restartNavAnimation(item.icon)
-                }
                 {...(item.external
                   ? {
                       target: "_blank",
@@ -253,9 +241,8 @@ export function AppSidebar({
               >
                 <span className="sidebar-nav__icon">
                   <AssetIcon
-                    className="asset-icon nav-gif-icon"
-                    key={`${item.icon}-${run ? "a" : "b"}`}
-                    src={`${icon}?run=${run ? "a" : "b"}`}
+                    className="asset-icon"
+                    src={icon}
                   />
                 </span>
 
@@ -411,6 +398,7 @@ export function AppSidebar({
                   className={
                     active ? "is-active" : ""
                   }
+                  data-nav-icon={item.icon}
                   href={item.href}
                   key={item.label}
                   onClick={closeMobile}
