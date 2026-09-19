@@ -41,36 +41,34 @@ const SOCIAL_LINKS = [
 const QUICK_LINKS = [
   {
     accent: "marketplace",
-    eyebrow: "MINEACLE STORE",
+    eyebrow: "STORE",
     title: "Marketplace",
-    description: "Ranks, upgrades, and extras for your next adventure.",
+    description: "Ranks & extras",
     href: "https://store.mineacle.net/",
     icon: "marketplace" as SiteNavIcon,
-    media: homeContent.mineaclePlus.media,
     external: true,
   },
   {
     accent: "rewards",
-    eyebrow: "DAILY PERKS",
+    eyebrow: "FREE PERKS",
     title: "Vote & earn",
-    description: "Support the server and pick up rewards while you play.",
+    description: "Claim rewards",
     href: "/vote",
     icon: "rewards" as SiteNavIcon,
   },
   {
     accent: "leaderboards",
-    eyebrow: "LIVE RANKINGS",
+    eyebrow: "RANKINGS",
     title: "Leaderboards",
-    description: "See who is climbing, building, and making a name.",
+    description: "See who's on top",
     href: "/leaderboards",
     icon: "leaderboard" as SiteNavIcon,
-    media: homeContent.competitive.media,
   },
   {
     accent: "records",
-    eyebrow: "PUBLIC RECORDS",
+    eyebrow: "LOOKUP",
     title: "Player records",
-    description: "Quickly search the network's public moderation history.",
+    description: "Search a player",
     href: "/punishments",
     icon: "punishments" as SiteNavIcon,
   },
@@ -416,20 +414,13 @@ export function VisitorHome({
 
         <div className={styles.sidebarSpacer} />
 
-        <section className={styles.sidebarPlayCard}>
-          <span className={styles.miniCube} aria-hidden="true">
-            <i />
-            <i />
-            <i />
-          </span>
-          <small>JAVA EDITION</small>
-          <strong>Ready to jump in?</strong>
-          <p>One click copies everything you need.</p>
-          <button type="button" onClick={copyServerAddress}>
-            <span>{copied ? "IP copied!" : SERVER_ADDRESS}</span>
-            <b aria-hidden="true">{copied ? "✓" : "COPY"}</b>
-          </button>
-        </section>
+        <div className={styles.sidebarNote}>
+          <span aria-hidden="true">✦</span>
+          <div>
+            <small>MINEACLE NETWORK</small>
+            <strong>Play your way.</strong>
+          </div>
+        </div>
 
         <div className={styles.socialRow}>
           {SOCIAL_LINKS.map((social) => (
@@ -565,7 +556,7 @@ export function VisitorHome({
           </div>
         </header>
 
-        <div className={styles.contentScroller}>
+        <main className={styles.dashboard}>
           <section
             className={styles.hero}
             aria-label="Play Mineacle"
@@ -586,7 +577,8 @@ export function VisitorHome({
             </video>
             <div className={styles.heroShade} aria-hidden="true" />
             <span className={styles.heroSticker} aria-hidden="true">
-              JAVA
+              <small>JAVA</small>
+              LET&apos;S GO!
               <b>★</b>
             </span>
 
@@ -595,28 +587,22 @@ export function VisitorHome({
                 <i aria-hidden="true" />
                 MINEACLE OPEN BETA
               </span>
-              <h1>Make your mark.</h1>
+              <h1>Come play your way.</h1>
               <p>
-                Pick a goal, build something wild, and meet players
-                who are ready for the next adventure.
+                Build a base, chase the top spot, or just hang out.
+                Mineacle is your place to jump in and have fun.
               </p>
 
               <div className={styles.heroActions}>
                 <button type="button" onClick={copyServerAddress}>
                   <span aria-hidden="true">▶</span>
-                  {copied ? "Copied to clipboard" : "Copy IP & play"}
+                  {copied ? "Copied to clipboard" : "Play Mineacle"}
                 </button>
-                <a href="/leaderboards">
-                  See what players are doing
+                <a href="/vote">
+                  Grab free rewards
                   <span aria-hidden="true">→</span>
                 </a>
               </div>
-            </div>
-
-            <div className={styles.heroTags} aria-label="Server features">
-              <span>Survival</span>
-              <span>Events</span>
-              <span>Player economy</span>
             </div>
           </section>
 
@@ -633,59 +619,53 @@ export function VisitorHome({
               <span>
                 <small>LIVE SERVER</small>
                 <strong>
-                  {isOnline ? "Mineacle is ready" : "Checking Mineacle"}
+                  {isOnline ? "The world is live" : "Checking the world"}
                 </strong>
-                <p>Java players can jump in right now.</p>
+                <p>Java Edition · mineacle.net</p>
               </span>
             </div>
 
-            <ol className={styles.joinTrack}>
-              <li>
-                <b>1</b>
-                <span>
-                  <small>FIRST</small>
-                  <strong>Copy the IP</strong>
-                </span>
-              </li>
-              <li>
-                <b>2</b>
-                <span>
-                  <small>THEN</small>
-                  <strong>Open Multiplayer</strong>
-                </span>
-              </li>
-              <li>
-                <b>3</b>
-                <span>
-                  <small>GO!</small>
-                  <strong>Join the fun</strong>
-                </span>
-              </li>
-            </ol>
-
-            <button
-              className={styles.compactCopyButton}
-              type="button"
-              onClick={copyServerAddress}
-            >
-              <span>{SERVER_ADDRESS}</span>
-              <b>{copied ? "COPIED ✓" : "COPY IP"}</b>
-            </button>
+            <div className={styles.joinGuide}>
+              <header>
+                <small>QUICK START</small>
+                <strong>Three tiny steps. Zero fuss.</strong>
+              </header>
+              <ol className={styles.joinTrack}>
+                <li>
+                  <b>1</b>
+                  <span>
+                    <small>FIRST</small>
+                    <strong>Copy the IP</strong>
+                  </span>
+                </li>
+                <li>
+                  <b>2</b>
+                  <span>
+                    <small>THEN</small>
+                    <strong>Open Multiplayer</strong>
+                  </span>
+                </li>
+                <li>
+                  <b>3</b>
+                  <span>
+                    <small>GO!</small>
+                    <strong>Join the fun</strong>
+                  </span>
+                </li>
+              </ol>
+            </div>
           </section>
 
-          <section className={styles.quickSection}>
-            <header className={styles.sectionHeading}>
-              <span>
-                <small>CHOOSE YOUR NEXT MOVE</small>
-                <h2>Quick jumps</h2>
-              </span>
-              <p>Everything important is one tap away.</p>
+          <section className={styles.actionShelf}>
+            <header className={styles.actionHeading}>
+              <small>ONE TAP AWAY</small>
+              <strong>Where to?</strong>
             </header>
 
-            <div className={styles.quickGrid}>
+            <div className={styles.actionGrid}>
               {QUICK_LINKS.map((item) => (
                 <a
-                  className={styles.quickCard}
+                  className={styles.actionCard}
                   data-accent={item.accent}
                   href={item.href}
                   key={item.title}
@@ -696,28 +676,19 @@ export function VisitorHome({
                       }
                     : {})}
                 >
-                  {"media" in item && item.media ? (
-                    <img
-                      className={styles.quickCardMedia}
-                      src={item.media}
-                      alt=""
-                      draggable={false}
-                    />
-                  ) : null}
-                  <span className={styles.quickCardGlow} aria-hidden="true" />
-                  <span className={styles.quickCardIcon}>
+                  <span className={styles.actionCardIcon}>
                     <img
                       src={NAV_ICON_PATHS[item.icon]}
                       alt=""
                       draggable={false}
                     />
                   </span>
-                  <span className={styles.quickCardCopy}>
+                  <span className={styles.actionCardCopy}>
                     <small>{item.eyebrow}</small>
                     <strong>{item.title}</strong>
-                    <p>{item.description}</p>
+                    <span>{item.description}</span>
                   </span>
-                  <b className={styles.quickCardArrow} aria-hidden="true">
+                  <b className={styles.actionCardArrow} aria-hidden="true">
                     {"external" in item && item.external ? "↗" : "→"}
                   </b>
                 </a>
@@ -725,14 +696,32 @@ export function VisitorHome({
             </div>
           </section>
 
-          <section className={styles.communityGrid}>
+          <section className={styles.playfulRow}>
+            <div className={styles.worldCard}>
+              <span className={styles.worldDecor} aria-hidden="true">
+                <i />
+                <i />
+                <i />
+              </span>
+              <span className={styles.worldCopy}>
+                <small>YOUR WORLD, YOUR RULES</small>
+                <strong>What sounds fun today?</strong>
+                <p>Build it. Trade it. Win it. Or invent something new.</p>
+              </span>
+              <div className={styles.worldChoices} aria-label="Ways to play">
+                <span data-tone="purple"><b>✦</b> Build</span>
+                <span data-tone="green"><b>◇</b> Explore</span>
+                <span data-tone="blue"><b>★</b> Compete</span>
+              </div>
+            </div>
+
             <a
-              className={styles.communityCard}
+              className={styles.discordCard}
               href="https://discord.gg/4xrYFxdSWg"
               target="_blank"
               rel="noreferrer"
             >
-              <span className={styles.communityIcon}>
+              <span className={styles.discordIcon}>
                 <img
                   src={`${SOCIAL_ICON_ROOT}/discord-white.gif`}
                   alt=""
@@ -740,8 +729,9 @@ export function VisitorHome({
                 />
               </span>
               <span>
-                <small>MEET THE COMMUNITY</small>
-                <strong>Keep the adventure going on Discord</strong>
+                <small>COMMUNITY</small>
+                <strong>Find your crew</strong>
+                <span>Chat, team up, and share builds.</span>
               </span>
               <b aria-hidden="true">↗</b>
             </a>
@@ -758,13 +748,18 @@ export function VisitorHome({
                 <strong>
                   {viewer
                     ? `Welcome back, ${viewer.username}`
-                    : "Connect your in-game player"}
+                    : "Make it yours"}
                 </strong>
+                <span>
+                  {viewer
+                    ? "Your profile is ready."
+                    : "Connect your in-game player."}
+                </span>
               </span>
               <b aria-hidden="true">→</b>
             </a>
           </section>
-        </div>
+        </main>
       </section>
 
       <div
