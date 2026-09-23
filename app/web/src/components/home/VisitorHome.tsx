@@ -5,38 +5,46 @@ import { PlayerAvatar } from "@/components/players/PlayerAvatar";
 import { PlayerSearch } from "@/components/players/PlayerSearch";
 import type { Viewer } from "@/features/auth/types";
 import { homeContent } from "@/features/home/home-content";
-import type { SiteNavIcon } from "@/shared/navigation/site-navigation";
 import styles from "./VisitorHome.module.css";
 
 const SERVER_ADDRESS = "mineacle.net";
-const NAV_ICON_ROOT = "/shared/images/icons/mineacle-playful";
-const CORE_ICON_ROOT = "/shared/images/icons/streamline/core-solid";
+const ICON_ROOT = "/shared/images/icons/mineacle-wireframe";
+const PLAY_BUTTON_ICON =
+  "/images/home/visitorhome/play-button-arrowhead.png";
+const PLAY_BUTTON_COPIED_ICON =
+  "/images/home/visitorhome/check.png";
+const STATUS_CACHE_KEY = "mineacle:home-status:mineacle.net";
+const STATUS_CACHE_MAX_AGE = 15_000;
 
-const NAV_ICON_PATHS: Record<SiteNavIcon, string> = {
-  home: `${NAV_ICON_ROOT}/home.svg`,
-  leaderboard: `${NAV_ICON_ROOT}/leaderboards.svg`,
-  rewards: `${NAV_ICON_ROOT}/rewards.svg`,
-  punishments: `${NAV_ICON_ROOT}/punishments.svg`,
-  marketplace: `${NAV_ICON_ROOT}/marketplace.svg`,
+const ICONS = {
+  close: `${ICON_ROOT}/close.png`,
+  crate: `${ICON_ROOT}/crate.png`,
+  gift: `${ICON_ROOT}/gift.png`,
+  gavel: `${ICON_ROOT}/gavel.png`,
+  home: `${ICON_ROOT}/home.png`,
+  marketplace: `${ICON_ROOT}/marketplace.png`,
+  profile: `${ICON_ROOT}/profile.png`,
+  search: `${ICON_ROOT}/search.png`,
+  trophy: `${ICON_ROOT}/trophy.png`,
 };
 
 const HEADER_NAVIGATION = [
-  { label: "Home", href: "/", icon: "home" as SiteNavIcon },
+  { label: "Home", href: "/", icon: ICONS.home },
   {
     label: "Leaderboard",
     href: "/leaderboards",
-    icon: "leaderboard" as SiteNavIcon,
+    icon: ICONS.trophy,
   },
-  { label: "Vote", href: "/vote", icon: "rewards" as SiteNavIcon },
+  { label: "Vote", href: "/vote", icon: ICONS.gift },
   {
     label: "Bans",
     href: "/punishments",
-    icon: "punishments" as SiteNavIcon,
+    icon: ICONS.gavel,
   },
   {
     label: "Marketplace",
     href: "https://store.mineacle.net/",
-    icon: "marketplace" as SiteNavIcon,
+    icon: ICONS.marketplace,
     external: true,
     featured: true,
   },
@@ -47,20 +55,23 @@ const QUICK_LINKS = [
     title: "Marketplace",
     href: "https://store.mineacle.net/",
     media: homeContent.mineaclePlus.media,
-    icon: "marketplace" as SiteNavIcon,
+    icon: ICONS.crate,
+    card: "marketplace",
     external: true,
   },
   {
     title: "Vote / Earn a Reward",
     href: "/vote",
     media: "",
-    icon: "rewards" as SiteNavIcon,
+    icon: ICONS.gift,
+    card: "vote",
   },
   {
     title: "Leaderboards",
     href: "/leaderboards",
     media: homeContent.competitive.media,
-    icon: "leaderboard" as SiteNavIcon,
+    icon: ICONS.trophy,
+    card: "leaderboards",
   },
 ] as const;
 
@@ -69,6 +80,13 @@ export type HomeLeaderboardPlayer = {
   username: string;
   displayName: string;
   online: boolean;
+};
+
+type ServerStatus = {
+  online: boolean;
+  currentlyPlaying: number;
+  checked?: boolean;
+  source?: string;
 };
 
 type VisitorHomeProps = {
@@ -84,6 +102,8 @@ export function VisitorHome({
   const [searchOpen, setSearchOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [serverStatus, setServerStatus] =
+    useState<ServerStatus | null>(null);
 
   const searchRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
@@ -125,6 +145,152 @@ export function VisitorHome({
       if (copyTimerRef.current !== null) {
         window.clearTimeout(copyTimerRef.current);
       }
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    let requestActive = false;
+
+    function normalizeStatus(
+      value: ServerStatus | null,
+    ): ServerStatus | null {
+      if (!value || typeof value !== "object") {
+        return null;
+      }
+
+      const count = Number(value.currentlyPlaying || 0);
+
+      return {
+        online: value.online === true,
+        currentlyPlaying:
+          Number.isFinite(count) && count > 0
+            ? Math.floor(count)
+            : 0,
+        checked: value.checked !== false,
+        source:
+          typeof value.source === "string" ? value.source : "",
+      };
+    }
+
+    function readCachedStatus() {
+      try {
+        const cached = JSON.parse(
+          window.localStorage.getItem(STATUS_CACHE_KEY) || "null",
+        ) as
+          | (ServerStatus & {
+              updatedAt?: number;
+            })
+          | null;
+
+        if (
+          !cached ||
+          typeof cached.updatedAt !== "number" ||
+          Date.now() - cached.updatedAt > STATUS_CACHE_MAX_AGE
+        ) {
+          return null;
+        }
+
+        return normalizeStatus(cached);
+      } catch {
+        return null;
+      }
+    }
+
+    function writeCachedStatus(status: ServerStatus) {
+      try {
+        window.localStorage.setItem(
+          STATUS_CACHE_KEY,
+          JSON.stringify({
+            ...status,
+            updatedAt: Date.now(),
+          }),
+        );
+      } catch {
+        // Storage may be unavailable in private browsing.
+      }
+    }
+
+    async function loadServerStatus() {
+      if (requestActive) {
+        return;
+      }
+
+      requestActive = true;
+
+      try {
+        const controller = new AbortController();
+        const timeout = window.setTimeout(
+          () => controller.abort(),
+          2_400,
+        );
+
+        try {
+          const response = await fetch(
+            `/api/server/status?t=${Date.now()}`,
+            {
+              cache: "no-store",
+              signal: controller.signal,
+            },
+          );
+
+          if (!response.ok) {
+            return;
+          }
+
+          const status = normalizeStatus(
+            (await response.json()) as ServerStatus,
+          );
+
+          if (status && status.checked !== false && !cancelled) {
+            setServerStatus(status);
+            writeCachedStatus(status);
+          }
+        } finally {
+          window.clearTimeout(timeout);
+        }
+      } catch {
+        // Keep the last known state on transient failures.
+      } finally {
+        requestActive = false;
+      }
+    }
+
+    const cached = readCachedStatus();
+
+    if (cached) {
+      setServerStatus(cached);
+    }
+
+    loadServerStatus();
+
+    const timer = window.setInterval(() => {
+      if (!document.hidden) {
+        loadServerStatus();
+      }
+    }, 15_000);
+
+    const onFocus = () => loadServerStatus();
+    const onVisibilityChange = () => {
+      if (!document.hidden) {
+        loadServerStatus();
+      }
+    };
+
+    window.addEventListener("focus", onFocus);
+    document.addEventListener(
+      "visibilitychange",
+      onVisibilityChange,
+    );
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener(
+        "visibilitychange",
+        onVisibilityChange,
+      );
     };
   }, []);
 
@@ -176,6 +342,10 @@ export function VisitorHome({
     }
   }
 
+  const currentlyPlaying = serverStatus
+    ? serverStatus.currentlyPlaying.toLocaleString()
+    : "—";
+
   return (
     <div className={styles.page}>
       <section className={styles.heroFrame}>
@@ -201,7 +371,7 @@ export function VisitorHome({
                   : {})}
               >
                 <img
-                  src={NAV_ICON_PATHS[item.icon]}
+                  src={item.icon}
                   alt=""
                   draggable={false}
                 />
@@ -237,7 +407,7 @@ export function VisitorHome({
                 }}
               >
                 <img
-                  src={`${CORE_ICON_ROOT}/search.png`}
+                  src={ICONS.search}
                   alt=""
                   draggable={false}
                 />
@@ -253,6 +423,7 @@ export function VisitorHome({
                   <div className={styles.searchInputRow}>
                     <PlayerSearch
                       className={styles.searchField}
+                      iconSrc={ICONS.search}
                       placeholder="Search the global player database..."
                     />
                     <button
@@ -261,7 +432,11 @@ export function VisitorHome({
                       aria-label="Close player search"
                       onClick={() => setSearchOpen(false)}
                     >
-                      ×
+                      <img
+                        src={ICONS.close}
+                        alt=""
+                        draggable={false}
+                      />
                     </button>
                   </div>
 
@@ -334,7 +509,7 @@ export function VisitorHome({
                 }}
               >
                 <img
-                  src={`${CORE_ICON_ROOT}/user.svg`}
+                  src={ICONS.profile}
                   alt=""
                   draggable={false}
                 />
@@ -400,9 +575,33 @@ export function VisitorHome({
             }
             onClick={copyServerAddress}
           >
-            <span className={styles.playButtonText} aria-hidden="true">
-              <span>PLAY NOW</span>
-              <span>COPIED TO CLIPBOARD</span>
+            <span
+              className={styles.playButtonDefault}
+              aria-hidden="true"
+            >
+              PLAY NOW
+            </span>
+            <span
+              className={styles.playButtonHover}
+              aria-hidden="true"
+            >
+              <img
+                src={PLAY_BUTTON_ICON}
+                alt=""
+                draggable={false}
+              />
+              <span>{currentlyPlaying} Currently Playing</span>
+            </span>
+            <span
+              className={styles.playButtonSuccess}
+              aria-hidden={!copied}
+            >
+              <img
+                src={PLAY_BUTTON_COPIED_ICON}
+                alt=""
+                draggable={false}
+              />
+              <span>IP Copied</span>
             </span>
           </button>
         </div>
@@ -415,7 +614,7 @@ export function VisitorHome({
         {QUICK_LINKS.map((item) => (
           <a
             className={styles.quickCard}
-            data-card={item.icon}
+            data-card={item.card}
             href={item.href}
             key={item.title}
             {...("external" in item && item.external
@@ -436,7 +635,7 @@ export function VisitorHome({
             <span className={styles.quickCardShade} aria-hidden="true" />
             <span className={styles.quickCardIcon} aria-hidden="true">
               <img
-                src={NAV_ICON_PATHS[item.icon]}
+                src={item.icon}
                 alt=""
                 draggable={false}
               />

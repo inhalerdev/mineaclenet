@@ -22,12 +22,14 @@ type PlayerSearchResult = {
 
 type PlayerSearchProps = {
   className?: string;
+  iconSrc?: string;
   placeholder?: string;
   variant?: "default" | "rail";
 };
 
 export function PlayerSearch({
   className,
+  iconSrc = SEARCH_ICON,
   placeholder = "Search for a player",
   variant = "default",
 }: PlayerSearchProps) {
@@ -162,7 +164,7 @@ export function PlayerSearch({
       >
         <img
           className={styles.searchIcon}
-          src={SEARCH_ICON}
+          src={iconSrc}
           alt=""
           draggable={false}
         />

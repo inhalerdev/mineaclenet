@@ -1,3 +1,19 @@
+@font-face {
+  font-family: "Mineacle Primary";
+  src: url("/shared/fonts/mineacle-primary.ttf") format("truetype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Mineacle Secondary";
+  src: url("/shared/fonts/mineacle-secondary.ttf") format("truetype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400;
+}
+
 .page {
   --page-margin: 32px;
   --content-gap: 16px;
@@ -26,6 +42,7 @@
   overflow: hidden;
   background: #111111;
   color: var(--text);
+  font-family: "Mineacle Primary", monospace;
 }
 
 .page button,
@@ -89,10 +106,11 @@
 }
 
 .headerNavItem img {
-  width: 16px;
-  height: 16px;
-  flex: 0 0 16px;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
   object-fit: contain;
+  image-rendering: pixelated;
 }
 
 .headerNavItem:hover,
@@ -113,6 +131,10 @@
   border-color: #ffb41f;
   background: rgba(229, 154, 0, 0.24);
   color: #ffe0a3;
+}
+
+.featuredNavItem img {
+  filter: brightness(0) saturate(100%) invert(83%) sepia(44%) saturate(1025%) hue-rotate(342deg) brightness(104%) contrast(102%);
 }
 
 .brand {
@@ -178,11 +200,11 @@
 }
 
 .headerToolButton img {
-  width: 16px;
-  height: 16px;
-  flex: 0 0 16px;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
   object-fit: contain;
-  filter: brightness(0) saturate(100%) invert(100%);
+  image-rendering: pixelated;
 }
 
 .headerToolButton i {
@@ -289,6 +311,14 @@
 .closeSearch:hover {
   background: rgba(255, 85, 85, 0.08);
   color: #ff7777;
+}
+
+.closeSearch img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: brightness(0) saturate(100%) invert(47%) sepia(90%) saturate(1404%) hue-rotate(324deg) brightness(105%) contrast(101%);
 }
 
 .topPlayersHeading {
@@ -487,6 +517,7 @@
   background: var(--green);
   color: #ffffff;
   cursor: pointer;
+  font-family: "Mineacle Secondary", "Mineacle Primary", monospace;
   box-shadow: 0 10px 26px rgba(0, 0, 0, 0.25);
   transform: translateX(50%);
   transition: background-color var(--motion), border-color var(--motion), transform var(--motion);
@@ -503,32 +534,78 @@
   transform: translateX(50%);
 }
 
-.playButtonText {
-  width: 100%;
-  height: 20px;
-  display: flex;
-  flex-direction: column;
+.playButtonDefault,
+.playButtonHover,
+.playButtonSuccess {
+  grid-area: 1 / 1;
+  display: inline-flex;
   align-items: center;
-  overflow: hidden;
-  font-size: 17px;
-  font-weight: 750;
+  justify-content: center;
+  gap: 8px;
+  pointer-events: none;
+  white-space: nowrap;
+  will-change: opacity, transform;
+  transition:
+    opacity 200ms ease,
+    transform 200ms cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+.playButtonDefault {
+  opacity: 1;
+  font-size: 18px;
   letter-spacing: 0.025em;
-  line-height: 20px;
+  transform: translateY(0);
 }
 
-.playButtonText > span {
-  width: 100%;
-  min-height: 20px;
-  text-align: center;
-  transition: transform 240ms cubic-bezier(0.2, 0.75, 0.25, 1);
-}
-
-.playButtonCopied .playButtonText > span {
-  transform: translateY(-20px);
-}
-
-.playButtonCopied .playButtonText {
+.playButtonHover,
+.playButtonSuccess {
+  opacity: 0;
+  font-family: "Mineacle Primary", monospace;
   font-size: 12px;
+  transform: translateY(125%);
+}
+
+.playButton:hover .playButtonDefault,
+.playButton:focus-visible .playButtonDefault {
+  opacity: 0;
+  transform: translateY(-125%);
+}
+
+.playButton:hover .playButtonHover,
+.playButton:focus-visible .playButtonHover {
+  opacity: 1;
+  transform: none;
+}
+
+.playButtonCopied .playButtonDefault,
+.playButtonCopied:hover .playButtonDefault,
+.playButtonCopied:focus-visible .playButtonDefault,
+.playButtonCopied .playButtonHover,
+.playButtonCopied:hover .playButtonHover,
+.playButtonCopied:focus-visible .playButtonHover {
+  opacity: 0;
+  transform: translateY(-125%);
+}
+
+.playButtonCopied .playButtonSuccess,
+.playButtonCopied:hover .playButtonSuccess,
+.playButtonCopied:focus-visible .playButtonSuccess {
+  opacity: 1;
+  transform: none;
+}
+
+.playButtonHover img,
+.playButtonSuccess img {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.playButton:hover .playButtonHover img,
+.playButton:focus-visible .playButtonHover img {
+  transform: translateX(1px);
 }
 
 .quickGrid {
@@ -584,7 +661,7 @@
     linear-gradient(0deg, rgba(13, 13, 13, 0.58), rgba(13, 13, 13, 0.18));
 }
 
-.quickCard[data-card="rewards"] {
+.quickCard[data-card="vote"] {
   background:
     radial-gradient(circle at 50% 38%, rgba(17, 252, 123, 0.12), transparent 36%),
     #222222;
@@ -594,8 +671,8 @@
   position: absolute;
   z-index: 2;
   top: calc(50% - 48px);
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   display: grid;
   place-items: center;
   opacity: 0.74;
@@ -603,9 +680,10 @@
 }
 
 .quickCardIcon img {
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   object-fit: contain;
+  image-rendering: pixelated;
 }
 
 .quickCard:hover .quickCardIcon {
@@ -667,9 +745,9 @@
   }
 
   .headerNavItem img {
-    width: 16px;
-    height: 16px;
-    flex-basis: 16px;
+    width: 24px;
+    height: 24px;
+    flex-basis: 24px;
   }
 
   .brand,
@@ -880,9 +958,9 @@
 
   .headerNavItem img,
   .headerToolButton img {
-    width: 16px;
-    height: 16px;
-    flex-basis: 16px;
+    width: 22px;
+    height: 22px;
+    flex-basis: 22px;
   }
 
   .quickCard > strong {
