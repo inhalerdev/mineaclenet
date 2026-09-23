@@ -9,20 +9,18 @@ import styles from "./VisitorHome.module.css";
 
 const SERVER_ADDRESS = "mineacle.net";
 const ICON_ROOT = "/shared/images/icons/mineacle-wireframe";
-const PLAY_BUTTON_ICON =
-  "/images/home/visitorhome/play-button-arrowhead.png";
-const PLAY_BUTTON_COPIED_ICON =
-  "/images/home/visitorhome/check.png";
 const STATUS_CACHE_KEY = "mineacle:home-status:mineacle.net";
 const STATUS_CACHE_MAX_AGE = 15_000;
 
 const ICONS = {
+  check: `${ICON_ROOT}/check.png`,
   close: `${ICON_ROOT}/close.png`,
   crate: `${ICON_ROOT}/crate.png`,
   gift: `${ICON_ROOT}/gift.png`,
   gavel: `${ICON_ROOT}/gavel.png`,
   home: `${ICON_ROOT}/home.png`,
   marketplace: `${ICON_ROOT}/marketplace.png`,
+  play: `${ICON_ROOT}/play.png`,
   profile: `${ICON_ROOT}/profile.png`,
   search: `${ICON_ROOT}/search.png`,
   trophy: `${ICON_ROOT}/trophy.png`,
@@ -99,6 +97,8 @@ export function VisitorHome({
   topPlayers = [],
 }: VisitorHomeProps) {
   const [copied, setCopied] = useState(false);
+  const [playHovered, setPlayHovered] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
@@ -107,6 +107,7 @@ export function VisitorHome({
 
   const searchRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
+  const mobileNavRef = useRef<HTMLDivElement>(null);
   const copyTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -126,12 +127,20 @@ export function VisitorHome({
       ) {
         setProfileOpen(false);
       }
+
+      if (
+        mobileNavRef.current &&
+        !mobileNavRef.current.contains(target)
+      ) {
+        setMobileMenuOpen(false);
+      }
     }
 
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         setSearchOpen(false);
         setProfileOpen(false);
+        setMobileMenuOpen(false);
       }
     }
 
@@ -145,6 +154,22 @@ export function VisitorHome({
       if (copyTimerRef.current !== null) {
         window.clearTimeout(copyTimerRef.current);
       }
+    };
+  }, []);
+
+  useEffect(() => {
+    const desktop = window.matchMedia("(min-width: 1321px)");
+    const closeMobileMenu = () => {
+      if (desktop.matches) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    closeMobileMenu();
+    desktop.addEventListener("change", closeMobileMenu);
+
+    return () => {
+      desktop.removeEventListener("change", closeMobileMenu);
     };
   }, []);
 
@@ -345,11 +370,100 @@ export function VisitorHome({
   const currentlyPlaying = serverStatus
     ? serverStatus.currentlyPlaying.toLocaleString()
     : "—";
+  const playState = copied
+    ? "copied"
+    : playHovered
+      ? "players"
+      : "idle";
 
   return (
     <div className={styles.page}>
       <section className={styles.heroFrame}>
         <header className={styles.header}>
+          <div className={styles.mobileMenuShell} ref={mobileNavRef}>
+            <button
+              className={`${styles.mobileMenuButton} ${
+                mobileMenuOpen ? styles.mobileMenuButtonOpen : ""
+              }`}
+              type="button"
+              aria-label={
+                mobileMenuOpen
+                  ? "Close navigation menu"
+                  : "Open navigation menu"
+              }
+              aria-expanded={mobileMenuOpen}
+              aria-controls="home-mobile-navigation"
+              onClick={() => {
+                setMobileMenuOpen((value) => !value);
+                setSearchOpen(false);
+                setProfileOpen(false);
+              }}
+            >
+              <span />
+              <span />
+              <span />
+            </button>
+
+            {mobileMenuOpen ? (
+              <nav
+                className={styles.mobileNavigation}
+                id="home-mobile-navigation"
+                aria-label="Mobile navigation"
+              >
+                {HEADER_NAVIGATION.map((item) => (
+                  <a
+                    className={`${styles.mobileNavigationItem} ${
+                      "featured" in item && item.featured
+                        ? styles.mobileFeaturedItem
+                        : ""
+                    }`}
+                    href={item.href}
+                    key={item.label}
+                    onClick={() => setMobileMenuOpen(false)}
+                    {...("external" in item && item.external
+                      ? {
+                          target: "_blank",
+                          rel: "noreferrer",
+                        }
+                      : {})}
+                  >
+                    <img src={item.icon} alt="" draggable={false} />
+                    <span>{item.label}</span>
+                    <b aria-hidden="true">&gt;</b>
+                  </a>
+                ))}
+
+                <button
+                  className={styles.mobileNavigationItem}
+                  type="button"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setSearchOpen(true);
+                    setProfileOpen(false);
+                  }}
+                >
+                  <img src={ICONS.search} alt="" draggable={false} />
+                  <span>Search</span>
+                  <b aria-hidden="true">&gt;</b>
+                </button>
+
+                <button
+                  className={styles.mobileNavigationItem}
+                  type="button"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setProfileOpen(true);
+                    setSearchOpen(false);
+                  }}
+                >
+                  <img src={ICONS.profile} alt="" draggable={false} />
+                  <span>My Profile</span>
+                  <b aria-hidden="true">&gt;</b>
+                </button>
+              </nav>
+            ) : null}
+          </div>
+
           <nav
             className={styles.headerNavigation}
             aria-label="Primary navigation"
@@ -404,6 +518,7 @@ export function VisitorHome({
                 onClick={() => {
                   setSearchOpen((value) => !value);
                   setProfileOpen(false);
+                  setMobileMenuOpen(false);
                 }}
               >
                 <img
@@ -412,7 +527,9 @@ export function VisitorHome({
                   draggable={false}
                 />
                 <span>Search</span>
-                <i aria-hidden="true" />
+                <span className={styles.menuArrow} aria-hidden="true">
+                  &gt;
+                </span>
               </button>
 
               {searchOpen ? (
@@ -443,7 +560,7 @@ export function VisitorHome({
                   <div className={styles.topPlayersHeading}>
                     <span>Top 3 Players Global</span>
                     <a href="/leaderboards">
-                      View More <b aria-hidden="true">›</b>
+                      View More <b aria-hidden="true">&gt;</b>
                     </a>
                   </div>
 
@@ -506,6 +623,7 @@ export function VisitorHome({
                 onClick={() => {
                   setProfileOpen((value) => !value);
                   setSearchOpen(false);
+                  setMobileMenuOpen(false);
                 }}
               >
                 <img
@@ -514,7 +632,9 @@ export function VisitorHome({
                   draggable={false}
                 />
                 <span>My Profile</span>
-                <i aria-hidden="true" />
+                <span className={styles.menuArrow} aria-hidden="true">
+                  &gt;
+                </span>
               </button>
 
               {profileOpen ? (
@@ -564,44 +684,40 @@ export function VisitorHome({
           <div className={styles.heroShade} aria-hidden="true" />
 
           <button
-            className={`${styles.playButton} ${
-              copied ? styles.playButtonCopied : ""
-            }`}
+            className={styles.playButton}
+            data-state={playState}
             type="button"
             aria-label={
               copied
-                ? "Mineacle server address copied"
-                : "Copy Mineacle server address"
+                ? "Mineacle IP copied"
+                : playHovered
+                  ? `${currentlyPlaying} players currently playing. Copy Mineacle IP`
+                  : "Copy Mineacle IP"
             }
             onClick={copyServerAddress}
+            onMouseEnter={() => setPlayHovered(true)}
+            onMouseLeave={() => setPlayHovered(false)}
+            onFocus={() => setPlayHovered(true)}
+            onBlur={() => setPlayHovered(false)}
           >
             <span
-              className={styles.playButtonDefault}
-              aria-hidden="true"
+              className={styles.playButtonContent}
+              key={playState}
+              aria-live="polite"
             >
-              PLAY NOW
-            </span>
-            <span
-              className={styles.playButtonHover}
-              aria-hidden="true"
-            >
-              <img
-                src={PLAY_BUTTON_ICON}
-                alt=""
-                draggable={false}
-              />
-              <span>{currentlyPlaying} Currently Playing</span>
-            </span>
-            <span
-              className={styles.playButtonSuccess}
-              aria-hidden={!copied}
-            >
-              <img
-                src={PLAY_BUTTON_COPIED_ICON}
-                alt=""
-                draggable={false}
-              />
-              <span>IP Copied</span>
+              {playState === "idle" ? "PLAY NOW" : null}
+              {playState === "players" ? (
+                <>
+                  <img src={ICONS.play} alt="" draggable={false} />
+                  <span>{currentlyPlaying} Currently Playing</span>
+                </>
+              ) : null}
+              {playState === "copied" ? (
+                <>
+                  <img src={ICONS.check} alt="" draggable={false} />
+                  <span>IP Copied</span>
+                </>
+              ) : null}
             </span>
           </button>
         </div>
