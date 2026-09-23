@@ -715,7 +715,16 @@ export function VisitorHome({
               key={playState}
               aria-live="polite"
             >
-              {playState === "idle" ? "PLAY NOW" : null}
+              {playState === "idle" ? (
+                <>
+                  <img
+                    src={mineacleIcons.play}
+                    alt=""
+                    draggable={false}
+                  />
+                  <span>PLAY NOW</span>
+                </>
+              ) : null}
               {playState === "players" ? (
                 <>
                   <img
