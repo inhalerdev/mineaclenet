@@ -7,10 +7,8 @@ import {
   type FormEvent,
 } from "react";
 import { PlayerAvatar } from "@/components/players/PlayerAvatar";
+import { mineacleIcons } from "@/shared/icons/mineacle-icons";
 import styles from "./PlayerSearch.module.css";
-
-const SEARCH_ICON =
-  "/shared/images/icons/streamline/core-solid/search.png";
 
 type PlayerSearchResult = {
   uuid: string;
@@ -29,7 +27,7 @@ type PlayerSearchProps = {
 
 export function PlayerSearch({
   className,
-  iconSrc = SEARCH_ICON,
+  iconSrc = mineacleIcons.search,
   placeholder = "Search for a player",
   variant = "default",
 }: PlayerSearchProps) {

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { PlayerSearch } from "@/components/players/PlayerSearch";
 import type { Viewer } from "@/features/auth/types";
-import { useOneShotGif } from "@/shared/media/use-one-shot-gif";
+import { mineacleIcons } from "@/shared/icons/mineacle-icons";
 import {
   siteNavigation,
   type SiteNavIcon,
@@ -12,33 +12,29 @@ import {
 } from "@/shared/navigation/site-navigation";
 import { useNavigationDrawer } from "@/shared/navigation/use-navigation-drawer";
 
-const ICON_ROOT =
-  "/shared/images/icons/streamline/core-solid";
-const NAV_ICON_ROOT =
-  "/shared/images/icons/mineacle-playful";
-const SOCIAL_ROOT =
-  "/shared/images/icons/streamline/logos";
-
 const NAV_ICON_PATHS: Record<SiteNavIcon, string> = {
-  home: `${NAV_ICON_ROOT}/home.svg`,
-  leaderboard: `${NAV_ICON_ROOT}/leaderboards.svg`,
-  rewards: `${NAV_ICON_ROOT}/rewards.svg`,
-  punishments: `${NAV_ICON_ROOT}/punishments.svg`,
-  marketplace: `${NAV_ICON_ROOT}/marketplace.svg`,
+  home: mineacleIcons.home,
+  leaderboard: mineacleIcons.trophy,
+  rewards: mineacleIcons.gift,
+  punishments: mineacleIcons.gavel,
+  marketplace: mineacleIcons.marketplace,
 };
 
 const SOCIAL_LINKS = [
   {
     label: "Discord",
     href: "https://discord.gg/4xrYFxdSWg",
-    icon: `${SOCIAL_ROOT}/discord-white.gif`,
-    sourceIsOneShot: false,
+    icon: mineacleIcons.socialDiscord,
+  },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/mineaclenetwork/",
+    icon: mineacleIcons.socialInstagram,
   },
   {
     label: "X",
     href: "https://x.com/mineaclenetwork",
-    icon: `${SOCIAL_ROOT}/x.gif`,
-    sourceIsOneShot: true,
+    icon: mineacleIcons.socialX,
   },
 ] as const;
 
@@ -68,11 +64,6 @@ function SidebarSocialLink({
   mobile?: boolean;
   onClick?: () => void;
 }) {
-  const animation = useOneShotGif(
-    social.icon,
-    social.sourceIsOneShot,
-  );
-
   return (
     <a
       className={mobile ? undefined : "sidebar-social-link"}
@@ -82,24 +73,16 @@ function SidebarSocialLink({
       target="_blank"
       rel="noreferrer"
       onClick={onClick}
-      onMouseEnter={animation.start}
-      onMouseLeave={animation.stop}
     >
       {mobile ? (
         <>
-          <AssetIcon
-            key={animation.src}
-            src={animation.src}
-          />
+          <AssetIcon src={social.icon} />
           <span>{social.label}</span>
         </>
       ) : (
         <>
           <span className="sidebar-social-link__icon">
-            <AssetIcon
-              key={animation.src}
-              src={animation.src}
-            />
+            <AssetIcon src={social.icon} />
           </span>
 
           <span className="sidebar-social-link__label">
@@ -285,7 +268,7 @@ export function AppSidebar({
                 </span>
               ) : (
                 <AssetIcon
-                  src={`${ICON_ROOT}/user.svg`}
+                  src={mineacleIcons.profile}
                 />
               )}
             </span>
@@ -458,7 +441,7 @@ export function AppSidebar({
                 </span>
               ) : (
                 <AssetIcon
-                  src={`${ICON_ROOT}/user.svg`}
+                  src={mineacleIcons.profile}
                 />
               )}
 

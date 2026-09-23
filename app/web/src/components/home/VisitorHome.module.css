@@ -225,21 +225,12 @@
   transform: translateY(1px);
 }
 
-.menuArrow {
+.headerToolButton .menuArrow {
   width: 12px;
+  height: 12px;
   display: block;
-  color: currentColor;
-  font-family: "Mineacle Primary", monospace;
-  font-size: 11px;
-  line-height: 1;
-  text-align: center;
-  transform: rotate(90deg);
-  transform-origin: center;
-  transition: transform var(--motion);
-}
-
-.headerToolButtonOpen .menuArrow {
-  transform: rotate(-90deg);
+  object-fit: contain;
+  image-rendering: pixelated;
 }
 
 .mobileMenuShell {

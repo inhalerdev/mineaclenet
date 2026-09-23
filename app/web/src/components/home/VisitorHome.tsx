@@ -5,44 +5,30 @@ import { PlayerAvatar } from "@/components/players/PlayerAvatar";
 import { PlayerSearch } from "@/components/players/PlayerSearch";
 import type { Viewer } from "@/features/auth/types";
 import { homeContent } from "@/features/home/home-content";
+import { mineacleIcons } from "@/shared/icons/mineacle-icons";
 import styles from "./VisitorHome.module.css";
 
 const SERVER_ADDRESS = "mineacle.net";
-const ICON_ROOT = "/shared/images/icons/mineacle-wireframe";
 const STATUS_CACHE_KEY = "mineacle:home-status:mineacle.net";
 const STATUS_CACHE_MAX_AGE = 15_000;
 
-const ICONS = {
-  check: `${ICON_ROOT}/check.png`,
-  close: `${ICON_ROOT}/close.png`,
-  crate: `${ICON_ROOT}/crate.png`,
-  gift: `${ICON_ROOT}/gift.png`,
-  gavel: `${ICON_ROOT}/gavel.png`,
-  home: `${ICON_ROOT}/home.png`,
-  marketplace: `${ICON_ROOT}/marketplace.png`,
-  play: `${ICON_ROOT}/play.png`,
-  profile: `${ICON_ROOT}/profile.png`,
-  search: `${ICON_ROOT}/search.png`,
-  trophy: `${ICON_ROOT}/trophy.png`,
-};
-
 const HEADER_NAVIGATION = [
-  { label: "Home", href: "/", icon: ICONS.home },
+  { label: "Home", href: "/", icon: mineacleIcons.home },
   {
     label: "Leaderboard",
     href: "/leaderboards",
-    icon: ICONS.trophy,
+    icon: mineacleIcons.trophy,
   },
-  { label: "Vote", href: "/vote", icon: ICONS.gift },
+  { label: "Vote", href: "/vote", icon: mineacleIcons.gift },
   {
     label: "Bans",
     href: "/punishments",
-    icon: ICONS.gavel,
+    icon: mineacleIcons.gavel,
   },
   {
     label: "Marketplace",
     href: "https://store.mineacle.net/",
-    icon: ICONS.marketplace,
+    icon: mineacleIcons.marketplace,
     external: true,
     featured: true,
   },
@@ -53,7 +39,7 @@ const QUICK_LINKS = [
     title: "Marketplace",
     href: "https://store.mineacle.net/",
     media: homeContent.mineaclePlus.media,
-    icon: ICONS.crate,
+    icon: mineacleIcons.crate,
     card: "marketplace",
     external: true,
   },
@@ -61,14 +47,14 @@ const QUICK_LINKS = [
     title: "Vote / Earn a Reward",
     href: "/vote",
     media: "",
-    icon: ICONS.gift,
+    icon: mineacleIcons.gift,
     card: "vote",
   },
   {
     title: "Leaderboards",
     href: "/leaderboards",
     media: homeContent.competitive.media,
-    icon: ICONS.trophy,
+    icon: mineacleIcons.trophy,
     card: "leaderboards",
   },
 ] as const;
@@ -442,7 +428,11 @@ export function VisitorHome({
                     setProfileOpen(false);
                   }}
                 >
-                  <img src={ICONS.search} alt="" draggable={false} />
+                  <img
+                    src={mineacleIcons.search}
+                    alt=""
+                    draggable={false}
+                  />
                   <span>Search</span>
                   <b aria-hidden="true">&gt;</b>
                 </button>
@@ -456,7 +446,11 @@ export function VisitorHome({
                     setSearchOpen(false);
                   }}
                 >
-                  <img src={ICONS.profile} alt="" draggable={false} />
+                  <img
+                    src={mineacleIcons.profile}
+                    alt=""
+                    draggable={false}
+                  />
                   <span>My Profile</span>
                   <b aria-hidden="true">&gt;</b>
                 </button>
@@ -522,14 +516,22 @@ export function VisitorHome({
                 }}
               >
                 <img
-                  src={ICONS.search}
+                  src={mineacleIcons.search}
                   alt=""
                   draggable={false}
                 />
                 <span>Search</span>
-                <span className={styles.menuArrow} aria-hidden="true">
-                  &gt;
-                </span>
+                <img
+                  className={styles.menuArrow}
+                  src={
+                    searchOpen
+                      ? mineacleIcons.arrowUp
+                      : mineacleIcons.arrowDown
+                  }
+                  alt=""
+                  aria-hidden="true"
+                  draggable={false}
+                />
               </button>
 
               {searchOpen ? (
@@ -540,7 +542,7 @@ export function VisitorHome({
                   <div className={styles.searchInputRow}>
                     <PlayerSearch
                       className={styles.searchField}
-                      iconSrc={ICONS.search}
+                      iconSrc={mineacleIcons.search}
                       placeholder="Search the global player database..."
                     />
                     <button
@@ -550,7 +552,7 @@ export function VisitorHome({
                       onClick={() => setSearchOpen(false)}
                     >
                       <img
-                        src={ICONS.close}
+                        src={mineacleIcons.close}
                         alt=""
                         draggable={false}
                       />
@@ -627,14 +629,22 @@ export function VisitorHome({
                 }}
               >
                 <img
-                  src={ICONS.profile}
+                  src={mineacleIcons.profile}
                   alt=""
                   draggable={false}
                 />
                 <span>My Profile</span>
-                <span className={styles.menuArrow} aria-hidden="true">
-                  &gt;
-                </span>
+                <img
+                  className={styles.menuArrow}
+                  src={
+                    profileOpen
+                      ? mineacleIcons.arrowUp
+                      : mineacleIcons.arrowDown
+                  }
+                  alt=""
+                  aria-hidden="true"
+                  draggable={false}
+                />
               </button>
 
               {profileOpen ? (
@@ -708,13 +718,21 @@ export function VisitorHome({
               {playState === "idle" ? "PLAY NOW" : null}
               {playState === "players" ? (
                 <>
-                  <img src={ICONS.play} alt="" draggable={false} />
+                  <img
+                    src={mineacleIcons.copy}
+                    alt=""
+                    draggable={false}
+                  />
                   <span>{currentlyPlaying} Currently Playing</span>
                 </>
               ) : null}
               {playState === "copied" ? (
                 <>
-                  <img src={ICONS.check} alt="" draggable={false} />
+                  <img
+                    src={mineacleIcons.check}
+                    alt=""
+                    draggable={false}
+                  />
                   <span>IP Copied</span>
                 </>
               ) : null}
