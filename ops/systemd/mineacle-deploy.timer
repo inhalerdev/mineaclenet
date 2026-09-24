@@ -1,0 +1,11 @@
+# /etc/systemd/system/mineacle-deploy.timer
+[Unit]
+Description=Check for new Mineacle commits every 60 seconds
+
+[Timer]
+OnBootSec=1min
+OnUnitInactiveSec=60s
+AccuracySec=5s
+
+[Install]
+WantedBy=timers.target

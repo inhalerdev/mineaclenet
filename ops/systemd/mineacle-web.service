@@ -1,0 +1,30 @@
+# /etc/systemd/system/mineacle-web.service
+# Serves whichever release /srv/mineacle/current points at.
+[Unit]
+Description=Mineacle website (Next.js)
+After=network-online.target mariadb.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=mineacle
+Group=mineacle
+WorkingDirectory=/srv/mineacle/current/app/web
+Environment=NODE_ENV=production
+Environment=NEXT_TELEMETRY_DISABLED=1
+Environment=PORT=3000
+# If Node was installed with nvm, replace /usr/bin/node with its full path
+# (run `which node` as the mineacle user).
+ExecStart=/usr/bin/node node_modules/next/dist/bin/next start -H 127.0.0.1 -p ${PORT}
+Restart=always
+RestartSec=3
+TimeoutStopSec=15
+
+# Hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ReadWritePaths=/srv/mineacle
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,16 @@
+# /etc/systemd/system/mineacle-deploy.service
+# One deploy check. Triggered every 60s by mineacle-deploy.timer.
+[Unit]
+Description=Mineacle deploy check (build new commits, switch when healthy)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=mineacle
+Group=mineacle
+# If Node/pnpm were installed with nvm, add their bin folder to PATH here.
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/usr/local/bin/mineacle-deploy
+TimeoutStartSec=20min
+Nice=10

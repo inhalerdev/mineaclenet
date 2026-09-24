@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import "./globals.css";
 import "./home.css";
 import "./systems.css";
-import "./predesign.css";
 import "./punishments.css";
 import "./flat-navigation.css";
 import "./module-system.css";

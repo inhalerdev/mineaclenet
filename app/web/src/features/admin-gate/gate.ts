@@ -1,21 +1,33 @@
-import {
-  createHash,
-  createHmac,
-  timingSafeEqual,
-} from "node:crypto";
+import { createHmac, timingSafeEqual } from "node:crypto";
 import { compare } from "bcryptjs";
+
+/**
+ * Development gateway.
+ *
+ * Every credential comes from server-side environment variables so nothing
+ * sensitive lives in the (public) Git repository:
+ *
+ *   ADMIN_GATE_USERNAME       login name for the gateway
+ *   ADMIN_GATE_PASSWORD_HASH  bcrypt hash, or its base64 form
+ *   ADMIN_GATE_SECRET         32+ random characters used to sign the cookie
+ *   ADMIN_GATE_SESSION_HOURS  optional, defaults to 12 (max 168)
+ *
+ * Generate the hash and a secret with:  pnpm gate:hash
+ *
+ * If anything is missing or malformed the gateway stays locked and the
+ * /admin page shows "Gateway configuration is incomplete".
+ */
 
 export const ADMIN_GATE_COOKIE = "mineacle_admin_gate";
 export const ADMIN_PREVIEW_COOKIE = "mineacle_admin_preview";
 
-const TOKEN_VERSION = "v1";
-const SESSION_HOURS = 12;
-
-const ADMIN_USERNAME = "notator";
-
-// bcrypt cost 12. Plaintext password is intentionally not stored in Git.
-const ADMIN_PASSWORD_HASH =
-  "$2b$12$vBgLL58BJi97LYVvhsDnsOIlScYyh8Dsy95m.JTUri7mhkQSOc6C6";
+// v2: tokens are signed with ADMIN_GATE_SECRET instead of a key derived from
+// DB_PASSWORD, so every v1 cookie is rejected and users sign in once more.
+const TOKEN_VERSION = "v2";
+const DEFAULT_SESSION_HOURS = 12;
+const MAX_SESSION_HOURS = 168;
+const MIN_SECRET_LENGTH = 32;
+const BCRYPT_HASH = /^\$2[aby]\$\d{2}\$[./A-Za-z0-9]{53}$/;
 
 function requiredEnv(name: string) {
   const value = process.env[name]?.trim();
@@ -27,16 +39,55 @@ function requiredEnv(name: string) {
   return value;
 }
 
+function adminUsername() {
+  return requiredEnv("ADMIN_GATE_USERNAME").toLowerCase();
+}
+
+function adminPasswordHash() {
+  const configured = requiredEnv("ADMIN_GATE_PASSWORD_HASH");
+
+  if (BCRYPT_HASH.test(configured)) {
+    return configured;
+  }
+
+  // Base64 form. Next.js expands `$NAME` inside .env files, which silently
+  // corrupts a raw bcrypt hash unless every `$` is escaped as `\$`.
+  const decoded = Buffer.from(configured, "base64")
+    .toString("utf8")
+    .trim();
+
+  if (BCRYPT_HASH.test(decoded)) {
+    return decoded;
+  }
+
+  throw new Error(
+    "ADMIN_GATE_PASSWORD_HASH is not a valid bcrypt hash. Use the base64 value printed by `pnpm gate:hash`, or escape every `$` as `\\$` in .env files.",
+  );
+}
+
 function gateSecret() {
-  // Derive the signing key from an existing server-only secret.
-  // DB_PASSWORD is never sent to the browser or stored in the cookie.
-  return createHash("sha256")
-    .update(`mineacle-admin-gate:${requiredEnv("DB_PASSWORD")}`)
-    .digest("hex");
+  const secret = requiredEnv("ADMIN_GATE_SECRET");
+
+  if (secret.length < MIN_SECRET_LENGTH) {
+    throw new Error(
+      `ADMIN_GATE_SECRET must be at least ${MIN_SECRET_LENGTH} characters`,
+    );
+  }
+
+  return secret;
 }
 
 function sessionSeconds() {
-  return SESSION_HOURS * 60 * 60;
+  const hours = Number(
+    process.env.ADMIN_GATE_SESSION_HOURS?.trim() ||
+      DEFAULT_SESSION_HOURS,
+  );
+  const bounded =
+    Number.isFinite(hours) && hours > 0
+      ? Math.min(hours, MAX_SESSION_HOURS)
+      : DEFAULT_SESSION_HOURS;
+
+  return Math.floor(bounded * 60 * 60);
 }
 
 function safeEqual(left: string, right: string) {
@@ -56,18 +107,25 @@ function signature(payload: string) {
     .digest("base64url");
 }
 
+/**
+ * Throws when the gateway is not configured, so the caller can show a
+ * configuration error instead of "incorrect password".
+ */
 export async function verifyAdminGateCredentials(
   username: string,
   password: string,
 ) {
+  const expectedUsername = adminUsername();
+  const hash = adminPasswordHash();
+  gateSecret();
+
+  // Always run bcrypt, even for a wrong username, so response time does not
+  // reveal which part was wrong.
   const [usernameMatches, passwordMatches] = await Promise.all([
     Promise.resolve(
-      safeEqual(
-        username.trim().toLowerCase(),
-        ADMIN_USERNAME.toLowerCase(),
-      ),
+      safeEqual(username.trim().toLowerCase(), expectedUsername),
     ),
-    compare(password, ADMIN_PASSWORD_HASH),
+    compare(password, hash),
   ]);
 
   return usernameMatches && passwordMatches;
@@ -80,7 +138,7 @@ export function createAdminGateToken() {
   const payload = Buffer.from(
     JSON.stringify({
       v: TOKEN_VERSION,
-      u: ADMIN_USERNAME,
+      u: adminUsername(),
       exp: expiresAt,
     }),
   ).toString("base64url");
@@ -100,9 +158,7 @@ export function verifyAdminGateToken(token?: string) {
       return false;
     }
 
-    const expectedSignature = signature(payload);
-
-    if (!safeEqual(suppliedSignature, expectedSignature)) {
+    if (!safeEqual(suppliedSignature, signature(payload))) {
       return false;
     }
 
@@ -121,12 +177,10 @@ export function verifyAdminGateToken(token?: string) {
       typeof data.exp === "number" &&
       data.exp > now &&
       typeof data.u === "string" &&
-      safeEqual(
-        data.u.toLowerCase(),
-        ADMIN_USERNAME.toLowerCase(),
-      )
+      safeEqual(data.u.toLowerCase(), adminUsername())
     );
   } catch {
+    // Missing configuration also lands here: the gateway stays locked.
     return false;
   }
 }

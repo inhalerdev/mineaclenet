@@ -687,6 +687,7 @@ export function VisitorHome({
             muted
             playsInline
             preload="auto"
+            poster={homeContent.hero.poster || undefined}
             aria-label={homeContent.hero.mediaLabel}
           >
             <source src={homeContent.hero.media} type="video/mp4" />

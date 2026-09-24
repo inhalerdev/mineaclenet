@@ -1,6 +1,6 @@
 {
   "name": "mineaclenet-web",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,7 +8,8 @@
     "start": "next start -H 127.0.0.1",
     "migrate": "node scripts/migrate.mjs",
     "cleanup": "node scripts/cleanup.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "gate:hash": "node scripts/gate-hash.mjs"
   },
   "dependencies": {
     "bcryptjs": "3.0.2",
@@ -22,5 +23,6 @@
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.5",
     "typescript": "5.9.2"
-  }
+  },
+  "packageManager": "pnpm@11.19.0"
 }
