@@ -19,6 +19,7 @@
   --muted: #bbbbbb;
   --primary: #b078ff;
   --secondary: #d0afff;
+  --nav-hover: #888888;
   --green: #389222;
   --green-hover: #43a82a;
   --amber: #e59a00;
@@ -63,12 +64,19 @@
 }
 
 .header {
+  /* Space kept clear on each side of the 200px logo. */
+  --logo-width: 200px;
+  --logo-clearance: 24px;
+
   position: absolute;
   z-index: 30;
   inset: 0 0 auto;
   height: var(--header-height);
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 224px minmax(0, 1fr);
+  grid-template-columns:
+    minmax(0, 1fr)
+    calc(var(--logo-width) + 2 * var(--logo-clearance))
+    minmax(0, 1fr);
   align-items: center;
   padding: 0 24px;
   border-bottom: var(--stroke-width) solid var(--border-soft);
@@ -80,6 +88,9 @@
   min-width: 0;
   display: flex;
   align-items: center;
+  /* First link starts at the header's left padding, last link ends
+     --logo-clearance before the logo, equal gaps in between. */
+  justify-content: space-between;
   gap: 8px;
 }
 
@@ -124,7 +135,7 @@
 .headerNavItem:hover,
 .headerNavItem:focus-visible {
   background: transparent;
-  color: var(--secondary);
+  color: var(--nav-hover);
 }
 
 .featuredNavItem {
@@ -212,9 +223,14 @@
 }
 
 .headerToolButton:hover,
+.headerToolButton:focus-visible {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--nav-hover);
+}
+
 .headerToolButtonOpen {
   background: rgba(255, 255, 255, 0.04);
-  color: var(--secondary);
+  color: #ffffff;
 }
 
 .headerToolButton img {
@@ -283,7 +299,7 @@
 }
 
 .searchField form:focus-within {
-  border-color: var(--secondary);
+  border-color: var(--nav-hover);
   background: #111111;
 }
 
@@ -364,7 +380,7 @@
 
 .topPlayersHeading a:hover,
 .topPlayersHeading a:focus-visible {
-  color: var(--secondary);
+  color: var(--nav-hover);
 }
 
 .topPlayersHeading b {
@@ -402,7 +418,7 @@
 
 .topPlayerCard:hover,
 .topPlayerCard:focus-visible {
-  border-color: var(--secondary);
+  border-color: var(--nav-hover);
   background: #292929;
 }
 
@@ -495,8 +511,8 @@
 .profilePanel a:focus-visible,
 .profilePanel button:hover,
 .profilePanel button:focus-visible {
-  background: rgba(176, 120, 255, 0.13);
-  color: var(--secondary);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--nav-hover);
 }
 
 .profilePanel button:disabled {
@@ -572,18 +588,39 @@
   transform: translateX(-50%);
 }
 
+/*
+ * All three labels (PLAY NOW / N Currently Playing / IP Copied) sit in the
+ * same grid cell, so the button is always as wide as the widest one and
+ * never changes size when you hover or click. Its width only changes when
+ * the player count gains or loses a digit.
+ */
 .playButtonContent {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+  display: grid;
+  place-items: center;
   color: #ffffff;
   font-size: 14px;
   font-weight: 400;
   line-height: 1;
   pointer-events: none;
   white-space: nowrap;
-  animation: playStateIn 180ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+.playButtonState {
+  grid-area: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(7px);
+  transition:
+    opacity 180ms cubic-bezier(0.2, 0.75, 0.25, 1),
+    transform 180ms cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+.playButtonState[data-active="true"] {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .playButtonContent img {
@@ -618,7 +655,7 @@
 }
 
 .quickCard:focus-visible {
-  border-color: var(--secondary);
+  border-color: var(--nav-hover);
   outline: 0;
 }
 
@@ -692,18 +729,6 @@
   from {
     opacity: 0;
     transform: translateY(-4px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes playStateIn {
-  from {
-    opacity: 0;
-    transform: translateY(7px);
   }
 
   to {
@@ -819,7 +844,7 @@
   .mobileNavigationItem:hover,
   .mobileNavigationItem:focus-visible {
     background: transparent;
-    color: var(--secondary);
+    color: var(--nav-hover);
     outline: 0;
   }
 
@@ -1124,4 +1149,25 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/*
+ * Navigation icons: #ffffff normally, #888888 on hover/keyboard focus.
+ * The icon PNGs are pure white, so brightness(0.5333) turns them into
+ * exactly #888888 (255 x 0.5333 = 136 = 0x88).
+ */
+.headerNavItem img,
+.headerToolButton img,
+.mobileNavigationItem img {
+  filter: none;
+  transition: filter var(--motion);
+}
+
+.headerNavItem:hover img,
+.headerNavItem:focus-visible img,
+.headerToolButton:hover img,
+.headerToolButton:focus-visible img,
+.mobileNavigationItem:hover img,
+.mobileNavigationItem:focus-visible img {
+  filter: brightness(0.5333);
 }

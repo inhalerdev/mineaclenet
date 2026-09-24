@@ -711,41 +711,28 @@ export function VisitorHome({
             onFocus={() => setPlayHovered(true)}
             onBlur={() => setPlayHovered(false)}
           >
-            <span
-              className={styles.playButtonContent}
-              key={playState}
-              aria-live="polite"
-            >
-              {playState === "idle" ? (
-                <>
-                  <img
-                    src={mineacleIcons.play}
-                    alt=""
-                    draggable={false}
-                  />
-                  <span>PLAY NOW</span>
-                </>
-              ) : null}
-              {playState === "players" ? (
-                <>
-                  <img
-                    src={mineacleIcons.copy}
-                    alt=""
-                    draggable={false}
-                  />
-                  <span>{currentlyPlaying} Currently Playing</span>
-                </>
-              ) : null}
-              {playState === "copied" ? (
-                <>
-                  <img
-                    src={mineacleIcons.check}
-                    alt=""
-                    draggable={false}
-                  />
-                  <span>IP Copied</span>
-                </>
-              ) : null}
+            <span className={styles.playButtonContent} aria-hidden="true">
+              <span
+                className={styles.playButtonState}
+                data-active={playState === "idle"}
+              >
+                <img src={mineacleIcons.play} alt="" draggable={false} />
+                <span>PLAY NOW</span>
+              </span>
+              <span
+                className={styles.playButtonState}
+                data-active={playState === "players"}
+              >
+                <img src={mineacleIcons.copy} alt="" draggable={false} />
+                <span>{currentlyPlaying} Currently Playing</span>
+              </span>
+              <span
+                className={styles.playButtonState}
+                data-active={playState === "copied"}
+              >
+                <img src={mineacleIcons.check} alt="" draggable={false} />
+                <span>IP Copied</span>
+              </span>
             </span>
           </button>
         </div>

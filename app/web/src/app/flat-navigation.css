@@ -1148,3 +1148,21 @@
     background: #b5791d;
   }
 }
+
+/*
+ * Navigation icons: #ffffff normally, #888888 on hover/keyboard focus
+ * (desktop sidebar and mobile drawer). invert(53.33%) of black = #888888.
+ */
+.sidebar-nav__item .asset-icon,
+.mobile-drawer nav a .asset-icon {
+  filter: brightness(0) saturate(100%) invert(100%);
+  transition: filter 150ms ease;
+}
+
+.sidebar-nav__item:hover .asset-icon,
+.sidebar-nav__item:focus-visible .asset-icon,
+.site-sidebar:hover .sidebar-nav__item.is-active:hover .asset-icon,
+.mobile-drawer nav a:hover .asset-icon,
+.mobile-drawer nav a:focus-visible .asset-icon {
+  filter: brightness(0) saturate(100%) invert(53.33%);
+}
