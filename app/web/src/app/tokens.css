@@ -1,0 +1,45 @@
+/*
+ * Mineacle color system: the single source of truth for colors.
+ *
+ * Built from the brand palette and the logo itself. The logo is drawn as a
+ * flat purple face (#B078FF), a darker purple 3D edge (#6F4FA0) and a thick
+ * near-black outline (#111111). Interactive elements reuse that exact recipe,
+ * which also matches the blocky Minecraft button style.
+ *
+ * Rules:
+ *   - Text and icons stay white. Hover never greys them out.
+ *   - Purple means "clickable / you are here": button faces, the block bar
+ *     under nav links, card hover outlines.
+ *   - #D0AFFF is only for purple-button hover.
+ *   - #11FC7B is only for small online / live indicators.
+ */
+:root {
+  /* Surfaces */
+  --mc-bg: #111111;
+  --mc-surface: #222222;
+  --mc-surface-raised: #2b2b2b;
+  --mc-outline: #0b0b0b;
+
+  /* Text */
+  --mc-text: #f8f8f8;
+  --mc-text-muted: #b3b3b3;
+
+  /* Purple (logo) */
+  --mc-purple: #8436fe;
+  --mc-purple-face: #b078ff;
+  --mc-purple-edge: #6f4fa0;
+  --mc-purple-deep: #4e2a8c;
+  --mc-purple-hover: #d0afff;
+
+  /* Green (play / call to action) */
+  --mc-green: #389222;
+  --mc-green-hover: #43a82a;
+  --mc-green-light: #62c249;
+  --mc-green-edge: #1f5a14;
+
+  /* Status */
+  --mc-live: #11fc7b;
+
+  /* Block bar under / beside nav links */
+  --mc-bar: 3px;
+}

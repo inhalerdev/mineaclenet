@@ -19,7 +19,6 @@
   --muted: #bbbbbb;
   --primary: #b078ff;
   --secondary: #d0afff;
-  --nav-hover: #888888;
   --green: #389222;
   --green-hover: #43a82a;
   --amber: #e59a00;
@@ -135,7 +134,7 @@
 .headerNavItem:hover,
 .headerNavItem:focus-visible {
   background: transparent;
-  color: var(--nav-hover);
+  color: var(--mc-text);
 }
 
 .featuredNavItem {
@@ -225,7 +224,7 @@
 .headerToolButton:hover,
 .headerToolButton:focus-visible {
   background: rgba(255, 255, 255, 0.04);
-  color: var(--nav-hover);
+  color: var(--mc-text);
 }
 
 .headerToolButtonOpen {
@@ -299,7 +298,7 @@
 }
 
 .searchField form:focus-within {
-  border-color: var(--nav-hover);
+  border-color: var(--mc-purple-face);
   background: #111111;
 }
 
@@ -380,7 +379,9 @@
 
 .topPlayersHeading a:hover,
 .topPlayersHeading a:focus-visible {
-  color: var(--nav-hover);
+  color: var(--mc-text);
+  text-decoration: underline var(--mc-bar) var(--mc-purple-face);
+  text-underline-offset: 4px;
 }
 
 .topPlayersHeading b {
@@ -418,7 +419,7 @@
 
 .topPlayerCard:hover,
 .topPlayerCard:focus-visible {
-  border-color: var(--nav-hover);
+  border-color: var(--mc-purple-face);
   background: #292929;
 }
 
@@ -511,8 +512,9 @@
 .profilePanel a:focus-visible,
 .profilePanel button:hover,
 .profilePanel button:focus-visible {
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--nav-hover);
+  background: var(--mc-surface-raised);
+  color: var(--mc-text);
+  box-shadow: inset var(--mc-bar) 0 0 var(--mc-purple-face);
 }
 
 .profilePanel button:disabled {
@@ -654,8 +656,9 @@
   color: #ffffff;
 }
 
+.quickCard:hover,
 .quickCard:focus-visible {
-  border-color: var(--nav-hover);
+  border-color: var(--mc-purple-face);
   outline: 0;
 }
 
@@ -843,8 +846,9 @@
 
   .mobileNavigationItem:hover,
   .mobileNavigationItem:focus-visible {
-    background: transparent;
-    color: var(--nav-hover);
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: inset var(--mc-bar) 0 0 var(--mc-purple-face);
+    color: var(--mc-text);
     outline: 0;
   }
 
@@ -1151,23 +1155,89 @@
   }
 }
 
-/*
- * Navigation icons: #ffffff normally, #888888 on hover/keyboard focus.
- * The icon PNGs are pure white, so brightness(0.5333) turns them into
- * exactly #888888 (255 x 0.5333 = 136 = 0x88).
- */
-.headerNavItem img,
-.headerToolButton img,
-.mobileNavigationItem img {
-  filter: none;
-  transition: filter var(--motion);
+/* ==========================================================================
+ * Mineacle color system (see app/tokens.css)
+ * ========================================================================== */
+
+/* Nav links + Search / My Profile: text and icons stay white; a purple block
+   bar (logo face + logo edge) appears under the hovered or current link. */
+.headerNavItem,
+.headerToolButton {
+  position: relative;
 }
 
-.headerNavItem:hover img,
-.headerNavItem:focus-visible img,
-.headerToolButton:hover img,
-.headerToolButton:focus-visible img,
-.mobileNavigationItem:hover img,
-.mobileNavigationItem:focus-visible img {
-  filter: brightness(0.5333);
+.headerNavItem::after,
+.headerToolButton::after {
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  height: var(--mc-bar);
+  background: var(--mc-purple-face);
+  box-shadow: 0 2px 0 var(--mc-purple-edge);
+  opacity: 0;
+  transform: scaleX(0.6);
+  transition:
+    opacity var(--motion),
+    transform var(--motion);
+  pointer-events: none;
+  content: "";
 }
+
+/* Sits on the header's bottom edge. */
+.headerNavItem::after {
+  bottom: -9px;
+}
+
+.headerToolButton::after {
+  left: 8px;
+  right: 8px;
+  bottom: 2px;
+}
+
+.headerNavItem:hover::after,
+.headerNavItem:focus-visible::after,
+.headerNavItem[aria-current="page"]::after,
+.headerToolButton:hover::after,
+.headerToolButton:focus-visible::after,
+.headerToolButtonOpen::after {
+  opacity: 1;
+  transform: none;
+}
+
+/* Play button: built like the logo / a Minecraft button:
+   green face, light top edge, dark bottom edge, black outline.
+   Pressing it sinks the button 3px. */
+.playButton {
+  padding-bottom: 4px;
+  border: 2px solid var(--mc-outline);
+  background: var(--mc-green);
+  box-shadow:
+    inset 0 3px 0 var(--mc-green-light),
+    inset 0 -5px 0 var(--mc-green-edge),
+    0 10px 26px rgba(0, 0, 0, 0.25);
+  transition:
+    background-color var(--motion),
+    box-shadow 90ms ease,
+    transform 90ms ease;
+}
+
+.playButton:hover,
+.playButton:focus-visible {
+  border-color: var(--mc-outline);
+  background: var(--mc-green-hover);
+  transform: translateX(-50%);
+}
+
+.playButton:active {
+  padding-bottom: 1px;
+  box-shadow:
+    inset 0 3px 0 var(--mc-green-light),
+    inset 0 -2px 0 var(--mc-green-edge),
+    0 6px 16px rgba(0, 0, 0, 0.25);
+  transform: translateX(-50%) translateY(3px);
+}
+
+.playButtonContent img {
+  filter: none;
+}
+

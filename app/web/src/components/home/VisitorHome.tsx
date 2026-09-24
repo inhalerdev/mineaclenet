@@ -405,6 +405,7 @@ export function VisitorHome({
                     }`}
                     href={item.href}
                     key={item.label}
+                    aria-current={item.href === "/" ? "page" : undefined}
                     onClick={() => setMobileMenuOpen(false)}
                     {...("external" in item && item.external
                       ? {
@@ -471,6 +472,7 @@ export function VisitorHome({
                 }`}
                 href={item.href}
                 key={item.label}
+                aria-current={item.href === "/" ? "page" : undefined}
                 {...("external" in item && item.external
                   ? {
                       target: "_blank",

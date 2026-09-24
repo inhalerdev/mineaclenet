@@ -213,7 +213,7 @@
 }
 
 .sidebar-nav__external {
-  color: #888888;
+  color: var(--mc-text-muted);
   font-size: 10px;
 }
 
@@ -233,7 +233,7 @@
 
 .sidebar-account-action__copy small,
 .site-sidebar:hover .sidebar-account-action__copy small {
-  color: #888888;
+  color: var(--mc-text-muted);
   font-size: 9px;
   font-weight: 500;
   letter-spacing: 0;
@@ -1149,20 +1149,47 @@
   }
 }
 
-/*
- * Navigation icons: #ffffff normally, #888888 on hover/keyboard focus
- * (desktop sidebar and mobile drawer). invert(53.33%) of black = #888888.
- */
-.sidebar-nav__item .asset-icon,
-.mobile-drawer nav a .asset-icon {
-  filter: brightness(0) saturate(100%) invert(100%);
-  transition: filter 150ms ease;
+/* ==========================================================================
+ * Mineacle color system (see app/tokens.css)
+ * Sidebar + mobile drawer: text and icons stay white; the purple block bar
+ * on the right edge shows on hover and stays on the current page.
+ * ========================================================================== */
+.sidebar-nav__item::after,
+.sidebar-nav__item.is-active::after,
+.mobile-drawer nav a::after,
+.mobile-drawer nav a.is-active::after {
+  position: absolute;
+  top: 9px;
+  right: -1px;
+  bottom: 9px;
+  width: var(--mc-bar);
+  border-radius: 0;
+  background: var(--mc-purple-face);
+  box-shadow: -2px 0 0 var(--mc-purple-edge);
+  opacity: 0;
+  transition: opacity 150ms ease;
+  pointer-events: none;
+  content: "";
 }
 
-.sidebar-nav__item:hover .asset-icon,
-.sidebar-nav__item:focus-visible .asset-icon,
-.site-sidebar:hover .sidebar-nav__item.is-active:hover .asset-icon,
-.mobile-drawer nav a:hover .asset-icon,
-.mobile-drawer nav a:focus-visible .asset-icon {
-  filter: brightness(0) saturate(100%) invert(53.33%);
+.mobile-drawer nav a {
+  position: relative;
 }
+
+.sidebar-nav__item:hover::after,
+.sidebar-nav__item:focus-visible::after,
+.sidebar-nav__item.is-active::after,
+.mobile-drawer nav a:hover::after,
+.mobile-drawer nav a:focus-visible::after,
+.mobile-drawer nav a.is-active::after {
+  opacity: 1;
+}
+
+/* Current page: flat block look instead of the old purple glow. */
+.sidebar-nav__item.is-active,
+.site-sidebar:hover .sidebar-nav__item.is-active,
+.sidebar-nav__item.is-active:hover,
+.mobile-drawer nav a.is-active {
+  box-shadow: none;
+}
+
