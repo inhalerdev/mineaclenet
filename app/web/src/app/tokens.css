@@ -44,6 +44,12 @@
   --mc-gold-edge: #9a6b0a;
   --mc-gold-text: #2b1d00;
 
+  /* Red (Sign out and other "leave / remove" actions) */
+  --mc-red: #c3302b;
+  --mc-red-hover: #d93d37;
+  --mc-red-light: #e8675f;
+  --mc-red-edge: #6b1512;
+
   /* Status */
   --mc-live: #11fc7b;
 

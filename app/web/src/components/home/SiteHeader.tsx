@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { PlayerAvatar } from "@/components/players/PlayerAvatar";
+import {
+  PlayerAvatar,
+  playerAvatarUrl,
+} from "@/components/players/PlayerAvatar";
 import { PlayerSearch } from "@/components/players/PlayerSearch";
 import type { Viewer } from "@/features/auth/types";
 import {
@@ -223,11 +226,21 @@ export function SiteHeader({
                 setSearchOpen(false);
               }}
             >
-              <img
-                src={mineacleIcons.profile}
-                alt=""
-                draggable={false}
-              />
+              {viewer ? (
+                <img
+                  className={styles.profileHead}
+                  src={playerAvatarUrl(viewer.uuid, 32)}
+                  alt=""
+                  referrerPolicy="no-referrer"
+                  draggable={false}
+                />
+              ) : (
+                <img
+                  src={mineacleIcons.profile}
+                  alt=""
+                  draggable={false}
+                />
+              )}
               <span>My Profile</span>
               <img
                 className={styles.mobileMenuArrow}
@@ -418,11 +431,21 @@ export function SiteHeader({
               setMobileMenuOpen(false);
             }}
           >
-            <img
-              src={mineacleIcons.profile}
-              alt=""
-              draggable={false}
-            />
+            {viewer ? (
+              <img
+                className={styles.profileHead}
+                src={playerAvatarUrl(viewer.uuid, 32)}
+                alt=""
+                referrerPolicy="no-referrer"
+                draggable={false}
+              />
+            ) : (
+              <img
+                src={mineacleIcons.profile}
+                alt=""
+                draggable={false}
+              />
+            )}
             <span>My Profile</span>
             <img
               className={styles.menuArrow}
@@ -466,31 +489,42 @@ export function SiteHeader({
                 </>
               ) : (
                 <>
-                  <span className={styles.panelKicker}>
-                    Signed in as
-                  </span>
-                  <strong className={styles.panelUser}>
-                    {viewer.username}
-                  </strong>
-                  <a className={styles.menuRow} href="/profile">
-                    Open profile
+                  <a className={styles.panelAccount} href="/profile">
+                    <img
+                      src={playerAvatarUrl(viewer.uuid, 64)}
+                      alt=""
+                      referrerPolicy="no-referrer"
+                      draggable={false}
+                    />
+                    <span>
+                      <small>Signed in as</small>
+                      <strong>{viewer.username}</strong>
+                    </span>
                   </a>
-                  <a className={styles.menuRow} href="/following">
-                    Friends
-                  </a>
-                  <a className={styles.menuRow} href="/notifications">
-                    Notifications
-                    {viewer.unreadNotifications > 0 ? (
-                      <b className={styles.badge}>
-                        {viewer.unreadNotifications > 99
-                          ? "99+"
-                          : viewer.unreadNotifications}
-                      </b>
-                    ) : null}
-                  </a>
+
                   <span className={styles.menuDivider} aria-hidden="true" />
+
+                  <nav className={styles.menuList} aria-label="Account">
+                    <a className={styles.menuRow} href="/profile">
+                      My profile
+                    </a>
+                    <a className={styles.menuRow} href="/following">
+                      Friends
+                    </a>
+                    <a className={styles.menuRow} href="/notifications">
+                      Notifications
+                      {viewer.unreadNotifications > 0 ? (
+                        <b className={styles.badge}>
+                          {viewer.unreadNotifications > 99
+                            ? "99+"
+                            : viewer.unreadNotifications}
+                        </b>
+                      ) : null}
+                    </a>
+                  </nav>
+
                   <button
-                    className={styles.blockButton}
+                    className={`${styles.blockButton} ${styles.blockButtonDanger}`}
                     type="button"
                     onClick={logout}
                     disabled={loggingOut}
