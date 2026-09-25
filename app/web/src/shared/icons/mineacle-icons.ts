@@ -11,7 +11,8 @@ export const mineacleIcons = {
   gift: `${MINEACLE_ICON_ROOT}/gift.png`,
   location: `${MINEACLE_ICON_ROOT}/location.png`,
   play: `${MINEACLE_ICON_ROOT}/play.png`,
-  profile: `${MINEACLE_ICON_ROOT}/profile.png`,
+  // The profile icon lives with the nav icons now.
+  profile: `${MINEACLE_ICON_ROOT}/nav/profile.png`,
   search: `${MINEACLE_ICON_ROOT}/search.png`,
   socialDiscord: `${MINEACLE_ICON_ROOT}/social-discord.png`,
   socialInstagram: `${MINEACLE_ICON_ROOT}/social-instagram.png`,
@@ -22,9 +23,10 @@ export const mineacleIcons = {
 
 /*
  * Navigation icons (home, leaderboards, vote, bans, marketplace).
- * All drawn on the same pixel grid and cropped to one 24 x 20 box so they
- * share a baseline. Show them at exactly 24 x 20 CSS pixels (1 art-pixel per
- * screen pixel); other sizes make pixel art look uneven.
+ * The site shows every nav icon 20px tall and as wide as its own shape, so
+ * any PNG dropped into icons/mineacle/nav works without code changes.
+ * Crop each file tight to the artwork (no empty border) so it fills the
+ * full height.
  */
 export const MINEACLE_NAV_ICON_ROOT = `${MINEACLE_ICON_ROOT}/nav`;
 

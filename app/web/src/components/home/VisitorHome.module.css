@@ -1528,19 +1528,24 @@
   }
 }
 
-/* Nav icons are shown exactly as supplied in icons/mineacle/nav, in a
-   24 x 20 box, and nothing about them changes on hover. */
+/* Nav icons are shown exactly as supplied in icons/mineacle/nav: always
+   20px tall, as wide as their own shape. Swap a file and it just works,
+   whatever its size. Nothing about them changes on hover. */
 .page .headerNavItem img,
-.page .mobileNavigationItem img {
-  width: 24px;
+.page .mobileNavigationItem img,
+.page .profileMenu > .headerToolButton > img:first-child {
+  width: auto;
   height: 20px;
-  flex: 0 0 24px;
-  object-fit: contain;
-  /* Normal scaling: pixel icons scale by whole numbers so stay crisp, and
-     smooth artwork (like the gavel) is drawn smoothly as designed. */
+  flex: 0 0 auto;
+  object-fit: initial;
+  /* Normal scaling: pixel icons stay crisp, smooth artwork stays smooth. */
   image-rendering: auto;
   transform: none;
   transition: none;
+}
+
+.page .profileMenu > .headerToolButton {
+  grid-template-columns: auto max-content 10px;
 }
 
 .page .headerNavItem:not(.featuredNavItem) img,

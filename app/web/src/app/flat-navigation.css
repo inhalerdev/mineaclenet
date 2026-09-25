@@ -1208,7 +1208,7 @@ html .mobile-drawer nav a {
 }
 
 /* ==========================================================================
- * Nav icons v3: plain white pixel icons at exactly 24 x 20, no coloured
+ * Nav icons v3: plain white icons, always 20px tall, no coloured
  * tiles, no tilt, and no change on hover (the old rotate(3deg) scale(1.05)
  * hover is what made them look skewed). Hover = the row's background only.
  * !important is used because older rules above target these with very
@@ -1228,8 +1228,10 @@ html .mobile-drawer nav a {
 
 .site-sidebar .sidebar-nav__item .asset-icon,
 .mobile-drawer nav a[data-nav-icon] .asset-icon {
-  width: 24px !important;
+  /* always 20px tall, as wide as the icon's own shape */
+  width: auto !important;
   height: 20px !important;
+  max-width: none !important;
   padding: 0 !important;
   border: 0 !important;
   border-radius: 0 !important;
