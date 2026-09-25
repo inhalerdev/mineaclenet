@@ -4,9 +4,13 @@ export const MINEACLE_ICON_ROOT =
 export const mineacleIcons = {
   arrowDown: `${MINEACLE_ICON_ROOT}/arrow-down.png`,
   arrowUp: `${MINEACLE_ICON_ROOT}/arrow-up.png`,
+  // Notifications: plain bell, and the bell with the red dot for unread.
+  bell: `${MINEACLE_ICON_ROOT}/bell.svg`,
+  bellUnread: `${MINEACLE_ICON_ROOT}/bell-unread.png`,
   check: `${MINEACLE_ICON_ROOT}/check.png`,
   close: `${MINEACLE_ICON_ROOT}/close.png`,
   copy: `${MINEACLE_ICON_ROOT}/copy.png`,
+  friends: `${MINEACLE_ICON_ROOT}/friends.svg`,
   crate: `${MINEACLE_ICON_ROOT}/crate.png`,
   gift: `${MINEACLE_ICON_ROOT}/gift.png`,
   location: `${MINEACLE_ICON_ROOT}/location.png`,

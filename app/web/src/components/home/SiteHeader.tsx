@@ -506,13 +506,43 @@ export function SiteHeader({
 
                   <nav className={styles.menuList} aria-label="Account">
                     <a className={styles.menuRow} href="/profile">
-                      My profile
+                      <img
+                        className={styles.menuIcon}
+                        src={mineacleIcons.profile}
+                        alt=""
+                        draggable={false}
+                      />
+                      <span>My profile</span>
                     </a>
                     <a className={styles.menuRow} href="/following">
-                      Friends
+                      <img
+                        className={styles.menuIcon}
+                        src={mineacleIcons.friends}
+                        alt=""
+                        draggable={false}
+                      />
+                      <span>Friends</span>
                     </a>
-                    <a className={styles.menuRow} href="/notifications">
-                      Notifications
+                    <a
+                      className={styles.menuRow}
+                      href="/notifications"
+                      aria-label={
+                        viewer.unreadNotifications > 0
+                          ? `Notifications, ${viewer.unreadNotifications} unread`
+                          : undefined
+                      }
+                    >
+                      <img
+                        className={styles.menuIcon}
+                        src={
+                          viewer.unreadNotifications > 0
+                            ? mineacleIcons.bellUnread
+                            : mineacleIcons.bell
+                        }
+                        alt=""
+                        draggable={false}
+                      />
+                      <span>Notifications</span>
                       {viewer.unreadNotifications > 0 ? (
                         <b className={styles.badge}>
                           {viewer.unreadNotifications > 99

@@ -2027,3 +2027,35 @@
     inset 0 3px 0 var(--mc-red-light),
     inset 0 -1px 0 var(--mc-red-edge);
 }
+
+/* Account menu rows: icon column + label + optional count. */
+.page .menuList .menuRow {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) auto;
+  gap: 10px;
+}
+
+.menuIcon {
+  width: 18px;
+  height: 18px;
+  display: block;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+/* Unread count: red, to match the red dot on the bell. */
+.menuList .badge {
+  background: var(--mc-red);
+  box-shadow: inset 0 -2px 0 var(--mc-red-edge);
+}
+
+/* The bell and friends icons are drawn on a 24px pixel grid with empty space
+   around them, so show them at 24px (one screen pixel per icon pixel, crisp)
+   without making the row taller. */
+.menuIcon[src*="/bell"],
+.menuIcon[src*="/friends"] {
+  width: 24px;
+  height: 24px;
+  margin: -3px;
+  image-rendering: auto;
+}
