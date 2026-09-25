@@ -659,7 +659,11 @@
 .page .menuRow:hover,
 .page .menuRow:focus-visible {
   background: var(--mc-surface-raised);
-  box-shadow: inset var(--mc-bar) 0 0 var(--mc-purple-face);
+  box-shadow: none;
+}
+
+.page .menuRow:active {
+  background: #333333;
 }
 
 .menuDivider {
@@ -938,12 +942,7 @@
     transition: border-color var(--motion), background-color var(--motion);
   }
 
-  .mobileMenuButton:hover,
-  .mobileMenuButton:focus-visible,
-  .mobileMenuButtonOpen {
-    border-color: rgba(208, 175, 255, 0.42);
-    background: rgba(176, 120, 255, 0.1);
-  }
+
 
   .mobileMenuButton > span {
     width: 20px;
@@ -1004,10 +1003,8 @@
     transition: border-color var(--motion), background-color var(--motion), color var(--motion);
   }
 
-  .mobileNavigationItem:hover,
   .mobileNavigationItem:focus-visible {
     background: rgba(255, 255, 255, 0.06);
-    box-shadow: inset var(--mc-bar) 0 0 var(--mc-purple-face);
     color: var(--mc-text);
     outline: 0;
   }
@@ -1319,51 +1316,6 @@
  * Mineacle color system (see app/tokens.css)
  * ========================================================================== */
 
-/* Nav links + Search / My Profile: text and icons stay white; a purple block
-   bar (logo face + logo edge) appears under the hovered or current link. */
-.headerNavItem,
-.headerToolButton {
-  position: relative;
-}
-
-.headerNavItem::after,
-.headerToolButton::after {
-  position: absolute;
-  left: 4px;
-  right: 4px;
-  height: var(--mc-bar);
-  background: var(--mc-purple-face);
-  box-shadow: 0 2px 0 var(--mc-purple-edge);
-  opacity: 0;
-  transform: scaleX(0.6);
-  transition:
-    opacity var(--motion),
-    transform var(--motion);
-  pointer-events: none;
-  content: "";
-}
-
-/* Sits on the header's bottom edge. */
-.headerNavItem::after {
-  bottom: -9px;
-}
-
-.headerToolButton::after {
-  left: 8px;
-  right: 8px;
-  bottom: 2px;
-}
-
-.headerNavItem:hover::after,
-.headerNavItem:focus-visible::after,
-.headerNavItem[aria-current="page"]::after,
-.headerToolButton:hover::after,
-.headerToolButton:focus-visible::after,
-.headerToolButtonOpen::after {
-  opacity: 1;
-  transform: none;
-}
-
 /* Play button: built like the logo / a Minecraft button:
    green face, light top edge, dark bottom edge, black outline.
    Pressing it sinks the button 3px. */
@@ -1439,11 +1391,6 @@
  *  - Current page + hover: a soft raised tile behind the link.
  *  - Marketplace: a small purple block button (same recipe as the others).
  * ========================================================================== */
-.headerNavItem::after,
-.headerToolButton::after {
-  display: none;
-}
-
 .page .headerNavItem {
   height: 32px;
   padding: 0 10px;
@@ -1833,5 +1780,106 @@
 .badge {
   height: 18px;
   font-size: 10px;
+}
+
+/* ==========================================================================
+ * Mobile header + hamburger menu, in the new style (no old purple states).
+ * Hover styles only apply to devices with a real pointer, so on phones a
+ * link never stays "stuck" highlighted after a tap; taps get a press instead.
+ * ========================================================================== */
+@media (max-width: 1320px) {
+  /* Hamburger / X: neutral block button */
+  .page .mobileMenuButton {
+    border: 2px solid var(--mc-outline);
+    border-radius: 0;
+    background: #2b2b2b;
+    box-shadow:
+      inset 0 2px 0 #3a3a3a,
+      inset 0 -3px 0 #161616;
+    transition:
+      transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 110ms ease,
+      background-color 140ms ease,
+      border-color 140ms ease;
+  }
+
+  .page .mobileMenuButtonOpen {
+    background: #333333;
+  }
+
+  .page .mobileMenuButton:focus-visible {
+    background: #363636;
+    outline: 0;
+  }
+
+  .page .mobileMenuButton:active {
+    box-shadow:
+      inset 0 2px 0 #3a3a3a,
+      inset 0 -1px 0 #161616;
+    transform: translateY(2px);
+    transition-duration: 50ms;
+  }
+
+  /* Menu panel: same game-UI panel as the dropdowns */
+  .page .mobileNavigation {
+    top: 48px;
+    gap: 2px;
+    padding: 10px;
+    border: 0;
+    border-radius: 0;
+    background: #1f1f1f;
+    box-shadow:
+      inset 0 0 0 2px var(--mc-outline),
+      inset 0 0 0 4px #4a4a4a,
+      0 18px 40px rgba(0, 0, 0, 0.45);
+  }
+
+  /* Links: soft tile, no side bar */
+  .page .mobileNavigationItem {
+    border-radius: 0;
+    box-shadow: none;
+    transition:
+      transform 90ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      background-color 120ms ease;
+  }
+
+  .page .mobileNavigationItem[aria-current="page"] {
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.35);
+  }
+
+  .page .mobileNavigationItem:not(.mobileFeaturedItem):active {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateY(1px);
+    transition-duration: 40ms;
+  }
+
+  /* Marketplace in the menu: gold block, presses like the desktop one */
+  .page .mobileFeaturedItem:active {
+    box-shadow:
+      inset 0 2px 0 var(--mc-gold-light),
+      inset 0 -1px 0 var(--mc-gold-edge);
+    transform: translateY(2px);
+    transition-duration: 50ms;
+  }
+}
+
+@media (max-width: 1320px) and (hover: hover) {
+  .page .mobileMenuButton:hover {
+    background: #363636;
+    transform: translateY(-1px);
+  }
+
+  .page .mobileNavigationItem:not(.mobileFeaturedItem):hover {
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: none;
+  }
+
+  .page .mobileFeaturedItem:hover {
+    border-color: #ffffff;
+    background: var(--mc-gold-hover);
+  }
 }
 
