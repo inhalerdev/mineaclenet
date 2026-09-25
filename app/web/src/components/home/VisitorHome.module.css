@@ -1528,3 +1528,25 @@
   }
 }
 
+/* Nav icons: pixel art shown at exactly 24 x 20 (1 art-pixel = 1 screen
+   pixel), and nothing about them changes on hover, so they never shift. */
+.page .headerNavItem img,
+.page .mobileNavigationItem img {
+  width: 24px;
+  height: 20px;
+  flex: 0 0 24px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  transform: none;
+  transition: none;
+}
+
+.page .headerNavItem:not(.featuredNavItem) img,
+.page .mobileNavigationItem:not(.mobileFeaturedItem) img {
+  filter: none;
+}
+
+.page .headerNavItem {
+  gap: 8px;
+}
+

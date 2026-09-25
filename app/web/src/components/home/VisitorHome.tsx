@@ -6,7 +6,10 @@ import { PlayerAvatar } from "@/components/players/PlayerAvatar";
 import { PlayerSearch } from "@/components/players/PlayerSearch";
 import type { Viewer } from "@/features/auth/types";
 import { homeContent } from "@/features/home/home-content";
-import { mineacleIcons } from "@/shared/icons/mineacle-icons";
+import {
+  mineacleIcons,
+  mineacleNavIcons,
+} from "@/shared/icons/mineacle-icons";
 import { burstCoins } from "@/shared/media/coin-burst";
 import styles from "./VisitorHome.module.css";
 
@@ -26,22 +29,22 @@ const IP_COPIED_ADVANCEMENTS = [
 ] as const;
 
 const HEADER_NAVIGATION = [
-  { label: "Home", href: "/", icon: mineacleIcons.home },
+  { label: "Home", href: "/", icon: mineacleNavIcons.home },
   {
     label: "Leaderboard",
     href: "/leaderboards",
-    icon: mineacleIcons.trophy,
+    icon: mineacleNavIcons.leaderboards,
   },
-  { label: "Vote", href: "/vote", icon: mineacleIcons.gift },
+  { label: "Vote", href: "/vote", icon: mineacleNavIcons.vote },
   {
     label: "Bans",
     href: "/punishments",
-    icon: mineacleIcons.gavel,
+    icon: mineacleNavIcons.bans,
   },
   {
     label: "Marketplace",
     href: "https://store.mineacle.net/",
-    icon: mineacleIcons.marketplace,
+    icon: mineacleNavIcons.marketplace,
     external: true,
     featured: true,
   },

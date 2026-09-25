@@ -4,7 +4,10 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { PlayerSearch } from "@/components/players/PlayerSearch";
 import type { Viewer } from "@/features/auth/types";
-import { mineacleIcons } from "@/shared/icons/mineacle-icons";
+import {
+  mineacleIcons,
+  mineacleNavIcons,
+} from "@/shared/icons/mineacle-icons";
 import {
   siteNavigation,
   type SiteNavIcon,
@@ -14,11 +17,11 @@ import { useNavigationDrawer } from "@/shared/navigation/use-navigation-drawer";
 import { burstCoins } from "@/shared/media/coin-burst";
 
 const NAV_ICON_PATHS: Record<SiteNavIcon, string> = {
-  home: mineacleIcons.home,
-  leaderboard: mineacleIcons.trophy,
-  rewards: mineacleIcons.gift,
-  punishments: mineacleIcons.gavel,
-  marketplace: mineacleIcons.marketplace,
+  home: mineacleNavIcons.home,
+  leaderboard: mineacleNavIcons.leaderboards,
+  rewards: mineacleNavIcons.vote,
+  punishments: mineacleNavIcons.bans,
+  marketplace: mineacleNavIcons.marketplace,
 };
 
 const SOCIAL_LINKS = [
