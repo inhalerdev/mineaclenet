@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { AchievementToast } from "@/components/home/AchievementToast";
 import { PlayerAvatar } from "@/components/players/PlayerAvatar";
 import { PlayerSearch } from "@/components/players/PlayerSearch";
 import type { Viewer } from "@/features/auth/types";
@@ -11,6 +12,17 @@ import styles from "./VisitorHome.module.css";
 const SERVER_ADDRESS = "mineacle.net";
 const STATUS_CACHE_KEY = "mineacle:home-status:mineacle.net";
 const STATUS_CACHE_MAX_AGE = 15_000;
+
+// Shown in the "Advancement Made!" toast when the IP is copied.
+// A different one is picked each time (never the same twice in a row).
+const IP_COPIED_ADVANCEMENTS = [
+  "The Journey Begins",
+  "Pack Your Bags",
+  "Portal Primed",
+  "Destination: Mineacle",
+  "First Steps",
+  "Adventure Awaits",
+] as const;
 
 const HEADER_NAVIGATION = [
   { label: "Home", href: "/", icon: mineacleIcons.home },
@@ -83,6 +95,10 @@ export function VisitorHome({
   topPlayers = [],
 }: VisitorHomeProps) {
   const [copied, setCopied] = useState(false);
+  const [achievement, setAchievement] = useState<{
+    id: number;
+    title: string;
+  } | null>(null);
   const [playHovered, setPlayHovered] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -325,6 +341,21 @@ export function VisitorHome({
 
     setCopied(copiedSuccessfully);
 
+    if (copiedSuccessfully) {
+      setAchievement((previous) => {
+        const choices = IP_COPIED_ADVANCEMENTS.filter(
+          (title) => title !== previous?.title,
+        );
+
+        return {
+          id: Date.now(),
+          title:
+            choices[Math.floor(Math.random() * choices.length)] ??
+            IP_COPIED_ADVANCEMENTS[0],
+        };
+      });
+    }
+
     if (copyTimerRef.current !== null) {
       window.clearTimeout(copyTimerRef.current);
     }
@@ -562,9 +593,9 @@ export function VisitorHome({
                   </div>
 
                   <div className={styles.topPlayersHeading}>
-                    <span>Top 3 Players Global</span>
+                    <span>Top 3 players</span>
                     <a href="/leaderboards">
-                      View More <b aria-hidden="true">&gt;</b>
+                      View leaderboards <b aria-hidden="true">&gt;</b>
                     </a>
                   </div>
 
@@ -580,7 +611,10 @@ export function VisitorHome({
                           )}`}
                           key={player.uuid}
                         >
-                          <span className={styles.topPlayerRank}>
+                          <span
+                            className={styles.topPlayerRank}
+                            data-rank={index + 1}
+                          >
                             #{index + 1}
                           </span>
                           <PlayerAvatar
@@ -591,8 +625,8 @@ export function VisitorHome({
                           <strong>
                             {player.displayName || player.username}
                           </strong>
-                          <small>
-                            {player.online ? "Online" : "Player"}
+                          <small data-online={player.online}>
+                            {player.online ? "Online" : "Offline"}
                           </small>
                         </a>
                       ) : (
@@ -600,7 +634,10 @@ export function VisitorHome({
                           className={styles.topPlayerCard}
                           key={`player-${index + 1}`}
                         >
-                          <span className={styles.topPlayerRank}>
+                          <span
+                            className={styles.topPlayerRank}
+                            data-rank={index + 1}
+                          >
                             #{index + 1}
                           </span>
                           <span
@@ -656,17 +693,53 @@ export function VisitorHome({
                 >
                   {!viewer ? (
                     <>
-                      <a href="/login?mode=login">Sign in</a>
-                      <a href="/login?mode=create">
+                      <span className={styles.panelKicker}>
+                        Player account
+                      </span>
+                      <a
+                        className={`${styles.blockButton} ${styles.blockButtonPrimary}`}
+                        href="/login?mode=login"
+                      >
+                        Sign in
+                      </a>
+                      <a
+                        className={styles.blockButton}
+                        href="/login?mode=create"
+                      >
                         Verify account
                       </a>
+                      <p className={styles.panelHint}>
+                        New here? Link your Minecraft account with a
+                        quick in-game code.
+                      </p>
                     </>
                   ) : (
                     <>
-                      <a href="/profile">Open profile</a>
-                      <a href="/following">Friends</a>
-                      <a href="/notifications">Notifications</a>
+                      <span className={styles.panelKicker}>
+                        Signed in as
+                      </span>
+                      <strong className={styles.panelUser}>
+                        {viewer.username}
+                      </strong>
+                      <a className={styles.menuRow} href="/profile">
+                        Open profile
+                      </a>
+                      <a className={styles.menuRow} href="/following">
+                        Friends
+                      </a>
+                      <a className={styles.menuRow} href="/notifications">
+                        Notifications
+                        {viewer.unreadNotifications > 0 ? (
+                          <b className={styles.badge}>
+                            {viewer.unreadNotifications > 99
+                              ? "99+"
+                              : viewer.unreadNotifications}
+                          </b>
+                        ) : null}
+                      </a>
+                      <span className={styles.menuDivider} aria-hidden="true" />
                       <button
+                        className={styles.blockButton}
                         type="button"
                         onClick={logout}
                         disabled={loggingOut}
@@ -777,6 +850,24 @@ export function VisitorHome({
           </a>
         ))}
       </section>
+
+      {achievement ? (
+        <AchievementToast
+          key={achievement.id}
+          kicker="Advancement Made!"
+          title={achievement.title}
+          detail={`${SERVER_ADDRESS} copied · paste it in Multiplayer`}
+          playersOnline={
+            serverStatus && serverStatus.currentlyPlaying > 0
+              ? `${currentlyPlaying} ${
+                  serverStatus.currentlyPlaying === 1 ? "player" : "players"
+                } online now`
+              : null
+          }
+          iconSrc="/shared/images/branding/mineacle-mark.png"
+          onDone={() => setAchievement(null)}
+        />
+      ) : null}
 
       <span className={styles.copyStatus} role="status" aria-live="polite">
         {copied ? `${SERVER_ADDRESS} copied to clipboard` : ""}

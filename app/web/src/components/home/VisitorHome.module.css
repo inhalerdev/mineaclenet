@@ -260,143 +260,184 @@
   display: none;
 }
 
-.searchPanel {
+/* ==========================================================================
+ * Dropdown panels (search + account), game-UI style like the achievement
+ * toast: black outline, light inner ring, inventory-slot inputs and cards,
+ * block buttons. Colors from app/tokens.css.
+ * ========================================================================== */
+.searchPanel,
+.profilePanel {
   position: absolute;
   z-index: 40;
-  top: var(--header-height);
-  left: 0;
-  width: min(512px, calc(100vw - 64px));
-  height: 200px;
+  top: calc(var(--header-height) + 6px);
   padding: 16px;
-  border: var(--stroke-width) solid var(--border);
-  border-top: 0;
-  border-radius: 0 0 4px 4px;
-  background: #202020;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.34);
+  border: 0;
+  border-radius: 0;
+  background: #1f1f1f;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 0 0 4px #4a4a4a,
+    0 18px 40px rgba(0, 0, 0, 0.45);
   animation: panelIn var(--motion) both;
 }
 
+.searchPanel {
+  left: 0;
+  width: min(540px, calc(100vw - 64px));
+  display: grid;
+  gap: 14px;
+}
+
+.profilePanel {
+  right: 0;
+  width: 250px;
+  display: grid;
+  gap: 10px;
+}
+
+/* --- Search ------------------------------------------------------------- */
 .searchInputRow {
   position: relative;
-  height: 32px;
+  height: 44px;
 }
 
 .searchField {
   position: relative;
   z-index: 4;
-  height: 32px;
+  height: 44px;
 }
 
 .searchField form {
-  height: 32px;
-  gap: 8px;
-  padding: 0 40px 0 12px;
-  border-color: rgba(255, 255, 255, 0.29);
-  border-width: var(--stroke-width);
+  height: 44px;
+  gap: 10px;
+  padding: 0 52px 0 14px;
+  border: 0;
   border-radius: 0;
   background: #111111;
+  /* sunken inventory slot */
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 3px 3px 0 0 #0a0a0a,
+    inset -3px -3px 0 0 #2e2e2e;
 }
 
 .searchField form:focus-within {
-  border-color: var(--mc-purple-face);
   background: #111111;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-purple-face),
+    inset 0 -4px 0 0 var(--mc-purple-edge);
 }
 
 .searchField form img {
-  width: 14px;
-  height: 14px;
-  flex-basis: 14px;
+  width: 16px;
+  height: 16px;
+  flex-basis: 16px;
 }
 
 .searchField form input {
-  font-size: 10px;
+  font-size: 14px;
 }
 
 .searchField form input::placeholder {
-  color: #8a8a8a;
+  color: #7a7a7a;
 }
 
 .searchField form input::-webkit-search-cancel-button {
   display: none;
 }
 
+/* live results list */
 .searchField > div {
-  top: 40px;
-  max-height: 132px;
+  top: 52px;
+  max-height: 240px;
   overflow-y: auto;
-  border-width: var(--stroke-width);
-  border-radius: 4px;
-  background: #171717;
+  border: 0;
+  border-radius: 0;
+  background: #1a1a1a;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 0 0 4px #4a4a4a,
+    0 14px 30px rgba(0, 0, 0, 0.4);
 }
 
 .closeSearch {
   position: absolute;
   z-index: 8;
-  top: 0;
-  right: 0;
-  width: 36px;
+  top: 6px;
+  right: 6px;
+  width: 32px;
   height: 32px;
   display: grid;
   place-items: center;
-  border: 0;
-  background: transparent;
+  padding: 0 0 3px;
+  border: 2px solid var(--mc-outline);
+  background: #2b2b2b;
+  box-shadow:
+    inset 0 2px 0 #3a3a3a,
+    inset 0 -3px 0 #161616;
   cursor: pointer;
   transition: background-color var(--motion);
 }
 
 .closeSearch:hover,
 .closeSearch:focus-visible {
-  background: rgba(255, 85, 85, 0.08);
+  background: #3a3a3a;
+}
+
+.closeSearch:active {
+  padding-bottom: 0;
+  box-shadow:
+    inset 0 2px 0 #3a3a3a,
+    inset 0 -1px 0 #161616;
 }
 
 .closeSearch img {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   display: block;
   object-fit: contain;
   image-rendering: pixelated;
-  filter: brightness(0) saturate(100%) invert(47%) sepia(90%) saturate(1404%) hue-rotate(324deg) brightness(105%) contrast(101%);
+  filter: none;
 }
 
 .topPlayersHeading {
-  height: 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--content-gap);
-  color: #f5f5f5;
-  font-size: 9px;
+  color: var(--mc-text-muted);
+  font-size: 12px;
   line-height: 1;
 }
 
-.topPlayersHeading a {
+.page .topPlayersHeading a {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  color: #d9d9d9;
+  gap: 6px;
+  color: var(--mc-text);
+  font-size: 12px;
   transition: color var(--motion);
 }
 
-.topPlayersHeading a:hover,
-.topPlayersHeading a:focus-visible {
+.page .topPlayersHeading a:hover,
+.page .topPlayersHeading a:focus-visible {
   color: var(--mc-text);
   text-decoration: underline var(--mc-bar) var(--mc-purple-face);
-  text-underline-offset: 4px;
+  text-underline-offset: 5px;
 }
 
 .topPlayersHeading b {
   display: inline-block;
   font-family: "Mineacle Primary", monospace;
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 400;
   line-height: 1;
 }
 
 .topPlayersGrid {
-  height: 104px;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--content-gap);
+  gap: 10px;
 }
 
 .topPlayerCard {
@@ -407,29 +448,58 @@
   grid-template-rows: auto auto;
   align-content: center;
   align-items: center;
-  gap: 4px 8px;
-  padding: 10px;
+  gap: 6px 10px;
+  padding: 14px 10px 16px;
   overflow: hidden;
-  border: var(--stroke-width) solid var(--border);
+  border: 2px solid var(--mc-outline);
   border-radius: 0;
-  background: #242424;
-  color: #ffffff;
-  transition: border-color var(--motion), background-color var(--motion);
+  background: #262626;
+  box-shadow:
+    inset 0 2px 0 #333333,
+    inset 0 -4px 0 #181818;
+  color: var(--mc-text);
+  transition:
+    border-color var(--motion),
+    background-color var(--motion),
+    box-shadow var(--motion);
 }
 
 .topPlayerCard:hover,
 .topPlayerCard:focus-visible {
   border-color: var(--mc-purple-face);
-  background: #292929;
+  background: #2c2c2c;
+  box-shadow:
+    inset 0 2px 0 #363636,
+    inset 0 -4px 0 var(--mc-purple-edge);
 }
 
+/* #1 / #2 / #3 as little gold, silver and bronze blocks */
 .topPlayerRank {
   position: absolute;
-  top: 7px;
-  left: 7px;
-  color: var(--secondary);
-  font-size: 7px;
+  top: 5px;
+  right: 5px;
+  padding: 3px 5px 5px;
+  background: #3a3a3a;
+  box-shadow: inset 0 -2px 0 #1a1a1a;
+  color: #111111;
+  font-size: 10px;
   font-weight: 400;
+  line-height: 1;
+}
+
+.topPlayerRank[data-rank="1"] {
+  background: #ffd83d;
+  box-shadow: inset 0 -2px 0 #b08a12;
+}
+
+.topPlayerRank[data-rank="2"] {
+  background: #dcdcdc;
+  box-shadow: inset 0 -2px 0 #8c8c8c;
+}
+
+.topPlayerRank[data-rank="3"] {
+  background: #e08a4a;
+  box-shadow: inset 0 -2px 0 #8a4b1e;
 }
 
 .topPlayerAvatar,
@@ -437,15 +507,15 @@
   width: 40px;
   height: 40px;
   grid-row: 1 / 3;
-  border-radius: 4px;
+  border: 2px solid var(--mc-outline);
+  border-radius: 0;
   image-rendering: pixelated;
 }
 
 .topPlayerPlaceholder {
   display: block;
-  background:
-    linear-gradient(135deg, rgba(176, 120, 255, 0.26), rgba(176, 120, 255, 0.04)),
-    #1a1a1a;
+  background: #1a1a1a;
+  box-shadow: inset 3px 3px 0 #0f0f0f;
 }
 
 .topPlayerCard strong,
@@ -458,68 +528,158 @@
 
 .topPlayerCard strong {
   align-self: end;
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 400;
 }
 
 .topPlayerCard small {
   align-self: start;
-  color: #8f8f8f;
-  font-size: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--mc-text-muted);
+  font-size: 11px;
 }
 
-.profilePanel {
-  position: absolute;
-  z-index: 40;
-  top: var(--header-height);
-  right: 0;
-  width: max(100%, 160px);
-  display: grid;
-  gap: 8px;
-  padding: 8px;
-  border: var(--stroke-width) solid var(--border);
-  border-top: 0;
-  border-radius: 0 0 4px 4px;
-  background: #202020;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.32);
-  animation: panelIn var(--motion) both;
+.topPlayerCard small[data-online="true"] {
+  color: var(--mc-text);
 }
 
-.profilePanel a,
-.profilePanel button {
-  min-height: 24px;
+.topPlayerCard small[data-online="true"]::before {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 6px;
+  background: var(--mc-live);
+  box-shadow: 0 0 0 2px #0b3d22;
+  content: "";
+}
+
+/* --- Account menu ---------------------------------------------------------- */
+.panelKicker {
+  color: var(--mc-purple-face);
+  font-size: 12px;
+  line-height: 1;
+  text-shadow: 1px 1px 0 var(--mc-purple-deep);
+}
+
+.panelUser {
+  margin: -2px 0 2px;
+  overflow: hidden;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.panelHint {
+  margin: 2px 0 0;
+  color: var(--mc-text-muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+/* Block buttons: face + top light + dark bottom edge + black outline. */
+.page .blockButton {
+  height: 42px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px 8px;
-  border: 0;
+  padding: 0 14px 4px;
+  border: 2px solid var(--mc-outline);
   border-radius: 0;
-  background: transparent;
+  background: #2b2b2b;
+  box-shadow:
+    inset 0 3px 0 #3a3a3a,
+    inset 0 -4px 0 #161616;
   color: #ffffff;
   cursor: pointer;
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 400;
   line-height: 1;
-  text-align: center;
-  transition: border-color var(--motion), background-color var(--motion), color var(--motion);
+  transition:
+    background-color var(--motion),
+    box-shadow 90ms ease,
+    transform 90ms ease;
 }
 
-.profilePanel a:first-child {
-  border: var(--stroke-width) solid rgba(255, 255, 255, 0.34);
+.page .blockButton:hover,
+.page .blockButton:focus-visible {
+  background: #363636;
 }
 
-.profilePanel a:hover,
-.profilePanel a:focus-visible,
-.profilePanel button:hover,
-.profilePanel button:focus-visible {
+.page .blockButton:active {
+  padding-bottom: 1px;
+  box-shadow:
+    inset 0 3px 0 #3a3a3a,
+    inset 0 -1px 0 #161616;
+  transform: translateY(3px);
+}
+
+.page .blockButtonPrimary {
+  background: var(--mc-purple);
+  box-shadow:
+    inset 0 3px 0 var(--mc-purple-face),
+    inset 0 -4px 0 var(--mc-purple-deep);
+}
+
+.page .blockButtonPrimary:hover,
+.page .blockButtonPrimary:focus-visible {
+  background: #9450ff;
+}
+
+.page .blockButtonPrimary:active {
+  box-shadow:
+    inset 0 3px 0 var(--mc-purple-face),
+    inset 0 -1px 0 var(--mc-purple-deep);
+}
+
+.page .blockButton:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.page .menuRow {
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 12px;
+  background: transparent;
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 1;
+  transition:
+    background-color var(--motion),
+    box-shadow var(--motion);
+}
+
+.page .menuRow:hover,
+.page .menuRow:focus-visible {
   background: var(--mc-surface-raised);
-  color: var(--mc-text);
   box-shadow: inset var(--mc-bar) 0 0 var(--mc-purple-face);
 }
 
-.profilePanel button:disabled {
-  cursor: wait;
-  opacity: 0.65;
+.menuDivider {
+  height: 2px;
+  margin: 2px 0;
+  background: #2e2e2e;
+  box-shadow: 0 1px 0 #151515;
+}
+
+.badge {
+  min-width: 22px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  padding: 0 6px 2px;
+  background: var(--mc-purple);
+  box-shadow: inset 0 -2px 0 var(--mc-purple-deep);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 400;
 }
 
 .hero {
@@ -1241,3 +1401,35 @@
   filter: none;
 }
 
+/* Nav text size comes from --mc-nav-font in app/tokens.css.
+   (.page a / .page button reset the font, so this needs the .page prefix.) */
+.page .headerNavItem,
+.page .mobileNavigationItem {
+  font-size: var(--mc-nav-font);
+}
+
+@media (min-width: 1321px) {
+  .page .headerToolButton {
+    font-size: var(--mc-nav-font);
+  }
+}
+
+
+/* Dropdown panels on smaller screens: let them grow to fit their content. */
+@media (max-width: 1320px) {
+  .searchPanel,
+  .topPlayersGrid,
+  .topPlayersHeading {
+    height: auto;
+  }
+
+  .profilePanel {
+    width: min(250px, calc(100% - 16px));
+  }
+}
+
+@media (max-width: 480px) {
+  .topPlayerCard strong {
+    font-size: 12px;
+  }
+}

@@ -42,4 +42,7 @@
 
   /* Block bar under / beside nav links */
   --mc-bar: 3px;
+
+  /* Navigation text size (homepage header, sidebar, mobile menus) */
+  --mc-nav-font: 14px;
 }

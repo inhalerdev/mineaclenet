@@ -1193,3 +1193,9 @@
   box-shadow: none;
 }
 
+/* Nav text size comes from --mc-nav-font in app/tokens.css. */
+html .site-sidebar .sidebar-nav__label,
+html .mobile-drawer nav a {
+  font-size: var(--mc-nav-font);
+}
+
