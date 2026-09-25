@@ -1466,42 +1466,65 @@
     inset 0 -2px 0 rgba(0, 0, 0, 0.35);
 }
 
+/* Marketplace: gold block button. Same 32px height, 14px text and 14px icon
+   as the other links, with its label on the same line as theirs. */
 .page .featuredNavItem {
-  height: 34px;
-  padding: 0 14px 4px;
+  height: 32px;
+  padding: 0 12px;
   border: 2px solid var(--mc-outline);
-  background: var(--mc-purple);
+  background: var(--mc-gold);
   box-shadow:
-    inset 0 3px 0 var(--mc-purple-face),
-    inset 0 -4px 0 var(--mc-purple-deep);
-  color: #ffffff;
+    inset 0 2px 0 var(--mc-gold-light),
+    inset 0 -3px 0 var(--mc-gold-edge);
+  color: var(--mc-gold-text);
   transition:
     background-color var(--motion),
     box-shadow 90ms ease,
     transform 90ms ease;
 }
 
+.page .featuredNavItem img {
+  filter: brightness(0) opacity(0.85);
+}
+
 .page .featuredNavItem:hover,
 .page .featuredNavItem:focus-visible {
   border-color: var(--mc-outline);
-  background: #9450ff;
-  color: #ffffff;
+  background: var(--mc-gold-hover);
+  color: var(--mc-gold-text);
 }
 
 .page .featuredNavItem:active {
-  padding-bottom: 1px;
   box-shadow:
-    inset 0 3px 0 var(--mc-purple-face),
-    inset 0 -1px 0 var(--mc-purple-deep);
-  transform: translateY(3px);
+    inset 0 2px 0 var(--mc-gold-light),
+    inset 0 -1px 0 var(--mc-gold-edge);
+  transform: translateY(2px);
 }
 
 @media (max-width: 1320px) {
   .page .mobileFeaturedItem {
-    background: var(--mc-purple);
+    background: var(--mc-gold);
     box-shadow:
-      inset 0 2px 0 var(--mc-purple-face),
-      inset 0 -3px 0 var(--mc-purple-deep);
+      inset 0 2px 0 var(--mc-gold-light),
+      inset 0 -3px 0 var(--mc-gold-edge);
+    color: var(--mc-gold-text);
+  }
+
+  .page .mobileFeaturedItem img {
+    filter: brightness(0) opacity(0.85);
+  }
+
+  .page .mobileFeaturedItem {
+    border: 2px solid var(--mc-outline);
+  }
+
+  .page .mobileFeaturedItem:hover,
+  .page .mobileFeaturedItem:focus-visible {
+    background: var(--mc-gold-hover);
+    box-shadow:
+      inset 0 2px 0 var(--mc-gold-light),
+      inset 0 -3px 0 var(--mc-gold-edge);
+    color: var(--mc-gold-text);
   }
 }
 

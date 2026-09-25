@@ -37,6 +37,13 @@
   --mc-green-light: #62c249;
   --mc-green-edge: #1f5a14;
 
+  /* Gold (Marketplace button + coins). Dark text on gold for contrast. */
+  --mc-gold: #f2b51e;
+  --mc-gold-hover: #ffc53a;
+  --mc-gold-light: #ffd83d;
+  --mc-gold-edge: #9a6b0a;
+  --mc-gold-text: #2b1d00;
+
   /* Status */
   --mc-live: #11fc7b;
 
