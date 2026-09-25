@@ -1243,3 +1243,10 @@ html .mobile-drawer nav a {
   image-rendering: auto !important;
 }
 
+/* The gavel is diagonal, so draw it slightly taller to match the others. */
+.site-sidebar .sidebar-nav__item .asset-icon[src$="/nav/gavel.png"],
+.mobile-drawer nav a[data-nav-icon] .asset-icon[src$="/nav/gavel.png"] {
+  height: 24px !important;
+  margin-block: -2px !important;
+}
+

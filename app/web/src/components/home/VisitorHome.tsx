@@ -450,7 +450,6 @@ export function VisitorHome({
                   >
                     <img src={item.icon} alt="" draggable={false} />
                     <span>{item.label}</span>
-                    <b aria-hidden="true">&gt;</b>
                   </a>
                 ))}
 
@@ -469,7 +468,13 @@ export function VisitorHome({
                     draggable={false}
                   />
                   <span>Search</span>
-                  <b aria-hidden="true">&gt;</b>
+                  <img
+                    className={styles.mobileMenuArrow}
+                    src={mineacleIcons.arrowDown}
+                    alt=""
+                    aria-hidden="true"
+                    draggable={false}
+                  />
                 </button>
 
                 <button
@@ -487,7 +492,13 @@ export function VisitorHome({
                     draggable={false}
                   />
                   <span>My Profile</span>
-                  <b aria-hidden="true">&gt;</b>
+                  <img
+                    className={styles.mobileMenuArrow}
+                    src={mineacleIcons.arrowDown}
+                    alt=""
+                    aria-hidden="true"
+                    draggable={false}
+                  />
                 </button>
               </nav>
             ) : null}

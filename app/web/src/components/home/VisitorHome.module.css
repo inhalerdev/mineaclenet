@@ -1557,3 +1557,224 @@
   gap: 8px;
 }
 
+/* Search icon in the header: same 20px height as the other nav icons. */
+.page .searchMenu > .headerToolButton {
+  grid-template-columns: auto max-content 10px;
+}
+
+.page .searchMenu > .headerToolButton > img:first-child {
+  width: auto;
+  height: 20px;
+  image-rendering: auto;
+}
+
+/* The gavel is diagonal, so at the same height it looks smaller than the
+   boxy icons. Draw it a little taller without moving the row. */
+.page img[src$="/nav/gavel.png"] {
+  height: 24px;
+  margin-block: -2px;
+}
+
+/* Hamburger menu: icon column fits the 20px-tall nav icons; only Search and
+   My Profile (which open a panel) get a dropdown arrow. */
+@media (max-width: 1320px) {
+  .page .mobileNavigationItem {
+    grid-template-columns: 24px minmax(0, 1fr) auto;
+  }
+
+  .page .mobileNavigationItem > img:first-child {
+    justify-self: center;
+  }
+
+  .page .mobileNavigationItem > .mobileMenuArrow {
+    width: 12px;
+    height: 12px;
+    flex: none;
+    object-fit: contain;
+    image-rendering: auto;
+  }
+}
+
+/* ==========================================================================
+ * Button feel (Minecraft-style), shared by every button on the homepage.
+ *  - Hover / keyboard focus: lifts 2px, face brightens, outline turns white
+ *    (the in-game hover look), shadow drops underneath.
+ *  - Click: sinks into its bottom edge.
+ * ========================================================================== */
+.playButton,
+.page .featuredNavItem,
+.page .blockButton,
+.closeSearch,
+.topPlayerCard,
+.headerToolButton {
+  transition:
+    transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease;
+}
+
+/* --- Play (green) ------------------------------------------------------- */
+.playButton:hover,
+.playButton:focus-visible {
+  border-color: #ffffff;
+  background: var(--mc-green-hover);
+  box-shadow:
+    inset 0 3px 0 var(--mc-green-light),
+    inset 0 -5px 0 var(--mc-green-edge),
+    0 4px 0 rgba(0, 0, 0, 0.45),
+    0 14px 28px rgba(0, 0, 0, 0.3);
+  transform: translateX(-50%) translateY(-2px);
+}
+
+.playButton:active {
+  padding-bottom: 1px;
+  border-color: #ffffff;
+  background: var(--mc-green);
+  box-shadow:
+    inset 0 3px 0 var(--mc-green-light),
+    inset 0 -2px 0 var(--mc-green-edge),
+    0 1px 0 rgba(0, 0, 0, 0.45);
+  transform: translateX(-50%) translateY(3px);
+  transition-duration: 50ms;
+}
+
+/* --- Marketplace (gold) --------------------------------------------------- */
+.page .featuredNavItem:hover,
+.page .featuredNavItem:focus-visible {
+  border-color: #ffffff;
+  background: var(--mc-gold-hover);
+  box-shadow:
+    inset 0 2px 0 var(--mc-gold-light),
+    inset 0 -3px 0 var(--mc-gold-edge),
+    0 3px 0 rgba(0, 0, 0, 0.45);
+  transform: translateY(-2px);
+}
+
+.page .featuredNavItem:active {
+  border-color: #ffffff;
+  background: var(--mc-gold);
+  box-shadow:
+    inset 0 2px 0 var(--mc-gold-light),
+    inset 0 -1px 0 var(--mc-gold-edge);
+  transform: translateY(2px);
+  transition-duration: 50ms;
+}
+
+/* --- Account menu buttons (Sign in, Verify account, Sign out) ------------ */
+.page .blockButton:hover,
+.page .blockButton:focus-visible {
+  border-color: #ffffff;
+  background: #3a3a3a;
+  box-shadow:
+    inset 0 3px 0 #4a4a4a,
+    inset 0 -4px 0 #161616,
+    0 3px 0 rgba(0, 0, 0, 0.45);
+  transform: translateY(-2px);
+}
+
+.page .blockButtonPrimary:hover,
+.page .blockButtonPrimary:focus-visible {
+  background: #9450ff;
+  box-shadow:
+    inset 0 3px 0 var(--mc-purple-face),
+    inset 0 -4px 0 var(--mc-purple-deep),
+    0 3px 0 rgba(0, 0, 0, 0.45);
+}
+
+.page .blockButton:active {
+  padding-bottom: 1px;
+  border-color: #ffffff;
+  box-shadow:
+    inset 0 3px 0 #3a3a3a,
+    inset 0 -1px 0 #161616;
+  transform: translateY(3px);
+  transition-duration: 50ms;
+}
+
+.page .blockButtonPrimary:active {
+  background: var(--mc-purple);
+  box-shadow:
+    inset 0 3px 0 var(--mc-purple-face),
+    inset 0 -1px 0 var(--mc-purple-deep);
+}
+
+/* --- Search panel close (X) ----------------------------------------------- */
+.closeSearch:hover,
+.closeSearch:focus-visible {
+  border-color: #ffffff;
+  background: #3a3a3a;
+  transform: translateY(-1px);
+}
+
+.closeSearch:active {
+  transform: translateY(2px);
+  transition-duration: 50ms;
+}
+
+/* --- Top 3 player cards ----------------------------------------------------- */
+.topPlayerCard:hover,
+.topPlayerCard:focus-visible {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 2px 0 #363636,
+    inset 0 -4px 0 var(--mc-purple-edge),
+    0 4px 0 rgba(0, 0, 0, 0.4);
+}
+
+.topPlayerCard:active {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 2px 0 #363636,
+    inset 0 -2px 0 var(--mc-purple-edge);
+  transition-duration: 50ms;
+}
+
+/* --- Header Search / My Profile (flat header buttons) ----------------------- */
+.headerToolButton:hover,
+.headerToolButton:focus-visible {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.headerToolButton .menuArrow {
+  transition: transform 140ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.headerToolButton:hover .menuArrow,
+.headerToolButton:focus-visible .menuArrow {
+  transform: translateY(2px);
+}
+
+.headerToolButtonOpen .menuArrow,
+.headerToolButtonOpen:hover .menuArrow {
+  transform: none;
+}
+
+.headerToolButton:active {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(1px);
+  transition-duration: 50ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .playButton:hover,
+  .playButton:focus-visible,
+  .playButton:active {
+    transform: translateX(-50%);
+  }
+
+  .page .featuredNavItem:hover,
+  .page .featuredNavItem:active,
+  .page .blockButton:hover,
+  .page .blockButton:active,
+  .closeSearch:hover,
+  .closeSearch:active,
+  .topPlayerCard:hover,
+  .topPlayerCard:active,
+  .headerToolButton:active,
+  .headerToolButton:hover .menuArrow {
+    transform: none;
+  }
+}
+

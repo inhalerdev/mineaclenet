@@ -1,24 +1,18 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { playNotes } from "@/shared/media/chiptune";
 import styles from "./AchievementToast.module.css";
 
 /**
  * Minecraft-style "Advancement Made!" toast.
  *
- * Two lines, like the in-game one. Slides in at the top right, plays a
- * short chime, then slides out. Click it to dismiss early. Render it with a new
+ * Two lines, like the in-game one. Slides in at the top right (silently),
+ * then slides out. Click it to dismiss early. Render it with a new
  * `key` each time so the animation restarts.
  */
 
 const VISIBLE_MS = 4_000;
 const LEAVE_MS = 320;
-
-function playChime() {
-  // Three quick rising "block" notes: E5, G5, C6.
-  playNotes([659.25, 783.99, 1046.5]);
-}
 
 export type AchievementToastProps = {
   kicker: string;
@@ -38,8 +32,6 @@ export function AchievementToast({
   onDoneRef.current = onDone;
 
   useEffect(() => {
-    playChime();
-
     const leaveTimer = window.setTimeout(
       () => setLeaving(true),
       VISIBLE_MS,
