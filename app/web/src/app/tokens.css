@@ -50,6 +50,11 @@
   /* Block bar under / beside nav links */
   --mc-bar: 3px;
 
-  /* Navigation text size (homepage header, sidebar, mobile menus) */
-  --mc-nav-font: 14px;
+  /* Navigation sizes (homepage header, sidebar, mobile menus) */
+  --mc-nav-font: 12px;
+  --mc-nav-icon: 11px;
+
+  /* Dropdown menus (search panel, account menu) */
+  --mc-menu-font: 12px;
+  --mc-menu-font-small: 11px;
 }

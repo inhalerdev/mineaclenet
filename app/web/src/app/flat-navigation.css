@@ -1228,9 +1228,9 @@ html .mobile-drawer nav a {
 
 .site-sidebar .sidebar-nav__item .asset-icon,
 .mobile-drawer nav a[data-nav-icon] .asset-icon {
-  /* always 20px tall, as wide as the icon's own shape */
+  /* nav icon height from tokens.css, as wide as the icon's own shape */
   width: auto !important;
-  height: 20px !important;
+  height: var(--mc-nav-icon) !important;
   max-width: none !important;
   padding: 0 !important;
   border: 0 !important;
@@ -1246,7 +1246,7 @@ html .mobile-drawer nav a {
 /* The gavel is diagonal, so draw it slightly taller to match the others. */
 .site-sidebar .sidebar-nav__item .asset-icon[src$="/nav/gavel.png"],
 .mobile-drawer nav a[data-nav-icon] .asset-icon[src$="/nav/gavel.png"] {
-  height: 24px !important;
-  margin-block: -2px !important;
+  height: calc(var(--mc-nav-icon) * 1.2) !important;
+  margin-block: calc(var(--mc-nav-icon) * -0.1) !important;
 }
 

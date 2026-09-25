@@ -1535,7 +1535,7 @@
 .page .mobileNavigationItem img,
 .page .profileMenu > .headerToolButton > img:first-child {
   width: auto;
-  height: 20px;
+  height: var(--mc-nav-icon);
   flex: 0 0 auto;
   object-fit: initial;
   /* Normal scaling: pixel icons stay crisp, smooth artwork stays smooth. */
@@ -1564,22 +1564,22 @@
 
 .page .searchMenu > .headerToolButton > img:first-child {
   width: auto;
-  height: 20px;
+  height: var(--mc-nav-icon);
   image-rendering: auto;
 }
 
 /* The gavel is diagonal, so at the same height it looks smaller than the
    boxy icons. Draw it a little taller without moving the row. */
 .page img[src$="/nav/gavel.png"] {
-  height: 24px;
-  margin-block: -2px;
+  height: calc(var(--mc-nav-icon) * 1.2);
+  margin-block: calc(var(--mc-nav-icon) * -0.1);
 }
 
 /* Hamburger menu: icon column fits the 20px-tall nav icons; only Search and
    My Profile (which open a panel) get a dropdown arrow. */
 @media (max-width: 1320px) {
   .page .mobileNavigationItem {
-    grid-template-columns: 24px minmax(0, 1fr) auto;
+    grid-template-columns: calc(var(--mc-nav-icon) * 1.4) minmax(0, 1fr) auto;
   }
 
   .page .mobileNavigationItem > img:first-child {
@@ -1776,5 +1776,62 @@
   .headerToolButton:hover .menuArrow {
     transform: none;
   }
+}
+
+/* ==========================================================================
+ * Sizing pass: smaller, cleaner nav + dropdowns (sizes live in tokens.css)
+ * ========================================================================== */
+
+/* Marketplace: a few px taller so its icon and label can breathe. */
+.page .featuredNavItem {
+  height: 36px;
+  padding: 0 14px;
+}
+
+/* Search panel */
+.searchField form input {
+  font-size: var(--mc-menu-font);
+}
+
+.topPlayersHeading,
+.page .topPlayersHeading a,
+.topPlayersHeading b {
+  font-size: var(--mc-menu-font-small);
+}
+
+.topPlayerCard strong {
+  font-size: var(--mc-menu-font);
+}
+
+.topPlayerCard small {
+  font-size: 10px;
+}
+
+/* Account menu */
+.panelKicker {
+  font-size: var(--mc-menu-font-small);
+}
+
+.panelUser {
+  font-size: 14px;
+}
+
+.panelHint {
+  font-size: 10px;
+}
+
+.page .blockButton {
+  height: 38px;
+  font-size: var(--mc-menu-font);
+}
+
+.page .menuRow {
+  height: 34px;
+  font-size: var(--mc-menu-font);
+}
+
+.badge {
+  height: 18px;
+  font-size: 10px;
 }
 
