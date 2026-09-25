@@ -65,7 +65,7 @@
 .header {
   /* Space kept clear on each side of the 200px logo. */
   --logo-width: 200px;
-  --logo-clearance: 24px;
+  --logo-clearance: 16px;
 
   position: absolute;
   z-index: 30;
@@ -1880,6 +1880,42 @@
   .page .mobileFeaturedItem:hover {
     border-color: #ffffff;
     background: var(--mc-gold-hover);
+  }
+}
+
+/* ==========================================================================
+ * Desktop nav layout: links grouped 16px apart, sitting 16px left of the
+ * logo (the gap comes from --logo-clearance on .header). Search sits 16px
+ * right of the logo; My Profile stays at the far right.
+ * ========================================================================== */
+.headerNavigation {
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+/* Logo: no purple glow on hover; it floats gently instead. */
+.brand:hover img,
+.brand:focus-visible img {
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.34));
+  transform: none;
+  animation: brandFloat 1.6s ease-in-out infinite;
+}
+
+@keyframes brandFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand:hover img,
+  .brand:focus-visible img {
+    animation: none;
   }
 }
 
