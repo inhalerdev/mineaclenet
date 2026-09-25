@@ -1238,6 +1238,6 @@ html .mobile-drawer nav a {
   filter: none !important;
   transform: none !important;
   transition: none !important;
-  image-rendering: pixelated;
+  image-rendering: auto !important;
 }
 

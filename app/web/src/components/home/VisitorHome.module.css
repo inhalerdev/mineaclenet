@@ -1528,15 +1528,17 @@
   }
 }
 
-/* Nav icons: pixel art shown at exactly 24 x 20 (1 art-pixel = 1 screen
-   pixel), and nothing about them changes on hover, so they never shift. */
+/* Nav icons are shown exactly as supplied in icons/mineacle/nav, in a
+   24 x 20 box, and nothing about them changes on hover. */
 .page .headerNavItem img,
 .page .mobileNavigationItem img {
   width: 24px;
   height: 20px;
   flex: 0 0 24px;
   object-fit: contain;
-  image-rendering: pixelated;
+  /* Normal scaling: pixel icons scale by whole numbers so stay crisp, and
+     smooth artwork (like the gavel) is drawn smoothly as designed. */
+  image-rendering: auto;
   transform: none;
   transition: none;
 }

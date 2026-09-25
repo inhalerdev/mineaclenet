@@ -8,18 +8,16 @@ export const mineacleIcons = {
   close: `${MINEACLE_ICON_ROOT}/close.png`,
   copy: `${MINEACLE_ICON_ROOT}/copy.png`,
   crate: `${MINEACLE_ICON_ROOT}/crate.png`,
-  gavel: `${MINEACLE_ICON_ROOT}/gavel.png`,
   gift: `${MINEACLE_ICON_ROOT}/gift.png`,
-  home: `${MINEACLE_ICON_ROOT}/home.png`,
   location: `${MINEACLE_ICON_ROOT}/location.png`,
-  marketplace: `${MINEACLE_ICON_ROOT}/marketplace.png`,
   play: `${MINEACLE_ICON_ROOT}/play.png`,
   profile: `${MINEACLE_ICON_ROOT}/profile.png`,
   search: `${MINEACLE_ICON_ROOT}/search.png`,
   socialDiscord: `${MINEACLE_ICON_ROOT}/social-discord.png`,
   socialInstagram: `${MINEACLE_ICON_ROOT}/social-instagram.png`,
   socialX: `${MINEACLE_ICON_ROOT}/social-x.png`,
-  trophy: `${MINEACLE_ICON_ROOT}/trophy.png`,
+  // The trophy lives with the nav icons now.
+  trophy: `${MINEACLE_ICON_ROOT}/nav/trophy.png`,
 } as const;
 
 /*
