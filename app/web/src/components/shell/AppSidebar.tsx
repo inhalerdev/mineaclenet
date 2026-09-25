@@ -14,7 +14,6 @@ import {
   type SiteNavItem,
 } from "@/shared/navigation/site-navigation";
 import { useNavigationDrawer } from "@/shared/navigation/use-navigation-drawer";
-import { burstCoins } from "@/shared/media/coin-burst";
 
 const NAV_ICON_PATHS: Record<SiteNavIcon, string> = {
   home: mineacleNavIcons.home,
@@ -219,11 +218,6 @@ export function AppSidebar({
                 data-nav-icon={item.icon}
                 href={item.href}
                 key={item.label}
-                onClick={
-                  item.icon === "marketplace"
-                    ? (event) => burstCoins(event.currentTarget)
-                    : undefined
-                }
                 {...(item.external
                   ? {
                       target: "_blank",
@@ -393,12 +387,7 @@ export function AppSidebar({
                   data-nav-icon={item.icon}
                   href={item.href}
                   key={item.label}
-                  onClick={(event) => {
-                    if (item.icon === "marketplace") {
-                      burstCoins(event.currentTarget);
-                    }
-                    closeMobile();
-                  }}
+                  onClick={closeMobile}
                   {...(item.external
                     ? {
                         target: "_blank",

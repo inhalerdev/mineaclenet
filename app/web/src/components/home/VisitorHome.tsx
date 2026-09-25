@@ -10,7 +10,6 @@ import {
   mineacleIcons,
   mineacleNavIcons,
 } from "@/shared/icons/mineacle-icons";
-import { burstCoins } from "@/shared/media/coin-burst";
 import styles from "./VisitorHome.module.css";
 
 const SERVER_ADDRESS = "mineacle.net";
@@ -441,12 +440,7 @@ export function VisitorHome({
                     href={item.href}
                     key={item.label}
                     aria-current={item.href === "/" ? "page" : undefined}
-                    onClick={(event) => {
-                      if ("featured" in item && item.featured) {
-                        burstCoins(event.currentTarget);
-                      }
-                      setMobileMenuOpen(false);
-                    }}
+                    onClick={() => setMobileMenuOpen(false)}
                     {...("external" in item && item.external
                       ? {
                           target: "_blank",
@@ -513,11 +507,6 @@ export function VisitorHome({
                 href={item.href}
                 key={item.label}
                 aria-current={item.href === "/" ? "page" : undefined}
-                onClick={
-                  "featured" in item && item.featured
-                    ? (event) => burstCoins(event.currentTarget)
-                    : undefined
-                }
                 {...("external" in item && item.external
                   ? {
                       target: "_blank",

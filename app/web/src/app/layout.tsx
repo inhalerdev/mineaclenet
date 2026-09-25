@@ -6,7 +6,6 @@ import "./systems.css";
 import "./punishments.css";
 import "./flat-navigation.css";
 import "./module-system.css";
-import "./effects.css";
 
 const navigationDrawerBootstrap = `
   try {
