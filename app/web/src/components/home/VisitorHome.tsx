@@ -7,6 +7,7 @@ import { PlayerSearch } from "@/components/players/PlayerSearch";
 import type { Viewer } from "@/features/auth/types";
 import { homeContent } from "@/features/home/home-content";
 import { mineacleIcons } from "@/shared/icons/mineacle-icons";
+import { burstCoins } from "@/shared/media/coin-burst";
 import styles from "./VisitorHome.module.css";
 
 const SERVER_ADDRESS = "mineacle.net";
@@ -437,7 +438,12 @@ export function VisitorHome({
                     href={item.href}
                     key={item.label}
                     aria-current={item.href === "/" ? "page" : undefined}
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={(event) => {
+                      if ("featured" in item && item.featured) {
+                        burstCoins(event.currentTarget);
+                      }
+                      setMobileMenuOpen(false);
+                    }}
                     {...("external" in item && item.external
                       ? {
                           target: "_blank",
@@ -504,6 +510,11 @@ export function VisitorHome({
                 href={item.href}
                 key={item.label}
                 aria-current={item.href === "/" ? "page" : undefined}
+                onClick={
+                  "featured" in item && item.featured
+                    ? (event) => burstCoins(event.currentTarget)
+                    : undefined
+                }
                 {...("external" in item && item.external
                   ? {
                       target: "_blank",
@@ -856,14 +867,6 @@ export function VisitorHome({
           key={achievement.id}
           kicker="Advancement Made!"
           title={achievement.title}
-          detail={`${SERVER_ADDRESS} copied · paste it in Multiplayer`}
-          playersOnline={
-            serverStatus && serverStatus.currentlyPlaying > 0
-              ? `${currentlyPlaying} ${
-                  serverStatus.currentlyPlaying === 1 ? "player" : "players"
-                } online now`
-              : null
-          }
           iconSrc="/shared/images/branding/mineacle-mark.png"
           onDone={() => setAchievement(null)}
         />

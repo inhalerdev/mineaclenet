@@ -1433,3 +1433,75 @@
     font-size: 12px;
   }
 }
+
+/* ==========================================================================
+ * Nav v2: no underline bars.
+ *  - Current page + hover: a soft raised tile behind the link.
+ *  - Marketplace: a small purple block button (same recipe as the others).
+ * ========================================================================== */
+.headerNavItem::after,
+.headerToolButton::after {
+  display: none;
+}
+
+.page .headerNavItem {
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 0;
+  transition:
+    background-color var(--motion),
+    box-shadow var(--motion);
+}
+
+.page .headerNavItem:not(.featuredNavItem):hover,
+.page .headerNavItem:not(.featuredNavItem):focus-visible {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--mc-text);
+}
+
+.page .headerNavItem[aria-current="page"]:not(.featuredNavItem) {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.35);
+}
+
+.page .featuredNavItem {
+  height: 34px;
+  padding: 0 14px 4px;
+  border: 2px solid var(--mc-outline);
+  background: var(--mc-purple);
+  box-shadow:
+    inset 0 3px 0 var(--mc-purple-face),
+    inset 0 -4px 0 var(--mc-purple-deep);
+  color: #ffffff;
+  transition:
+    background-color var(--motion),
+    box-shadow 90ms ease,
+    transform 90ms ease;
+}
+
+.page .featuredNavItem:hover,
+.page .featuredNavItem:focus-visible {
+  border-color: var(--mc-outline);
+  background: #9450ff;
+  color: #ffffff;
+}
+
+.page .featuredNavItem:active {
+  padding-bottom: 1px;
+  box-shadow:
+    inset 0 3px 0 var(--mc-purple-face),
+    inset 0 -1px 0 var(--mc-purple-deep);
+  transform: translateY(3px);
+}
+
+@media (max-width: 1320px) {
+  .page .mobileFeaturedItem {
+    background: var(--mc-purple);
+    box-shadow:
+      inset 0 2px 0 var(--mc-purple-face),
+      inset 0 -3px 0 var(--mc-purple-deep);
+  }
+}
+

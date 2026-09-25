@@ -1199,3 +1199,11 @@ html .mobile-drawer nav a {
   font-size: var(--mc-nav-font);
 }
 
+/* Nav v2: no side bars; the current page keeps its dark tile only. */
+.sidebar-nav__item::after,
+.sidebar-nav__item.is-active::after,
+.mobile-drawer nav a::after,
+.mobile-drawer nav a.is-active::after {
+  display: none;
+}
+
