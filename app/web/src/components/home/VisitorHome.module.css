@@ -1899,23 +1899,32 @@
   }
 }
 
-/* Logo: no purple glow on hover; it floats gently instead. */
+/* Logo: a quick pixel-style hop on hover, like a mob jumping one block.
+   It snaps up in 2px steps (no smooth easing), lands with a small squash,
+   and plays once each time the pointer comes over it. */
+.brand img {
+  transform-origin: 50% 100%;
+}
+
 .brand:hover img,
 .brand:focus-visible img {
   filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.34));
   transform: none;
-  animation: brandFloat 1.6s ease-in-out infinite;
+  animation: brandHop 440ms steps(1, end) 1 both;
 }
 
-@keyframes brandFloat {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-4px);
-  }
+@keyframes brandHop {
+  0%   { transform: translateY(0); }
+  8%   { transform: translateY(-2px); }
+  16%  { transform: translateY(-4px); }
+  24%  { transform: translateY(-6px); }
+  40%  { transform: translateY(-8px); }
+  56%  { transform: translateY(-6px); }
+  64%  { transform: translateY(-4px); }
+  72%  { transform: translateY(-2px); }
+  80%  { transform: translateY(0) scale(1.03, 0.95); }
+  90%  { transform: translateY(0) scale(0.99, 1.02); }
+  100% { transform: translateY(0); }
 }
 
 @media (prefers-reduced-motion: reduce) {
