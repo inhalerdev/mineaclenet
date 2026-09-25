@@ -1,0 +1,44 @@
+/*
+ * Account pages layout. Builds on the homepage frame (VisitorHome.module.css):
+ * one full-height framed hero instead of hero + quick links.
+ */
+.page.page {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+/* A bit darker than the homepage so the panel reads clearly. */
+.shade.shade {
+  background:
+    radial-gradient(ellipse at center, rgba(8, 8, 8, 0.35), rgba(8, 8, 8, 0.7) 75%),
+    linear-gradient(180deg, rgba(8, 8, 8, 0.4), rgba(8, 8, 8, 0.6));
+}
+
+/* Scrollable area under the header; the panel sits in the middle and the
+   page scrolls inside the frame if the panel is taller than the screen. */
+.stage {
+  position: absolute;
+  z-index: 10;
+  inset: var(--header-height) 0 0;
+  display: grid;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* top padding keeps the panel clear of the logo, which hangs below
+     the header */
+  padding: 64px 16px 32px;
+}
+
+.stage > * {
+  margin: auto;
+}
+
+@media (max-width: 720px) {
+  .stage {
+    padding: 48px 12px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stage {
+    padding: 40px 8px 12px;
+  }
+}

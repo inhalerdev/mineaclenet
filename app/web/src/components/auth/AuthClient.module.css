@@ -1,358 +1,451 @@
-.root {
-  display: grid;
-  gap: 14px;
+/*
+ * Account panel (log in / create account / verify), in the same game-UI
+ * style as the homepage menus: black outline + grey inner ring, sunken
+ * inventory-slot inputs, block buttons (from VisitorHome.module.css).
+ * Colors come from app/tokens.css.
+ */
+.card {
+  width: min(100%, 440px);
+  padding: 4px;
+  background: #1f1f1f;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 0 0 4px #4a4a4a,
+    0 24px 60px rgba(0, 0, 0, 0.55);
+  color: var(--mc-text);
+  animation: cardIn 260ms cubic-bezier(0.2, 0.8, 0.25, 1) both;
 }
 
+/* --- Tabs: like inventory tabs. The open one joins the panel, the other
+       sits back, darker. ---------------------------------------------------- */
 .tabs {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 6px;
 }
 
-.tabs button {
-  min-height: 40px;
-  padding: 0 13px;
-  border: 1px solid rgba(248, 248, 248, 0.10);
-  border-radius: 4px;
-  background: #111111;
-  color: #888888;
+.tab {
+  height: 46px;
+  padding: 0 12px 2px;
+  border: 0;
+  border-radius: 0;
+  background: #151515;
+  box-shadow: inset 0 -2px 0 #4a4a4a;
+  color: var(--mc-text-muted);
   cursor: pointer;
-  font: inherit;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 13px;
+  line-height: 1;
+  white-space: nowrap;
   transition:
-    border-color var(--ease),
-    background-color var(--ease),
-    color var(--ease),
-    box-shadow var(--ease);
+    background-color 140ms ease,
+    color 140ms ease;
 }
 
-.tabs button:hover {
-  border-color: rgba(248, 248, 248, 0.18);
-  color: #ffffff;
+.tab + .tab {
+  box-shadow:
+    inset 0 -2px 0 #4a4a4a,
+    inset 2px 0 0 #4a4a4a;
 }
 
-.tabs .activeTab {
-  position: relative;
-  border-color: rgba(176, 120, 255, 0.34);
-  background: #1d1d1d;
-  color: #ffffff;
-  box-shadow: inset 0 -2px #b078ff;
+.tab:hover,
+.tab:focus-visible {
+  background: #1a1a1a;
+  color: var(--mc-text);
+  outline: none;
 }
 
-.steps {
+.tab[aria-selected="true"] {
+  background: transparent;
+  box-shadow: none;
+  color: var(--mc-text);
+  cursor: default;
+}
+
+.tab + .tab[aria-selected="true"] {
+  box-shadow: inset 2px 0 0 #4a4a4a;
+}
+
+.tab:first-child:not([aria-selected="true"]) {
+  box-shadow:
+    inset 0 -2px 0 #4a4a4a,
+    inset -2px 0 0 #4a4a4a;
+}
+
+.tab:focus-visible {
+  text-decoration: underline 2px var(--mc-purple-face);
+  text-underline-offset: 5px;
+}
+
+.body {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 6px;
+  gap: 20px;
+  padding: 22px 20px 20px;
+}
+
+/* --- Create account steps ------------------------------------------------ */
+.steps {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .steps li {
-  min-height: 56px;
+  flex: 1 1 0;
+  min-width: 0;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 0 12px;
-  border: 1px solid rgba(248, 248, 248, 0.10);
-  border-radius: 4px;
-  background: #171717;
+  gap: 8px;
+  color: var(--mc-text-muted);
+  font-size: 12px;
+  line-height: 1;
+  white-space: nowrap;
 }
 
-.steps li span {
+.steps li:last-child {
+  flex: 0 0 auto;
+}
+
+/* line to the next step */
+.steps li:not(:last-child)::after {
+  flex: 1 1 auto;
+  min-width: 8px;
+  height: 2px;
+  background: #3a3a3a;
+  content: "";
+}
+
+.steps li[data-state="done"]::after {
+  background: var(--mc-green);
+}
+
+.steps li[data-state="current"],
+.steps li[data-state="done"] {
+  color: var(--mc-text);
+}
+
+.stepNumber {
   width: 24px;
   height: 24px;
+  flex: 0 0 24px;
   display: grid;
   place-items: center;
-  border-radius: 4px;
-  background: #222222;
-  color: #888888;
+  padding-bottom: 2px;
+  border: 2px solid var(--mc-outline);
+  background: #2b2b2b;
+  box-shadow:
+    inset 0 2px 0 #3a3a3a,
+    inset 0 -2px 0 #161616;
+  color: var(--mc-text-muted);
   font-size: 11px;
-  font-weight: 700;
 }
 
-.steps li strong {
-  color: #999999;
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.steps .stepActive {
-  border-color: rgba(176, 120, 255, 0.24);
-  background: #1d1d1d;
-}
-
-.steps .stepActive span {
-  background: #8436fe;
+.steps li[data-state="current"] .stepNumber {
+  background: var(--mc-purple);
+  box-shadow:
+    inset 0 2px 0 var(--mc-purple-face),
+    inset 0 -2px 0 var(--mc-purple-deep);
   color: #ffffff;
 }
 
-.steps .stepActive strong {
-  color: #ffffff;
+.steps li[data-state="done"] .stepNumber {
+  background: var(--mc-green);
+  box-shadow:
+    inset 0 2px 0 var(--mc-green-light),
+    inset 0 -2px 0 var(--mc-green-edge);
 }
 
-.panel {
+.stepNumber img {
+  width: 10px;
+  height: 10px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+/* --- Forms ----------------------------------------------------------------- */
+.form {
   display: grid;
   gap: 16px;
-  padding: 20px;
-  border: 1px solid rgba(248, 248, 248, 0.10);
-  border-radius: 8px;
-  background: #171717;
 }
 
-.header small {
-  display: block;
-  color: #b078ff;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+.header {
+  display: grid;
+  gap: 10px;
+}
+
+.kicker {
+  color: var(--mc-purple-face);
+  font-size: 12px;
+  line-height: 1;
+  text-shadow: 1px 1px 0 var(--mc-purple-deep);
 }
 
 .header h1 {
-  margin: 7px 0 0;
+  margin: 0;
   color: #ffffff;
-  font-size: clamp(28px, 4vw, 36px);
-  font-weight: 700;
-  line-height: 0.98;
-  letter-spacing: -0.04em;
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1.1;
+  text-shadow: 2px 2px 0 #000000;
 }
 
 .header p {
-  max-width: 54ch;
-  margin: 9px 0 0;
-  color: #bbbbbb;
+  margin: 0;
+  color: var(--mc-text-muted);
   font-size: 13px;
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
-.note {
-  min-height: 42px;
-  display: flex;
-  align-items: center;
-  padding: 9px 12px;
-  border: 1px solid rgba(98, 194, 73, 0.22);
-  border-radius: 4px;
-  background: #192217;
-  color: #d4dfd0;
-  font-size: 12px;
-  line-height: 1.45;
-}
-
-.fieldGroup {
-  display: grid;
-  gap: 13px;
+.header b,
+.hint b {
+  color: var(--mc-text);
+  font-weight: 400;
 }
 
 .field {
   display: grid;
-  gap: 6px;
+  gap: 8px;
 }
 
-.field span {
-  color: #cfcfcf;
-  font-size: 11px;
-  font-weight: 500;
+.field > span {
+  color: var(--mc-text-muted);
+  font-size: 12px;
+  line-height: 1;
 }
 
+/* sunken inventory slot, same as the header search box */
 .field input {
   width: 100%;
   height: 44px;
-  padding: 0 12px;
-  border: 1px solid rgba(248, 248, 248, 0.10);
-  border-radius: 4px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 0;
+  outline: none;
   background: #111111;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 3px 3px 0 0 #0a0a0a,
+    inset -3px -3px 0 0 #2e2e2e;
   color: #ffffff;
-  font: inherit;
-  font-size: 13px;
-  transition:
-    border-color var(--ease),
-    background-color var(--ease);
+  font-size: 14px;
+  transition: box-shadow 140ms ease;
 }
 
 .field input::placeholder {
-  color: #707070;
+  color: #7a7a7a;
 }
 
 .field input:focus {
-  outline: none;
-  border-color: rgba(176, 120, 255, 0.60);
-  background: #111111;
-  box-shadow: none;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-purple-face),
+    inset 0 -4px 0 0 var(--mc-purple-edge);
 }
 
 .field input:-webkit-autofill,
 .field input:-webkit-autofill:hover,
-.field input:-webkit-autofill:focus,
-.field input:-webkit-autofill:active {
+.field input:-webkit-autofill:focus {
   -webkit-text-fill-color: #ffffff;
   caret-color: #ffffff;
-  -webkit-box-shadow: 0 0 0 1000px #111111 inset;
+  -webkit-box-shadow:
+    0 0 0 1000px #111111 inset,
+    inset 0 0 0 2px var(--mc-outline);
   transition: background-color 9999s ease-out 0s;
 }
 
-.error {
-  padding: 11px 12px;
-  border: 1px solid rgba(255, 85, 85, 0.22);
-  border-radius: 4px;
-  background: #231919;
-  color: #ffb2b2;
-  font-size: 11px;
-  line-height: 1.45;
+.hint {
+  margin: -4px 0 0;
+  color: var(--mc-text-muted);
+  font-size: 12px;
+  line-height: 1.5;
 }
 
-.submit {
-  width: 100%;
-  height: 44px;
-  border: 1px solid rgba(208, 175, 255, 0.56);
-  border-radius: 4px;
-  background: #8436fe;
-  color: #ffffff;
-  cursor: pointer;
-  font: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  box-shadow: 0 0 9px rgba(132, 54, 254, 0.13);
-  transition:
-    border-color var(--ease),
-    background-color var(--ease),
-    box-shadow var(--ease);
-}
-
-.submit:hover:not(:disabled) {
-  border-color: #d0afff;
-  background: #9858ff;
-  box-shadow: 0 0 18px rgba(132, 54, 254, 0.30);
-}
-
-.submit:disabled {
-  cursor: wait;
-  opacity: 0.72;
-}
-
-.commandCard {
-  display: grid;
-  gap: 10px;
-  padding: 15px;
-  border: 1px solid rgba(176, 120, 255, 0.22);
-  border-radius: 8px;
-  background: #1d1d1d;
-}
-
-.commandLabel {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.commandLabel small {
-  color: #d0afff;
-  font-size: 10px;
-  font-weight: 600;
-}
-
-.commandLabel span {
-  color: #999999;
-  font-size: 10px;
-  line-height: 1.4;
-}
-
-.commandValue {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.commandValue strong {
-  overflow: auto;
-  color: #ffffff;
-  font-size: 26px;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  white-space: nowrap;
-}
-
-.commandCopy {
-  min-width: 82px;
-  height: 38px;
-  flex: 0 0 auto;
-  padding: 0 12px;
-  border: 1px solid rgba(248, 248, 248, 0.10);
-  border-radius: 4px;
-  background: #111111;
-  color: #ffffff;
-  cursor: pointer;
-  font: inherit;
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.verifyGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 7px;
-}
-
-.verifyCard {
-  min-height: 118px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 14px;
-  border: 1px solid rgba(248, 248, 248, 0.10);
-  border-radius: 4px;
-  background: #171717;
-}
-
-.verifyCard small {
-  color: #b078ff;
-  font-size: 10px;
-  font-weight: 600;
-}
-
-.verifyCard strong {
-  color: #ffffff;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.verifyCard p {
+/* --- Messages ------------------------------------------------------------- */
+.error,
+.notice {
   margin: 0;
-  color: #999999;
-  font-size: 11px;
-  line-height: 1.45;
+  padding: 11px 14px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.error {
+  background: #2a1515;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 0 0 4px #5c2626;
+  color: #ff8f8f;
+}
+
+.notice {
+  background: #15261a;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 0 0 4px #27552f;
+  color: #9ef0aa;
+}
+
+/* "New to the website? Create an account" */
+.switch {
+  margin: 0;
+  color: var(--mc-text-muted);
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.switch button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--mc-text);
+  cursor: pointer;
+  font-size: 12px;
+  text-decoration: underline 2px transparent;
+  text-underline-offset: 5px;
+  transition: text-decoration-color 140ms ease;
+}
+
+.switch button:hover,
+.switch button:focus-visible {
+  outline: none;
+  text-decoration-color: var(--mc-purple-face);
+}
+
+/* --- Verify step ---------------------------------------------------------- */
+.command {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  background: #111111;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 3px 3px 0 0 #0a0a0a,
+    inset -3px -3px 0 0 #2e2e2e;
+}
+
+.commandAvatar {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  border: 2px solid var(--mc-outline);
+  background: #1a1a1a;
+  image-rendering: pixelated;
+}
+
+.command code {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 18px;
+  line-height: 1.2;
+  text-shadow: 2px 2px 0 #000000;
+  user-select: all;
+}
+
+.copyButton.copyButton {
+  height: 36px;
+  flex: 0 0 auto;
+  gap: 8px;
+  padding: 0 12px 3px;
+  font-size: 12px;
+}
+
+.copyButton img {
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+  image-rendering: pixelated;
 }
 
 .waiting {
-  min-height: 40px;
-  display: inline-flex;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
-  padding: 0 12px;
-  border: 1px solid rgba(248, 248, 248, 0.10);
-  border-radius: 4px;
-  background: #1d1d1d;
-  color: #d2d2d2;
+  gap: 8px 10px;
+  color: var(--mc-text);
   font-size: 12px;
-  font-weight: 600;
+  line-height: 1.2;
 }
 
-.waitingDot {
+.liveDot {
   width: 8px;
   height: 8px;
-  border-radius: 50%;
-  background: #11fc7b;
-  box-shadow: none;
+  flex: 0 0 8px;
+  background: var(--mc-live);
+  box-shadow: 0 0 0 2px #0b3d22;
   animation: pulse 1.2s ease-in-out infinite;
+}
+
+.expires {
+  margin-left: auto;
+  color: var(--mc-text-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Password step: the verified player ----------------------------------- */
+.verified {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  background: #262626;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 2px 0 2px #333333,
+    inset 0 -4px 0 0 #181818;
+}
+
+.verified img {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  border: 2px solid var(--mc-outline);
+  background: #1a1a1a;
+  image-rendering: pixelated;
+}
+
+.verified > span {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.verified b {
+  overflow: hidden;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.verified small {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--mc-green-light);
+  font-size: 11px;
+  line-height: 1;
+}
+
+.verified small::before {
+  width: 6px;
+  height: 6px;
+  background: var(--mc-live);
+  box-shadow: 0 0 0 2px #0b3d22;
+  content: "";
 }
 
 @keyframes pulse {
   0%,
   100% {
-    opacity: 0.55;
+    opacity: 0.45;
   }
 
   50% {
@@ -360,28 +453,50 @@
   }
 }
 
-@media (max-width: 640px) {
-  .panel {
-    padding: 16px;
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
   }
 
-  .steps,
-  .verifyGrid {
-    grid-template-columns: 1fr;
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .body {
+    gap: 18px;
+    padding: 18px 14px 16px;
   }
 
-  .commandValue {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .commandValue strong {
+  .header h1 {
     font-size: 22px;
-    white-space: normal;
-    word-break: break-word;
   }
 
-  .commandCopy {
-    width: 100%;
+  .tab {
+    padding: 0 6px 2px;
+    font-size: 12px;
+  }
+
+  .command code {
+    font-size: 16px;
+  }
+
+  .copyButton span {
+    display: none;
+  }
+
+  .expires {
+    margin-left: 0;
+    flex-basis: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .liveDot {
+    animation: none;
   }
 }

@@ -1,7 +1,24 @@
 "use client";
 
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
+import homeStyles from "@/components/home/VisitorHome.module.css";
+import { playerAvatarUrl } from "@/components/players/PlayerAvatar";
+import { mineacleIcons } from "@/shared/icons/mineacle-icons";
 import styles from "./AuthClient.module.css";
+
+/*
+ * Log in / create account panel.
+ *
+ * Create account runs in three steps:
+ *   1. Player:   enter a Java username that has joined Mineacle
+ *   2. Verify:   run /verify <code> in game (this page polls until done)
+ *   3. Password: set the website password
+ *
+ * Styled like the homepage menus (game-UI panel, block buttons). Must be
+ * rendered inside the homepage `.page` wrapper so the block buttons apply.
+ */
+
+const SERVER_ADDRESS = "mineacle.net";
 
 type VerifyState = {
   challengeId: string;
@@ -10,7 +27,7 @@ type VerifyState = {
   expiresAt: number;
 };
 
-type AuthMode = "login" | "create";
+export type AuthMode = "login" | "create";
 
 type AuthClientProps = {
   initialMode?: AuthMode;
@@ -34,6 +51,17 @@ async function confirmBrowserSession() {
   return data.authenticated === true;
 }
 
+function formatRemaining(ms: number) {
+  const total = Math.max(0, Math.ceil(ms / 1000));
+  const minutes = Math.floor(total / 60);
+  const seconds = total % 60;
+
+  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+}
+
+const blockButton = homeStyles.blockButton;
+const primaryButton = `${homeStyles.blockButton} ${homeStyles.blockButtonPrimary}`;
+
 export function AuthClient({
   initialMode = "login",
   onAuthenticated,
@@ -47,22 +75,10 @@ export function AuthClient({
   const [confirm, setConfirm] = useState("");
   const [verification, setVerification] = useState<VerifyState | null>(null);
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
   const [commandCopied, setCommandCopied] = useState(false);
-
-  useEffect(() => {
-    const requestedMode =
-      new URLSearchParams(window.location.search).get("mode");
-
-    setMode(requestedMode === "create" ? "create" : initialMode);
-    setStep("username");
-    setUsername("");
-    setVerification(null);
-    setPassword("");
-    setConfirm("");
-    setError("");
-    setCommandCopied(false);
-  }, [initialMode]);
+  const [now, setNow] = useState(() => Date.now());
 
   async function finishAuthentication() {
     if (onAuthenticated) {
@@ -73,6 +89,7 @@ export function AuthClient({
     window.location.replace("/");
   }
 
+  // Poll until the player has run /verify in game.
   useEffect(() => {
     if (!verification || step !== "verify") {
       return;
@@ -95,7 +112,7 @@ export function AuthClient({
         };
 
         if (data.expired) {
-          setError("That verification code expired. Generate a new one");
+          setError("That code expired. Generate a new one.");
           setVerification(null);
           setStep("username");
         } else if (data.verified) {
@@ -110,10 +127,23 @@ export function AuthClient({
     return () => window.clearInterval(timer);
   }, [verification, step]);
 
+  // Countdown shown next to the verify code.
+  useEffect(() => {
+    if (step !== "verify") {
+      return;
+    }
+
+    setNow(Date.now());
+    const timer = window.setInterval(() => setNow(Date.now()), 1000);
+
+    return () => window.clearInterval(timer);
+  }, [step]);
+
   async function login(event: FormEvent) {
     event.preventDefault();
     setBusy(true);
     setError("");
+    setNotice("");
 
     try {
       const response = await fetch("/api/auth/login", {
@@ -149,6 +179,7 @@ export function AuthClient({
     event.preventDefault();
     setBusy(true);
     setError("");
+    setNotice("");
 
     try {
       const response = await fetch("/api/auth/verify/start", {
@@ -214,14 +245,9 @@ export function AuthClient({
       }
 
       if (data.session === false) {
-        setMode("login");
-        setStep("username");
-        setVerification(null);
-        setPassword("");
-        setConfirm("");
-        setCommandCopied(false);
-        setError(
-          data.error || "Account created. Log in with your new password",
+        changeMode("login");
+        setNotice(
+          data.error || "Account created. Log in with your new password.",
         );
         return;
       }
@@ -248,7 +274,17 @@ export function AuthClient({
     setPassword("");
     setConfirm("");
     setError("");
+    setNotice("");
     setCommandCopied(false);
+
+    // Keep the address bar in sync so refresh / back work as expected.
+    const path = next === "create" ? "/register" : "/login";
+
+    if (!onAuthenticated && window.location.pathname !== path) {
+      window.history.replaceState(null, "", path);
+      document.title =
+        next === "create" ? "Create account | Mineacle" : "Log in | Mineacle";
+    }
   }
 
   async function copyCommand() {
@@ -265,31 +301,33 @@ export function AuthClient({
     }
   }
 
-  const createStepIndex =
-    step === "username" ? 1 : step === "verify" ? 2 : 3;
+  const stepIndex = step === "username" ? 1 : step === "verify" ? 2 : 3;
+  const remainingMs = verification?.expiresAt
+    ? new Date(verification.expiresAt).getTime() - now
+    : Number.NaN;
 
-  const verifyExpiresText = useMemo(() => {
-    if (!verification?.expiresAt) {
-      return null;
-    }
-
-    const expiresAt = new Date(verification.expiresAt);
-
-    if (Number.isNaN(expiresAt.getTime())) {
-      return null;
-    }
-
-    return expiresAt.toLocaleTimeString([], {
-      hour: "numeric",
-      minute: "2-digit",
-    });
-  }, [verification]);
+  const messages = (
+    <>
+      {notice ? (
+        <p className={styles.notice} role="status">
+          {notice}
+        </p>
+      ) : null}
+      {error ? (
+        <p className={styles.error} role="alert">
+          {error}
+        </p>
+      ) : null}
+    </>
+  );
 
   return (
-    <div className={styles.root}>
-      <div className={styles.tabs} role="tablist" aria-label="Account access">
+    <div className={styles.card}>
+      <div className={styles.tabs} role="tablist" aria-label="Account">
         <button
-          className={mode === "login" ? styles.activeTab : ""}
+          className={styles.tab}
+          role="tab"
+          aria-selected={mode === "login"}
           onClick={() => changeMode("login")}
           type="button"
         >
@@ -297,7 +335,9 @@ export function AuthClient({
         </button>
 
         <button
-          className={mode === "create" ? styles.activeTab : ""}
+          className={styles.tab}
+          role="tab"
+          aria-selected={mode === "create"}
           onClick={() => changeMode("create")}
           type="button"
         >
@@ -305,43 +345,56 @@ export function AuthClient({
         </button>
       </div>
 
-      {mode === "create" ? (
-        <ol className={styles.steps} aria-label="Create account steps">
-          <li className={createStepIndex >= 1 ? styles.stepActive : ""}>
-            <span>1</span>
-            <strong>Player</strong>
-          </li>
-          <li className={createStepIndex >= 2 ? styles.stepActive : ""}>
-            <span>2</span>
-            <strong>Verify</strong>
-          </li>
-          <li className={createStepIndex >= 3 ? styles.stepActive : ""}>
-            <span>3</span>
-            <strong>Password</strong>
-          </li>
-        </ol>
-      ) : null}
+      <div className={styles.body}>
+        {mode === "create" ? (
+          <ol className={styles.steps} aria-label="Create account steps">
+            {["Player", "Verify", "Password"].map((label, index) => {
+              const number = index + 1;
+              const state =
+                number < stepIndex
+                  ? "done"
+                  : number === stepIndex
+                    ? "current"
+                    : "todo";
 
-      {mode === "login" ? (
-        <form className={styles.panel} onSubmit={login}>
-          <header className={styles.header}>
-            <small>MINEACLE ACCOUNT</small>
-            <h1>Welcome back</h1>
-            <p>
-              Sign in with the Minecraft username tied to your
-              Mineacle account.
-            </p>
-          </header>
+              return (
+                <li
+                  key={label}
+                  data-state={state}
+                  aria-current={state === "current" ? "step" : undefined}
+                >
+                  <span className={styles.stepNumber} aria-hidden="true">
+                    {state === "done" ? (
+                      <img src={mineacleIcons.check} alt="" draggable={false} />
+                    ) : (
+                      number
+                    )}
+                  </span>
+                  <span>{label}</span>
+                </li>
+              );
+            })}
+          </ol>
+        ) : null}
 
-          <div className={styles.fieldGroup}>
+        {mode === "login" ? (
+          <form className={styles.form} onSubmit={login}>
+            <header className={styles.header}>
+              <span className={styles.kicker}>Mineacle account</span>
+              <h1>Welcome back</h1>
+              <p>Log in with your Minecraft username.</p>
+            </header>
+
             <label className={styles.field}>
               <span>Minecraft username</span>
               <input
                 autoComplete="username"
+                autoCapitalize="none"
+                spellCheck={false}
                 maxLength={16}
                 value={username}
                 onChange={(event) => setUsername(event.target.value)}
-                placeholder="Enter your Java username"
+                placeholder="Your Java username"
                 required
               />
             </label>
@@ -353,135 +406,162 @@ export function AuthClient({
                 type="password"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
-                placeholder="Enter your password"
+                placeholder="Your password"
                 required
               />
             </label>
-          </div>
 
-          {error ? <div className={styles.error}>{error}</div> : null}
+            {messages}
 
-          <button className={styles.submit} disabled={busy} type="submit">
-            {busy ? "Logging in..." : "Log in"}
-          </button>
-        </form>
-      ) : null}
+            <button className={primaryButton} disabled={busy} type="submit">
+              {busy ? "Logging in..." : "Log in"}
+            </button>
 
-      {mode === "create" && step === "username" ? (
-        <form className={styles.panel} onSubmit={start}>
-          <header className={styles.header}>
-            <small>PLAYER VERIFICATION</small>
-            <h1>Connect your player</h1>
-            <p>
-              Enter the Java username that has already joined
-              Mineacle. You will verify ownership in game before
-              creating your website password.
+            <p className={styles.switch}>
+              New to the website?{" "}
+              <button type="button" onClick={() => changeMode("create")}>
+                Create an account
+              </button>
             </p>
-          </header>
+          </form>
+        ) : null}
 
-          <div className={styles.note}>
-            The player must have joined Mineacle at least once.
-          </div>
+        {mode === "create" && step === "username" ? (
+          <form className={styles.form} onSubmit={start}>
+            <header className={styles.header}>
+              <span className={styles.kicker}>Step 1 of 3</span>
+              <h1>Link your player</h1>
+              <p>
+                Enter the Java username you play with. You&apos;ll confirm
+                it&apos;s you with a quick command in game.
+              </p>
+            </header>
 
-          <label className={styles.field}>
-            <span>Minecraft username</span>
-            <input
-              maxLength={16}
-              value={username}
-              onChange={(event) => setUsername(event.target.value)}
-              placeholder="Enter your Java username"
-              required
-            />
-          </label>
+            <label className={styles.field}>
+              <span>Minecraft username</span>
+              <input
+                autoComplete="username"
+                autoCapitalize="none"
+                spellCheck={false}
+                maxLength={16}
+                value={username}
+                onChange={(event) => setUsername(event.target.value)}
+                placeholder="Your Java username"
+                required
+              />
+            </label>
 
-          {error ? <div className={styles.error}>{error}</div> : null}
-
-          <button className={styles.submit} disabled={busy} type="submit">
-            {busy ? "Checking player..." : "Generate verification code"}
-          </button>
-        </form>
-      ) : null}
-
-      {mode === "create" && step === "verify" && verification ? (
-        <div className={styles.panel}>
-          <header className={styles.header}>
-            <small>VERIFY IN MINECRAFT</small>
-            <h1>Verify {verification.username}</h1>
-            <p>
-              Join Mineacle on Java Edition, run the command
-              below, and this page will update automatically.
+            <p className={styles.hint}>
+              You need to have joined <b>{SERVER_ADDRESS}</b> at least once.
             </p>
-          </header>
 
-          <div className={styles.commandCard}>
-            <div className={styles.commandLabel}>
-              <small>IN-GAME COMMAND</small>
-              {verifyExpiresText ? (
-                <span>Expires around {verifyExpiresText}</span>
+            {messages}
+
+            <button className={primaryButton} disabled={busy} type="submit">
+              {busy ? "Checking player..." : "Get my code"}
+            </button>
+          </form>
+        ) : null}
+
+        {mode === "create" && step === "verify" && verification ? (
+          <div className={styles.form}>
+            <header className={styles.header}>
+              <span className={styles.kicker}>Step 2 of 3</span>
+              <h1>Verify in game</h1>
+              <p>
+                Join <b>{SERVER_ADDRESS}</b> as{" "}
+                <b>{verification.username}</b> and type this in chat:
+              </p>
+            </header>
+
+            <div className={styles.command}>
+              <img
+                className={styles.commandAvatar}
+                src={playerAvatarUrl(verification.username, 64)}
+                alt=""
+                referrerPolicy="no-referrer"
+                draggable={false}
+              />
+              <code>/verify {verification.code}</code>
+              <button
+                className={`${blockButton} ${styles.copyButton}`}
+                type="button"
+                onClick={copyCommand}
+                aria-label="Copy command"
+              >
+                <img
+                  src={commandCopied ? mineacleIcons.check : mineacleIcons.copy}
+                  alt=""
+                  draggable={false}
+                />
+                <span>{commandCopied ? "Copied" : "Copy"}</span>
+              </button>
+            </div>
+
+            <div className={styles.waiting} role="status">
+              <span className={styles.liveDot} aria-hidden="true" />
+              <span>Waiting for you in game</span>
+              {Number.isFinite(remainingMs) ? (
+                <span className={styles.expires}>
+                  Code expires in {formatRemaining(remainingMs)}
+                </span>
               ) : null}
             </div>
 
-            <div className={styles.commandValue}>
-              <strong>/verify {verification.code}</strong>
-              <button
-                className={styles.commandCopy}
-                type="button"
-                onClick={copyCommand}
-              >
-                {commandCopied ? "Copied" : "Copy"}
-              </button>
-            </div>
-          </div>
-
-          <div className={styles.verifyGrid}>
-            <div className={styles.verifyCard}>
-              <small>STEP 1</small>
-              <strong>Join Mineacle</strong>
-              <p>Connect using the same Java username shown above.</p>
-            </div>
-
-            <div className={styles.verifyCard}>
-              <small>STEP 2</small>
-              <strong>Run the command</strong>
-              <p>Paste the verification command in Minecraft chat.</p>
-            </div>
-
-            <div className={styles.verifyCard}>
-              <small>STEP 3</small>
-              <strong>Return here</strong>
-              <p>This window will continue automatically when verified.</p>
-            </div>
-          </div>
-
-          <div className={styles.waiting}>
-            <span className={styles.waitingDot} aria-hidden="true" />
-            Waiting for verification
-          </div>
-
-          {error ? <div className={styles.error}>{error}</div> : null}
-        </div>
-      ) : null}
-
-      {mode === "create" && step === "password" && verification ? (
-        <form className={styles.panel} onSubmit={complete}>
-          <header className={styles.header}>
-            <small>PLAYER VERIFIED</small>
-            <h1>Create your password</h1>
-            <p>
-              {verification.username} is verified. Finish your
-              Mineacle account by setting a password.
+            <p className={styles.hint}>
+              This page moves on by itself once you&apos;ve run the command.
             </p>
-          </header>
 
-          <div className={styles.fieldGroup}>
+            {messages}
+
+            <button
+              className={blockButton}
+              type="button"
+              onClick={() => changeMode("create")}
+            >
+              Use a different username
+            </button>
+          </div>
+        ) : null}
+
+        {mode === "create" && step === "password" && verification ? (
+          <form className={styles.form} onSubmit={complete}>
+            <header className={styles.header}>
+              <span className={styles.kicker}>Step 3 of 3</span>
+              <h1>Set a password</h1>
+            </header>
+
+            <div className={styles.verified}>
+              <img
+                src={playerAvatarUrl(verification.username, 64)}
+                alt=""
+                referrerPolicy="no-referrer"
+                draggable={false}
+              />
+              <span>
+                <b>{verification.username}</b>
+                <small>Verified</small>
+              </span>
+            </div>
+
+            {/* Lets password managers save the username with the password. */}
+            <input
+              type="text"
+              autoComplete="username"
+              value={verification.username}
+              readOnly
+              hidden
+            />
+
             <label className={styles.field}>
               <span>Password</span>
               <input
+                autoComplete="new-password"
                 type="password"
                 minLength={10}
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
-                placeholder="Create a password"
+                placeholder="At least 10 characters"
                 required
               />
             </label>
@@ -489,23 +569,24 @@ export function AuthClient({
             <label className={styles.field}>
               <span>Confirm password</span>
               <input
+                autoComplete="new-password"
                 type="password"
                 minLength={10}
                 value={confirm}
                 onChange={(event) => setConfirm(event.target.value)}
-                placeholder="Confirm your password"
+                placeholder="Type it again"
                 required
               />
             </label>
-          </div>
 
-          {error ? <div className={styles.error}>{error}</div> : null}
+            {messages}
 
-          <button className={styles.submit} disabled={busy} type="submit">
-            {busy ? "Creating account..." : "Create account"}
-          </button>
-        </form>
-      ) : null}
+            <button className={primaryButton} disabled={busy} type="submit">
+              {busy ? "Creating account..." : "Create account"}
+            </button>
+          </form>
+        ) : null}
+      </div>
     </div>
   );
 }
