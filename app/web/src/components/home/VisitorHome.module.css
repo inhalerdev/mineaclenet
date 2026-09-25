@@ -1884,13 +1884,19 @@
 }
 
 /* ==========================================================================
- * Desktop nav layout: links grouped 16px apart, sitting 16px left of the
- * logo (the gap comes from --logo-clearance on .header). Search sits 16px
- * right of the logo; My Profile stays at the far right.
+ * Desktop nav layout: links grouped 16px apart, starting 16px in from the
+ * header's left edge. Search sits 16px right of the logo (--logo-clearance);
+ * My Profile sits 16px in from the right edge.
  * ========================================================================== */
 .headerNavigation {
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 16px;
+}
+
+@media (min-width: 1321px) {
+  .page .header {
+    padding: 0 16px;
+  }
 }
 
 /* Logo: no purple glow on hover; it floats gently instead. */
