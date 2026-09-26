@@ -30,8 +30,10 @@
     minmax(0, 1fr);
   align-items: center;
   padding: 0 16px;
-  border-bottom: var(--stroke-width) solid var(--border-soft);
+  /* Block edge along the bottom: dark shade line, then the black outline. */
+  border-bottom: 2px solid var(--mc-outline);
   background: rgba(34, 34, 34, 0.97);
+  box-shadow: inset 0 -3px 0 #181818;
 }
 
 /* ==========================================================================

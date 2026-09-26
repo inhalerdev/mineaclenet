@@ -18,7 +18,6 @@
   --page-margin: 32px;
   --content-gap: 16px;
   --section-gap: 16px;
-  --stroke-width: 0.5px;
   --header-height: 48px;
   --surface: #222222;
   --border: rgba(255, 255, 255, 0.28);
@@ -61,9 +60,20 @@
   min-width: 0;
   min-height: 0;
   overflow: hidden;
-  border: var(--stroke-width) solid var(--border);
-  border-radius: 4px;
+  border: 2px solid var(--mc-outline);
   background: #1a1a1a;
+}
+
+/* Block edge: a thin light ring just inside the black outline, drawn on top
+   of the video and header so it shows all the way round (same recipe as the
+   cards and menus). */
+.heroFrame::after {
+  position: absolute;
+  z-index: 40;
+  inset: 0;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.1);
+  content: "";
+  pointer-events: none;
 }
 
 /* Everything under the header: background video + shade. */
