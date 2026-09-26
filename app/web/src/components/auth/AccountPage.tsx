@@ -8,7 +8,7 @@ import {
 import frame from "@/components/site/SiteFrame.module.css";
 import { getCurrentViewer } from "@/features/auth/session";
 import { homeContent } from "@/features/home/home-content";
-import { getPlayerLeaderboard } from "@/features/players/repository";
+import { getTopPlayers } from "@/features/players/top-players";
 import styles from "./AccountPage.module.css";
 
 /*
@@ -17,21 +17,14 @@ import styles from "./AccountPage.module.css";
  * account panel in the middle.
  */
 export async function AccountPage({ mode }: { mode: AuthMode }) {
-  const [viewer, leaderboard] = await Promise.all([
+  const [viewer, topPlayers] = await Promise.all([
     getCurrentViewer(),
-    getPlayerLeaderboard("balance", 3).catch(() => []),
+    getTopPlayers(),
   ]);
 
   if (viewer) {
     redirect("/");
   }
-
-  const topPlayers = leaderboard.map((player) => ({
-    uuid: player.uuid,
-    username: player.username,
-    displayName: player.displayName,
-    online: player.online,
-  }));
 
   return (
     <AccountShell mode={mode} topPlayers={topPlayers}>
