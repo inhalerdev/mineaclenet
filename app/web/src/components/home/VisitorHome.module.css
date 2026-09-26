@@ -2251,3 +2251,24 @@
 .page .topPlayersHeading a:focus-visible b {
   transform: translateX(3px);
 }
+
+/* Search panel close (X): turns into a red block while there's text in
+   the search box (same red as Sign out). */
+.searchInputRow:has(input:not(:placeholder-shown)) .closeSearch {
+  background: var(--mc-red);
+  box-shadow:
+    inset 0 2px 0 var(--mc-red-light),
+    inset 0 -3px 0 var(--mc-red-edge);
+}
+
+.searchInputRow:has(input:not(:placeholder-shown)) .closeSearch:hover,
+.searchInputRow:has(input:not(:placeholder-shown)) .closeSearch:focus-visible {
+  background: var(--mc-red-hover);
+}
+
+.searchInputRow:has(input:not(:placeholder-shown)) .closeSearch:active {
+  background: var(--mc-red);
+  box-shadow:
+    inset 0 2px 0 var(--mc-red-light),
+    inset 0 -1px 0 var(--mc-red-edge);
+}
