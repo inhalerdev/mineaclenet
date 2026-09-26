@@ -291,7 +291,7 @@ export function VisitorHome({
 
   return (
     <div className={`${frame.page} ${styles.homePage}`}>
-      <section className={`${frame.heroFrame} ${styles.heroFrame}`}>
+      <section className={`${frame.heroFrame} ${styles.heroSection}`}>
         <SiteHeader
           viewer={viewer}
           topPlayers={topPlayers}

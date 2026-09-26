@@ -1,11 +1,30 @@
+/*
+ * Homepage: the Play Now button and server line in the hero, and the
+ * quick-link cards (Marketplace, Vote, Leaderboards).
+ *
+ * The page frame and hero box come from site/SiteFrame.module.css and the
+ * header from site/SiteHeader.module.css. Colors are in app/tokens.css.
+ *
+ * Layouts:
+ *   - Desktop:   hero on top, cards in a row under it (Marketplace biggest).
+ *   - Ultrawide: hero on the left, cards in a column down the right side.
+ *   - Phones:    the page scrolls; cards stack full width under the hero.
+ *
+ * .homePage sits on the page wrapper and switches between those layouts.
+ * Where it changes the frame itself it's written twice (.homePage.homePage)
+ * so it wins over SiteFrame's own rules whatever order they load in.
+ */
 
-
+/* ==========================================================================
+ * Play Now: green block button. Hover shows the player count, click copies
+ * the IP. Built like the logo: green face, light top edge, dark bottom
+ * edge, black outline.
+ * ========================================================================== */
 .playButton {
   position: absolute;
   z-index: 4;
-  right: auto;
-  left: 50%;
   bottom: 32px;
+  left: 50%;
   width: max-content;
   min-width: 160px;
   max-width: calc(100% - 32px);
@@ -13,38 +32,54 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0 24px;
+  padding: 0 24px 4px;
   overflow: hidden;
-  border: var(--stroke-width) solid #4baa38;
+  border: 2px solid var(--mc-outline);
   border-radius: 0;
-  background: var(--green);
+  background: var(--mc-green);
+  box-shadow:
+    inset 0 3px 0 var(--mc-green-light),
+    inset 0 -5px 0 var(--mc-green-edge),
+    0 10px 26px rgba(0, 0, 0, 0.25);
   color: #ffffff;
   cursor: pointer;
-  font-family: "Mineacle Primary", monospace;
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.25);
   transform: translateX(-50%);
   transition:
-    background-color var(--motion),
-    border-color var(--motion),
-    transform var(--motion);
+    transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease;
 }
 
 .playButton:hover,
 .playButton:focus-visible {
-  border-color: #61c84a;
-  background: var(--green-hover);
+  border-color: #ffffff;
+  background: var(--mc-green-hover);
+  box-shadow:
+    inset 0 3px 0 var(--mc-green-light),
+    inset 0 -5px 0 var(--mc-green-edge),
+    0 4px 0 rgba(0, 0, 0, 0.45),
+    0 14px 28px rgba(0, 0, 0, 0.3);
   transform: translateX(-50%) translateY(-2px);
 }
 
 .playButton:active {
-  transform: translateX(-50%);
+  padding-bottom: 1px;
+  border-color: #ffffff;
+  background: var(--mc-green);
+  box-shadow:
+    inset 0 3px 0 var(--mc-green-light),
+    inset 0 -2px 0 var(--mc-green-edge),
+    0 1px 0 rgba(0, 0, 0, 0.45);
+  transform: translateX(-50%) translateY(3px);
+  transition-duration: 50ms;
 }
 
 /*
  * All three labels (PLAY NOW / N Currently Playing / IP Copied) sit in the
  * same grid cell, so the button is always as wide as the widest one and
- * never changes size when you hover or click. Its width only changes when
- * the player count gains or loses a digit.
+ * doesn't change size when you hover or click.
  */
 .playButtonContent {
   display: grid;
@@ -66,8 +101,8 @@
   opacity: 0;
   transform: translateY(7px);
   transition:
-    opacity 180ms cubic-bezier(0.2, 0.75, 0.25, 1),
-    transform 180ms cubic-bezier(0.2, 0.75, 0.25, 1);
+    opacity var(--motion),
+    transform var(--motion);
 }
 
 .playButtonState[data-active="true"] {
@@ -82,9 +117,71 @@
   flex: 0 0 14px;
   object-fit: contain;
   image-rendering: pixelated;
-  filter: brightness(0) invert(1);
 }
 
+/* Screen-reader announcement when the IP is copied. */
+.copyStatus {
+  position: fixed;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+ * Server line under Play Now ("mineacle.net · 42 online"). Only on phones
+ * and touch screens: they can't hover Play Now to see the count.
+ * ========================================================================== */
+.serverLine {
+  position: absolute;
+  z-index: 4;
+  bottom: 14px;
+  left: 50%;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 6px 10px 7px;
+  background: rgba(17, 17, 17, 0.78);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-size: 12px;
+  line-height: 1;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+.serverLine > span + span::before {
+  margin-right: 8px;
+  color: var(--mc-text-muted);
+  content: "\00b7";
+}
+
+/* Status light: green online, red offline, grey while checking. */
+.serverLine > i {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 6px;
+  background: #666666;
+  box-shadow: 0 0 0 2px #222222;
+}
+
+.serverLine > i[data-online="true"] {
+  background: var(--mc-live);
+  box-shadow: 0 0 0 2px #0b3d22;
+}
+
+.serverLine > i[data-online="false"] {
+  background: var(--mc-red);
+  box-shadow: 0 0 0 2px var(--mc-red-edge);
+}
+
+/* ==========================================================================
+ * Quick-link cards: dark cards with a soft glow in each card's color.
+ * Hover lifts 2px with a white outline and a shadow; click sinks.
+ * ========================================================================== */
 .quickGrid {
   min-width: 0;
   min-height: 0;
@@ -100,43 +197,72 @@
   display: grid;
   place-items: center;
   overflow: hidden;
-  border: var(--stroke-width) solid var(--border);
-  border-radius: 4px;
+  border: 2px solid var(--mc-outline);
+  border-radius: 0;
   background: #222222;
+  box-shadow:
+    inset 0 2px 0 #2e2e2e,
+    inset 0 -4px 0 #181818;
   color: #ffffff;
+  transition:
+    transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 140ms ease,
+    background-color 140ms ease;
+}
+
+.quickCard[data-card="marketplace"] {
+  background:
+    radial-gradient(circle at 50% 38%, rgba(242, 181, 30, 0.12), transparent 40%),
+    #222222;
+}
+
+.quickCard[data-card="vote"] {
+  background:
+    radial-gradient(circle at 50% 38%, rgba(17, 252, 123, 0.1), transparent 40%),
+    #222222;
+}
+
+.quickCard[data-card="leaderboards"] {
+  background:
+    radial-gradient(circle at 50% 38%, rgba(176, 120, 255, 0.14), transparent 40%),
+    #222222;
 }
 
 .quickCard:hover,
 .quickCard:focus-visible {
   border-color: #ffffff;
   outline: 0;
+  box-shadow:
+    inset 0 2px 0 #333333,
+    inset 0 -4px 0 #181818,
+    0 4px 0 rgba(0, 0, 0, 0.45);
+  transform: translateY(-2px);
 }
 
-.quickCardMedia,
-.quickCardShade {
+.quickCard:active {
+  box-shadow:
+    inset 0 2px 0 #333333,
+    inset 0 -1px 0 #181818;
+  transform: translateY(2px);
+  transition-duration: 50ms;
+}
+
+/* Optional background art (set in features/home/home-content.ts). */
+.quickCardMedia {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-}
-
-.quickCardMedia {
   object-fit: cover;
   filter: brightness(0.38) saturate(0.78);
 }
 
 .quickCardShade {
-  background:
-    radial-gradient(circle at 50% 25%, rgba(176, 120, 255, 0.1), transparent 48%),
-    linear-gradient(0deg, rgba(13, 13, 13, 0.58), rgba(13, 13, 13, 0.18));
+  display: none;
 }
 
-.quickCard[data-card="vote"] {
-  background:
-    radial-gradient(circle at 50% 38%, rgba(17, 252, 123, 0.12), transparent 36%),
-    #222222;
-}
-
+/* Icon above the title; hops up a few pixels with the card. */
 .quickCardIcon {
   position: absolute;
   z-index: 2;
@@ -145,7 +271,11 @@
   height: 32px;
   display: grid;
   place-items: center;
-  opacity: 0.82;
+}
+
+.quickCard:hover .quickCardIcon,
+.quickCard:focus-visible .quickCardIcon {
+  transform: translateY(-3px);
 }
 
 .quickCardIcon img {
@@ -168,88 +298,22 @@
   text-wrap: balance;
 }
 
-.copyStatus {
-  position: fixed;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
+/* ==========================================================================
+ * Screen sizes
+ * ========================================================================== */
 @media (max-width: 1320px) {
-  
-
-  
-
   .playButton {
     bottom: 24px;
-    height: 52px;
   }
 }
 
 @media (max-width: 720px) {
-  
-
-  
-
-  
-
-  
-
-  
-
   .playButton {
-    bottom: 16px;
     height: 48px;
   }
-
-  .quickGrid {
-    grid-template-columns: minmax(0, 1.35fr) repeat(2, minmax(0, 1fr));
-    gap: var(--content-gap);
-  }
-
-  .quickCardIcon {
-    top: calc(50% - 34px);
-    width: 26px;
-    height: 26px;
-  }
-
-  .quickCardIcon img {
-    width: 22px;
-    height: 22px;
-  }
-
-  .quickCard > strong {
-    margin-top: 30px;
-    padding-inline: 5px;
-    font-size: 9px;
-  }
 }
 
-@media (max-width: 480px) {
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  .quickCard > strong {
-    font-size: 8px;
-  }
-}
-
+/* Short screens */
 @media (max-height: 720px) {
   .playButton {
     bottom: 12px;
@@ -295,105 +359,9 @@
   }
 }
 
-/* ==========================================================================
- * Mineacle color system (see app/tokens.css)
- * ========================================================================== */
-
-/* Play button: built like the logo / a Minecraft button:
-   green face, light top edge, dark bottom edge, black outline.
-   Pressing it sinks the button 3px. */
-.playButton {
-  padding-bottom: 4px;
-  border: 2px solid var(--mc-outline);
-  background: var(--mc-green);
-  box-shadow:
-    inset 0 3px 0 var(--mc-green-light),
-    inset 0 -5px 0 var(--mc-green-edge),
-    0 10px 26px rgba(0, 0, 0, 0.25);
-  transition:
-    background-color var(--motion),
-    box-shadow 90ms ease,
-    transform 90ms ease;
-}
-
-.playButton:hover,
-.playButton:focus-visible {
-  border-color: var(--mc-outline);
-  background: var(--mc-green-hover);
-  transform: translateX(-50%);
-}
-
-.playButton:active {
-  padding-bottom: 1px;
-  box-shadow:
-    inset 0 3px 0 var(--mc-green-light),
-    inset 0 -2px 0 var(--mc-green-edge),
-    0 6px 16px rgba(0, 0, 0, 0.25);
-  transform: translateX(-50%) translateY(3px);
-}
-
-.playButtonContent img {
-  filter: none;
-}
-
-/* ==========================================================================
- * Button feel (Minecraft-style), shared by every button on the homepage.
- *  - Hover / keyboard focus: lifts 2px, face brightens, outline turns white
- *    (the in-game hover look), shadow drops underneath.
- *  - Click: sinks into its bottom edge.
- * ========================================================================== */
-.playButton {
-  transition:
-    transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    box-shadow 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    background-color 140ms ease,
-    border-color 140ms ease,
-    color 140ms ease;
-}
-
-/* --- Play (green) ------------------------------------------------------- */
-.playButton:hover,
-.playButton:focus-visible {
-  border-color: #ffffff;
-  background: var(--mc-green-hover);
-  box-shadow:
-    inset 0 3px 0 var(--mc-green-light),
-    inset 0 -5px 0 var(--mc-green-edge),
-    0 4px 0 rgba(0, 0, 0, 0.45),
-    0 14px 28px rgba(0, 0, 0, 0.3);
-  transform: translateX(-50%) translateY(-2px);
-}
-
-.playButton:active {
-  padding-bottom: 1px;
-  border-color: #ffffff;
-  background: var(--mc-green);
-  box-shadow:
-    inset 0 3px 0 var(--mc-green-light),
-    inset 0 -2px 0 var(--mc-green-edge),
-    0 1px 0 rgba(0, 0, 0, 0.45);
-  transform: translateX(-50%) translateY(3px);
-  transition-duration: 50ms;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .playButton:hover,
-  .playButton:focus-visible,
-  .playButton:active {
-    transform: translateX(-50%);
-  }
-
-  
-}
-
-/* ==========================================================================
- * Quick-link cards (Marketplace, Vote, Leaderboards)
- * ========================================================================== */
-
-/* Ultrawide screens (about 2:1 and wider): the hero runs the full height
-   on the left and the cards stack in a column down the right side. The
-   hero keeps roughly a 16:9 shape; the cards get the rest of the width
-   (never narrower than 360px). Marketplace stays the biggest card. */
+/* Ultrawide (about 2:1 and wider): the hero runs the full height on the
+   left and the cards stack in a column down the right side. The hero keeps
+   roughly a 16:9 shape; the cards get the rest (at least 360px). */
 @media (min-aspect-ratio: 2/1) and (min-width: 1321px) {
   .homePage.homePage {
     --cards-width: max(
@@ -429,7 +397,7 @@
     grid-template-rows: auto auto;
   }
 
-  .homePage.homePage .heroFrame {
+  .homePage.homePage .heroSection {
     height: max(420px, calc(100svh - 2 * var(--page-margin) - 64px));
   }
 
@@ -463,145 +431,17 @@
 
   .homePage .quickCard > strong {
     margin-top: 32px;
-    padding-inline: 16px;
     font-size: 14px;
   }
 }
 
-/* ==========================================================================
- * Quick-link cards: plain cards (no background images) with a soft glow in
- * each card's color, and the same button feel as the rest of the site:
- * hover lifts 2px with a white outline and a shadow underneath, click sinks.
- * ========================================================================== */
-.quickCard[data-card="marketplace"] {
-  background:
-    radial-gradient(circle at 50% 38%, rgba(242, 181, 30, 0.12), transparent 40%),
-    #222222;
-}
-
-.quickCard[data-card="vote"] {
-  background:
-    radial-gradient(circle at 50% 38%, rgba(17, 252, 123, 0.1), transparent 40%),
-    #222222;
-}
-
-.quickCard[data-card="leaderboards"] {
-  background:
-    radial-gradient(circle at 50% 38%, rgba(176, 120, 255, 0.14), transparent 40%),
-    #222222;
-}
-
-.quickCardShade {
-  display: none;
-}
-
-.quickCard {
-  border-width: 2px;
-  border-color: var(--mc-outline);
-  border-radius: 0;
-  box-shadow:
-    inset 0 2px 0 #2e2e2e,
-    inset 0 -4px 0 #181818;
-  transition:
-    transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    box-shadow 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    border-color 140ms ease,
-    background-color 140ms ease;
-}
-
-.quickCard:hover,
-.quickCard:focus-visible {
-  border-color: #ffffff;
-  outline: 0;
-  box-shadow:
-    inset 0 2px 0 #333333,
-    inset 0 -4px 0 #181818,
-    0 4px 0 rgba(0, 0, 0, 0.45);
-  transform: translateY(-2px);
-}
-
-.quickCard:active {
-  box-shadow:
-    inset 0 2px 0 #333333,
-    inset 0 -1px 0 #181818;
-  transform: translateY(2px);
-  transition-duration: 50ms;
-}
-
-/* The icon hops up a couple of pixels with the card. */
-.quickCardIcon {
-  opacity: 1;
-  transition: none;
-}
-
-.quickCard:hover .quickCardIcon,
-.quickCard:focus-visible .quickCardIcon {
-  transform: translateY(-3px);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .quickCard:hover,
-  .quickCard:focus-visible,
-  .quickCard:active,
-  .quickCard:hover .quickCardIcon {
-    transform: none;
-  }
-}
-
-/* ==========================================================================
- * Server line under Play Now ("mineacle.net · 42 online"). Only on phones
- * and touch screens: they can't hover Play Now to see the count.
- * ========================================================================== */
-.serverLine {
-  position: absolute;
-  z-index: 4;
-  left: 50%;
-  bottom: 14px;
-  display: none;
-  align-items: center;
-  gap: 8px;
-  margin: 0;
-  padding: 6px 10px 7px;
-  background: rgba(17, 17, 17, 0.78);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
-  color: #ffffff;
-  font-size: 12px;
-  line-height: 1;
-  white-space: nowrap;
-  transform: translateX(-50%);
-}
-
-.serverLine > span + span::before {
-  margin-right: 8px;
-  color: var(--mc-text-muted);
-  content: "\00b7";
-}
-
-/* Status light: green online, red offline, grey while checking. */
-.serverLine > i {
-  width: 6px;
-  height: 6px;
-  flex: 0 0 6px;
-  background: #666666;
-  box-shadow: 0 0 0 2px #222222;
-}
-
-.serverLine > i[data-online="true"] {
-  background: var(--mc-live);
-  box-shadow: 0 0 0 2px #0b3d22;
-}
-
-.serverLine > i[data-online="false"] {
-  background: var(--mc-red);
-  box-shadow: 0 0 0 2px var(--mc-red-edge);
-}
-
+/* Phones and touch screens: show the server line and lift Play Now to make
+   room for it. */
 @media (max-width: 720px), (hover: none) {
   .serverLine {
     display: inline-flex;
   }
 
-  /* Lift Play Now to make room for the line under it. */
   .homePage .playButton {
     bottom: 44px;
   }
@@ -614,5 +454,20 @@
 
   .homePage .playButton {
     bottom: 50px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .playButton:hover,
+  .playButton:focus-visible,
+  .playButton:active {
+    transform: translateX(-50%);
+  }
+
+  .quickCard:hover,
+  .quickCard:focus-visible,
+  .quickCard:active,
+  .quickCard:hover .quickCardIcon {
+    transform: none;
   }
 }
