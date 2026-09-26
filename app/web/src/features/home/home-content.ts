@@ -19,8 +19,10 @@ export const homeContent = {
     poster: process.env.NEXT_PUBLIC_HERO_POSTER_URL || "",
     mediaLabel: "Mineacle seasonal world",
   },
+  // Quick-link card backgrounds. Empty = plain card (no image). To add art
+  // later, put the file in public/images/home/ and set its path here.
   mineaclePlus: {
-    media: "/images/home/mineacle-plus.webp",
+    media: "",
     mediaLabel: "Mineacle+ showcase artwork",
   },
   rewards: {
@@ -28,7 +30,7 @@ export const homeContent = {
     mediaLabel: "Rewards artwork",
   },
   competitive: {
-    media: "/images/home/leaderboards.webp",
+    media: "",
     mediaLabel: "Competitive leaderboard showcase artwork",
   },
 };
