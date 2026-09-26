@@ -50,9 +50,7 @@
 .vote-card,
 .punishments-filters,
 .punishments-list,
-.punishments-empty,
-.auth-art,
-.auth-panel {
+.punishments-empty {
   border: 1px solid var(--module-border);
   border-radius: var(--module-radius);
   background: var(--module-bg);
@@ -235,7 +233,6 @@
 }
 
 /* Page content itself remains canvas. Only its children float. */
-.system-page,
-.auth-page {
+.system-page {
   background: #111111;
 }

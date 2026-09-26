@@ -258,10 +258,6 @@
   filter: brightness(0.38) saturate(0.78);
 }
 
-.quickCardShade {
-  display: none;
-}
-
 /* Icon above the title; hops up a few pixels with the card. */
 .quickCardIcon {
   position: absolute;

@@ -39,7 +39,7 @@ const QUICK_LINKS = [
   {
     title: "Vote / Earn a Reward",
     href: "/vote",
-    media: "",
+    media: homeContent.rewards.media,
     icon: mineacleIcons.gift,
     card: "vote",
   },
@@ -51,8 +51,6 @@ const QUICK_LINKS = [
     card: "leaderboards",
   },
 ] as const;
-
-export type { HomeLeaderboardPlayer };
 
 type ServerStatus = {
   online: boolean;
@@ -399,7 +397,6 @@ export function VisitorHome({
                 draggable={false}
               />
             ) : null}
-            <span className={styles.quickCardShade} aria-hidden="true" />
             <span className={styles.quickCardIcon} aria-hidden="true">
               <img
                 src={item.icon}
