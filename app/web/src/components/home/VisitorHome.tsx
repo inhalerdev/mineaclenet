@@ -289,7 +289,7 @@ export function VisitorHome({
       : "idle";
 
   return (
-    <div className={styles.page}>
+    <div className={`${styles.page} ${styles.homePage}`}>
       <section className={styles.heroFrame}>
         <SiteHeader
           viewer={viewer}

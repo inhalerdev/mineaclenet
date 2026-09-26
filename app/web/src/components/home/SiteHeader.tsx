@@ -339,8 +339,10 @@ export function SiteHeader({
               <div className={styles.searchInputRow}>
                 <PlayerSearch
                   className={styles.searchField}
+                  inline
+                  autoFocus
                   iconSrc={mineacleIcons.search}
-                  placeholder="Search the global player database..."
+                  placeholder="Search for a player..."
                 />
                 <button
                   className={styles.closeSearch}
