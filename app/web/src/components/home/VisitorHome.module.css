@@ -1,126 +1,5 @@
 /* Page frame (page, hero box, video) lives in site/SiteFrame.module.css. */
 
-.header {
-  /* Space kept clear on each side of the 200px logo. */
-  --logo-width: 200px;
-  --logo-clearance: 16px;
-
-  position: absolute;
-  z-index: 30;
-  inset: 0 0 auto;
-  height: var(--header-height);
-  display: grid;
-  grid-template-columns:
-    minmax(0, 1fr)
-    calc(var(--logo-width) + 2 * var(--logo-clearance))
-    minmax(0, 1fr);
-  align-items: center;
-  padding: 0 24px;
-  border-bottom: var(--stroke-width) solid var(--border-soft);
-  background: rgba(34, 34, 34, 0.97);
-}
-
-.headerNavigation {
-  grid-column: 1;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  /* First link starts at the header's left padding, last link ends
-     --logo-clearance before the logo, equal gaps in between. */
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.headerNavItem {
-  min-width: 0;
-  height: 28px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  padding: 0 4px;
-  border: 0;
-  border-radius: 4px;
-  color: #f5f5f5;
-  font-size: 9px;
-  font-weight: 400;
-  line-height: 1;
-  white-space: nowrap;
-  transition:
-    border-color var(--motion),
-    background-color var(--motion),
-    color var(--motion);
-}
-
-.headerNavItem img {
-  width: 14px;
-  height: 14px;
-  display: block;
-  flex: 0 0 14px;
-  object-fit: contain;
-  image-rendering: pixelated;
-}
-
-.headerNavItem > span {
-  height: 14px;
-  display: flex;
-  align-items: center;
-  line-height: 14px;
-  transform: translateY(-1px);
-}
-
-.headerNavItem:hover,
-.headerNavItem:focus-visible {
-  background: transparent;
-  color: var(--mc-text);
-}
-
-.featuredNavItem {
-  padding-inline: 8px;
-  border: var(--stroke-width) solid var(--amber);
-  background: transparent;
-  color: #ffffff;
-}
-
-.featuredNavItem:hover,
-.featuredNavItem:focus-visible {
-  border-color: #ffb41f;
-  background: transparent;
-  color: #ffffff;
-}
-
-.featuredNavItem img,
-.mobileFeaturedItem img {
-  filter: none;
-}
-
-.brand {
-  position: absolute;
-  z-index: 34;
-  top: 4px;
-  left: 50%;
-  width: 200px;
-  height: 96px;
-  display: grid;
-  place-items: start center;
-  transform: translateX(-50%);
-}
-
-.brand img {
-  width: 200px;
-  height: 88px;
-  display: block;
-  object-fit: contain;
-  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.34));
-  transition: filter var(--motion), transform var(--motion);
-}
-
-.brand:hover img,
-.brand:focus-visible img {
-  filter: drop-shadow(0 10px 15px rgba(95, 43, 153, 0.46));
-  transform: translateY(-2px);
-}
-
 .headerTools {
   grid-column: 3;
   min-width: 0;
@@ -743,15 +622,6 @@
 }
 
 @media (max-width: 1320px) {
-  .header {
-    grid-template-columns: 40px minmax(0, 1fr) 40px;
-    padding: 0 12px;
-  }
-
-  .headerNavigation {
-    display: none;
-  }
-
   .mobileMenuShell {
     position: relative;
     z-index: 48;
@@ -872,19 +742,6 @@
     color: #ffffff;
   }
 
-  .brand,
-  .brand img {
-    width: 164px;
-  }
-
-  .brand {
-    height: 84px;
-  }
-
-  .brand img {
-    height: 76px;
-  }
-
   .headerTools {
     display: contents;
   }
@@ -921,23 +778,6 @@
 }
 
 @media (max-width: 720px) {
-  .header {
-    padding: 0 8px;
-  }
-
-  .brand,
-  .brand img {
-    width: 148px;
-  }
-
-  .brand {
-    height: 80px;
-  }
-
-  .brand img {
-    height: 72px;
-  }
-
   .mobileNavigation {
     width: min(320px, calc(100vw - 42px));
   }
@@ -1000,15 +840,6 @@
 }
 
 @media (max-width: 480px) {
-  .brand,
-  .brand img {
-    width: 132px;
-  }
-
-  .brand img {
-    height: 68px;
-  }
-
   .mobileNavigation {
     width: calc(100vw - 34px);
   }
@@ -1155,7 +986,6 @@
 
 /* Nav text size comes from --mc-nav-font in app/tokens.css.
    (.page a / .page button reset the font, so this needs the .page prefix.) */
-.page .headerNavItem,
 .page .mobileNavigationItem {
   font-size: var(--mc-nav-font);
 }
@@ -1184,68 +1014,6 @@
   .topPlayerCard strong {
     font-size: 12px;
   }
-}
-
-/* ==========================================================================
- * Nav v2: no underline bars.
- *  - Current page + hover: a soft raised tile behind the link.
- *  - Marketplace: a small purple block button (same recipe as the others).
- * ========================================================================== */
-.page .headerNavItem {
-  height: 32px;
-  padding: 0 10px;
-  border-radius: 0;
-  transition:
-    background-color var(--motion),
-    box-shadow var(--motion);
-}
-
-.page .headerNavItem:not(.featuredNavItem):hover,
-.page .headerNavItem:not(.featuredNavItem):focus-visible {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--mc-text);
-}
-
-.page .headerNavItem[aria-current="page"]:not(.featuredNavItem) {
-  background: rgba(255, 255, 255, 0.08);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    inset 0 -2px 0 rgba(0, 0, 0, 0.35);
-}
-
-/* Marketplace: gold block button. Same 32px height, 14px text and 14px icon
-   as the other links, with its label on the same line as theirs. */
-.page .featuredNavItem {
-  height: 32px;
-  padding: 0 12px;
-  border: 2px solid var(--mc-outline);
-  background: var(--mc-gold);
-  box-shadow:
-    inset 0 2px 0 var(--mc-gold-light),
-    inset 0 -3px 0 var(--mc-gold-edge);
-  color: var(--mc-gold-text);
-  transition:
-    background-color var(--motion),
-    box-shadow 90ms ease,
-    transform 90ms ease;
-}
-
-.page .featuredNavItem img {
-  filter: brightness(0) opacity(0.85);
-}
-
-.page .featuredNavItem:hover,
-.page .featuredNavItem:focus-visible {
-  border-color: var(--mc-outline);
-  background: var(--mc-gold-hover);
-  color: var(--mc-gold-text);
-}
-
-.page .featuredNavItem:active {
-  box-shadow:
-    inset 0 2px 0 var(--mc-gold-light),
-    inset 0 -1px 0 var(--mc-gold-edge);
-  transform: translateY(2px);
 }
 
 @media (max-width: 1320px) {
@@ -1278,7 +1046,6 @@
 /* Nav icons are shown exactly as supplied in icons/mineacle/nav: always
    20px tall, as wide as their own shape. Swap a file and it just works,
    whatever its size. Nothing about them changes on hover. */
-.page .headerNavItem img,
 .page .mobileNavigationItem img,
 .page .profileMenu > .headerToolButton > img:first-child {
   width: auto;
@@ -1295,13 +1062,8 @@
   grid-template-columns: auto max-content 10px;
 }
 
-.page .headerNavItem:not(.featuredNavItem) img,
 .page .mobileNavigationItem:not(.mobileFeaturedItem) img {
   filter: none;
-}
-
-.page .headerNavItem {
-  gap: 8px;
 }
 
 /* Search icon in the header: same 20px height as the other nav icons. */
@@ -1349,7 +1111,6 @@
  *  - Click: sinks into its bottom edge.
  * ========================================================================== */
 .playButton,
-.page .featuredNavItem,
 .closeSearch,
 .topPlayerCard,
 .headerToolButton {
@@ -1383,28 +1144,6 @@
     inset 0 -2px 0 var(--mc-green-edge),
     0 1px 0 rgba(0, 0, 0, 0.45);
   transform: translateX(-50%) translateY(3px);
-  transition-duration: 50ms;
-}
-
-/* --- Marketplace (gold) --------------------------------------------------- */
-.page .featuredNavItem:hover,
-.page .featuredNavItem:focus-visible {
-  border-color: #ffffff;
-  background: var(--mc-gold-hover);
-  box-shadow:
-    inset 0 2px 0 var(--mc-gold-light),
-    inset 0 -3px 0 var(--mc-gold-edge),
-    0 3px 0 rgba(0, 0, 0, 0.45);
-  transform: translateY(-2px);
-}
-
-.page .featuredNavItem:active {
-  border-color: #ffffff;
-  background: var(--mc-gold);
-  box-shadow:
-    inset 0 2px 0 var(--mc-gold-light),
-    inset 0 -1px 0 var(--mc-gold-edge);
-  transform: translateY(2px);
   transition-duration: 50ms;
 }
 
@@ -1472,8 +1211,6 @@
     transform: translateX(-50%);
   }
 
-  .page .featuredNavItem:hover,
-  .page .featuredNavItem:active,
   .closeSearch:hover,
   .closeSearch:active,
   .topPlayerCard:hover,
@@ -1487,12 +1224,6 @@
 /* ==========================================================================
  * Sizing pass: smaller, cleaner nav + dropdowns (sizes live in tokens.css)
  * ========================================================================== */
-
-/* Marketplace: a few px taller so its icon and label can breathe. */
-.page .featuredNavItem {
-  height: 36px;
-  padding: 0 14px;
-}
 
 /* Search panel */
 .searchField form input {
@@ -1636,63 +1367,6 @@
     background: var(--mc-gold-hover);
   }
 }
-
-/* ==========================================================================
- * Desktop nav layout: links grouped 16px apart, starting 16px in from the
- * header's left edge. Search sits 16px right of the logo (--logo-clearance);
- * My Profile sits 16px in from the right edge.
- * ========================================================================== */
-.headerNavigation {
-  justify-content: flex-start;
-  gap: 16px;
-}
-
-@media (min-width: 1321px) {
-  .page .header {
-    padding: 0 16px;
-  }
-}
-
-/* Logo: on hover it snaps up 5px and stays up while the pointer is over
-   it, then snaps back down when the pointer leaves. No easing, so it moves
-   like a pixel hop. */
-.brand img {
-  transition: none;
-}
-
-.brand:hover img,
-.brand:focus-visible img {
-  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.34));
-  transform: translateY(-5px);
-  animation: none;
-}
-
-/* Hover / click area follows the logo's outline instead of its rectangle.
-   The link itself ignores the pointer; an invisible layer cut to the
-   logo's shape (traced from mineacle-logo.png) catches it instead. It
-   stays put while the logo hops, so the logo doesn't flicker at the edge.
-   If the logo file changes shape, this outline needs re-tracing. */
-.page .brand {
-  pointer-events: none;
-}
-
-.page .brand img {
-  height: auto;
-  pointer-events: none;
-}
-
-.page .brand::after {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  aspect-ratio: 1920 / 840;
-  clip-path: polygon(0.4% 70%, 4.5% 17.3%, 8.6% 14.9%, 12.8% 12.6%, 16.9% 10.7%, 21% 8.9%, 25.2% 7.5%, 29.3% 6.3%, 33.4% 5.4%, 37.6% 4.5%, 41.7% 4%, 45.8% 3.8%, 50% 3.8%, 54.1% 3.8%, 58.2% 3.9%, 62.4% 4.3%, 66.5% 4.9%, 70.6% 5.7%, 74.8% 6.9%, 78.9% 8.3%, 83% 10%, 87.2% 12%, 91.3% 14.3%, 95.5% 17%, 99.6% 70.8%, 99.6% 87.5%, 95.5% 94.9%, 91.3% 95.7%, 87.2% 92.7%, 83% 88.8%, 78.9% 76.8%, 74.8% 73.5%, 70.6% 70.8%, 66.5% 68.7%, 62.4% 67%, 58.2% 65.7%, 54.1% 64.9%, 50% 64.5%, 45.8% 64.9%, 41.7% 65.7%, 37.6% 67.1%, 33.4% 68.8%, 29.3% 71.2%, 25.2% 73.9%, 21% 77.4%, 16.9% 89.2%, 12.8% 93.1%, 8.6% 96.1%, 4.5% 94.8%, 0.4% 87.5%);
-  content: "";
-  cursor: pointer;
-  pointer-events: auto;
-}
-
 
 /* ==========================================================================
  * Signed-in account menu: player head on the My Profile button, a header

@@ -12,6 +12,7 @@ import {
   mineacleNavIcons,
 } from "@/shared/icons/mineacle-icons";
 import block from "@/components/site/BlockButton.module.css";
+import headerStyles from "@/components/site/SiteHeader.module.css";
 import styles from "./VisitorHome.module.css";
 
 /*
@@ -140,7 +141,7 @@ export function SiteHeader({
   }
 
   return (
-    <header className={styles.header}>
+    <header className={headerStyles.header}>
       <div className={styles.mobileMenuShell} ref={mobileNavRef}>
         <button
           className={`${styles.mobileMenuButton} ${
@@ -256,14 +257,14 @@ export function SiteHeader({
       </div>
 
       <nav
-        className={styles.headerNavigation}
+        className={headerStyles.headerNavigation}
         aria-label="Primary navigation"
       >
         {HEADER_NAVIGATION.map((item) => (
           <a
-            className={`${styles.headerNavItem} ${
+            className={`${headerStyles.headerNavItem} ${
               "featured" in item && item.featured
-                ? styles.featuredNavItem
+                ? headerStyles.featuredNavItem
                 : ""
             }`}
             href={item.href}
@@ -287,7 +288,7 @@ export function SiteHeader({
       </nav>
 
       <a
-        className={styles.brand}
+        className={headerStyles.brand}
         href="/"
         aria-label="Mineacle home"
       >
