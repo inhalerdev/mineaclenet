@@ -354,6 +354,23 @@ export function VisitorHome({
               </span>
             </span>
           </button>
+
+          {/* Server address + live player count. Shown on phones and
+              touch screens, which can't hover over Play Now to see it. */}
+          <p className={styles.serverLine}>
+            <i
+              aria-hidden="true"
+              data-online={serverStatus ? String(serverStatus.online) : undefined}
+            />
+            <span>{SERVER_ADDRESS}</span>
+            {serverStatus ? (
+              <span>
+                {serverStatus.online
+                  ? `${currentlyPlaying} online`
+                  : "Server offline"}
+              </span>
+            ) : null}
+          </p>
         </div>
       </section>
 
