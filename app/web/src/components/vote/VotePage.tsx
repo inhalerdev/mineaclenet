@@ -41,7 +41,7 @@ export function VotePage({
       viewer={viewer}
       topPlayers={topPlayers}
       currentPath="/vote"
-      align="top"
+      variant="content"
     >
       <div className={styles.vote}>
         <header className={styles.intro}>

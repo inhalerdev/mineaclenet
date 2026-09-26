@@ -24,8 +24,8 @@
 .content {
   position: absolute;
   bottom: 48px;
-  left: 48px;
-  width: min(620px, calc(100% - 96px));
+  left: var(--content-inset);
+  width: min(620px, calc(100% - 2 * var(--content-inset)));
   pointer-events: auto;
 }
 
@@ -154,8 +154,7 @@
 @media (max-width: 1320px) {
   .content {
     bottom: 32px;
-    left: 32px;
-    width: min(560px, calc(100% - 64px));
+    width: min(560px, calc(100% - 2 * var(--content-inset)));
   }
 }
 
@@ -188,9 +187,8 @@
   }
 
   .content {
-    right: 16px;
+    right: var(--content-inset);
     bottom: 20px;
-    left: 16px;
     width: auto;
   }
 

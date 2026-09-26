@@ -45,7 +45,7 @@ export function PunishmentsPage({
       viewer={viewer}
       topPlayers={topPlayers}
       currentPath="/punishments"
-      align="top"
+      variant="content"
     >
       <div className={styles.records}>
         <header className={styles.intro}>

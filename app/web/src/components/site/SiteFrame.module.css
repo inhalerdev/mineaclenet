@@ -19,6 +19,10 @@
   --content-gap: 16px;
   --section-gap: 16px;
   --header-height: 48px;
+  /* Where page content starts, measured from the frame's left edge. The
+     homepage hero text and inner pages (vote, bans...) both use it so
+     content lines up from page to page. */
+  --content-inset: 48px;
   --surface: #222222;
   --border: rgba(255, 255, 255, 0.28);
   --border-soft: rgba(255, 255, 255, 0.14);
@@ -109,12 +113,14 @@
 @media (max-width: 1320px) {
   .page {
     --page-margin: 16px;
+    --content-inset: 32px;
   }
 }
 
 @media (max-width: 720px) {
   .page {
     --page-margin: 12px;
+    --content-inset: 16px;
     grid-template-rows: minmax(0, 2.65fr) minmax(124px, 1fr);
   }
 }

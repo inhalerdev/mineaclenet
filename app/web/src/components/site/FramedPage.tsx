@@ -9,24 +9,26 @@ import frame from "./SiteFrame.module.css";
 import styles from "./FramedPage.module.css";
 
 /*
- * Layout for inner pages (login, register, vote, ...): one full-height
- * framed box with the site header on top, the homepage video dimmed behind,
- * and a scrollable area for the page's own content.
+ * Layout for inner pages: one full-height framed box with the site header
+ * on top and a scrollable area for the page's own content.
  *
- *   align="center"  content sits in the middle (login panel)
- *   align="top"     content starts under the logo and scrolls (vote page)
+ *   variant="panel"    homepage video dimmed behind, one panel in the
+ *                      middle (login, register)
+ *   variant="content"  plain dark background; content starts under the
+ *                      logo at the same left edge as the homepage hero
+ *                      text and runs the full width (vote, bans)
  */
 export function FramedPage({
   viewer = null,
   topPlayers,
   currentPath,
-  align = "center",
+  variant = "panel",
   children,
 }: {
   viewer?: Viewer | null;
   topPlayers: HomeLeaderboardPlayer[];
   currentPath: string;
-  align?: "center" | "top";
+  variant?: "panel" | "content";
   children: ReactNode;
 }) {
   return (
@@ -38,22 +40,26 @@ export function FramedPage({
           currentPath={currentPath}
         />
 
-        <div className={frame.hero} aria-hidden="true">
-          <video
-            className={frame.heroVideo}
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            poster={homeContent.hero.poster || undefined}
-          >
-            <source src={homeContent.hero.media} type="video/mp4" />
-          </video>
-          <div className={`${frame.heroShade} ${styles.shade}`} />
-        </div>
+        {variant === "panel" ? (
+          <div className={frame.hero} aria-hidden="true">
+            <video
+              className={frame.heroVideo}
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="auto"
+              poster={homeContent.hero.poster || undefined}
+            >
+              <source src={homeContent.hero.media} type="video/mp4" />
+            </video>
+            <div className={`${frame.heroShade} ${styles.shade}`} />
+          </div>
+        ) : (
+          <div className={`${frame.hero} ${styles.plain}`} aria-hidden="true" />
+        )}
 
-        <main className={styles.stage} data-align={align}>
+        <main className={styles.stage} data-variant={variant}>
           {children}
         </main>
       </section>

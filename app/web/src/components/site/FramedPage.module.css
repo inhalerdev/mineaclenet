@@ -7,11 +7,18 @@
   grid-template-rows: minmax(0, 1fr);
 }
 
-/* Darker than the homepage so the content reads clearly over the video. */
+/* Panel pages: darker than the homepage so the panel reads over the video. */
 .shade.shade {
   background:
     radial-gradient(ellipse at center, rgba(8, 8, 8, 0.35), rgba(8, 8, 8, 0.7) 75%),
     linear-gradient(180deg, rgba(8, 8, 8, 0.4), rgba(8, 8, 8, 0.6));
+}
+
+/* Content pages: plain dark surface, a touch lighter under the header. */
+.plain.plain {
+  background:
+    linear-gradient(180deg, #1d1d1d, #161616 320px),
+    #161616;
 }
 
 /* Scrollable area under the header. The top padding keeps content clear of
@@ -23,35 +30,39 @@
   display: grid;
   overflow-y: auto;
   overscroll-behavior: contain;
+}
+
+.stage[data-variant="panel"] {
   padding: 64px 16px 32px;
 }
 
-.stage[data-align="center"] > * {
+.stage[data-variant="panel"] > * {
   margin: auto;
 }
 
-.stage[data-align="top"] {
+/* Content starts at --content-inset, the same left edge as the homepage
+   hero text, and fills the width. */
+.stage[data-variant="content"] {
   align-content: start;
-  justify-items: center;
-  padding-top: 72px;
+  padding: 72px var(--content-inset) var(--content-inset);
 }
 
 @media (max-width: 720px) {
-  .stage {
+  .stage[data-variant="panel"] {
     padding: 48px 12px 16px;
   }
 
-  .stage[data-align="top"] {
+  .stage[data-variant="content"] {
     padding-top: 56px;
   }
 }
 
 @media (max-width: 480px) {
-  .stage {
+  .stage[data-variant="panel"] {
     padding: 40px 8px 12px;
   }
 
-  .stage[data-align="top"] {
+  .stage[data-variant="content"] {
     padding-top: 52px;
   }
 }

@@ -9,7 +9,7 @@
 .records {
   --columns: 190px 118px minmax(0, 1fr) 130px 150px 96px;
 
-  width: min(1240px, 100%);
+  min-width: 0;
   display: grid;
   gap: 20px;
 }
