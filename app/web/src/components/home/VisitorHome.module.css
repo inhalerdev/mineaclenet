@@ -324,8 +324,9 @@
 .searchField form:focus-within {
   background: #111111;
   box-shadow:
-    inset 0 0 0 2px var(--mc-purple-face),
-    inset 0 -4px 0 0 var(--mc-purple-edge);
+    inset 0 0 0 2px #ffffff,
+    inset 4px 4px 0 0 #0a0a0a,
+    inset -4px -4px 0 0 #2e2e2e;
 }
 
 .searchField form img {
@@ -408,13 +409,13 @@
 
 .page .topPlayersHeading a:hover,
 .page .topPlayersHeading a:focus-visible {
-  color: var(--mc-text);
-  text-decoration: underline var(--mc-bar) var(--mc-purple-face);
-  text-underline-offset: 5px;
+  color: #ffffff;
+  outline: none;
 }
 
 .topPlayersHeading b {
   display: inline-block;
+  transition: transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1);
   font-family: "Mineacle Primary", monospace;
   font-size: 12px;
   font-weight: 400;
@@ -453,11 +454,11 @@
 
 .topPlayerCard:hover,
 .topPlayerCard:focus-visible {
-  border-color: var(--mc-purple-face);
+  border-color: #ffffff;
   background: #2c2c2c;
   box-shadow:
     inset 0 2px 0 #363636,
-    inset 0 -4px 0 var(--mc-purple-edge);
+    inset 0 -4px 0 #181818;
 }
 
 /* #1 / #2 / #3 as little gold, silver and bronze blocks */
@@ -809,7 +810,7 @@
 
 .quickCard:hover,
 .quickCard:focus-visible {
-  border-color: var(--mc-purple-face);
+  border-color: #ffffff;
   outline: 0;
 }
 
@@ -1653,7 +1654,7 @@
   transform: translateY(-2px);
   box-shadow:
     inset 0 2px 0 #363636,
-    inset 0 -4px 0 var(--mc-purple-edge),
+    inset 0 -4px 0 #181818,
     0 4px 0 rgba(0, 0, 0, 0.4);
 }
 
@@ -1661,7 +1662,7 @@
   transform: translateY(1px);
   box-shadow:
     inset 0 2px 0 #363636,
-    inset 0 -2px 0 var(--mc-purple-edge);
+    inset 0 -2px 0 #181818;
   transition-duration: 50ms;
 }
 
@@ -1986,7 +1987,7 @@
 }
 
 .page .panelAccount:focus-visible {
-  outline: 2px solid var(--mc-purple-face);
+  outline: 2px solid #ffffff;
   outline-offset: 2px;
 }
 
@@ -2243,4 +2244,10 @@
   .quickCard:hover .quickCardIcon {
     transform: none;
   }
+}
+
+/* "View leaderboards >": the arrow nudges right on hover (no underline). */
+.page .topPlayersHeading a:hover b,
+.page .topPlayersHeading a:focus-visible b {
+  transform: translateX(3px);
 }

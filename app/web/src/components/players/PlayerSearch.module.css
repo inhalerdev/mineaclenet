@@ -29,8 +29,9 @@
 
 .form:focus-within {
   box-shadow:
-    inset 0 0 0 2px var(--mc-purple-face),
-    inset 0 -4px 0 0 var(--mc-purple-edge);
+    inset 0 0 0 2px #ffffff,
+    inset 4px 4px 0 0 #0a0a0a,
+    inset -4px -4px 0 0 #2e2e2e;
 }
 
 .searchIcon {
