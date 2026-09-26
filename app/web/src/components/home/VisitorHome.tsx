@@ -2,12 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AchievementToast } from "@/components/home/AchievementToast";
-import {
-  SiteHeader,
-  type HomeLeaderboardPlayer,
-} from "@/components/site/SiteHeader";
+import { LaunchTicker } from "@/components/home/LaunchTicker";
+import { SiteHeader } from "@/components/site/SiteHeader";
 import type { Viewer } from "@/features/auth/types";
 import { homeContent } from "@/features/home/home-content";
+import type { LaunchStats } from "@/features/home/launch-stats";
+import type { TopPlayer } from "@/features/players/top-players";
 import { mineacleIcons } from "@/shared/icons/mineacle-icons";
 import frame from "@/components/site/SiteFrame.module.css";
 import styles from "./VisitorHome.module.css";
@@ -61,12 +61,14 @@ type ServerStatus = {
 
 type VisitorHomeProps = {
   viewer?: Viewer | null;
-  topPlayers?: HomeLeaderboardPlayer[];
+  topPlayers?: TopPlayer[];
+  launchStats?: LaunchStats | null;
 };
 
 export function VisitorHome({
   viewer = null,
   topPlayers = [],
+  launchStats = null,
 }: VisitorHomeProps) {
   const [copied, setCopied] = useState(false);
   const [achievement, setAchievement] = useState<{
@@ -353,22 +355,12 @@ export function VisitorHome({
             </span>
           </button>
 
-          {/* Server address + live player count. Shown on phones and
-              touch screens, which can't hover over Play Now to see it. */}
-          <p className={styles.serverLine}>
-            <i
-              aria-hidden="true"
-              data-online={serverStatus ? String(serverStatus.online) : undefined}
-            />
-            <span>{SERVER_ADDRESS}</span>
-            {serverStatus ? (
-              <span>
-                {serverStatus.online
-                  ? `${currentlyPlaying} online`
-                  : "Server offline"}
-              </span>
-            ) : null}
-          </p>
+          <LaunchTicker
+            address={SERVER_ADDRESS}
+            status={serverStatus}
+            stats={launchStats}
+            richest={topPlayers[0]}
+          />
         </div>
       </section>
 

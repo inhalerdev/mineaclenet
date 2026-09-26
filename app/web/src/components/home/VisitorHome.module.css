@@ -1,6 +1,7 @@
 /*
- * Homepage: the Play Now button and server line in the hero, and the
- * quick-link cards (Marketplace, Vote, Leaderboards).
+ * Homepage: the Play Now button in the hero (the live ticker under it is
+ * LaunchTicker.module.css), and the quick-link cards (Marketplace, Vote,
+ * Leaderboards).
  *
  * The page frame and hero box come from site/SiteFrame.module.css and the
  * header from site/SiteHeader.module.css. Colors are in app/tokens.css.
@@ -15,6 +16,12 @@
  * so it wins over SiteFrame's own rules whatever order they load in.
  */
 
+/* Height of the live ticker along the bottom of the hero; Play Now sits
+   above it. */
+.homePage.homePage {
+  --ticker-height: 36px;
+}
+
 /* ==========================================================================
  * Play Now: green block button. Hover shows the player count, click copies
  * the IP. Built like the logo: green face, light top edge, dark bottom
@@ -23,7 +30,7 @@
 .playButton {
   position: absolute;
   z-index: 4;
-  bottom: 32px;
+  bottom: calc(var(--ticker-height) + 24px);
   left: 50%;
   width: max-content;
   min-width: 160px;
@@ -128,54 +135,6 @@
   clip: rect(0 0 0 0);
   clip-path: inset(50%);
   white-space: nowrap;
-}
-
-/* ==========================================================================
- * Server line under Play Now ("mineacle.net · 42 online"). Only on phones
- * and touch screens: they can't hover Play Now to see the count.
- * ========================================================================== */
-.serverLine {
-  position: absolute;
-  z-index: 4;
-  bottom: 14px;
-  left: 50%;
-  display: none;
-  align-items: center;
-  gap: 8px;
-  margin: 0;
-  padding: 6px 10px 7px;
-  background: rgba(17, 17, 17, 0.78);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
-  color: #ffffff;
-  font-size: 12px;
-  line-height: 1;
-  white-space: nowrap;
-  transform: translateX(-50%);
-}
-
-.serverLine > span + span::before {
-  margin-right: 8px;
-  color: var(--mc-text-muted);
-  content: "\00b7";
-}
-
-/* Status light: green online, red offline, grey while checking. */
-.serverLine > i {
-  width: 6px;
-  height: 6px;
-  flex: 0 0 6px;
-  background: #666666;
-  box-shadow: 0 0 0 2px #222222;
-}
-
-.serverLine > i[data-online="true"] {
-  background: var(--mc-live);
-  box-shadow: 0 0 0 2px #0b3d22;
-}
-
-.serverLine > i[data-online="false"] {
-  background: var(--mc-red);
-  box-shadow: 0 0 0 2px var(--mc-red-edge);
 }
 
 /* ==========================================================================
@@ -299,7 +258,7 @@
  * ========================================================================== */
 @media (max-width: 1320px) {
   .playButton {
-    bottom: 24px;
+    bottom: calc(var(--ticker-height) + 20px);
   }
 }
 
@@ -312,7 +271,7 @@
 /* Short screens */
 @media (max-height: 720px) {
   .playButton {
-    bottom: 12px;
+    bottom: calc(var(--ticker-height) + 12px);
     height: 48px;
   }
 
@@ -334,7 +293,7 @@
 
 @media (max-height: 560px) {
   .playButton {
-    bottom: 8px;
+    bottom: calc(var(--ticker-height) + 8px);
     height: 44px;
   }
 
@@ -387,6 +346,8 @@
    size, in nav-menu order: Leaderboards, Vote, Marketplace. */
 @media (max-width: 720px) {
   .homePage.homePage {
+    --ticker-height: 34px;
+
     height: auto;
     min-height: 100dvh;
     overflow: visible;
@@ -428,28 +389,6 @@
   .homePage .quickCard > strong {
     margin-top: 32px;
     font-size: 14px;
-  }
-}
-
-/* Phones and touch screens: show the server line and lift Play Now to make
-   room for it. */
-@media (max-width: 720px), (hover: none) {
-  .serverLine {
-    display: inline-flex;
-  }
-
-  .homePage .playButton {
-    bottom: 44px;
-  }
-}
-
-@media (hover: none) and (min-width: 721px) {
-  .serverLine {
-    bottom: 20px;
-  }
-
-  .homePage .playButton {
-    bottom: 50px;
   }
 }
 

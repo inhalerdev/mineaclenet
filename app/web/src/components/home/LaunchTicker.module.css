@@ -1,0 +1,139 @@
+/*
+ * Homepage ticker: dark strip along the bottom of the hero with a gold
+ * PUBLIC BETA tag and a scrolling line of live stats. Colors from
+ * app/tokens.css; the strip's height is --ticker-height (set in
+ * VisitorHome.module.css, which also lifts Play Now above it).
+ */
+.ticker {
+  position: absolute;
+  z-index: 4;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: var(--ticker-height);
+  display: flex;
+  align-items: stretch;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(12, 12, 12, 0.82);
+  color: #ffffff;
+  font-size: 12px;
+  line-height: 1;
+}
+
+/* Gold block tag, same recipe as the Marketplace button. */
+.tag {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  padding: 0 14px 2px;
+  background: var(--mc-gold);
+  box-shadow:
+    inset 0 2px 0 var(--mc-gold-light),
+    inset 0 -3px 0 var(--mc-gold-edge),
+    inset -2px 0 0 var(--mc-outline);
+  color: var(--mc-gold-text);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.viewport {
+  position: relative;
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  /* soft fade at both ends */
+  mask-image: linear-gradient(90deg, transparent, #000 32px, #000 calc(100% - 32px), transparent);
+}
+
+.track {
+  width: max-content;
+  height: 100%;
+  display: flex;
+  animation: scroll linear infinite;
+}
+
+.ticker:hover .track {
+  animation-play-state: paused;
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  white-space: nowrap;
+}
+
+.list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 18px;
+}
+
+/* Small grey block between items. */
+.list li::before {
+  width: 4px;
+  height: 4px;
+  margin-right: 18px;
+  margin-left: -18px;
+  background: #4a4a4a;
+  content: "";
+}
+
+/* Status light on the online count. */
+.list li[data-tone]::after {
+  order: -1;
+  width: 6px;
+  height: 6px;
+  flex: 0 0 6px;
+  content: "";
+}
+
+.list li[data-tone="online"]::after {
+  background: var(--mc-live);
+  box-shadow: 0 0 0 2px #0b3d22;
+}
+
+.list li[data-tone="offline"]::after {
+  background: var(--mc-red);
+  box-shadow: 0 0 0 2px var(--mc-red-edge);
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 720px) {
+  .ticker {
+    font-size: 11px;
+  }
+
+  .tag {
+    padding: 0 10px 2px;
+  }
+}
+
+/* Reduce motion: no scrolling; swipe / scroll the line instead. */
+@media (prefers-reduced-motion: reduce) {
+  .viewport {
+    overflow-x: auto;
+    mask-image: none;
+    scrollbar-width: none;
+  }
+
+  .track {
+    animation: none;
+  }
+
+  .list[aria-hidden] {
+    display: none;
+  }
+}
