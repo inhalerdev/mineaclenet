@@ -1,20 +1,20 @@
 import { VisitorHome } from "@/components/home/VisitorHome";
 import { getCurrentViewer } from "@/features/auth/session";
-import { getLaunchStats } from "@/features/home/launch-stats";
+import { getHeroStats } from "@/features/home/hero-stats";
 import { getTopPlayers } from "@/features/players/top-players";
 
 export async function HomeExperience() {
-  const [viewer, topPlayers, launchStats] = await Promise.all([
+  const [viewer, topPlayers, heroStats] = await Promise.all([
     getCurrentViewer(),
     getTopPlayers(),
-    getLaunchStats(),
+    getHeroStats(),
   ]);
 
   return (
     <VisitorHome
       viewer={viewer}
       topPlayers={topPlayers}
-      launchStats={launchStats}
+      heroStats={heroStats}
     />
   );
 }

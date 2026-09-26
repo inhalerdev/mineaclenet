@@ -2,17 +2,19 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AchievementToast } from "@/components/home/AchievementToast";
-import { LaunchTicker } from "@/components/home/LaunchTicker";
+import { HeroContent, type HeroStat } from "@/components/home/HeroContent";
+import { playerAvatarUrl } from "@/components/players/PlayerAvatar";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import type { Viewer } from "@/features/auth/types";
 import { homeContent } from "@/features/home/home-content";
-import type { LaunchStats } from "@/features/home/launch-stats";
+import type { HeroStats } from "@/features/home/hero-stats";
 import type { TopPlayer } from "@/features/players/top-players";
 import { mineacleIcons } from "@/shared/icons/mineacle-icons";
 import frame from "@/components/site/SiteFrame.module.css";
 import styles from "./VisitorHome.module.css";
 
 const SERVER_ADDRESS = "mineacle.net";
+const heroText = homeContent.heroText;
 const STATUS_CACHE_KEY = "mineacle:home-status:mineacle.net";
 const STATUS_CACHE_MAX_AGE = 15_000;
 
@@ -62,13 +64,13 @@ type ServerStatus = {
 type VisitorHomeProps = {
   viewer?: Viewer | null;
   topPlayers?: TopPlayer[];
-  launchStats?: LaunchStats | null;
+  heroStats?: HeroStats | null;
 };
 
 export function VisitorHome({
   viewer = null,
   topPlayers = [],
-  launchStats = null,
+  heroStats = null,
 }: VisitorHomeProps) {
   const [copied, setCopied] = useState(false);
   const [achievement, setAchievement] = useState<{
@@ -283,6 +285,44 @@ export function VisitorHome({
   const currentlyPlaying = serverStatus
     ? serverStatus.currentlyPlaying.toLocaleString()
     : "—";
+  // Live stat tiles under Play Now. A tile is left out until its number is
+  // known (e.g. while the first status check runs, or if the database is
+  // unreachable).
+  const topPlayer = topPlayers[0];
+  const heroTiles: HeroStat[] = [
+    ...(serverStatus
+      ? [
+          serverStatus.online
+            ? {
+                key: "online",
+                value: currentlyPlaying,
+                label: "Online now",
+                live: true,
+              }
+            : { key: "online", value: "Offline", label: "Server" },
+        ]
+      : []),
+    ...(heroStats
+      ? [
+          {
+            key: "joined",
+            value: heroStats.playersJoined.toLocaleString(),
+            label: "Unique players",
+          },
+        ]
+      : []),
+    ...(topPlayer
+      ? [
+          {
+            key: "top",
+            value: topPlayer.displayName || topPlayer.username,
+            label: "#1 player",
+            image: playerAvatarUrl(topPlayer.uuid, 40),
+          },
+        ]
+      : []),
+  ];
+
   const playState = copied
     ? "copied"
     : playHovered
@@ -313,53 +353,59 @@ export function VisitorHome({
           </video>
           <div className={frame.heroShade} aria-hidden="true" />
 
-          <button
-            className={styles.playButton}
-            data-state={playState}
-            type="button"
-            aria-label={
-              copied
-                ? "Mineacle IP copied"
-                : playHovered
-                  ? `${currentlyPlaying} players currently playing. Copy Mineacle IP`
-                  : "Copy Mineacle IP"
+          <HeroContent
+            tags={[
+              { label: heroText.tag, tone: "gold" as const },
+              ...(heroText.subtag
+                ? [{ label: heroText.subtag, tone: "dark" as const }]
+                : []),
+            ]}
+            headline={heroText.headline}
+            text={heroText.text}
+            action={
+              <button
+                className={styles.playButton}
+                data-state={playState}
+                type="button"
+                aria-label={
+                  copied
+                    ? "Mineacle IP copied"
+                    : playHovered
+                      ? `${currentlyPlaying} players currently playing. Copy Mineacle IP`
+                      : "Copy Mineacle IP"
+                }
+                onClick={copyServerAddress}
+                onMouseEnter={() => setPlayHovered(true)}
+                onMouseLeave={() => setPlayHovered(false)}
+                onFocus={() => setPlayHovered(true)}
+                onBlur={() => setPlayHovered(false)}
+              >
+                <span className={styles.playButtonContent} aria-hidden="true">
+                  <span
+                    className={styles.playButtonState}
+                    data-active={playState === "idle"}
+                  >
+                    <img src={mineacleIcons.play} alt="" draggable={false} />
+                    <span>PLAY NOW</span>
+                  </span>
+                  <span
+                    className={styles.playButtonState}
+                    data-active={playState === "players"}
+                  >
+                    <img src={mineacleIcons.copy} alt="" draggable={false} />
+                    <span>{currentlyPlaying} Currently Playing</span>
+                  </span>
+                  <span
+                    className={styles.playButtonState}
+                    data-active={playState === "copied"}
+                  >
+                    <img src={mineacleIcons.check} alt="" draggable={false} />
+                    <span>IP Copied</span>
+                  </span>
+                </span>
+              </button>
             }
-            onClick={copyServerAddress}
-            onMouseEnter={() => setPlayHovered(true)}
-            onMouseLeave={() => setPlayHovered(false)}
-            onFocus={() => setPlayHovered(true)}
-            onBlur={() => setPlayHovered(false)}
-          >
-            <span className={styles.playButtonContent} aria-hidden="true">
-              <span
-                className={styles.playButtonState}
-                data-active={playState === "idle"}
-              >
-                <img src={mineacleIcons.play} alt="" draggable={false} />
-                <span>PLAY NOW</span>
-              </span>
-              <span
-                className={styles.playButtonState}
-                data-active={playState === "players"}
-              >
-                <img src={mineacleIcons.copy} alt="" draggable={false} />
-                <span>{currentlyPlaying} Currently Playing</span>
-              </span>
-              <span
-                className={styles.playButtonState}
-                data-active={playState === "copied"}
-              >
-                <img src={mineacleIcons.check} alt="" draggable={false} />
-                <span>IP Copied</span>
-              </span>
-            </span>
-          </button>
-
-          <LaunchTicker
-            address={SERVER_ADDRESS}
-            status={serverStatus}
-            stats={launchStats}
-            richest={topPlayers[0]}
+            stats={heroTiles}
           />
         </div>
       </section>

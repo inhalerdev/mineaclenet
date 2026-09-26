@@ -266,33 +266,13 @@ export async function searchPlayers(
   return rows.map(mapPlayer);
 }
 
-export type ServerTotals = {
-  players: number;
-  balanceCents: number;
-  kills: number;
-};
-
-/* Totals across every player who has joined (for the homepage ticker). */
-export async function getServerTotals(): Promise<ServerTotals> {
-  const columns = await profileColumns();
-  const sumOf = (column: string) =>
-    columns.has(column)
-      ? `COALESCE(SUM(${quoteIdentifier(column)}), 0)`
-      : "0";
-
+/* How many different players have joined (for the homepage hero). */
+export async function countPlayersJoined(): Promise<number> {
   const [rows] = await getCoreDb().query<RowDataPacket[]>(
-    `SELECT COUNT(*) AS players,
-            ${sumOf("balance_cents")} AS balance_cents,
-            ${sumOf("kills")} AS kills
+    `SELECT COUNT(*) AS players
      FROM ${quoteIdentifier(PROFILE_TABLE)}
      WHERE uuid <> ''`,
   );
 
-  const row = rows[0] || {};
-
-  return {
-    players: numberValue(row.players),
-    balanceCents: numberValue(row.balance_cents),
-    kills: numberValue(row.kills),
-  };
+  return numberValue(rows[0]?.players);
 }

@@ -1,7 +1,7 @@
 /*
- * Homepage: the Play Now button in the hero (the live ticker under it is
- * LaunchTicker.module.css), and the quick-link cards (Marketplace, Vote,
- * Leaderboards).
+ * Homepage: the Play Now button (placed in the hero by HeroContent, whose
+ * text and tags are styled in HeroContent.module.css) and the quick-link
+ * cards (Marketplace, Vote, Leaderboards).
  *
  * The page frame and hero box come from site/SiteFrame.module.css and the
  * header from site/SiteHeader.module.css. Colors are in app/tokens.css.
@@ -16,25 +16,16 @@
  * so it wins over SiteFrame's own rules whatever order they load in.
  */
 
-/* Height of the live ticker along the bottom of the hero; Play Now sits
-   above it. */
-.homePage.homePage {
-  --ticker-height: 36px;
-}
-
 /* ==========================================================================
  * Play Now: green block button. Hover shows the player count, click copies
  * the IP. Built like the logo: green face, light top edge, dark bottom
  * edge, black outline.
  * ========================================================================== */
 .playButton {
-  position: absolute;
-  z-index: 4;
-  bottom: calc(var(--ticker-height) + 24px);
-  left: 50%;
+  position: relative;
   width: max-content;
-  min-width: 160px;
-  max-width: calc(100% - 32px);
+  min-width: 180px;
+  max-width: 100%;
   height: 52px;
   display: inline-flex;
   align-items: center;
@@ -50,7 +41,6 @@
     0 10px 26px rgba(0, 0, 0, 0.25);
   color: #ffffff;
   cursor: pointer;
-  transform: translateX(-50%);
   transition:
     transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
     box-shadow 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
@@ -68,7 +58,7 @@
     inset 0 -5px 0 var(--mc-green-edge),
     0 4px 0 rgba(0, 0, 0, 0.45),
     0 14px 28px rgba(0, 0, 0, 0.3);
-  transform: translateX(-50%) translateY(-2px);
+  transform: translateY(-2px);
 }
 
 .playButton:active {
@@ -79,7 +69,7 @@
     inset 0 3px 0 var(--mc-green-light),
     inset 0 -2px 0 var(--mc-green-edge),
     0 1px 0 rgba(0, 0, 0, 0.45);
-  transform: translateX(-50%) translateY(3px);
+  transform: translateY(3px);
   transition-duration: 50ms;
 }
 
@@ -256,14 +246,9 @@
 /* ==========================================================================
  * Screen sizes
  * ========================================================================== */
-@media (max-width: 1320px) {
-  .playButton {
-    bottom: calc(var(--ticker-height) + 20px);
-  }
-}
-
 @media (max-width: 720px) {
   .playButton {
+    width: 100%;
     height: 48px;
   }
 }
@@ -271,7 +256,6 @@
 /* Short screens */
 @media (max-height: 720px) {
   .playButton {
-    bottom: calc(var(--ticker-height) + 12px);
     height: 48px;
   }
 
@@ -293,7 +277,6 @@
 
 @media (max-height: 560px) {
   .playButton {
-    bottom: calc(var(--ticker-height) + 8px);
     height: 44px;
   }
 
@@ -314,10 +297,10 @@
   }
 }
 
-/* Ultrawide (about 2:1 and wider): the hero runs the full height on the
-   left and the cards stack in a column down the right side. The hero keeps
+/* Ultrawide (about 2:1 and wider, 1800px and up): the hero runs the full
+   height on the left and the cards stack in a column down the right side. The hero keeps
    roughly a 16:9 shape; the cards get the rest (at least 360px). */
-@media (min-aspect-ratio: 2/1) and (min-width: 1321px) {
+@media (min-aspect-ratio: 2/1) and (min-width: 1800px) {
   .homePage.homePage {
     --cards-width: max(
       360px,
@@ -346,8 +329,6 @@
    size, in nav-menu order: Leaderboards, Vote, Marketplace. */
 @media (max-width: 720px) {
   .homePage.homePage {
-    --ticker-height: 34px;
-
     height: auto;
     min-height: 100dvh;
     overflow: visible;
@@ -396,7 +377,7 @@
   .playButton:hover,
   .playButton:focus-visible,
   .playButton:active {
-    transform: translateX(-50%);
+    transform: none;
   }
 
   .quickCard:hover,

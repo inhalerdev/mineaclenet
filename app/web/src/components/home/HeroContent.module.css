@@ -1,0 +1,231 @@
+/*
+ * Homepage hero text (see HeroContent.tsx): tags, headline, a line of text,
+ * Play Now and live stat tiles, bottom-left over the background video with a
+ * dark fade behind it so it's readable on any frame. Colors come from
+ * app/tokens.css; Play Now's own look is in VisitorHome.module.css.
+ */
+.hero {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Darken the left and bottom so the text reads over any video frame. */
+.hero::before {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(8, 8, 8, 0.72), rgba(8, 8, 8, 0.25) 55%, transparent 80%),
+    linear-gradient(0deg, rgba(8, 8, 8, 0.5), transparent 45%);
+  content: "";
+}
+
+.content {
+  position: absolute;
+  bottom: 48px;
+  left: 48px;
+  width: min(620px, calc(100% - 96px));
+  pointer-events: auto;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Small block tags, same recipe as the site's other blocks. */
+.tag {
+  padding: 5px 8px 7px;
+  background: #2b2b2b;
+  box-shadow:
+    inset 0 2px 0 #3a3a3a,
+    inset 0 -3px 0 #161616,
+    0 0 0 2px var(--mc-outline);
+  color: #ffffff;
+  font-size: 11px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.tag[data-tone="gold"] {
+  background: var(--mc-gold);
+  box-shadow:
+    inset 0 2px 0 var(--mc-gold-light),
+    inset 0 -3px 0 var(--mc-gold-edge),
+    0 0 0 2px var(--mc-outline);
+  color: var(--mc-gold-text);
+}
+
+.headline {
+  margin: 18px 0 12px;
+  color: #ffffff;
+  font-size: clamp(32px, 3.4vw, 56px);
+  font-weight: 400;
+  line-height: 1.05;
+  text-shadow: 3px 3px 0 #000000;
+}
+
+.text {
+  max-width: 46ch;
+  margin: 0;
+  color: #e6e6e6;
+  font-size: 15px;
+  line-height: 1.5;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7);
+}
+
+/* Live numbers inside the text (e.g. the player count). */
+.text b {
+  color: #ffffff;
+  font-weight: 400;
+}
+
+.action {
+  margin-top: 22px;
+}
+
+/* Live stat tiles under Play Now: dark inventory-style slots with a big
+   value and a small label. */
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 22px 0 0;
+}
+
+.stat {
+  min-width: 128px;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 8px;
+  padding: 10px 14px 12px;
+  background: rgba(17, 17, 17, 0.78);
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+.stat dt {
+  color: var(--mc-text-muted);
+  font-size: 11px;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.stat dd {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  color: #ffffff;
+  font-size: 18px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.stat dd span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stat dd img {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  box-shadow: 0 0 0 2px var(--mc-outline);
+  image-rendering: pixelated;
+}
+
+/* Green status light (e.g. players online). */
+.live {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
+  background: var(--mc-live);
+  box-shadow: 0 0 0 2px #0b3d22;
+}
+
+/* ==========================================================================
+ * Screen sizes
+ * ========================================================================== */
+@media (max-width: 1320px) {
+  .content {
+    bottom: 32px;
+    left: 32px;
+    width: min(560px, calc(100% - 64px));
+  }
+}
+
+/* Short screens: smaller headline; then drop the line of text. */
+@media (max-height: 760px) {
+  .content {
+    bottom: 28px;
+  }
+
+  .headline {
+    margin: 14px 0 10px;
+    font-size: clamp(28px, 3vw, 40px);
+  }
+
+  .stats {
+    margin-top: 16px;
+  }
+}
+
+@media (max-height: 620px) {
+  .text {
+    display: none;
+  }
+}
+
+/* Phones: text across the full width, button full width. */
+@media (max-width: 720px) {
+  .hero::before {
+    background: linear-gradient(0deg, rgba(8, 8, 8, 0.8), rgba(8, 8, 8, 0.2) 70%);
+  }
+
+  .content {
+    right: 16px;
+    bottom: 20px;
+    left: 16px;
+    width: auto;
+  }
+
+  .headline {
+    font-size: 30px;
+  }
+
+  .text {
+    font-size: 13px;
+  }
+
+  .action {
+    margin-top: 18px;
+  }
+
+  /* Three tiles side by side, sharing the width. */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 14px;
+  }
+
+  .stat {
+    min-width: 0;
+    padding: 9px 8px 10px;
+  }
+
+  .stat dd {
+    font-size: 15px;
+  }
+
+  .stat dd img {
+    width: 16px;
+    height: 16px;
+    flex-basis: 16px;
+  }
+}

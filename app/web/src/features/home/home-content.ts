@@ -19,6 +19,15 @@ export const homeContent = {
     poster: process.env.NEXT_PUBLIC_HERO_POSTER_URL || "",
     mediaLabel: "Mineacle seasonal world",
   },
+  // Words in the homepage hero. The stat tiles under Play Now (players
+  // online, unique players, #1 player) are filled in automatically.
+  heroText: {
+    tag: "Open Beta",
+    // Second tag next to it. Leave empty to hide it.
+    subtag: "Now open for Java Edition",
+    headline: "Build. Trade. Fight.",
+    text: "A survival world with a player-run economy and PvP.",
+  },
   // Quick-link card backgrounds. Empty = plain card (no image). To add art
   // later, put the file in public/images/home/ and set its path here.
   mineaclePlus: {
