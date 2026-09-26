@@ -1,20 +1,15 @@
 import type { ReactNode } from "react";
 import { redirect } from "next/navigation";
 import { AuthClient, type AuthMode } from "@/components/auth/AuthClient";
-import {
-  SiteHeader,
-  type HomeLeaderboardPlayer,
-} from "@/components/site/SiteHeader";
-import frame from "@/components/site/SiteFrame.module.css";
+import { FramedPage } from "@/components/site/FramedPage";
+import type { HomeLeaderboardPlayer } from "@/components/site/SiteHeader";
 import { getCurrentViewer } from "@/features/auth/session";
-import { homeContent } from "@/features/home/home-content";
 import { getTopPlayers } from "@/features/players/top-players";
-import styles from "./AccountPage.module.css";
 
 /*
  * Log in (/login) and create account + in-game verify (/register).
- * Same frame, header and background video as the homepage, with the
- * account panel in the middle.
+ * The account panel sits in the middle of the shared inner-page layout
+ * (site/FramedPage.tsx).
  */
 export async function AccountPage({ mode }: { mode: AuthMode }) {
   const [viewer, topPlayers] = await Promise.all([
@@ -44,31 +39,11 @@ export function AccountShell({
   children: ReactNode;
 }) {
   return (
-    <div className={`${frame.page} ${styles.page}`}>
-      <section className={frame.heroFrame}>
-        <SiteHeader
-          viewer={null}
-          topPlayers={topPlayers}
-          currentPath={mode === "create" ? "/register" : "/login"}
-        />
-
-        <div className={frame.hero} aria-hidden="true">
-          <video
-            className={frame.heroVideo}
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            poster={homeContent.hero.poster || undefined}
-          >
-            <source src={homeContent.hero.media} type="video/mp4" />
-          </video>
-          <div className={`${frame.heroShade} ${styles.shade}`} />
-        </div>
-
-        <main className={styles.stage}>{children}</main>
-      </section>
-    </div>
+    <FramedPage
+      topPlayers={topPlayers}
+      currentPath={mode === "create" ? "/register" : "/login"}
+    >
+      {children}
+    </FramedPage>
   );
 }

@@ -5,6 +5,7 @@
  *   <button className={block.button}>                      grey
  *   <button className={`${block.button} ${block.primary}`}> purple
  *   <button className={`${block.button} ${block.danger}`}>  red
+ *   <a className={`${block.button} ${block.green}`}>         green
  *
  * Built like the logo: a colored face, a lighter top edge, a darker bottom
  * edge and a black outline. Hover lifts it 2px with a white outline and a
@@ -110,6 +111,30 @@
   box-shadow:
     inset 0 3px 0 var(--mc-red-light),
     inset 0 -1px 0 var(--mc-red-edge);
+}
+
+/* --- Green (same colors as Play Now) --------------------------------------- */
+.green.green {
+  background: var(--mc-green);
+  box-shadow:
+    inset 0 3px 0 var(--mc-green-light),
+    inset 0 -4px 0 var(--mc-green-edge);
+}
+
+.green.green:hover,
+.green.green:focus-visible {
+  background: var(--mc-green-hover);
+  box-shadow:
+    inset 0 3px 0 var(--mc-green-light),
+    inset 0 -4px 0 var(--mc-green-edge),
+    0 3px 0 rgba(0, 0, 0, 0.45);
+}
+
+.green.green:active {
+  background: var(--mc-green);
+  box-shadow:
+    inset 0 3px 0 var(--mc-green-light),
+    inset 0 -1px 0 var(--mc-green-edge);
 }
 
 @media (prefers-reduced-motion: reduce) {

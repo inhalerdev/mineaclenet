@@ -1,0 +1,340 @@
+/*
+ * Vote & Rewards page (see VotePage.tsx). Sits inside the shared inner-page
+ * layout (site/FramedPage). Same block recipe as the rest of the site:
+ * colored face, light top edge, dark bottom edge, black outline, square
+ * corners. Colors come from app/tokens.css; the Vote now buttons are
+ * site/BlockButton.module.css (green).
+ */
+.vote {
+  width: min(1080px, 100%);
+  display: grid;
+  gap: 32px;
+}
+
+/* --- Intro ----------------------------------------------------------------- */
+.intro {
+  display: grid;
+  justify-items: start;
+}
+
+.tag {
+  padding: 5px 8px 7px;
+  background: var(--mc-gold);
+  box-shadow:
+    inset 0 2px 0 var(--mc-gold-light),
+    inset 0 -3px 0 var(--mc-gold-edge),
+    0 0 0 2px var(--mc-outline);
+  color: var(--mc-gold-text);
+  font-size: 11px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.intro h1 {
+  margin: 18px 0 12px;
+  color: #ffffff;
+  font-size: clamp(30px, 3vw, 44px);
+  font-weight: 400;
+  line-height: 1.05;
+  text-shadow: 3px 3px 0 #000000;
+}
+
+.intro p {
+  max-width: 60ch;
+  margin: 0;
+  color: #e6e6e6;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.intro p b {
+  color: var(--mc-gold-light);
+  font-weight: 400;
+}
+
+/* Stat tiles: same as the homepage hero's. */
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 22px 0 0;
+}
+
+.stat {
+  min-width: 140px;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 8px;
+  padding: 10px 14px 12px;
+  background: rgba(17, 17, 17, 0.78);
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+.stat dt {
+  color: var(--mc-text-muted);
+  font-size: 11px;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.stat dd {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: #ffffff;
+  font-size: 18px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.stat dd span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stat dd img {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+/* --- Vote site cards ------------------------------------------------------- */
+.sites {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site {
+  position: relative;
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+  border: 2px solid var(--mc-outline);
+  background: #222222;
+  box-shadow:
+    inset 0 2px 0 #2e2e2e,
+    inset 0 -4px 0 #181818;
+}
+
+/* Number block in the corner: 1, 2, 3. */
+.siteNumber {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  padding-bottom: 3px;
+  background: #2b2b2b;
+  box-shadow:
+    inset 0 2px 0 #3a3a3a,
+    inset 0 -3px 0 #161616,
+    0 0 0 2px var(--mc-outline);
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.siteName {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.siteName strong {
+  overflow: hidden;
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.siteName small {
+  color: var(--mc-text-muted);
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+/* "+1 Vote Crate Key" slot. */
+.siteReward {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 10px 12px;
+  background: rgba(17, 17, 17, 0.6);
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 0 0 3px rgba(255, 255, 255, 0.08);
+  color: var(--mc-gold-light);
+  font-size: 13px;
+  line-height: 1;
+}
+
+.siteReward img {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.voteButton.voteButton {
+  height: 44px;
+  font-size: 14px;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* --- How it works ---------------------------------------------------------- */
+.how h2 {
+  margin: 0 0 16px;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.2;
+  text-shadow: 2px 2px 0 #000000;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  column-gap: 12px;
+  row-gap: 6px;
+  align-items: center;
+  padding: 16px;
+  background: rgba(17, 17, 17, 0.72);
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 0 0 3px rgba(255, 255, 255, 0.08);
+}
+
+.step img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.step strong {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.step p {
+  grid-column: 2;
+  margin: 0;
+  color: var(--mc-text-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+ * Screen sizes
+ * ========================================================================== */
+@media (max-width: 960px) {
+  .sites,
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Cards turn into rows: number, name, button; reward under the name. */
+  .site {
+    grid-template-columns: 32px minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 14px;
+    row-gap: 12px;
+    padding: 16px;
+  }
+
+  .siteReward {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
+  }
+
+  .voteButton.voteButton {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    min-width: 128px;
+  }
+}
+
+@media (max-width: 560px) {
+  .vote {
+    gap: 24px;
+  }
+
+  .intro h1 {
+    font-size: 30px;
+  }
+
+  .intro p {
+    font-size: 13px;
+  }
+
+  .stats {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .stat {
+    min-width: 0;
+    padding: 9px 8px 10px;
+  }
+
+  .stat dd {
+    font-size: 15px;
+  }
+
+  .stat dd img {
+    width: 16px;
+    height: 16px;
+    flex-basis: 16px;
+  }
+
+  /* Button goes full width under the reward. */
+  .site {
+    grid-template-columns: 32px minmax(0, 1fr);
+  }
+
+  .siteReward {
+    grid-column: 1 / -1;
+    justify-self: stretch;
+  }
+
+  .voteButton.voteButton {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+}
