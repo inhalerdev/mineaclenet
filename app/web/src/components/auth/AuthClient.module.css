@@ -23,7 +23,9 @@
   grid-template-columns: 1fr 1fr;
 }
 
-.tab {
+/* Written as .tabs .tab so the size beats the page's font reset
+   (.page button { font: inherit } in site/SiteFrame.module.css). */
+.tabs .tab {
   height: 46px;
   padding: 0 12px 2px;
   border: 0;
@@ -215,7 +217,7 @@
 }
 
 /* sunken inventory slot, same as the header search box */
-.field input {
+.card .field input {
   width: 100%;
   height: 44px;
   padding: 0 14px;
@@ -232,20 +234,20 @@
   transition: box-shadow 140ms ease;
 }
 
-.field input::placeholder {
+.card .field input::placeholder {
   color: #7a7a7a;
 }
 
-.field input:focus {
+.card .field input:focus {
   box-shadow:
     inset 0 0 0 2px #ffffff,
     inset 4px 4px 0 0 #0a0a0a,
     inset -4px -4px 0 0 #2e2e2e;
 }
 
-.field input:-webkit-autofill,
-.field input:-webkit-autofill:hover,
-.field input:-webkit-autofill:focus {
+.card .field input:-webkit-autofill,
+.card .field input:-webkit-autofill:hover,
+.card .field input:-webkit-autofill:focus {
   -webkit-text-fill-color: #ffffff;
   caret-color: #ffffff;
   -webkit-box-shadow:
@@ -295,7 +297,7 @@
   text-align: center;
 }
 
-.switch button {
+.card .switch button {
   padding: 0;
   border: 0;
   background: none;
@@ -307,8 +309,8 @@
   transition: text-decoration-color 140ms ease;
 }
 
-.switch button:hover,
-.switch button:focus-visible {
+.card .switch button:hover,
+.card .switch button:focus-visible {
   outline: none;
   text-decoration-color: #ffffff;
 }
@@ -476,7 +478,7 @@
     font-size: 22px;
   }
 
-  .tab {
+  .tabs .tab {
     padding: 0 6px 2px;
     font-size: 12px;
   }

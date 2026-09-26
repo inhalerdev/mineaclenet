@@ -36,6 +36,15 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Start downloading the site font right away, so pages never show
+            a fallback font first (used in site/SiteFrame.module.css). */}
+        <link
+          rel="preload"
+          href="/shared/fonts/mineacle-primary.ttf"
+          as="font"
+          type="font/ttf"
+          crossOrigin="anonymous"
+        />
         <script
           id="mineacle-navigation-state"
           dangerouslySetInnerHTML={{
