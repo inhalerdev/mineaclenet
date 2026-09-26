@@ -11,15 +11,15 @@ import {
   mineacleIcons,
   mineacleNavIcons,
 } from "@/shared/icons/mineacle-icons";
-import block from "@/components/site/BlockButton.module.css";
-import headerStyles from "@/components/site/SiteHeader.module.css";
-import styles from "./VisitorHome.module.css";
+import block from "./BlockButton.module.css";
+import styles from "./SiteHeader.module.css";
 
 /*
  * The site header: nav links, logo, Search and My Profile menus, and the
  * hamburger menu on smaller screens. Shared by the homepage and the
- * account pages. Must be rendered inside an element with styles.page
- * (from VisitorHome.module.css), positioned like styles.heroFrame.
+ * account pages. Render it as the first thing inside the hero box
+ * (site/SiteFrame.module.css: .page > .heroFrame). Styles are in
+ * SiteHeader.module.css and BlockButton.module.css.
  */
 
 const HEADER_NAVIGATION = [
@@ -141,11 +141,11 @@ export function SiteHeader({
   }
 
   return (
-    <header className={headerStyles.header}>
-      <div className={headerStyles.mobileMenuShell} ref={mobileNavRef}>
+    <header className={styles.header}>
+      <div className={styles.mobileMenuShell} ref={mobileNavRef}>
         <button
-          className={`${headerStyles.mobileMenuButton} ${
-            mobileMenuOpen ? headerStyles.mobileMenuButtonOpen : ""
+          className={`${styles.mobileMenuButton} ${
+            mobileMenuOpen ? styles.mobileMenuButtonOpen : ""
           }`}
           type="button"
           aria-label={
@@ -168,15 +168,15 @@ export function SiteHeader({
 
         {mobileMenuOpen ? (
           <nav
-            className={headerStyles.mobileNavigation}
+            className={styles.mobileNavigation}
             id="home-mobile-navigation"
             aria-label="Mobile navigation"
           >
             {HEADER_NAVIGATION.map((item) => (
               <a
-                className={`${headerStyles.mobileNavigationItem} ${
+                className={`${styles.mobileNavigationItem} ${
                   "featured" in item && item.featured
-                    ? headerStyles.mobileFeaturedItem
+                    ? styles.mobileFeaturedItem
                     : ""
                 }`}
                 href={item.href}
@@ -196,7 +196,7 @@ export function SiteHeader({
             ))}
 
             <button
-              className={headerStyles.mobileNavigationItem}
+              className={styles.mobileNavigationItem}
               type="button"
               onClick={() => {
                 setMobileMenuOpen(false);
@@ -211,7 +211,7 @@ export function SiteHeader({
               />
               <span>Search</span>
               <img
-                className={headerStyles.mobileMenuArrow}
+                className={styles.mobileMenuArrow}
                 src={mineacleIcons.arrowDown}
                 alt=""
                 aria-hidden="true"
@@ -220,7 +220,7 @@ export function SiteHeader({
             </button>
 
             <button
-              className={headerStyles.mobileNavigationItem}
+              className={styles.mobileNavigationItem}
               type="button"
               onClick={() => {
                 setMobileMenuOpen(false);
@@ -230,7 +230,7 @@ export function SiteHeader({
             >
               {viewer ? (
                 <img
-                  className={headerStyles.profileHead}
+                  className={styles.profileHead}
                   src={playerAvatarUrl(viewer.uuid, 32)}
                   alt=""
                   referrerPolicy="no-referrer"
@@ -245,7 +245,7 @@ export function SiteHeader({
               )}
               <span>My Profile</span>
               <img
-                className={headerStyles.mobileMenuArrow}
+                className={styles.mobileMenuArrow}
                 src={mineacleIcons.arrowDown}
                 alt=""
                 aria-hidden="true"
@@ -257,14 +257,14 @@ export function SiteHeader({
       </div>
 
       <nav
-        className={headerStyles.headerNavigation}
+        className={styles.headerNavigation}
         aria-label="Primary navigation"
       >
         {HEADER_NAVIGATION.map((item) => (
           <a
-            className={`${headerStyles.headerNavItem} ${
+            className={`${styles.headerNavItem} ${
               "featured" in item && item.featured
-                ? headerStyles.featuredNavItem
+                ? styles.featuredNavItem
                 : ""
             }`}
             href={item.href}
@@ -288,7 +288,7 @@ export function SiteHeader({
       </nav>
 
       <a
-        className={headerStyles.brand}
+        className={styles.brand}
         href="/"
         aria-label="Mineacle home"
       >
@@ -299,11 +299,11 @@ export function SiteHeader({
         />
       </a>
 
-      <div className={headerStyles.headerTools}>
-        <div className={headerStyles.searchMenu} ref={searchRef}>
+      <div className={styles.headerTools}>
+        <div className={styles.searchMenu} ref={searchRef}>
           <button
-            className={`${headerStyles.headerToolButton} ${
-              searchOpen ? headerStyles.headerToolButtonOpen : ""
+            className={`${styles.headerToolButton} ${
+              searchOpen ? styles.headerToolButtonOpen : ""
             }`}
             type="button"
             aria-expanded={searchOpen}
@@ -321,7 +321,7 @@ export function SiteHeader({
             />
             <span>Search</span>
             <img
-              className={headerStyles.menuArrow}
+              className={styles.menuArrow}
               src={
                 searchOpen
                   ? mineacleIcons.arrowUp
@@ -421,10 +421,10 @@ export function SiteHeader({
           ) : null}
         </div>
 
-        <div className={headerStyles.profileMenu} ref={profileRef}>
+        <div className={styles.profileMenu} ref={profileRef}>
           <button
-            className={`${headerStyles.headerToolButton} ${
-              profileOpen ? headerStyles.headerToolButtonOpen : ""
+            className={`${styles.headerToolButton} ${
+              profileOpen ? styles.headerToolButtonOpen : ""
             }`}
             type="button"
             aria-expanded={profileOpen}
@@ -437,7 +437,7 @@ export function SiteHeader({
           >
             {viewer ? (
               <img
-                className={headerStyles.profileHead}
+                className={styles.profileHead}
                 src={playerAvatarUrl(viewer.uuid, 32)}
                 alt=""
                 referrerPolicy="no-referrer"
@@ -452,7 +452,7 @@ export function SiteHeader({
             )}
             <span>My Profile</span>
             <img
-              className={headerStyles.menuArrow}
+              className={styles.menuArrow}
               src={
                 profileOpen
                   ? mineacleIcons.arrowUp

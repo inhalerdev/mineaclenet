@@ -1,358 +1,4 @@
-/* Page frame (page, hero box, video) lives in site/SiteFrame.module.css. */
 
-/* ==========================================================================
- * Dropdown panels (search + account), game-UI style like the achievement
- * toast: black outline, light inner ring, inventory-slot inputs and cards,
- * block buttons. Colors from app/tokens.css.
- * ========================================================================== */
-.searchPanel,
-.profilePanel {
-  position: absolute;
-  z-index: 40;
-  top: calc(var(--header-height) + 6px);
-  padding: 16px;
-  border: 0;
-  border-radius: 0;
-  background: #1f1f1f;
-  box-shadow:
-    inset 0 0 0 2px var(--mc-outline),
-    inset 0 0 0 4px #4a4a4a,
-    0 18px 40px rgba(0, 0, 0, 0.45);
-  animation: panelIn var(--motion) both;
-}
-
-.searchPanel {
-  left: 0;
-  width: min(540px, calc(100vw - 64px));
-  display: grid;
-  gap: 14px;
-}
-
-.profilePanel {
-  right: 0;
-  width: 250px;
-  display: grid;
-  gap: 10px;
-}
-
-/* --- Search ------------------------------------------------------------- */
-.searchInputRow {
-  position: relative;
-  height: 44px;
-}
-
-.searchField {
-  position: relative;
-  z-index: 4;
-  height: 44px;
-}
-
-.searchField form {
-  height: 44px;
-  gap: 10px;
-  padding: 0 52px 0 14px;
-  border: 0;
-  border-radius: 0;
-  background: #111111;
-  /* sunken inventory slot */
-  box-shadow:
-    inset 0 0 0 2px var(--mc-outline),
-    inset 3px 3px 0 0 #0a0a0a,
-    inset -3px -3px 0 0 #2e2e2e;
-}
-
-.searchField form:focus-within {
-  background: #111111;
-  box-shadow:
-    inset 0 0 0 2px #ffffff,
-    inset 4px 4px 0 0 #0a0a0a,
-    inset -4px -4px 0 0 #2e2e2e;
-}
-
-.searchField form img {
-  width: 16px;
-  height: 16px;
-  flex-basis: 16px;
-}
-
-.searchField form input {
-  font-size: 14px;
-}
-
-.searchField form input::placeholder {
-  color: #7a7a7a;
-}
-
-.searchField form input::-webkit-search-cancel-button {
-  display: none;
-}
-
-
-.closeSearch {
-  position: absolute;
-  z-index: 8;
-  top: 6px;
-  right: 6px;
-  width: 32px;
-  height: 32px;
-  display: grid;
-  place-items: center;
-  padding: 0 0 3px;
-  border: 2px solid var(--mc-outline);
-  background: #2b2b2b;
-  box-shadow:
-    inset 0 2px 0 #3a3a3a,
-    inset 0 -3px 0 #161616;
-  cursor: pointer;
-  transition: background-color var(--motion);
-}
-
-.closeSearch:hover,
-.closeSearch:focus-visible {
-  background: #3a3a3a;
-}
-
-.closeSearch:active {
-  padding-bottom: 0;
-  box-shadow:
-    inset 0 2px 0 #3a3a3a,
-    inset 0 -1px 0 #161616;
-}
-
-.closeSearch img {
-  width: 12px;
-  height: 12px;
-  display: block;
-  object-fit: contain;
-  image-rendering: pixelated;
-  filter: none;
-}
-
-.topPlayersHeading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--content-gap);
-  color: var(--mc-text-muted);
-  font-size: 12px;
-  line-height: 1;
-}
-
-.page .topPlayersHeading a {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--mc-text);
-  font-size: 12px;
-  transition: color var(--motion);
-}
-
-.page .topPlayersHeading a:hover,
-.page .topPlayersHeading a:focus-visible {
-  color: #ffffff;
-  outline: none;
-}
-
-.topPlayersHeading b {
-  display: inline-block;
-  transition: transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  font-family: "Mineacle Primary", monospace;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1;
-}
-
-.topPlayersGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.topPlayerCard {
-  position: relative;
-  min-width: 0;
-  display: grid;
-  grid-template-columns: 40px minmax(0, 1fr);
-  grid-template-rows: auto auto;
-  align-content: center;
-  align-items: center;
-  gap: 6px 10px;
-  padding: 14px 10px 16px;
-  overflow: hidden;
-  border: 2px solid var(--mc-outline);
-  border-radius: 0;
-  background: #262626;
-  box-shadow:
-    inset 0 2px 0 #333333,
-    inset 0 -4px 0 #181818;
-  color: var(--mc-text);
-  transition:
-    border-color var(--motion),
-    background-color var(--motion),
-    box-shadow var(--motion);
-}
-
-.topPlayerCard:hover,
-.topPlayerCard:focus-visible {
-  border-color: #ffffff;
-  background: #2c2c2c;
-  box-shadow:
-    inset 0 2px 0 #363636,
-    inset 0 -4px 0 #181818;
-}
-
-/* #1 / #2 / #3 as little gold, silver and bronze blocks */
-.topPlayerRank {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  padding: 3px 5px 5px;
-  background: #3a3a3a;
-  box-shadow: inset 0 -2px 0 #1a1a1a;
-  color: #111111;
-  font-size: 10px;
-  font-weight: 400;
-  line-height: 1;
-}
-
-.topPlayerRank[data-rank="1"] {
-  background: #ffd83d;
-  box-shadow: inset 0 -2px 0 #b08a12;
-}
-
-.topPlayerRank[data-rank="2"] {
-  background: #dcdcdc;
-  box-shadow: inset 0 -2px 0 #8c8c8c;
-}
-
-.topPlayerRank[data-rank="3"] {
-  background: #e08a4a;
-  box-shadow: inset 0 -2px 0 #8a4b1e;
-}
-
-.topPlayerAvatar,
-.topPlayerPlaceholder {
-  width: 40px;
-  height: 40px;
-  grid-row: 1 / 3;
-  border: 2px solid var(--mc-outline);
-  border-radius: 0;
-  image-rendering: pixelated;
-}
-
-.topPlayerPlaceholder {
-  display: block;
-  background: #1a1a1a;
-  box-shadow: inset 3px 3px 0 #0f0f0f;
-}
-
-.topPlayerCard strong,
-.topPlayerCard small {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.topPlayerCard strong {
-  align-self: end;
-  font-size: 14px;
-  font-weight: 400;
-}
-
-.topPlayerCard small {
-  align-self: start;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  color: var(--mc-text-muted);
-  font-size: 11px;
-}
-
-.topPlayerCard small[data-online="true"] {
-  color: var(--mc-text);
-}
-
-.topPlayerCard small[data-online="true"]::before {
-  width: 6px;
-  height: 6px;
-  flex: 0 0 6px;
-  background: var(--mc-live);
-  box-shadow: 0 0 0 2px #0b3d22;
-  content: "";
-}
-
-/* --- Account menu ---------------------------------------------------------- */
-.panelKicker {
-  color: var(--mc-purple-face);
-  font-size: 12px;
-  line-height: 1;
-  text-shadow: 1px 1px 0 var(--mc-purple-deep);
-}
-
-.panelUser {
-  margin: -2px 0 2px;
-  overflow: hidden;
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.1;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.panelHint {
-  margin: 2px 0 0;
-  color: var(--mc-text-muted);
-  font-size: 11px;
-  line-height: 1.4;
-}
-
-.page .menuRow {
-  height: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 0 12px;
-  background: transparent;
-  color: #ffffff;
-  font-size: 14px;
-  line-height: 1;
-  transition:
-    background-color var(--motion),
-    box-shadow var(--motion);
-}
-
-.page .menuRow:hover,
-.page .menuRow:focus-visible {
-  background: var(--mc-surface-raised);
-  box-shadow: none;
-}
-
-.page .menuRow:active {
-  background: #333333;
-}
-
-.menuDivider {
-  height: 2px;
-  margin: 2px 0;
-  background: #2e2e2e;
-  box-shadow: 0 1px 0 #151515;
-}
-
-.badge {
-  min-width: 22px;
-  height: 20px;
-  display: grid;
-  place-items: center;
-  padding: 0 6px 2px;
-  background: var(--mc-purple);
-  box-shadow: inset 0 -2px 0 var(--mc-purple-deep);
-  color: #ffffff;
-  font-size: 11px;
-  font-weight: 400;
-}
 
 .playButton {
   position: absolute;
@@ -532,32 +178,10 @@
   white-space: nowrap;
 }
 
-@keyframes panelIn {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @media (max-width: 1320px) {
-  .searchPanel {
-    top: var(--header-height);
-    right: auto;
-    left: 8px;
-    width: min(512px, calc(100% - 16px));
-  }
+  
 
-  .profilePanel {
-    top: var(--header-height);
-    right: auto;
-    left: 8px;
-    width: 192px;
-  }
+  
 
   .playButton {
     bottom: 24px;
@@ -566,34 +190,15 @@
 }
 
 @media (max-width: 720px) {
-  .searchPanel {
-    right: 8px;
-    left: 8px;
-    width: auto;
-    height: 192px;
-    padding: 12px;
-  }
+  
 
-  .topPlayersGrid {
-    height: 104px;
-    gap: 8px;
-  }
+  
 
-  .topPlayerCard {
-    grid-template-columns: 36px minmax(0, 1fr);
-    gap: 4px 6px;
-    padding: 8px;
-  }
+  
 
-  .topPlayerAvatar,
-  .topPlayerPlaceholder {
-    width: 36px;
-    height: 36px;
-  }
+  
 
-  .profilePanel {
-    left: 8px;
-  }
+  
 
   .playButton {
     bottom: 16px;
@@ -624,53 +229,21 @@
 }
 
 @media (max-width: 480px) {
-  .searchPanel {
-    right: 6px;
-    left: 6px;
-    height: 186px;
-    padding: 10px;
-  }
+  
 
-  .topPlayersHeading {
-    height: 28px;
-  }
+  
 
-  .topPlayersGrid {
-    height: 106px;
-    gap: 6px;
-  }
+  
 
-  .topPlayerCard {
-    grid-template-columns: 1fr;
-    grid-template-rows: 36px auto;
-    justify-items: center;
-    gap: 5px;
-    padding: 8px 4px;
-    text-align: center;
-  }
+  
 
-  .topPlayerAvatar,
-  .topPlayerPlaceholder {
-    width: 36px;
-    height: 36px;
-    grid-row: auto;
-  }
+  
 
-  .topPlayerCard small {
-    display: none;
-  }
+  
 
-  .topPlayerCard strong {
-    max-width: 100%;
-    align-self: auto;
-    font-size: 7px;
-  }
+  
 
-  .profilePanel {
-    right: 6px;
-    left: 6px;
-    width: auto;
-  }
+  
 
   .quickCard > strong {
     font-size: 8px;
@@ -722,7 +295,6 @@
   }
 }
 
-
 /* ==========================================================================
  * Mineacle color system (see app/tokens.css)
  * ========================================================================== */
@@ -764,34 +336,13 @@
   filter: none;
 }
 
-/* Dropdown panels on smaller screens: let them grow to fit their content. */
-@media (max-width: 1320px) {
-  .searchPanel,
-  .topPlayersGrid,
-  .topPlayersHeading {
-    height: auto;
-  }
-
-  .profilePanel {
-    width: min(250px, calc(100% - 16px));
-  }
-}
-
-@media (max-width: 480px) {
-  .topPlayerCard strong {
-    font-size: 12px;
-  }
-}
-
 /* ==========================================================================
  * Button feel (Minecraft-style), shared by every button on the homepage.
  *  - Hover / keyboard focus: lifts 2px, face brightens, outline turns white
  *    (the in-game hover look), shadow drops underneath.
  *  - Click: sinks into its bottom edge.
  * ========================================================================== */
-.playButton,
-.closeSearch,
-.topPlayerCard {
+.playButton {
   transition:
     transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
     box-shadow 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
@@ -825,37 +376,6 @@
   transition-duration: 50ms;
 }
 
-/* --- Search panel close (X) ----------------------------------------------- */
-.closeSearch:hover,
-.closeSearch:focus-visible {
-  border-color: #ffffff;
-  background: #3a3a3a;
-  transform: translateY(-1px);
-}
-
-.closeSearch:active {
-  transform: translateY(2px);
-  transition-duration: 50ms;
-}
-
-/* --- Top 3 player cards ----------------------------------------------------- */
-.topPlayerCard:hover,
-.topPlayerCard:focus-visible {
-  transform: translateY(-2px);
-  box-shadow:
-    inset 0 2px 0 #363636,
-    inset 0 -4px 0 #181818,
-    0 4px 0 rgba(0, 0, 0, 0.4);
-}
-
-.topPlayerCard:active {
-  transform: translateY(1px);
-  box-shadow:
-    inset 0 2px 0 #363636,
-    inset 0 -2px 0 #181818;
-  transition-duration: 50ms;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .playButton:hover,
   .playButton:focus-visible,
@@ -863,181 +383,7 @@
     transform: translateX(-50%);
   }
 
-  .closeSearch:hover,
-  .closeSearch:active,
-  .topPlayerCard:hover,
-  .topPlayerCard:active {
-    transform: none;
-  }
-}
-
-/* ==========================================================================
- * Sizing pass: smaller, cleaner nav + dropdowns (sizes live in tokens.css)
- * ========================================================================== */
-
-/* Search panel */
-.searchField form input {
-  font-size: var(--mc-menu-font);
-}
-
-.topPlayersHeading,
-.page .topPlayersHeading a,
-.topPlayersHeading b {
-  font-size: var(--mc-menu-font-small);
-}
-
-.topPlayerCard strong {
-  font-size: var(--mc-menu-font);
-}
-
-.topPlayerCard small {
-  font-size: 10px;
-}
-
-/* Account menu */
-.panelKicker {
-  font-size: var(--mc-menu-font-small);
-}
-
-.panelUser {
-  font-size: 14px;
-}
-
-.panelHint {
-  font-size: 10px;
-}
-
-.page .menuRow {
-  height: 34px;
-  font-size: var(--mc-menu-font);
-}
-
-.badge {
-  height: 18px;
-  font-size: 10px;
-}
-
-/* ==========================================================================
- * Signed-in account menu: player head on the My Profile button, a header
- * with the head + name, plain rows, and a red Sign out block button.
- * ========================================================================== */
-.page .panelAccount {
-  display: grid;
-  grid-template-columns: 40px minmax(0, 1fr);
-  align-items: center;
-  gap: 12px;
-  padding: 4px 12px 2px;
-  color: var(--mc-text);
-}
-
-.panelAccount img {
-  width: 40px;
-  height: 40px;
-  border: 2px solid var(--mc-outline);
-  background: #1a1a1a;
-  image-rendering: pixelated;
-  transition: transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.panelAccount > span {
-  min-width: 0;
-  display: grid;
-  gap: 7px;
-}
-
-.panelAccount small {
-  color: var(--mc-text-muted);
-  font-size: 11px;
-  line-height: 1;
-}
-
-.panelAccount strong {
-  overflow: hidden;
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.page .panelAccount:hover img,
-.page .panelAccount:focus-visible img {
-  transform: translateY(-2px);
-}
-
-.page .panelAccount:focus-visible {
-  outline: 2px solid #ffffff;
-  outline-offset: 2px;
-}
-
-.menuList {
-  display: grid;
-  gap: 2px;
-  margin-bottom: 4px;
-}
-
-/* Account menu rows: icon column + label + optional count. */
-.page .menuList .menuRow {
-  display: grid;
-  grid-template-columns: 18px minmax(0, 1fr) auto;
-  gap: 10px;
-}
-
-.menuIcon {
-  width: 18px;
-  height: 18px;
-  display: block;
-  object-fit: contain;
-  image-rendering: pixelated;
-}
-
-/* Unread count: red, to match the red dot on the bell. */
-.menuList .badge {
-  background: var(--mc-red);
-  box-shadow: inset 0 -2px 0 var(--mc-red-edge);
-}
-
-/* The bell and friends icons are drawn on a 24px pixel grid with empty space
-   around them, so show them at 24px (one screen pixel per icon pixel, crisp)
-   without making the row taller. */
-.menuIcon[src*="/bell"],
-.menuIcon[src*="/friends"] {
-  width: 24px;
-  height: 24px;
-  margin: -3px;
-  image-rendering: auto;
-}
-
-/* ==========================================================================
- * Search panel v2: results show inside the panel (in place of the Top 3
- * while you type), as rows in the same style as the account menu.
- * ========================================================================== */
-.searchInputRow,
-.searchField {
-  height: auto;
-}
-
-.searchField [data-player-results] {
-  max-height: min(336px, calc(100dvh - 220px));
-  overflow-y: auto;
-  scrollbar-color: #4a4a4a transparent;
-  scrollbar-width: thin;
-}
-
-.searchPanel:has([data-has-query]) .topPlayersHeading,
-.searchPanel:has([data-has-query]) .topPlayersGrid {
-  display: none;
-}
-
-/* #1 / #2 / #3 badge sits on the Online / Offline line (bottom right) so
-   long names have the full width. */
-@media (min-width: 721px) {
-  .topPlayerRank {
-    top: auto;
-    bottom: 12px;
-    right: 8px;
-  }
+  
 }
 
 /* ==========================================================================
@@ -1200,33 +546,6 @@
   .quickCard:hover .quickCardIcon {
     transform: none;
   }
-}
-
-/* "View leaderboards >": the arrow nudges right on hover (no underline). */
-.page .topPlayersHeading a:hover b,
-.page .topPlayersHeading a:focus-visible b {
-  transform: translateX(3px);
-}
-
-/* Search panel close (X): turns into a red block while there's text in
-   the search box (same red as Sign out). */
-.searchInputRow:has(input:not(:placeholder-shown)) .closeSearch {
-  background: var(--mc-red);
-  box-shadow:
-    inset 0 2px 0 var(--mc-red-light),
-    inset 0 -3px 0 var(--mc-red-edge);
-}
-
-.searchInputRow:has(input:not(:placeholder-shown)) .closeSearch:hover,
-.searchInputRow:has(input:not(:placeholder-shown)) .closeSearch:focus-visible {
-  background: var(--mc-red-hover);
-}
-
-.searchInputRow:has(input:not(:placeholder-shown)) .closeSearch:active {
-  background: var(--mc-red);
-  box-shadow:
-    inset 0 2px 0 var(--mc-red-light),
-    inset 0 -1px 0 var(--mc-red-edge);
 }
 
 /* ==========================================================================

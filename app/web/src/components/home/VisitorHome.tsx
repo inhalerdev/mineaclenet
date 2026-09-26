@@ -5,7 +5,7 @@ import { AchievementToast } from "@/components/home/AchievementToast";
 import {
   SiteHeader,
   type HomeLeaderboardPlayer,
-} from "@/components/home/SiteHeader";
+} from "@/components/site/SiteHeader";
 import type { Viewer } from "@/features/auth/types";
 import { homeContent } from "@/features/home/home-content";
 import { mineacleIcons } from "@/shared/icons/mineacle-icons";
@@ -290,7 +290,7 @@ export function VisitorHome({
       : "idle";
 
   return (
-    <div className={`${frame.page} ${styles.page} ${styles.homePage}`}>
+    <div className={`${frame.page} ${styles.homePage}`}>
       <section className={`${frame.heroFrame} ${styles.heroFrame}`}>
         <SiteHeader
           viewer={viewer}

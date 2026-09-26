@@ -1,8 +1,10 @@
 import type { ReactNode } from "react";
 import { redirect } from "next/navigation";
 import { AuthClient, type AuthMode } from "@/components/auth/AuthClient";
-import { SiteHeader, type HomeLeaderboardPlayer } from "@/components/home/SiteHeader";
-import homeStyles from "@/components/home/VisitorHome.module.css";
+import {
+  SiteHeader,
+  type HomeLeaderboardPlayer,
+} from "@/components/site/SiteHeader";
 import frame from "@/components/site/SiteFrame.module.css";
 import { getCurrentViewer } from "@/features/auth/session";
 import { homeContent } from "@/features/home/home-content";
@@ -49,7 +51,7 @@ export function AccountShell({
   children: ReactNode;
 }) {
   return (
-    <div className={`${frame.page} ${homeStyles.page} ${styles.page}`}>
+    <div className={`${frame.page} ${styles.page}`}>
       <section className={frame.heroFrame}>
         <SiteHeader
           viewer={null}
