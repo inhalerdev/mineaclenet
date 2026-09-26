@@ -39,8 +39,6 @@
 
 .system-card,
 .system-page-header,
-.player-profile-hero,
-.player-profile-details,
 .profile-account-stats,
 .account-security__section,
 .system-following-list,
@@ -62,11 +60,6 @@
   border-radius: 0;
   background: transparent;
   box-shadow: none;
-}
-
-/* Consistent vertical rhythm between page modules. */
-.player-profile-page {
-  gap: var(--module-gap);
 }
 
 .profile-account-stats,
@@ -98,30 +91,12 @@
 }
 
 /* ------------------------------------------------------------
-   Grid module rule
-   Each independent stat/action tile may float, but uses the same recipe.
-   ------------------------------------------------------------ */
-
-.player-stat-grid .system-card {
-  border: 1px solid var(--module-border);
-  border-radius: var(--module-radius);
-  background: var(--module-bg);
-  box-shadow: var(--module-shadow);
-}
-
-.player-stat-grid .system-card:hover {
-  border-color: var(--module-border-strong);
-  background: var(--module-bg-hover);
-}
-
-/* ------------------------------------------------------------
    Controls never get large-module geometry.
    ------------------------------------------------------------ */
 
 .system-inline-action,
 .profile-account-actions > a,
 .profile-logout,
-.follow-toggle button,
 .account-security button,
 .mobile-menu-button,
 .mobile-account-button {

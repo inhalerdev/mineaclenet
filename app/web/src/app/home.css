@@ -297,10 +297,6 @@
   font-size: 7px;
 }
 
-.player-profile-pill {
-  padding-left: 4px !important;
-}
-
 .player-home-grid {
   min-height: 0;
   display: grid;

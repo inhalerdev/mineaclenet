@@ -1,0 +1,19 @@
+/*
+ * Follow / Following button (FollowToggle.tsx). The button itself is a
+ * block button (site/BlockButton.module.css): purple to follow, grey once
+ * following.
+ */
+.toggle {
+  display: grid;
+  gap: 6px;
+  justify-items: stretch;
+}
+
+.toggle button {
+  min-width: 132px;
+}
+
+.toggle small {
+  color: var(--mc-red-light);
+  font-size: 11px;
+}

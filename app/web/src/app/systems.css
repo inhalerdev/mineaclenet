@@ -41,7 +41,6 @@
 
 .system-page-header small,
 .system-card > small,
-.player-profile-identity small,
 .account-security__section > small {
   color: #b078ff;
   font-size: 11px;
@@ -50,8 +49,7 @@
   text-transform: uppercase;
 }
 
-.system-page-header h1,
-.player-profile-identity h1 {
+.system-page-header h1 {
   margin: 6px 0 0;
   color: #f8f8f8;
   font-size: clamp(26px, 3vw, 34px);
@@ -60,8 +58,7 @@
   letter-spacing: -0.04em;
 }
 
-.system-page-header p,
-.player-profile-identity p {
+.system-page-header p {
   max-width: 62ch;
   margin: 8px 0 0;
   color: #bbbbbb;
@@ -74,7 +71,6 @@
 .system-inline-action,
 .profile-account-actions > a,
 .profile-logout,
-.follow-toggle button,
 .account-security button {
   min-height: 40px;
   display: inline-flex;
@@ -100,7 +96,6 @@
 .system-inline-action:hover,
 .profile-account-actions > a:hover,
 .profile-logout:hover:not(:disabled),
-.follow-toggle button:hover:not(:disabled),
 .account-security button:hover:not(:disabled) {
   border-color: rgba(248, 248, 248, 0.18);
   background: #262626;
@@ -111,7 +106,6 @@
 .system-inline-action:active,
 .profile-account-actions > a:active,
 .profile-logout:active:not(:disabled),
-.follow-toggle button:active:not(:disabled),
 .account-security button:active:not(:disabled) {
   transform: none;
 }
@@ -121,23 +115,12 @@
 }
 
 .profile-logout:disabled,
-.account-security button:disabled,
-.follow-toggle button:disabled {
+.account-security button:disabled {
   opacity: 0.55;
   cursor: default;
 }
 
-/* Selected state used site-wide: dark control + purple edge/underline. */
-.follow-toggle button:not(.is-following) {
-  position: relative;
-  border-color: rgba(176, 120, 255, 0.34);
-  background: #1d1d1d;
-  color: #ffffff;
-  box-shadow: inset 0 -2px #b078ff;
-}
-
-.leaderboard-avatar,
-.player-profile-avatar {
+.leaderboard-avatar {
   display: grid;
   place-items: center;
   background: #222222;
@@ -150,130 +133,6 @@
   width: 38px;
   height: 38px;
   border-radius: 4px;
-}
-
-/* ============================================================
-   Public player profile
-   ============================================================ */
-
-.player-profile-page {
-  display: grid;
-  align-content: start;
-  gap: 16px;
-}
-
-.player-profile-hero,
-.player-profile-details,
-.player-stat-grid {
-  width: min(1120px, 100%);
-  margin: 0 auto;
-}
-
-.player-profile-hero {
-  position: relative;
-  min-height: 220px;
-  display: grid;
-  grid-template-columns: 92px minmax(0, 1fr) auto;
-  align-items: center;
-  padding: 24px;
-  overflow: hidden;
-  gap: 18px;
-  background:
-    linear-gradient(
-      90deg,
-      rgba(132, 54, 254, 0.10),
-      transparent 48%
-    ),
-    #171717;
-}
-
-.player-profile-avatar {
-  width: 92px;
-  height: 92px;
-  border-radius: 8px;
-}
-
-.player-profile-identity h1 {
-  font-size: clamp(30px, 4vw, 42px);
-}
-
-.player-profile-identity p {
-  font-size: 12px;
-}
-
-.follow-toggle {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 6px;
-}
-
-.follow-toggle small {
-  max-width: 220px;
-  color: #ff7777;
-  font-size: 10px;
-}
-
-.player-stat-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.player-stat-grid .system-card {
-  min-height: 128px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 18px;
-  transition:
-    border-color var(--ease-fast),
-    background-color var(--ease-fast);
-}
-
-.player-stat-grid .system-card:hover {
-  border-color: rgba(248, 248, 248, 0.18);
-  background: #1d1d1d;
-  transform: none;
-}
-
-.player-stat-grid strong {
-  margin-top: 8px;
-  color: #f8f8f8;
-  font-size: 22px;
-  font-weight: 700;
-}
-
-.player-stat-grid span {
-  margin-top: 5px;
-  color: #888888;
-  font-size: 11px;
-  line-height: 1.4;
-}
-
-.player-profile-details {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  padding: 18px 22px;
-  gap: 12px;
-}
-
-.player-profile-details > div {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.player-profile-details small {
-  color: #888888;
-  font-size: 10px;
-  font-weight: 600;
-}
-
-.player-profile-details strong {
-  color: #f8f8f8;
-  font-size: 12px;
-  font-weight: 600;
 }
 
 /* ============================================================
@@ -557,10 +416,7 @@
    ============================================================ */
 
 @media (max-width: 1000px) {
-  .player-stat-grid,
-  .player-profile-details {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+  
 
   .profile-account-stats {
     grid-template-columns: repeat(2, 1fr);
@@ -599,21 +455,11 @@
 
   
 
-  .player-profile-hero {
-    grid-template-columns: 76px minmax(0, 1fr);
-    min-height: 190px;
-    padding: 18px;
-  }
+  
 
-  .player-profile-avatar {
-    width: 76px;
-    height: 76px;
-  }
+  
 
-  .player-profile-hero .follow-toggle {
-    grid-column: 1 / -1;
-    align-items: flex-start;
-  }
+  
 
   
 }
@@ -626,8 +472,7 @@
       12px;
   }
 
-  .system-page-header h1,
-  .player-profile-identity h1 {
+  .system-page-header h1 {
     font-size: 28px;
   }
 
@@ -640,8 +485,6 @@
 
   
 
-  .player-stat-grid,
-  .player-profile-details,
   .profile-account-stats {
     grid-template-columns: 1fr;
   }
@@ -651,18 +494,11 @@
     border-left: 0;
   }
 
-  .player-profile-hero {
-    grid-template-columns: 60px minmax(0, 1fr);
-  }
+  
 
-  .player-profile-avatar {
-    width: 60px;
-    height: 60px;
-  }
+  
 
-  .player-profile-details {
-    padding: 16px;
-  }
+  
 
   .profile-account-actions {
     width: 100%;

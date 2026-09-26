@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import block from "@/components/site/BlockButton.module.css";
+import styles from "./FollowToggle.module.css";
 
 export function FollowToggle({
   uuid,
@@ -48,16 +50,17 @@ export function FollowToggle({
   }
 
   return (
-    <div className="follow-toggle">
+    <div className={styles.toggle}>
       <button
-        className={following ? "is-following" : ""}
+        className={`${block.button} ${following ? "" : block.primary}`}
+        aria-pressed={following}
         disabled={busy}
         onClick={toggle}
         type="button"
       >
         {busy ? "Updating..." : following ? "Following" : "Follow"}
       </button>
-      {message ? <small>{message}</small> : null}
+      {message ? <small role="alert">{message}</small> : null}
     </div>
   );
 }
