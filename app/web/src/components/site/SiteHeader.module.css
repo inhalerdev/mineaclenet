@@ -1,14 +1,15 @@
 /*
- * Site header: bar, nav links, Marketplace button and logo.
- * (Search / My Profile, the hamburger menu and the dropdown panels are
- * still in home/VisitorHome.module.css and move here next.)
+ * Site header: bar, nav links, Marketplace button, logo, the Search and
+ * My Profile buttons, and the hamburger menu (1320px and narrower).
+ * (The dropdown panels are still in home/VisitorHome.module.css and move
+ * here next.)
  *
  * Sits at the top of the hero box and uses the frame's variables
  * (site/SiteFrame.module.css). Nav text and icon sizes come from
  * app/tokens.css.
  *
- * Rules on links start with .header so they beat the page's font reset
- * (.page a { font: inherit } in SiteFrame.module.css).
+ * Rules on links and buttons start with .header so they beat the page's
+ * font reset (.page a, .page button { font: inherit } in SiteFrame).
  */
 
 /* ==========================================================================
@@ -188,6 +189,377 @@
 }
 
 /* ==========================================================================
+ * Search / My Profile buttons (right side of the header)
+ * ========================================================================== */
+.headerTools {
+  grid-column: 3;
+  min-width: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.searchMenu,
+.profileMenu {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.profileMenu {
+  margin-left: auto;
+}
+
+.header .headerToolButton {
+  height: var(--header-height);
+  display: inline-grid;
+  grid-template-columns: auto max-content 10px;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  border: 0;
+  background: transparent;
+  color: #f7f7f7;
+  cursor: pointer;
+  font-size: var(--mc-nav-font);
+  white-space: nowrap;
+  transition:
+    transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease;
+}
+
+.header .headerToolButtonOpen {
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
+}
+
+.header .headerToolButton:hover,
+.header .headerToolButton:focus-visible {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--mc-text);
+}
+
+.header .headerToolButton:active {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(1px);
+  transition-duration: 50ms;
+}
+
+.headerToolButton img {
+  width: 14px;
+  height: 14px;
+  display: block;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+/* Search / profile icon: same height as the nav icons. */
+.headerToolButton > img:first-child {
+  width: auto;
+  height: var(--mc-nav-icon);
+  flex: 0 0 auto;
+  image-rendering: auto;
+}
+
+/* Signed in: the player's head replaces the profile icon. */
+.headerToolButton > img.profileHead,
+.mobileNavigationItem > img.profileHead {
+  width: 18px;
+  height: 18px;
+  margin-block: -3px;
+  box-shadow: 0 0 0 1px var(--mc-outline);
+  image-rendering: pixelated;
+}
+
+.headerToolButton > span {
+  height: 14px;
+  display: flex;
+  align-items: center;
+  line-height: 14px;
+  transform: translateY(-1px);
+}
+
+/* Down arrow: nudges down on hover, stays put while the menu is open. */
+.headerToolButton .menuArrow {
+  width: 10px;
+  height: 10px;
+  transition: transform 140ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.headerToolButton:hover .menuArrow,
+.headerToolButton:focus-visible .menuArrow {
+  transform: translateY(2px);
+}
+
+.headerToolButtonOpen .menuArrow,
+.headerToolButtonOpen:hover .menuArrow {
+  transform: none;
+}
+
+/* ==========================================================================
+ * Hamburger menu (1320px and narrower)
+ * ========================================================================== */
+.mobileMenuShell {
+  display: none;
+}
+
+/* The gavel is diagonal, so at the same height it looks smaller than the
+   boxy icons. Draw it a little taller without moving the row. */
+.headerNavItem img[src$="/nav/gavel.png"],
+.mobileNavigationItem img[src$="/nav/gavel.png"] {
+  height: calc(var(--mc-nav-icon) * 1.2);
+  margin-block: calc(var(--mc-nav-icon) * -0.1);
+}
+
+@keyframes panelIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 1320px) {
+  .headerTools {
+    display: contents;
+  }
+
+  .searchMenu,
+  .profileMenu {
+    position: static;
+    margin: 0;
+  }
+
+  .header .headerToolButton {
+    display: none;
+  }
+
+  .mobileMenuShell {
+    position: relative;
+    z-index: 48;
+    grid-column: 1;
+    width: 40px;
+    height: 40px;
+    display: block;
+  }
+
+  /* Hamburger / X: neutral block button. */
+  .mobileMenuButton {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-content: center;
+    gap: 5px;
+    padding: 0;
+    border: 2px solid var(--mc-outline);
+    border-radius: 0;
+    background: #2b2b2b;
+    box-shadow:
+      inset 0 2px 0 #3a3a3a,
+      inset 0 -3px 0 #161616;
+    cursor: pointer;
+    transition:
+      transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 110ms ease,
+      background-color 140ms ease,
+      border-color 140ms ease;
+  }
+
+  .mobileMenuButtonOpen {
+    background: #333333;
+  }
+
+  .mobileMenuButton:focus-visible {
+    background: #363636;
+    outline: 0;
+  }
+
+  .mobileMenuButton:active {
+    box-shadow:
+      inset 0 2px 0 #3a3a3a,
+      inset 0 -1px 0 #161616;
+    transform: translateY(2px);
+    transition-duration: 50ms;
+  }
+
+  .mobileMenuButton > span {
+    width: 20px;
+    height: 2px;
+    display: block;
+    background: #ffffff;
+    image-rendering: pixelated;
+    transform-origin: center;
+    transition:
+      transform var(--motion),
+      opacity var(--motion);
+  }
+
+  .mobileMenuButtonOpen > span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .mobileMenuButtonOpen > span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .mobileMenuButtonOpen > span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* The menu: same game-UI panel as the dropdowns. */
+  .mobileNavigation {
+    position: absolute;
+    z-index: 50;
+    top: 48px;
+    left: 0;
+    width: min(320px, calc(100vw - 58px));
+    display: grid;
+    gap: 2px;
+    padding: 10px;
+    background: #1f1f1f;
+    box-shadow:
+      inset 0 0 0 2px var(--mc-outline),
+      inset 0 0 0 4px #4a4a4a,
+      0 18px 40px rgba(0, 0, 0, 0.45);
+    animation: panelIn var(--motion) both;
+  }
+
+  /* Links: soft tile on hover and for the current page. */
+  .header .mobileNavigationItem {
+    width: 100%;
+    min-height: 40px;
+    display: grid;
+    grid-template-columns: calc(var(--mc-nav-icon) * 1.4) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: var(--mc-nav-font);
+    text-align: left;
+    transition:
+      transform 90ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      background-color 120ms ease;
+  }
+
+  .header .mobileNavigationItem:focus-visible {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--mc-text);
+    outline: 0;
+  }
+
+  .header .mobileNavigationItem[aria-current="page"] {
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.35);
+  }
+
+  .header .mobileNavigationItem:not(.mobileFeaturedItem):active {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateY(1px);
+    transition-duration: 40ms;
+  }
+
+  /* Icons: as tall as --mc-nav-icon, as wide as their own shape. */
+  .mobileNavigationItem img {
+    width: auto;
+    height: var(--mc-nav-icon);
+    display: block;
+    flex: 0 0 auto;
+  }
+
+  .mobileNavigationItem > img:first-child {
+    justify-self: center;
+  }
+
+  /* Only Search and My Profile (which open a panel) get this arrow. */
+  .mobileNavigationItem > .mobileMenuArrow {
+    width: 12px;
+    height: 12px;
+    object-fit: contain;
+  }
+
+  .mobileNavigationItem > span {
+    height: 14px;
+    display: flex;
+    align-items: center;
+    line-height: 14px;
+    transform: translateY(-1px);
+  }
+
+  /* Marketplace in the menu: gold. */
+  .header .mobileFeaturedItem {
+    border: 2px solid var(--mc-outline);
+    background: var(--mc-gold);
+    color: var(--mc-gold-text);
+  }
+
+  .mobileFeaturedItem img {
+    filter: brightness(0) opacity(0.85);
+  }
+
+  .header .mobileFeaturedItem:hover,
+  .header .mobileFeaturedItem:focus-visible {
+    background: var(--mc-gold-hover);
+    box-shadow:
+      inset 0 2px 0 var(--mc-gold-light),
+      inset 0 -3px 0 var(--mc-gold-edge);
+    color: var(--mc-gold-text);
+  }
+
+  .header .mobileFeaturedItem:active {
+    box-shadow:
+      inset 0 2px 0 var(--mc-gold-light),
+      inset 0 -1px 0 var(--mc-gold-edge);
+    transform: translateY(2px);
+    transition-duration: 50ms;
+  }
+}
+
+/* Hover only on devices with a real pointer, so a tapped link on a phone
+   doesn't stay highlighted. */
+@media (max-width: 1320px) and (hover: hover) {
+  .mobileMenuButton:hover {
+    background: #363636;
+    transform: translateY(-1px);
+  }
+
+  .header .mobileNavigationItem:not(.mobileFeaturedItem):hover {
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: none;
+  }
+
+  .header .mobileFeaturedItem:hover {
+    border-color: #ffffff;
+    background: var(--mc-gold-hover);
+  }
+}
+
+@media (max-width: 720px) {
+  .mobileNavigation {
+    width: min(320px, calc(100vw - 42px));
+  }
+}
+
+@media (max-width: 480px) {
+  .mobileNavigation {
+    width: calc(100vw - 34px);
+  }
+}
+
+/* ==========================================================================
  * Screen sizes
  * ========================================================================== */
 @media (max-width: 1320px) {
@@ -225,7 +597,9 @@
 
 @media (prefers-reduced-motion: reduce) {
   .header .featuredNavItem:hover,
-  .header .featuredNavItem:active {
+  .header .featuredNavItem:active,
+  .header .headerToolButton:active,
+  .headerToolButton:hover .menuArrow {
     transform: none;
   }
 }
