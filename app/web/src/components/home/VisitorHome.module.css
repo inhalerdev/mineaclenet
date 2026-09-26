@@ -1,66 +1,4 @@
-@font-face {
-  font-family: "Mineacle Primary";
-  src: url("/shared/fonts/mineacle-primary.ttf") format("truetype");
-  font-display: swap;
-  font-style: normal;
-  font-weight: 400;
-}
-
-.page {
-  --page-margin: 32px;
-  --content-gap: 16px;
-  --section-gap: 16px;
-  --stroke-width: 0.5px;
-  --header-height: 48px;
-  --surface: #222222;
-  --border: rgba(255, 255, 255, 0.28);
-  --border-soft: rgba(255, 255, 255, 0.14);
-  --text: #ffffff;
-  --muted: #bbbbbb;
-  --primary: #b078ff;
-  --secondary: #d0afff;
-  --green: #389222;
-  --green-hover: #43a82a;
-  --amber: #e59a00;
-  --motion: 180ms cubic-bezier(0.2, 0.75, 0.25, 1);
-
-  width: 100%;
-  height: 100dvh;
-  min-width: 320px;
-  display: grid;
-  grid-template-rows: minmax(0, 2.45fr) minmax(0, 1fr);
-  gap: var(--section-gap);
-  padding: var(--page-margin);
-  overflow: hidden;
-  background: #111111;
-  color: var(--text);
-  font-family: "Mineacle Primary", monospace;
-}
-
-.page,
-.page * {
-  box-sizing: border-box;
-}
-
-.page button,
-.page a,
-.page input {
-  font: inherit;
-}
-
-.page a {
-  text-decoration: none;
-}
-
-.heroFrame {
-  position: relative;
-  min-width: 0;
-  min-height: 0;
-  overflow: hidden;
-  border: var(--stroke-width) solid var(--border);
-  border-radius: 4px;
-  background: #1a1a1a;
-}
+/* Page frame (page, hero box, video) lives in site/SiteFrame.module.css. */
 
 .header {
   /* Space kept clear on each side of the 200px logo. */
@@ -568,66 +506,6 @@
   line-height: 1.4;
 }
 
-/* Block buttons: face + top light + dark bottom edge + black outline. */
-.page .blockButton {
-  height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 14px 4px;
-  border: 2px solid var(--mc-outline);
-  border-radius: 0;
-  background: #2b2b2b;
-  box-shadow:
-    inset 0 3px 0 #3a3a3a,
-    inset 0 -4px 0 #161616;
-  color: #ffffff;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1;
-  transition:
-    background-color var(--motion),
-    box-shadow 90ms ease,
-    transform 90ms ease;
-}
-
-.page .blockButton:hover,
-.page .blockButton:focus-visible {
-  background: #363636;
-}
-
-.page .blockButton:active {
-  padding-bottom: 1px;
-  box-shadow:
-    inset 0 3px 0 #3a3a3a,
-    inset 0 -1px 0 #161616;
-  transform: translateY(3px);
-}
-
-.page .blockButtonPrimary {
-  background: var(--mc-purple);
-  box-shadow:
-    inset 0 3px 0 var(--mc-purple-face),
-    inset 0 -4px 0 var(--mc-purple-deep);
-}
-
-.page .blockButtonPrimary:hover,
-.page .blockButtonPrimary:focus-visible {
-  background: #9450ff;
-}
-
-.page .blockButtonPrimary:active {
-  box-shadow:
-    inset 0 3px 0 var(--mc-purple-face),
-    inset 0 -1px 0 var(--mc-purple-deep);
-}
-
-.page .blockButton:disabled {
-  cursor: wait;
-  opacity: 0.65;
-}
-
 .page .menuRow {
   height: 38px;
   display: flex;
@@ -672,34 +550,6 @@
   color: #ffffff;
   font-size: 11px;
   font-weight: 400;
-}
-
-.hero {
-  position: absolute;
-  z-index: 1;
-  inset: var(--header-height) 0 0;
-  overflow: hidden;
-  background: #1b1b1b;
-}
-
-.heroVideo,
-.heroShade {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.heroVideo {
-  object-fit: cover;
-  object-position: center center;
-  filter: saturate(0.82) contrast(1.03);
-}
-
-.heroShade {
-  background:
-    linear-gradient(180deg, rgba(8, 8, 8, 0.32), rgba(8, 8, 8, 0.54)),
-    linear-gradient(90deg, rgba(10, 10, 10, 0.14), rgba(10, 10, 10, 0.03) 58%, rgba(10, 10, 10, 0.22));
 }
 
 .playButton {
@@ -893,11 +743,6 @@
 }
 
 @media (max-width: 1320px) {
-  .page {
-    --page-margin: 16px;
-    --section-gap: 16px;
-  }
-
   .header {
     grid-template-columns: 40px minmax(0, 1fr) 40px;
     padding: 0 12px;
@@ -1076,12 +921,6 @@
 }
 
 @media (max-width: 720px) {
-  .page {
-    --page-margin: 12px;
-    --section-gap: 16px;
-    grid-template-rows: minmax(0, 2.65fr) minmax(124px, 1fr);
-  }
-
   .header {
     padding: 0 8px;
   }
@@ -1161,11 +1000,6 @@
 }
 
 @media (max-width: 480px) {
-  .page {
-    --page-margin: 8px;
-    --section-gap: 16px;
-  }
-
   .brand,
   .brand img {
     width: 132px;
@@ -1233,12 +1067,6 @@
 }
 
 @media (max-height: 720px) {
-  .page {
-    --page-margin: 12px;
-    --section-gap: 16px;
-    grid-template-rows: minmax(0, 2.7fr) minmax(120px, 1fr);
-  }
-
   .playButton {
     bottom: 12px;
     height: 48px;
@@ -1261,12 +1089,6 @@
 }
 
 @media (max-height: 560px) {
-  .page {
-    --page-margin: 8px;
-    --section-gap: 16px;
-    grid-template-rows: minmax(0, 2.8fr) minmax(104px, 1fr);
-  }
-
   .playButton {
     bottom: 8px;
     height: 44px;
@@ -1289,16 +1111,6 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .page *,
-  .page *::before,
-  .page *::after {
-    scroll-behavior: auto !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
 
 /* ==========================================================================
  * Mineacle color system (see app/tokens.css)
@@ -1538,7 +1350,6 @@
  * ========================================================================== */
 .playButton,
 .page .featuredNavItem,
-.page .blockButton,
 .closeSearch,
 .topPlayerCard,
 .headerToolButton {
@@ -1595,44 +1406,6 @@
     inset 0 -1px 0 var(--mc-gold-edge);
   transform: translateY(2px);
   transition-duration: 50ms;
-}
-
-/* --- Account menu buttons (Sign in, Verify account, Sign out) ------------ */
-.page .blockButton:hover,
-.page .blockButton:focus-visible {
-  border-color: #ffffff;
-  background: #3a3a3a;
-  box-shadow:
-    inset 0 3px 0 #4a4a4a,
-    inset 0 -4px 0 #161616,
-    0 3px 0 rgba(0, 0, 0, 0.45);
-  transform: translateY(-2px);
-}
-
-.page .blockButtonPrimary:hover,
-.page .blockButtonPrimary:focus-visible {
-  background: #9450ff;
-  box-shadow:
-    inset 0 3px 0 var(--mc-purple-face),
-    inset 0 -4px 0 var(--mc-purple-deep),
-    0 3px 0 rgba(0, 0, 0, 0.45);
-}
-
-.page .blockButton:active {
-  padding-bottom: 1px;
-  border-color: #ffffff;
-  box-shadow:
-    inset 0 3px 0 #3a3a3a,
-    inset 0 -1px 0 #161616;
-  transform: translateY(3px);
-  transition-duration: 50ms;
-}
-
-.page .blockButtonPrimary:active {
-  background: var(--mc-purple);
-  box-shadow:
-    inset 0 3px 0 var(--mc-purple-face),
-    inset 0 -1px 0 var(--mc-purple-deep);
 }
 
 /* --- Search panel close (X) ----------------------------------------------- */
@@ -1701,8 +1474,6 @@
 
   .page .featuredNavItem:hover,
   .page .featuredNavItem:active,
-  .page .blockButton:hover,
-  .page .blockButton:active,
   .closeSearch:hover,
   .closeSearch:active,
   .topPlayerCard:hover,
@@ -1753,11 +1524,6 @@
 
 .panelHint {
   font-size: 10px;
-}
-
-.page .blockButton {
-  height: 38px;
-  font-size: var(--mc-menu-font);
 }
 
 .page .menuRow {
@@ -1997,30 +1763,6 @@
   margin-bottom: 4px;
 }
 
-/* Red block button */
-.page .blockButtonDanger {
-  background: var(--mc-red);
-  box-shadow:
-    inset 0 3px 0 var(--mc-red-light),
-    inset 0 -4px 0 var(--mc-red-edge);
-}
-
-.page .blockButtonDanger:hover,
-.page .blockButtonDanger:focus-visible {
-  background: var(--mc-red-hover);
-  box-shadow:
-    inset 0 3px 0 var(--mc-red-light),
-    inset 0 -4px 0 var(--mc-red-edge),
-    0 3px 0 rgba(0, 0, 0, 0.45);
-}
-
-.page .blockButtonDanger:active {
-  background: var(--mc-red);
-  box-shadow:
-    inset 0 3px 0 var(--mc-red-light),
-    inset 0 -1px 0 var(--mc-red-edge);
-}
-
 /* Account menu rows: icon column + label + optional count. */
 .page .menuList .menuRow {
   display: grid;
@@ -2093,7 +1835,7 @@
    hero keeps roughly a 16:9 shape; the cards get the rest of the width
    (never narrower than 360px). Marketplace stays the biggest card. */
 @media (min-aspect-ratio: 2/1) and (min-width: 1321px) {
-  .homePage {
+  .homePage.homePage {
     --cards-width: max(
       360px,
       calc(
@@ -2120,14 +1862,14 @@
    card peeks in underneath), then the cards stack full width, all the same
    size, in nav-menu order: Leaderboards, Vote, Marketplace. */
 @media (max-width: 720px) {
-  .homePage {
+  .homePage.homePage {
     height: auto;
     min-height: 100dvh;
     overflow: visible;
     grid-template-rows: auto auto;
   }
 
-  .homePage .heroFrame {
+  .homePage.homePage .heroFrame {
     height: max(420px, calc(100svh - 2 * var(--page-margin) - 64px));
   }
 

@@ -6,3 +6,6 @@
 .env
 .env.local
 .env.*.local
+
+# Temporary files Claude uses to copy code between machines
+.claude-transfer/

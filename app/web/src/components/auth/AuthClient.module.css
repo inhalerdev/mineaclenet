@@ -1,7 +1,7 @@
 /*
  * Account panel (log in / create account / verify), in the same game-UI
  * style as the homepage menus: black outline + grey inner ring, sunken
- * inventory-slot inputs, block buttons (from VisitorHome.module.css).
+ * inventory-slot inputs, block buttons (site/BlockButton.module.css).
  * Colors come from app/tokens.css.
  */
 .card {

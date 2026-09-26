@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
-import homeStyles from "@/components/home/VisitorHome.module.css";
+import block from "@/components/site/BlockButton.module.css";
 import { playerAvatarUrl } from "@/components/players/PlayerAvatar";
 import { mineacleIcons } from "@/shared/icons/mineacle-icons";
 import styles from "./AuthClient.module.css";
@@ -14,8 +14,8 @@ import styles from "./AuthClient.module.css";
  *   2. Verify:   run /verify <code> in game (this page polls until done)
  *   3. Password: set the website password
  *
- * Styled like the homepage menus (game-UI panel, block buttons). Must be
- * rendered inside the homepage `.page` wrapper so the block buttons apply.
+ * Styled like the homepage menus (game-UI panel, block buttons from
+ * site/BlockButton.module.css). Rendered inside the site frame's `.page`.
  */
 
 const SERVER_ADDRESS = "mineacle.net";
@@ -59,8 +59,8 @@ function formatRemaining(ms: number) {
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
 
-const blockButton = homeStyles.blockButton;
-const primaryButton = `${homeStyles.blockButton} ${homeStyles.blockButtonPrimary}`;
+const blockButton = block.button;
+const primaryButton = `${block.button} ${block.primary}`;
 
 export function AuthClient({
   initialMode = "login",

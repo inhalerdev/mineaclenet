@@ -9,6 +9,7 @@ import {
 import type { Viewer } from "@/features/auth/types";
 import { homeContent } from "@/features/home/home-content";
 import { mineacleIcons } from "@/shared/icons/mineacle-icons";
+import frame from "@/components/site/SiteFrame.module.css";
 import styles from "./VisitorHome.module.css";
 
 const SERVER_ADDRESS = "mineacle.net";
@@ -289,17 +290,17 @@ export function VisitorHome({
       : "idle";
 
   return (
-    <div className={`${styles.page} ${styles.homePage}`}>
-      <section className={styles.heroFrame}>
+    <div className={`${frame.page} ${styles.page} ${styles.homePage}`}>
+      <section className={`${frame.heroFrame} ${styles.heroFrame}`}>
         <SiteHeader
           viewer={viewer}
           topPlayers={topPlayers}
           currentPath="/"
         />
 
-        <div className={styles.hero}>
+        <div className={frame.hero}>
           <video
-            className={styles.heroVideo}
+            className={frame.heroVideo}
             autoPlay
             loop
             muted
@@ -310,7 +311,7 @@ export function VisitorHome({
           >
             <source src={homeContent.hero.media} type="video/mp4" />
           </video>
-          <div className={styles.heroShade} aria-hidden="true" />
+          <div className={frame.heroShade} aria-hidden="true" />
 
           <button
             className={styles.playButton}

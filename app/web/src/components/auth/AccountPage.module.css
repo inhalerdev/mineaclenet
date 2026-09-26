@@ -1,5 +1,5 @@
 /*
- * Account pages layout. Builds on the homepage frame (VisitorHome.module.css):
+ * Account pages layout. Builds on the shared page frame (site/SiteFrame.module.css):
  * one full-height framed hero instead of hero + quick links.
  */
 .page.page {

@@ -11,6 +11,7 @@ import {
   mineacleIcons,
   mineacleNavIcons,
 } from "@/shared/icons/mineacle-icons";
+import block from "@/components/site/BlockButton.module.css";
 import styles from "./VisitorHome.module.css";
 
 /*
@@ -473,13 +474,13 @@ export function SiteHeader({
                     Player account
                   </span>
                   <a
-                    className={`${styles.blockButton} ${styles.blockButtonPrimary}`}
+                    className={`${block.button} ${block.primary}`}
                     href="/login"
                   >
                     Sign in
                   </a>
                   <a
-                    className={styles.blockButton}
+                    className={block.button}
                     href="/register"
                   >
                     Verify account
@@ -556,7 +557,7 @@ export function SiteHeader({
                   </nav>
 
                   <button
-                    className={`${styles.blockButton} ${styles.blockButtonDanger}`}
+                    className={`${block.button} ${block.danger}`}
                     type="button"
                     onClick={logout}
                     disabled={loggingOut}
