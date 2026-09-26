@@ -1,63 +1,124 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import block from "@/components/site/BlockButton.module.css";
+import styles from "./AccountSettings.module.css";
 
-export function AccountSecurity({
-  sessionCount,
-}: {
-  sessionCount: number;
-}) {
+type Message = { tone: "ok" | "error"; text: string } | null;
+
+/* Change password card on /profile. Changing it logs out every other
+   browser (the server revokes their sessions). */
+export function PasswordCard() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [busy, setBusy] = useState<"password" | "sessions" | "">("");
+  const [message, setMessage] = useState<Message>(null);
+  const [busy, setBusy] = useState(false);
 
   async function changePassword(event: FormEvent) {
     event.preventDefault();
 
     if (newPassword !== confirmPassword) {
-      setMessage("New passwords do not match");
+      setMessage({ tone: "error", text: "New passwords don't match" });
       return;
     }
 
-    setBusy("password");
-    setMessage("");
+    setBusy(true);
+    setMessage(null);
 
     try {
       const response = await fetch("/api/account/password", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          currentPassword,
-          newPassword,
-        }),
+        body: JSON.stringify({ currentPassword, newPassword }),
       });
 
       const data = (await response.json()) as { error?: string };
 
       if (!response.ok) {
-        setMessage(data.error || "Unable to change password");
+        setMessage({ tone: "error", text: data.error || "Unable to change password" });
         return;
       }
 
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
-      setMessage("Password changed. Other sessions were revoked");
+      setMessage({ tone: "ok", text: "Password changed. Other browsers were logged out." });
     } catch {
-      setMessage("Unable to connect to Mineacle");
+      setMessage({ tone: "error", text: "Unable to connect to Mineacle" });
     } finally {
-      setBusy("");
+      setBusy(false);
     }
   }
+
+  return (
+    <section className={styles.card} aria-labelledby="account-password">
+      <h2 id="account-password">Change password</h2>
+      <p className={styles.cardText}>At least 10 characters. Other browsers will be logged out.</p>
+
+      <form className={styles.form} onSubmit={changePassword}>
+        <label className={styles.field}>
+          <span>Current password</span>
+          <input
+            autoComplete="current-password"
+            type="password"
+            value={currentPassword}
+            onChange={(event) => setCurrentPassword(event.target.value)}
+            required
+          />
+        </label>
+
+        <label className={styles.field}>
+          <span>New password</span>
+          <input
+            autoComplete="new-password"
+            minLength={10}
+            maxLength={128}
+            type="password"
+            value={newPassword}
+            onChange={(event) => setNewPassword(event.target.value)}
+            required
+          />
+        </label>
+
+        <label className={styles.field}>
+          <span>Confirm new password</span>
+          <input
+            autoComplete="new-password"
+            minLength={10}
+            maxLength={128}
+            type="password"
+            value={confirmPassword}
+            onChange={(event) => setConfirmPassword(event.target.value)}
+            required
+          />
+        </label>
+
+        {message ? (
+          <p className={styles.message} data-tone={message.tone} role={message.tone === "error" ? "alert" : "status"}>
+            {message.text}
+          </p>
+        ) : null}
+
+        <button className={`${block.button} ${block.primary}`} disabled={busy} type="submit">
+          {busy ? "Updating..." : "Change password"}
+        </button>
+      </form>
+    </section>
+  );
+}
+
+/* Active sessions card on /profile, with "Log out everywhere". */
+export function SessionsCard({ sessionCount }: { sessionCount: number }) {
+  const [message, setMessage] = useState("");
+  const [busy, setBusy] = useState(false);
 
   async function revokeSessions() {
     if (busy) {
       return;
     }
 
-    setBusy("sessions");
+    setBusy(true);
     setMessage("");
 
     try {
@@ -67,7 +128,7 @@ export function AccountSecurity({
 
       if (!response.ok) {
         const data = (await response.json()) as { error?: string };
-        setMessage(data.error || "Unable to revoke sessions");
+        setMessage(data.error || "Unable to log out everywhere");
         return;
       }
 
@@ -75,77 +136,33 @@ export function AccountSecurity({
     } catch {
       setMessage("Unable to connect to Mineacle");
     } finally {
-      setBusy("");
+      setBusy(false);
     }
   }
 
   return (
-    <section className="account-security">
-      <div className="account-security__section">
-        <small>SECURITY</small>
-        <h2>Change password</h2>
+    <section className={styles.card} aria-labelledby="account-sessions">
+      <h2 id="account-sessions">Sessions</h2>
+      <p className={styles.cardText}>
+        You&apos;re logged in on <b>{sessionCount}</b> browser{sessionCount === 1 ? "" : "s"}.
+        Lost a device or used a shared computer? Log out of all of them,
+        including this one.
+      </p>
 
-        <form onSubmit={changePassword}>
-          <label>
-            Current password
-            <input
-              autoComplete="current-password"
-              type="password"
-              value={currentPassword}
-              onChange={(event) => setCurrentPassword(event.target.value)}
-              required
-            />
-          </label>
-
-          <label>
-            New password
-            <input
-              autoComplete="new-password"
-              minLength={10}
-              maxLength={128}
-              type="password"
-              value={newPassword}
-              onChange={(event) => setNewPassword(event.target.value)}
-              required
-            />
-          </label>
-
-          <label>
-            Confirm new password
-            <input
-              autoComplete="new-password"
-              minLength={10}
-              maxLength={128}
-              type="password"
-              value={confirmPassword}
-              onChange={(event) => setConfirmPassword(event.target.value)}
-              required
-            />
-          </label>
-
-          <button disabled={Boolean(busy)} type="submit">
-            {busy === "password" ? "Updating..." : "Change password"}
-          </button>
-        </form>
-      </div>
-
-      <div className="account-security__section">
-        <small>SESSIONS</small>
-        <h2>{sessionCount} active session{sessionCount === 1 ? "" : "s"}</h2>
-        <p>
-          Revoke every browser session for this account, including this one.
+      {message ? (
+        <p className={styles.message} data-tone="error" role="alert">
+          {message}
         </p>
-        <button
-          className="is-secondary"
-          disabled={Boolean(busy)}
-          onClick={revokeSessions}
-          type="button"
-        >
-          {busy === "sessions" ? "Revoking..." : "Log out everywhere"}
-        </button>
-      </div>
+      ) : null}
 
-      {message ? <p className="account-security__message">{message}</p> : null}
+      <button
+        className={`${block.button} ${block.danger}`}
+        disabled={busy}
+        onClick={revokeSessions}
+        type="button"
+      >
+        {busy ? "Logging out..." : "Log out everywhere"}
+      </button>
     </section>
   );
 }

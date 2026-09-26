@@ -1,0 +1,322 @@
+/*
+ * Your account page (/profile): AccountSettingsPage.tsx and the password /
+ * sessions cards in AccountSecurity.tsx. Inside the shared content layout
+ * (site/FramedPage); tags and stat tiles come from site/ContentPage.
+ *
+ * Rules on links and inputs start with a parent class so they beat the
+ * page's font reset in SiteFrame.module.css (.page a { font: inherit }).
+ */
+
+/* --- Head, name and buttons ------------------------------------------------ */
+.header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 24px;
+}
+
+.head {
+  width: 116px;
+  height: 116px;
+  padding: 5px;
+  border: 2px solid var(--mc-outline);
+  background: #3a3a3a;
+  box-shadow:
+    inset 0 0 0 1px #4a4a4a,
+    5px 6px 0 rgba(0, 0, 0, 0.35);
+  image-rendering: pixelated;
+}
+
+.identity {
+  min-width: 0;
+  display: grid;
+  justify-items: start;
+}
+
+.identity h1 {
+  max-width: 100%;
+  margin: 16px 0 8px;
+  overflow: hidden;
+  color: #ffffff;
+  font-size: clamp(30px, 3vw, 44px);
+  font-weight: 400;
+  line-height: 1.05;
+  text-overflow: ellipsis;
+  text-shadow: 3px 3px 0 #000000;
+  white-space: nowrap;
+}
+
+.identity p {
+  margin: 0;
+  color: var(--mc-text-muted);
+  font-size: 13px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.actions > * {
+  min-width: 132px;
+  white-space: nowrap;
+}
+
+/* --- Stat tiles (each opens its page) -------------------------------------- */
+.stats.stats {
+  margin: 0;
+}
+
+.stats .statLink {
+  display: flex;
+  color: inherit;
+  transition: transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.statLink dl {
+  flex: 1;
+  display: flex;
+  margin: 0;
+}
+
+.statLink dl > div {
+  flex: 1;
+}
+
+.stats .statLink:hover,
+.stats .statLink:focus-visible {
+  outline: 0;
+  transform: translateY(-2px);
+}
+
+.stats .statLink:hover dl > div,
+.stats .statLink:focus-visible dl > div {
+  box-shadow:
+    inset 0 0 0 2px #ffffff,
+    inset 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+/* --- Settings cards -------------------------------------------------------- */
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+}
+
+.side {
+  display: grid;
+  gap: 16px;
+}
+
+.card {
+  display: grid;
+  justify-items: start;
+  gap: 14px;
+  padding: 20px;
+  border: 2px solid var(--mc-outline);
+  background: #222222;
+  box-shadow:
+    inset 0 2px 0 #2e2e2e,
+    inset 0 -4px 0 #181818;
+}
+
+.card h2 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.cardText {
+  max-width: 60ch;
+  margin: -4px 0 0;
+  color: var(--mc-text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.cardText b {
+  color: #ffffff;
+  font-weight: 400;
+}
+
+.card > button,
+.form > button {
+  min-width: 180px;
+}
+
+/* Password form: inventory-slot inputs, same as the login panel. */
+.form {
+  width: 100%;
+  display: grid;
+  justify-items: start;
+  gap: 14px;
+}
+
+.field {
+  width: 100%;
+  display: grid;
+  gap: 8px;
+}
+
+.field > span {
+  color: var(--mc-text-muted);
+  font-size: 12px;
+  line-height: 1;
+}
+
+.form .field input {
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 0;
+  outline: none;
+  background: #111111;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 3px 3px 0 0 #0a0a0a,
+    inset -3px -3px 0 0 #2e2e2e;
+  color: #ffffff;
+  font-size: 14px;
+  transition: box-shadow 140ms ease;
+}
+
+.form .field input:focus {
+  box-shadow:
+    inset 0 0 0 2px #ffffff,
+    inset 4px 4px 0 0 #0a0a0a,
+    inset -4px -4px 0 0 #2e2e2e;
+}
+
+.form .field input:-webkit-autofill,
+.form .field input:-webkit-autofill:hover,
+.form .field input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #ffffff;
+  caret-color: #ffffff;
+  -webkit-box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 0 0 100px #111111;
+}
+
+/* Result line under a form: green for done, red for a problem. */
+.message {
+  width: 100%;
+  margin: 0;
+  padding: 10px 12px;
+  background: rgba(17, 252, 123, 0.08);
+  box-shadow: inset 0 0 0 2px rgba(17, 252, 123, 0.35);
+  color: var(--mc-live);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.message[data-tone="error"] {
+  background: rgba(195, 48, 43, 0.14);
+  box-shadow: inset 0 0 0 2px rgba(232, 103, 95, 0.4);
+  color: var(--mc-red-light);
+}
+
+/* Linked account details. */
+.details {
+  width: 100%;
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+
+.details > div {
+  display: grid;
+  gap: 6px;
+}
+
+.details dt {
+  color: var(--mc-text-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.details dd {
+  margin: 0;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.details .uuid {
+  font-size: 12px;
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
+/* ==========================================================================
+ * Screen sizes
+ * ========================================================================== */
+@media (max-width: 960px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .header {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 16px 18px;
+  }
+
+  .head {
+    width: 76px;
+    height: 76px;
+    padding: 4px;
+  }
+
+  .identity h1 {
+    margin-top: 12px;
+    font-size: 26px;
+  }
+
+  .actions {
+    grid-column: 1 / -1;
+  }
+
+  .actions > * {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  /* Stat tiles in one row. */
+  .stats.stats {
+    display: grid;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    gap: 6px;
+  }
+
+  .statLink dl > div {
+    min-width: 0;
+    padding: 9px 8px 10px;
+  }
+
+  .statLink dd {
+    font-size: 15px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .card > button,
+  .form > button {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stats .statLink:hover,
+  .stats .statLink:focus-visible {
+    transform: none;
+  }
+}

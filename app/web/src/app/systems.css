@@ -21,8 +21,7 @@
   background: #171717;
 }
 
-.system-card.is-wide,
-.profile-account-card {
+.system-card.is-wide {
   width: min(1180px, 100%);
   margin: 0 auto;
 }
@@ -40,8 +39,7 @@
 }
 
 .system-page-header small,
-.system-card > small,
-.account-security__section > small {
+.system-card > small {
   color: #b078ff;
   font-size: 11px;
   font-weight: 600;
@@ -68,10 +66,7 @@
 }
 
 /* Generic interactive controls */
-.system-inline-action,
-.profile-account-actions > a,
-.profile-logout,
-.account-security button {
+.system-inline-action {
   min-height: 40px;
   display: inline-flex;
   align-items: center;
@@ -93,31 +88,15 @@
     box-shadow var(--ease-fast);
 }
 
-.system-inline-action:hover,
-.profile-account-actions > a:hover,
-.profile-logout:hover:not(:disabled),
-.account-security button:hover:not(:disabled) {
+.system-inline-action:hover {
   border-color: rgba(248, 248, 248, 0.18);
   background: #262626;
   color: #ffffff;
   transform: none;
 }
 
-.system-inline-action:active,
-.profile-account-actions > a:active,
-.profile-logout:active:not(:disabled),
-.account-security button:active:not(:disabled) {
+.system-inline-action:active {
   transform: none;
-}
-
-.profile-logout {
-  height: 40px;
-}
-
-.profile-logout:disabled,
-.account-security button:disabled {
-  opacity: 0.55;
-  cursor: default;
 }
 
 .leaderboard-avatar {
@@ -273,168 +252,6 @@
   line-height: 1.45;
 }
 
-/* ============================================================
-   Account profile / security
-   ============================================================ */
-
-.profile-account-card {
-  padding: 0;
-  border: 0;
-  background: transparent;
-}
-
-.profile-account-actions {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-}
-
-.profile-account-stats {
-  display: grid;
-  grid-template-columns: 1.6fr repeat(3, 1fr);
-  margin: 16px 0 0;
-  overflow: hidden;
-  border: 1px solid rgba(248, 248, 248, 0.10);
-  border-radius: 8px;
-  background: #171717;
-  gap: 0;
-}
-
-.profile-account-stats > div {
-  min-width: 0;
-  padding: 16px;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-}
-
-.profile-account-stats > div + div {
-  border-left: 1px solid rgba(248, 248, 248, 0.08);
-}
-
-.profile-account-stats > div:hover {
-  background: #1d1d1d;
-}
-
-.profile-account-stats dt {
-  color: #888888;
-  font-size: 10px;
-  font-weight: 600;
-}
-
-.profile-account-stats dd {
-  margin: 6px 0 0;
-  overflow: hidden;
-  color: #f8f8f8;
-  font-size: 12px;
-  font-weight: 600;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.account-security {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  margin-top: 16px;
-  gap: 12px;
-}
-
-.account-security__section {
-  padding: 20px;
-  border: 1px solid rgba(248, 248, 248, 0.10);
-  border-radius: 8px;
-  background: #171717;
-}
-
-.account-security__section h2 {
-  margin: 6px 0 0;
-  color: #f8f8f8;
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.account-security__section p {
-  max-width: 52ch;
-  margin: 8px 0 0;
-  color: #888888;
-  font-size: 11px;
-  line-height: 1.5;
-}
-
-.account-security form {
-  display: grid;
-  margin-top: 16px;
-  gap: 10px;
-}
-
-.account-security label {
-  display: grid;
-  color: #bbbbbb;
-  font-size: 11px;
-  font-weight: 500;
-  gap: 6px;
-}
-
-.account-security input {
-  min-height: 40px;
-  padding: 0 12px;
-  border: 1px solid rgba(248, 248, 248, 0.10);
-  border-radius: 4px;
-  background: #111111;
-  color: #f8f8f8;
-  caret-color: #d0afff;
-}
-
-.account-security input:focus {
-  border-color: rgba(176, 120, 255, 0.60);
-  background: #111111;
-  box-shadow: none;
-}
-
-.account-security button {
-  width: fit-content;
-  margin-top: 4px;
-}
-
-.account-security button.is-secondary {
-  margin-top: 14px;
-}
-
-.account-security__message {
-  grid-column: 1 / -1;
-  margin: 0;
-  padding: 11px 13px;
-  border: 1px solid rgba(176, 120, 255, 0.20);
-  border-radius: 4px;
-  background: #1d1d1d;
-  color: #d0afff;
-  font-size: 11px;
-}
-
-/* ============================================================
-   Responsive
-   ============================================================ */
-
-@media (max-width: 1000px) {
-  
-
-  .profile-account-stats {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .profile-account-stats > div:nth-child(odd) {
-    border-left: 0;
-  }
-
-  .profile-account-stats > div:nth-child(n + 3) {
-    border-top: 1px solid rgba(248, 248, 248, 0.08);
-  }
-
-  .account-security {
-    grid-template-columns: 1fr;
-  }
-}
-
 @media (max-width: 800px) {
   .system-page {
     width: 100%;
@@ -485,14 +302,7 @@
 
   
 
-  .profile-account-stats {
-    grid-template-columns: 1fr;
-  }
-
-  .profile-account-stats > div + div {
-    border-top: 1px solid rgba(248, 248, 248, 0.08);
-    border-left: 0;
-  }
+  
 
   
 
@@ -500,8 +310,7 @@
 
   
 
-  .profile-account-actions {
-    width: 100%;
-    flex-wrap: wrap;
-  }
+  
+
+  
 }

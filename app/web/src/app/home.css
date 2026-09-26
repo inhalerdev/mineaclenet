@@ -855,17 +855,6 @@
   word-break: break-all;
 }
 
-.profile-logout {
-  min-height: 35px;
-  margin-top: 16px;
-  padding: 0 12px;
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 6px;
-  background: #222222;
-  color: #bbbbbb;
-  font-size: 8px;
-}
-
 .follow-form {
   display: grid;
   grid-template-columns: minmax(0,1fr) auto;

@@ -39,8 +39,6 @@
 
 .system-card,
 .system-page-header,
-.profile-account-stats,
-.account-security__section,
 .system-following-list,
 .notification-list,
 .system-empty {
@@ -54,7 +52,6 @@
  * Parent containers that only organize modules must stay transparent.
  * This prevents "container inside container inside container" card soup.
  */
-.profile-account-card,
 .system-card.is-wide {
   border: 0;
   border-radius: 0;
@@ -62,8 +59,6 @@
   box-shadow: none;
 }
 
-.profile-account-stats,
-.account-security,
 .system-following-list,
 .system-notification-list {
   margin-top: var(--module-gap);
@@ -95,23 +90,9 @@
    ------------------------------------------------------------ */
 
 .system-inline-action,
-.profile-account-actions > a,
-.profile-logout,
-.account-security button,
 .mobile-menu-button,
 .mobile-account-button {
   border-radius: var(--module-control-radius);
-}
-
-/* ------------------------------------------------------------
-   Account segmented data surface
-   One module, internal sections divided rather than individually carded.
-   ------------------------------------------------------------ */
-
-.profile-account-stats > div {
-  border-radius: 0;
-  box-shadow: none;
-  background: transparent;
 }
 
 /* ------------------------------------------------------------
@@ -129,8 +110,6 @@
     padding: 18px;
   }
 
-  .profile-account-stats,
-  .account-security,
   .system-following-list,
   .system-notification-list {
     margin-top: var(--module-gap);
@@ -138,8 +117,7 @@
 }
 
 @media (max-width: 560px) {
-  .system-page-header,
-  .account-security__section {
+  .system-page-header {
     padding: 16px;
   }
 }
