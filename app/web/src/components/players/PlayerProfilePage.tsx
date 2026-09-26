@@ -12,6 +12,7 @@ import {
   timeAgo,
 } from "@/features/players/profile-format";
 import type { PlayerProfile } from "@/features/players/types";
+import { withReturnPath } from "@/shared/navigation/return-path";
 import styles from "./PlayerProfilePage.module.css";
 
 /*
@@ -127,7 +128,7 @@ export function PlayerProfilePage({
                 initialFollowing={following}
               />
             ) : (
-              <a className={block.button} href="/login">
+              <a className={block.button} href={withReturnPath("/login", `/player/${encodeURIComponent(player.username)}`)}>
                 Log in to follow
               </a>
             )}

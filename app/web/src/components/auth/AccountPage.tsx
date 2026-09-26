@@ -11,19 +11,26 @@ import { getTopPlayers } from "@/features/players/top-players";
  * The account panel sits in the middle of the shared inner-page layout
  * (site/FramedPage.tsx).
  */
-export async function AccountPage({ mode }: { mode: AuthMode }) {
+export async function AccountPage({
+  mode,
+  returnTo = "/",
+}: {
+  mode: AuthMode;
+  /* Where to go after logging in (already checked with safeReturnPath). */
+  returnTo?: string;
+}) {
   const [viewer, topPlayers] = await Promise.all([
     getCurrentViewer(),
     getTopPlayers(),
   ]);
 
   if (viewer) {
-    redirect("/");
+    redirect(returnTo);
   }
 
   return (
     <AccountShell mode={mode} topPlayers={topPlayers}>
-      <AuthClient initialMode={mode} />
+      <AuthClient initialMode={mode} returnTo={returnTo} />
     </AccountShell>
   );
 }

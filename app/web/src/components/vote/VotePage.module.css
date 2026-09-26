@@ -97,6 +97,54 @@
   font-size: 14px;
 }
 
+/* --- Logged out: "Log in to vote" box ----------------------------------- */
+.locked {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 20px;
+  padding: 22px 24px;
+  border: 2px solid var(--mc-outline);
+  background:
+    radial-gradient(circle at 0% 50%, rgba(132, 54, 254, 0.14), transparent 45%),
+    #222222;
+  box-shadow:
+    inset 0 2px 0 #2e2e2e,
+    inset 0 -4px 0 #181818;
+}
+
+.locked > img {
+  width: 40px;
+  height: 40px;
+  image-rendering: pixelated;
+}
+
+.locked h2 {
+  margin: 0 0 6px;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.locked p {
+  max-width: 60ch;
+  margin: 0;
+  color: var(--mc-text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.lockedActions {
+  display: flex;
+  gap: 10px;
+}
+
+.lockedActions a {
+  min-width: 132px;
+  white-space: nowrap;
+}
+
 /* --- How it works ---------------------------------------------------------- */
 .how h2 {
   margin: 0 0 16px;
@@ -182,7 +230,31 @@
   }
 }
 
+@media (max-width: 760px) {
+  .locked {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .lockedActions {
+    grid-column: 1 / -1;
+  }
+
+  .lockedActions a {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
 @media (max-width: 560px) {
+  .locked {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 18px;
+  }
+
+  .locked > img {
+    display: none;
+  }
+
   /* Button goes full width under the reward. */
   .site {
     grid-template-columns: 32px minmax(0, 1fr);

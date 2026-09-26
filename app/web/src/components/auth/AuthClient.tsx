@@ -4,6 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import block from "@/components/site/BlockButton.module.css";
 import { playerAvatarUrl } from "@/components/players/PlayerAvatar";
 import { mineacleIcons } from "@/shared/icons/mineacle-icons";
+import { withReturnPath } from "@/shared/navigation/return-path";
 import styles from "./AuthClient.module.css";
 
 /*
@@ -31,6 +32,9 @@ export type AuthMode = "login" | "create";
 
 type AuthClientProps = {
   initialMode?: AuthMode;
+  /* Page to open after logging in; must already be checked with
+     safeReturnPath (shared/navigation/return-path.ts). */
+  returnTo?: string;
   onAuthenticated?: () => void | Promise<void>;
 };
 
@@ -64,6 +68,7 @@ const primaryButton = `${block.button} ${block.primary}`;
 
 export function AuthClient({
   initialMode = "login",
+  returnTo = "/",
   onAuthenticated,
 }: AuthClientProps = {}) {
   const [mode, setMode] = useState<AuthMode>(initialMode);
@@ -86,7 +91,7 @@ export function AuthClient({
       return;
     }
 
-    window.location.replace("/");
+    window.location.replace(returnTo);
   }
 
   // Poll until the player has run /verify in game.
@@ -281,7 +286,7 @@ export function AuthClient({
     const path = next === "create" ? "/register" : "/login";
 
     if (!onAuthenticated && window.location.pathname !== path) {
-      window.history.replaceState(null, "", path);
+      window.history.replaceState(null, "", withReturnPath(path, returnTo));
       document.title =
         next === "create" ? "Create account | Mineacle" : "Log in | Mineacle";
     }

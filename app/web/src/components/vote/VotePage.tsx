@@ -7,11 +7,13 @@ import type { HomeLeaderboardPlayer } from "@/components/site/SiteHeader";
 import type { Viewer } from "@/features/auth/types";
 import { voteReward, voteSites } from "@/features/vote/vote-sites";
 import { mineacleIcons, mineacleNavIcons } from "@/shared/icons/mineacle-icons";
+import { withReturnPath } from "@/shared/navigation/return-path";
 import styles from "./VotePage.module.css";
 
 /*
  * Vote & Rewards (/vote): intro with the daily numbers, one card per vote
  * site (from features/vote/vote-sites.ts), then how the keys work.
+ * Logged-out visitors get a "Log in to vote" box instead of the sites.
  */
 export function VotePage({
   viewer,
@@ -56,20 +58,16 @@ export function VotePage({
                 <img src={mineacleIcons.crate} alt="" />
                 Up to {voteSites.length}
               </StatTile>
-              <StatTile label={viewer ? "Voting as" : "Vote with"}>
-                {viewer ? (
-                  <>
-                    <img
-                      src={playerAvatarUrl(viewer.uuid, 40)}
-                      alt=""
-                      referrerPolicy="no-referrer"
-                    />
-                    <span>{viewer.username}</span>
-                  </>
-                ) : (
-                  <span>Your name</span>
-                )}
-              </StatTile>
+              {viewer ? (
+                <StatTile label="Voting as">
+                  <img
+                    src={playerAvatarUrl(viewer.uuid, 40)}
+                    alt=""
+                    referrerPolicy="no-referrer"
+                  />
+                  <span>{viewer.username}</span>
+                </StatTile>
+              ) : null}
             </dl>
           }
         >
@@ -77,30 +75,54 @@ export function VotePage({
           a <b>{voteReward}</b> in-game.
         </PageIntro>
 
-        <ol className={styles.sites} aria-label="Vote sites">
-          {voteSites.map((site, index) => (
-            <li className={styles.site} key={site.id}>
-              <span className={styles.siteNumber}>{index + 1}</span>
-              <div className={styles.siteName}>
-                <strong>{site.name}</strong>
-                <small>{site.domain}</small>
-              </div>
-              <p className={styles.siteReward}>
-                <img src={mineacleIcons.crate} alt="" />
-                +1 {voteReward}
+        {viewer ? (
+          <ol className={styles.sites} aria-label="Vote sites">
+            {voteSites.map((site, index) => (
+              <li className={styles.site} key={site.id}>
+                <span className={styles.siteNumber}>{index + 1}</span>
+                <div className={styles.siteName}>
+                  <strong>{site.name}</strong>
+                  <small>{site.domain}</small>
+                </div>
+                <p className={styles.siteReward}>
+                  <img src={mineacleIcons.crate} alt="" />
+                  +1 {voteReward}
+                </p>
+                <a
+                  className={`${block.button} ${block.green} ${styles.voteButton}`}
+                  href={site.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Vote now
+                  <span className={content.srOnly}> on {site.name} (opens in a new tab)</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <section className={styles.locked} aria-labelledby="vote-login">
+            <img src={mineacleIcons.crate} alt="" />
+            <div>
+              <h2 id="vote-login">Log in to vote</h2>
+              <p>
+                Your {voteReward}s go to the Minecraft account linked to your
+                Mineacle login, so log in first to see the vote sites.
               </p>
+            </div>
+            <div className={styles.lockedActions}>
               <a
-                className={`${block.button} ${block.green} ${styles.voteButton}`}
-                href={site.href}
-                target="_blank"
-                rel="noopener noreferrer"
+                className={`${block.button} ${block.primary}`}
+                href={withReturnPath("/login", "/vote")}
               >
-                Vote now
-                <span className={content.srOnly}> on {site.name} (opens in a new tab)</span>
+                Log in
               </a>
-            </li>
-          ))}
-        </ol>
+              <a className={block.button} href={withReturnPath("/register", "/vote")}>
+                Create account
+              </a>
+            </div>
+          </section>
+        )}
 
         <section className={styles.how} aria-labelledby="vote-how">
           <h2 id="vote-how">How it works</h2>
