@@ -1,108 +1,11 @@
 /*
- * Vote & Rewards page (see VotePage.tsx). Sits inside the shared inner-page
- * layout (site/FramedPage). Same block recipe as the rest of the site:
+ * Vote & Rewards page (see VotePage.tsx): the vote site cards and How it
+ * works. The intro and stat tiles are shared (site/ContentPage.module.css).
+ * Same block recipe as the rest of the site:
  * colored face, light top edge, dark bottom edge, black outline, square
  * corners. Colors come from app/tokens.css; the Vote now buttons are
  * site/BlockButton.module.css (green).
  */
-.vote {
-  min-width: 0;
-  display: grid;
-  gap: 32px;
-}
-
-/* --- Intro ----------------------------------------------------------------- */
-.intro {
-  display: grid;
-  justify-items: start;
-}
-
-.tag {
-  padding: 5px 8px 7px;
-  background: var(--mc-gold);
-  box-shadow:
-    inset 0 2px 0 var(--mc-gold-light),
-    inset 0 -3px 0 var(--mc-gold-edge),
-    0 0 0 2px var(--mc-outline);
-  color: var(--mc-gold-text);
-  font-size: 11px;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.intro h1 {
-  margin: 18px 0 12px;
-  color: #ffffff;
-  font-size: clamp(30px, 3vw, 44px);
-  font-weight: 400;
-  line-height: 1.05;
-  text-shadow: 3px 3px 0 #000000;
-}
-
-.intro p {
-  max-width: 60ch;
-  margin: 0;
-  color: #e6e6e6;
-  font-size: 15px;
-  line-height: 1.5;
-}
-
-.intro p b {
-  color: var(--mc-gold-light);
-  font-weight: 400;
-}
-
-/* Stat tiles: same as the homepage hero's. */
-.stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 22px 0 0;
-}
-
-.stat {
-  min-width: 140px;
-  display: flex;
-  flex-direction: column-reverse;
-  gap: 8px;
-  padding: 10px 14px 12px;
-  background: rgba(17, 17, 17, 0.78);
-  box-shadow:
-    inset 0 0 0 2px var(--mc-outline),
-    inset 0 0 0 3px rgba(255, 255, 255, 0.1);
-}
-
-.stat dt {
-  color: var(--mc-text-muted);
-  font-size: 11px;
-  line-height: 1.2;
-  text-transform: uppercase;
-}
-
-.stat dd {
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0;
-  color: #ffffff;
-  font-size: 18px;
-  line-height: 1;
-  white-space: nowrap;
-}
-
-.stat dd span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.stat dd img {
-  width: 20px;
-  height: 20px;
-  flex: 0 0 20px;
-  object-fit: contain;
-  image-rendering: pixelated;
-}
 
 /* --- Vote site cards ------------------------------------------------------- */
 .sites {
@@ -194,15 +97,6 @@
   font-size: 14px;
 }
 
-.srOnly {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
 /* --- How it works ---------------------------------------------------------- */
 .how h2 {
   margin: 0 0 16px;
@@ -289,40 +183,6 @@
 }
 
 @media (max-width: 560px) {
-  .vote {
-    gap: 24px;
-  }
-
-  .intro h1 {
-    font-size: 30px;
-  }
-
-  .intro p {
-    font-size: 13px;
-  }
-
-  .stats {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 6px;
-  }
-
-  .stat {
-    min-width: 0;
-    padding: 9px 8px 10px;
-  }
-
-  .stat dd {
-    font-size: 15px;
-  }
-
-  .stat dd img {
-    width: 16px;
-    height: 16px;
-    flex-basis: 16px;
-  }
-
   /* Button goes full width under the reward. */
   .site {
     grid-template-columns: 32px minmax(0, 1fr);

@@ -1,82 +1,13 @@
 /*
- * Public records page (see PunishmentsPage.tsx), inside the shared
- * inner-page layout (site/FramedPage). Same block recipe as the rest of
- * the site. Colors come from app/tokens.css.
+ * Public records page (see PunishmentsPage.tsx): search box and records
+ * table. The intro, count tile, filter tabs and empty box are shared
+ * (site/ContentPage.module.css). Colors come from app/tokens.css.
  *
  *   Desktop: a table (Player, Type, Reason, Staff, Date, Length).
  *   Phones:  each record becomes a card.
  */
 .records {
   --columns: 190px 118px minmax(0, 1fr) 130px 150px 96px;
-
-  min-width: 0;
-  display: grid;
-  gap: 20px;
-}
-
-/* --- Intro ----------------------------------------------------------------- */
-.intro {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px;
-}
-
-.tag {
-  display: inline-block;
-  padding: 5px 8px 7px;
-  background: var(--mc-red);
-  box-shadow:
-    inset 0 2px 0 var(--mc-red-light),
-    inset 0 -3px 0 var(--mc-red-edge),
-    0 0 0 2px var(--mc-outline);
-  color: #ffffff;
-  font-size: 11px;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.intro h1 {
-  margin: 18px 0 12px;
-  color: #ffffff;
-  font-size: clamp(30px, 3vw, 44px);
-  font-weight: 400;
-  line-height: 1.05;
-  text-shadow: 3px 3px 0 #000000;
-}
-
-.intro p {
-  margin: 0;
-  color: #e6e6e6;
-  font-size: 15px;
-  line-height: 1.5;
-}
-
-/* Record count, same look as the stat tiles. */
-.intro .total {
-  min-width: 140px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 10px 14px 12px;
-  background: rgba(17, 17, 17, 0.78);
-  box-shadow:
-    inset 0 0 0 2px var(--mc-outline),
-    inset 0 0 0 3px rgba(255, 255, 255, 0.1);
-}
-
-.total strong {
-  color: #ffffff;
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 1;
-}
-
-.total span {
-  color: var(--mc-text-muted);
-  font-size: 11px;
-  line-height: 1.2;
-  text-transform: uppercase;
 }
 
 /* --- Search and filters ---------------------------------------------------- */
@@ -137,57 +68,6 @@
 .filters .search button {
   height: 36px;
   flex: 0 0 auto;
-}
-
-/* Type and status filters: small tabs; the chosen one is lit. */
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-}
-
-.chips .chip {
-  height: 32px;
-  display: inline-flex;
-  align-items: center;
-  padding: 0 12px 2px;
-  background: #1c1c1c;
-  box-shadow:
-    inset 0 0 0 2px var(--mc-outline),
-    inset 0 -3px 0 #111111;
-  color: #cfcfcf;
-  font-size: 12px;
-  line-height: 1;
-  transition:
-    background-color var(--motion),
-    color var(--motion);
-}
-
-.chips .chip:hover,
-.chips .chip:focus-visible {
-  background: #2b2b2b;
-  color: #ffffff;
-}
-
-.chips .chip[aria-current="true"] {
-  background: #3a3a3a;
-  box-shadow:
-    inset 0 0 0 2px var(--mc-outline),
-    inset 0 2px 0 #4a4a4a,
-    inset 0 -3px 0 #1f1f1f;
-  color: #ffffff;
-}
-
-.chips .clear {
-  margin-left: 6px;
-  color: var(--mc-red-light);
-  font-size: 12px;
-}
-
-.chips .clear:hover,
-.chips .clear:focus-visible {
-  color: #ffffff;
 }
 
 .context {
@@ -375,29 +255,6 @@
   color: #6a6a6a;
 }
 
-/* --- Empty / unavailable --------------------------------------------------- */
-.empty {
-  display: grid;
-  justify-items: center;
-  gap: 8px;
-  padding: 48px 16px;
-  border: 2px solid var(--mc-outline);
-  background: rgba(20, 20, 20, 0.88);
-  text-align: center;
-}
-
-.empty strong {
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: 400;
-}
-
-.empty p {
-  margin: 0;
-  color: var(--mc-text-muted);
-  font-size: 13px;
-}
-
 /* --- Pages ----------------------------------------------------------------- */
 .pages {
   display: grid;
@@ -417,15 +274,6 @@
 .pages small {
   color: var(--mc-text-muted);
   font-size: 12px;
-}
-
-.srOnly {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
 }
 
 /* ==========================================================================
@@ -452,19 +300,6 @@
 
 /* Phones and small tablets: each record is a card. */
 @media (max-width: 760px) {
-  .intro {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .intro h1 {
-    font-size: 30px;
-  }
-
-  .intro p {
-    font-size: 13px;
-  }
-
   .search {
     max-width: none;
     flex-basis: 100%;

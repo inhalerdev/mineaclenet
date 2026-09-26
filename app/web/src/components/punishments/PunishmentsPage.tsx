@@ -1,6 +1,8 @@
 import { playerAvatarUrl } from "@/components/players/PlayerAvatar";
 import block from "@/components/site/BlockButton.module.css";
+import content from "@/components/site/ContentPage.module.css";
 import { FramedPage } from "@/components/site/FramedPage";
+import { PageIntro, StatTile } from "@/components/site/PageIntro";
 import type { HomeLeaderboardPlayer } from "@/components/site/SiteHeader";
 import type { Viewer } from "@/features/auth/types";
 import {
@@ -47,24 +49,27 @@ export function PunishmentsPage({
       currentPath="/punishments"
       variant="content"
     >
-      <div className={styles.records}>
-        <header className={styles.intro}>
-          <div>
-            <span className={styles.tag}>Public Records</span>
-            <h1>Bans &amp; Punishments</h1>
-            <p>Every ban, mute, warning and kick on Mineacle, newest first.</p>
-          </div>
-          {data ? (
-            <p className={styles.total}>
-              <strong>{data.total.toLocaleString()}</strong>
-              <span>{data.total === 1 ? "record" : "records"}</span>
-            </p>
-          ) : null}
-        </header>
+      <div className={`${content.content} ${styles.records}`}>
+        <PageIntro
+          tag="Public Records"
+          tone="red"
+          title="Bans & Punishments"
+          aside={
+            data ? (
+              <dl className={content.stats}>
+                <StatTile label={data.total === 1 ? "Record" : "Records"}>
+                  {data.total.toLocaleString()}
+                </StatTile>
+              </dl>
+            ) : null
+          }
+        >
+          Every ban, mute, warning and kick on Mineacle, newest first.
+        </PageIntro>
 
         <div className={styles.filters}>
           <form className={styles.search} action="/punishments" method="get" role="search">
-            <label htmlFor="records-player" className={styles.srOnly}>
+            <label htmlFor="records-player" className={content.srOnly}>
               Player
             </label>
             <img src={mineacleIcons.search} alt="" />
@@ -84,11 +89,11 @@ export function PunishmentsPage({
             </button>
           </form>
 
-          <nav className={styles.chips} aria-label="Type">
+          <nav className={content.chips} aria-label="Type">
             {punishmentTypes.map((item) => (
               <a
                 key={item.key}
-                className={styles.chip}
+                className={content.chip}
                 href={punishmentsHref({ ...filters, type: item.key })}
                 aria-current={filters.type === item.key ? "true" : undefined}
                 data-type={item.key}
@@ -98,11 +103,11 @@ export function PunishmentsPage({
             ))}
           </nav>
 
-          <nav className={styles.chips} aria-label="Status">
+          <nav className={content.chips} aria-label="Status">
             {punishmentStatuses.map((item) => (
               <a
                 key={item.key}
-                className={styles.chip}
+                className={content.chip}
                 href={punishmentsHref({ ...filters, status: item.key })}
                 aria-current={filters.status === item.key ? "true" : undefined}
               >
@@ -110,7 +115,7 @@ export function PunishmentsPage({
               </a>
             ))}
             {filtered ? (
-              <a className={styles.clear} href="/punishments">
+              <a className={content.clear} href="/punishments">
                 Clear
               </a>
             ) : null}
@@ -118,12 +123,12 @@ export function PunishmentsPage({
         </div>
 
         {!data ? (
-          <div className={styles.empty}>
+          <div className={content.empty}>
             <strong>Records are unavailable right now</strong>
             <p>Please try again in a minute.</p>
           </div>
         ) : data.records.length === 0 ? (
-          <div className={styles.empty}>
+          <div className={content.empty}>
             <strong>No records found</strong>
             <p>
               {filters.q

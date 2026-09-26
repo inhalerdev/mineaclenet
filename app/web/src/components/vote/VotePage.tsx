@@ -1,6 +1,8 @@
 import { playerAvatarUrl } from "@/components/players/PlayerAvatar";
 import block from "@/components/site/BlockButton.module.css";
+import content from "@/components/site/ContentPage.module.css";
 import { FramedPage } from "@/components/site/FramedPage";
+import { PageIntro, StatTile } from "@/components/site/PageIntro";
 import type { HomeLeaderboardPlayer } from "@/components/site/SiteHeader";
 import type { Viewer } from "@/features/auth/types";
 import { voteReward, voteSites } from "@/features/vote/vote-sites";
@@ -43,30 +45,18 @@ export function VotePage({
       currentPath="/vote"
       variant="content"
     >
-      <div className={styles.vote}>
-        <header className={styles.intro}>
-          <span className={styles.tag}>Vote &amp; Rewards</span>
-          <h1>Vote for Mineacle</h1>
-          <p>
-            Vote on all {voteSites.length} sites every day. Each vote gives you
-            a <b>{voteReward}</b> in-game.
-          </p>
-
-          <dl className={styles.stats}>
-            <div className={styles.stat}>
-              <dt>Vote sites</dt>
-              <dd>{voteSites.length}</dd>
-            </div>
-            <div className={styles.stat}>
-              <dt>Keys per day</dt>
-              <dd>
+      <div className={content.content}>
+        <PageIntro
+          tag="Vote & Rewards"
+          title="Vote for Mineacle"
+          footer={
+            <dl className={content.stats}>
+              <StatTile label="Vote sites">{voteSites.length}</StatTile>
+              <StatTile label="Keys per day">
                 <img src={mineacleIcons.crate} alt="" />
                 Up to {voteSites.length}
-              </dd>
-            </div>
-            <div className={styles.stat}>
-              <dt>{viewer ? "Voting as" : "Vote with"}</dt>
-              <dd>
+              </StatTile>
+              <StatTile label={viewer ? "Voting as" : "Vote with"}>
                 {viewer ? (
                   <>
                     <img
@@ -79,10 +69,13 @@ export function VotePage({
                 ) : (
                   <span>Your name</span>
                 )}
-              </dd>
-            </div>
-          </dl>
-        </header>
+              </StatTile>
+            </dl>
+          }
+        >
+          Vote on all {voteSites.length} sites every day. Each vote gives you
+          a <b>{voteReward}</b> in-game.
+        </PageIntro>
 
         <ol className={styles.sites} aria-label="Vote sites">
           {voteSites.map((site, index) => (
@@ -103,7 +96,7 @@ export function VotePage({
                 rel="noopener noreferrer"
               >
                 Vote now
-                <span className={styles.srOnly}> on {site.name} (opens in a new tab)</span>
+                <span className={content.srOnly}> on {site.name} (opens in a new tab)</span>
               </a>
             </li>
           ))}

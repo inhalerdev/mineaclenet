@@ -39,7 +39,6 @@
 
 .system-card,
 .system-page-header,
-.leaderboard-list,
 .player-profile-hero,
 .player-profile-details,
 .profile-account-stats,
@@ -57,7 +56,6 @@
  * Parent containers that only organize modules must stay transparent.
  * This prevents "container inside container inside container" card soup.
  */
-.leaderboard-shell,
 .profile-account-card,
 .system-card.is-wide {
   border: 0;
@@ -71,8 +69,6 @@
   gap: var(--module-gap);
 }
 
-.leaderboard-player-search,
-.leaderboard-list,
 .profile-account-stats,
 .account-security,
 .system-following-list,
@@ -90,14 +86,12 @@
    One floating parent. Rows themselves do not float.
    ------------------------------------------------------------ */
 
-.leaderboard-row,
 .system-following-list article,
 .notification-list article {
   border-radius: 0;
   box-shadow: none;
 }
 
-.leaderboard-row + .leaderboard-row,
 .system-following-list article + article,
 .notification-list article + article {
   border-top: 1px solid rgba(248, 248, 248, 0.08);
@@ -124,7 +118,6 @@
    Controls never get large-module geometry.
    ------------------------------------------------------------ */
 
-.leaderboard-tabs a,
 .system-inline-action,
 .profile-account-actions > a,
 .profile-logout,
@@ -133,15 +126,6 @@
 .mobile-menu-button,
 .mobile-account-button {
   border-radius: var(--module-control-radius);
-}
-
-.leaderboard-player-search {
-  /*
-   * Search is intentionally not given a second outer card because
-   * the search field itself is the control. Spacing makes it a
-   * separate page module without redundant nesting.
-   */
-  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.10));
 }
 
 /* ------------------------------------------------------------
@@ -170,8 +154,6 @@
     padding: 18px;
   }
 
-  .leaderboard-player-search,
-  .leaderboard-list,
   .profile-account-stats,
   .account-security,
   .system-following-list,
@@ -182,7 +164,7 @@
 
 @media (max-width: 560px) {
   .system-page-header,
-.account-security__section {
+  .account-security__section {
     padding: 16px;
   }
 }
