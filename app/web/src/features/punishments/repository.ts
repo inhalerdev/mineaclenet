@@ -61,9 +61,15 @@ function bitValue(value: unknown) {
   return Number(value) === 1 || value === true;
 }
 
+/*
+ * LiteBans leaves a timed punishment marked active after it runs out, so
+ * "active" also means it hasn't expired yet (until is in ms; 0 or less
+ * means it never expires). `now` is the server's clock, never user input.
+ */
 function statusSql(status: PunishmentStatus) {
-  if (status === "active") return " AND active = b'1'";
-  if (status === "inactive") return " AND active = b'0'";
+  const now = Math.floor(Date.now());
+  if (status === "active") return ` AND active = b'1' AND (until <= 0 OR until > ${now})`;
+  if (status === "inactive") return ` AND (active = b'0' OR (until > 0 AND until <= ${now}))`;
   return "";
 }
 
@@ -177,7 +183,8 @@ export async function getPunishments({
 
   const records = rows.map((row): PunishmentRecord => {
     const rawUntil = Number(row.until);
-    const permanent = rawUntil < 0;
+    const permanent = !(rawUntil > 0);
+    const expiresAt = permanent ? null : normalizeEpoch(rawUntil);
     const uuid = row.uuid?.trim() || null;
     return {
       key: `${row.type}:${row.id}`,
@@ -188,9 +195,9 @@ export async function getPunishments({
       reason: row.reason?.trim() || "No reason provided",
       staffName: row.staff_name?.trim() || "Console",
       createdAt: normalizeEpoch(row.time),
-      expiresAt: permanent ? null : normalizeEpoch(rawUntil),
+      expiresAt,
       permanent,
-      active: bitValue(row.active),
+      active: bitValue(row.active) && (expiresAt === null || expiresAt > Date.now()),
       removedByName: row.removed_by_name?.trim() || null,
       removedReason: row.removed_reason?.trim() || null,
     };

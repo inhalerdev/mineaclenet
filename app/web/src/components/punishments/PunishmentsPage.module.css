@@ -1,0 +1,529 @@
+/*
+ * Public records page (see PunishmentsPage.tsx), inside the shared
+ * inner-page layout (site/FramedPage). Same block recipe as the rest of
+ * the site. Colors come from app/tokens.css.
+ *
+ *   Desktop: a table (Player, Type, Reason, Staff, Date, Length).
+ *   Phones:  each record becomes a card.
+ */
+.records {
+  --columns: 190px 118px minmax(0, 1fr) 130px 150px 96px;
+
+  width: min(1240px, 100%);
+  display: grid;
+  gap: 20px;
+}
+
+/* --- Intro ----------------------------------------------------------------- */
+.intro {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 5px 8px 7px;
+  background: var(--mc-red);
+  box-shadow:
+    inset 0 2px 0 var(--mc-red-light),
+    inset 0 -3px 0 var(--mc-red-edge),
+    0 0 0 2px var(--mc-outline);
+  color: #ffffff;
+  font-size: 11px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.intro h1 {
+  margin: 18px 0 12px;
+  color: #ffffff;
+  font-size: clamp(30px, 3vw, 44px);
+  font-weight: 400;
+  line-height: 1.05;
+  text-shadow: 3px 3px 0 #000000;
+}
+
+.intro p {
+  margin: 0;
+  color: #e6e6e6;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* Record count, same look as the stat tiles. */
+.intro .total {
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 14px 12px;
+  background: rgba(17, 17, 17, 0.78);
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+.total strong {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.total span {
+  color: var(--mc-text-muted);
+  font-size: 11px;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+/* --- Search and filters ---------------------------------------------------- */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+}
+
+/* Search box: dark slot with the icon inside and Search on the right.
+   Rules on inputs, buttons and links start with a parent class so they
+   beat the page's font reset in SiteFrame.module.css. */
+.search {
+  flex: 1 1 320px;
+  max-width: 440px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 3px 0 12px;
+  background: #151515;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+.search:focus-within {
+  box-shadow:
+    inset 0 0 0 2px #ffffff,
+    inset 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+.search img {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+  image-rendering: pixelated;
+  opacity: 0.7;
+}
+
+.filters .search input {
+  min-width: 0;
+  height: 100%;
+  flex: 1;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #ffffff;
+  font-size: 13px;
+}
+
+.filters .search input::placeholder {
+  color: #8a8a8a;
+}
+
+.filters .search button {
+  height: 36px;
+  flex: 0 0 auto;
+}
+
+/* Type and status filters: small tabs; the chosen one is lit. */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.chips .chip {
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 12px 2px;
+  background: #1c1c1c;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 -3px 0 #111111;
+  color: #cfcfcf;
+  font-size: 12px;
+  line-height: 1;
+  transition:
+    background-color var(--motion),
+    color var(--motion);
+}
+
+.chips .chip:hover,
+.chips .chip:focus-visible {
+  background: #2b2b2b;
+  color: #ffffff;
+}
+
+.chips .chip[aria-current="true"] {
+  background: #3a3a3a;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 2px 0 #4a4a4a,
+    inset 0 -3px 0 #1f1f1f;
+  color: #ffffff;
+}
+
+.chips .clear {
+  margin-left: 6px;
+  color: var(--mc-red-light);
+  font-size: 12px;
+}
+
+.chips .clear:hover,
+.chips .clear:focus-visible {
+  color: #ffffff;
+}
+
+.context {
+  margin: 0;
+  color: var(--mc-text-muted);
+  font-size: 13px;
+}
+
+.context strong {
+  color: #ffffff;
+  font-weight: 400;
+}
+
+/* --- Records table --------------------------------------------------------- */
+.table {
+  border: 2px solid var(--mc-outline);
+  background: rgba(20, 20, 20, 0.88);
+}
+
+.head,
+.row {
+  display: grid;
+  grid-template-columns: var(--columns);
+  column-gap: 16px;
+  padding: 0 16px;
+}
+
+.head {
+  height: 38px;
+  align-items: center;
+  background: #1c1c1c;
+  box-shadow: inset 0 -2px 0 var(--mc-outline);
+  color: var(--mc-text-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  align-items: center;
+  min-height: 60px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  color: #e6e6e6;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.row + .row {
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.05);
+}
+
+.row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.player {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.player img {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  box-shadow: 0 0 0 2px var(--mc-outline);
+  image-rendering: pixelated;
+}
+
+.row .player a,
+.row .player span {
+  overflow: hidden;
+  color: #ffffff;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.row .player span {
+  color: var(--mc-text-muted);
+}
+
+.row .player a:hover,
+.row .player a:focus-visible {
+  color: var(--mc-purple-face);
+}
+
+/* Type badge (colored block) with the status under it. */
+.type {
+  display: grid;
+  justify-items: start;
+  gap: 6px;
+}
+
+.badge {
+  padding: 4px 7px 6px;
+  background: #3a3a3a;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.35),
+    0 0 0 2px var(--mc-outline);
+  color: #ffffff;
+  font-size: 11px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.badge[data-type="ban"] {
+  background: var(--mc-red);
+}
+
+.badge[data-type="mute"] {
+  background: var(--mc-purple);
+}
+
+.badge[data-type="warning"] {
+  background: var(--mc-gold);
+  color: var(--mc-gold-text);
+}
+
+.state {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--mc-text-muted);
+  font-size: 11px;
+  line-height: 1;
+}
+
+.state::before {
+  width: 6px;
+  height: 6px;
+  background: #666666;
+  box-shadow: 0 0 0 2px #222222;
+  content: "";
+}
+
+.state[data-state="active"] {
+  color: #ffffff;
+}
+
+.state[data-state="active"]::before {
+  background: var(--mc-live);
+  box-shadow: 0 0 0 2px #0b3d22;
+}
+
+.reason {
+  min-width: 0;
+}
+
+.reason p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.reason small,
+.cell small {
+  display: block;
+  margin-top: 4px;
+  color: var(--mc-text-muted);
+  font-size: 11px;
+}
+
+.cell {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.row .cell[data-label="Length"] {
+  overflow-wrap: normal;
+}
+
+/* "By <staff>" under the reason: only when the Staff column is hidden. */
+.reason .staffInline {
+  display: none;
+}
+
+.none {
+  color: #6a6a6a;
+}
+
+/* --- Empty / unavailable --------------------------------------------------- */
+.empty {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 48px 16px;
+  border: 2px solid var(--mc-outline);
+  background: rgba(20, 20, 20, 0.88);
+  text-align: center;
+}
+
+.empty strong {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.empty p {
+  margin: 0;
+  color: var(--mc-text-muted);
+  font-size: 13px;
+}
+
+/* --- Pages ----------------------------------------------------------------- */
+.pages {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+}
+
+.pages > :first-child {
+  justify-self: start;
+}
+
+.pages > :last-child {
+  justify-self: end;
+}
+
+.pages small {
+  color: var(--mc-text-muted);
+  font-size: 12px;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+ * Screen sizes
+ * ========================================================================== */
+@media (max-width: 1100px) {
+  .records {
+    --columns: 160px 100px minmax(0, 1fr) 124px 92px;
+  }
+
+  /* Staff moves under the reason. */
+  .reason .staffInline {
+    display: block;
+  }
+
+  .head span:nth-child(4) {
+    display: none;
+  }
+
+  .row .cell[data-label="Staff"] {
+    display: none;
+  }
+}
+
+/* Phones and small tablets: each record is a card. */
+@media (max-width: 760px) {
+  .intro {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .intro h1 {
+    font-size: 30px;
+  }
+
+  .intro p {
+    font-size: 13px;
+  }
+
+  .search {
+    max-width: none;
+    flex-basis: 100%;
+  }
+
+  .table {
+    border: 0;
+    background: none;
+  }
+
+  .head {
+    display: none;
+  }
+
+  .list {
+    display: grid;
+    gap: 10px;
+  }
+
+  .row,
+  .row + .row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "player type"
+      "reason reason"
+      "date length";
+    gap: 12px;
+    padding: 14px;
+    border: 2px solid var(--mc-outline);
+    background: rgba(20, 20, 20, 0.9);
+    box-shadow:
+      inset 0 2px 0 rgba(255, 255, 255, 0.05),
+      inset 0 -3px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  .player {
+    grid-area: player;
+  }
+
+  .type {
+    grid-area: type;
+    justify-items: end;
+  }
+
+  .reason {
+    grid-area: reason;
+  }
+
+  .row .cell[data-label="Date"] {
+    grid-area: date;
+  }
+
+  .row .cell[data-label="Length"] {
+    grid-area: length;
+    text-align: right;
+  }
+
+  .cell small {
+    display: inline;
+    margin: 0 0 0 6px;
+  }
+}

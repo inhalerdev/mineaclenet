@@ -23,9 +23,7 @@
 
 .system-card.is-wide,
 .leaderboard-shell,
-.profile-account-card,
-.vote-shell,
-.punishments-shell {
+.profile-account-card {
   width: min(1180px, 100%);
   margin: 0 auto;
 }
@@ -45,8 +43,7 @@
 .system-page-header small,
 .system-card > small,
 .player-profile-identity small,
-.account-security__section > small,
-.vote-card small {
+.account-security__section > small {
   color: #b078ff;
   font-size: 11px;
   font-weight: 600;
@@ -80,10 +77,7 @@
 .profile-account-actions > a,
 .profile-logout,
 .follow-toggle button,
-.account-security button,
-.punishments-filters button,
-.punishments-filters > a,
-.punishments-pagination a {
+.account-security button {
   min-height: 40px;
   display: inline-flex;
   align-items: center;
@@ -687,98 +681,6 @@
 }
 
 /* ============================================================
-   Vote / rewards
-   ============================================================ */
-
-.vote-shell {
-  padding: 0;
-  border: 0;
-  background: transparent;
-}
-
-.vote-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  margin-top: 16px;
-  gap: 12px;
-}
-
-.vote-card {
-  position: relative;
-  min-height: 190px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 20px;
-  overflow: hidden;
-  border: 1px solid rgba(248, 248, 248, 0.10);
-  border-radius: 8px;
-  background:
-    linear-gradient(
-      135deg,
-      rgba(132, 54, 254, 0.08),
-      transparent 46%
-    ),
-    #171717;
-  transform: none;
-  transition:
-    border-color var(--ease-fast),
-    background-color var(--ease-fast);
-}
-
-.vote-card::after {
-  position: absolute;
-  top: 18px;
-  right: -1px;
-  bottom: 18px;
-  width: 3px;
-  border-radius: 3px 0 0 3px;
-  background: #b078ff;
-  opacity: 0.48;
-  content: "";
-}
-
-.vote-card:hover {
-  border-color: rgba(248, 248, 248, 0.18);
-  background:
-    linear-gradient(
-      135deg,
-      rgba(132, 54, 254, 0.12),
-      transparent 52%
-    ),
-    #1d1d1d;
-  transform: none;
-}
-
-.vote-card:active {
-  transform: none;
-}
-
-.vote-card strong {
-  display: block;
-  margin-top: 7px;
-  color: #f8f8f8;
-  font-size: 20px;
-  font-weight: 700;
-}
-
-.vote-card p {
-  max-width: 42ch;
-  margin: 8px 0 0;
-  color: #bbbbbb;
-  font-size: 12px;
-  line-height: 1.5;
-}
-
-.vote-card > b {
-  width: fit-content;
-  margin-top: 22px;
-  color: #d0afff;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-/* ============================================================
    Responsive
    ============================================================ */
 
@@ -843,9 +745,7 @@
     align-items: flex-start;
   }
 
-  .vote-grid {
-    grid-template-columns: 1fr;
-  }
+  
 }
 
 @media (max-width: 560px) {

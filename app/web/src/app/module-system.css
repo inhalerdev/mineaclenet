@@ -46,11 +46,7 @@
 .account-security__section,
 .system-following-list,
 .notification-list,
-.system-empty,
-.vote-card,
-.punishments-filters,
-.punishments-list,
-.punishments-empty {
+.system-empty {
   border: 1px solid var(--module-border);
   border-radius: var(--module-radius);
   background: var(--module-bg);
@@ -63,8 +59,6 @@
  */
 .leaderboard-shell,
 .profile-account-card,
-.vote-shell,
-.punishments-shell,
 .system-card.is-wide {
   border: 0;
   border-radius: 0;
@@ -79,9 +73,6 @@
 
 .leaderboard-player-search,
 .leaderboard-list,
-.vote-grid,
-.punishments-filters,
-.punishments-list,
 .profile-account-stats,
 .account-security,
 .system-following-list,
@@ -100,7 +91,6 @@
    ------------------------------------------------------------ */
 
 .leaderboard-row,
-.punishment-row,
 .system-following-list article,
 .notification-list article {
   border-radius: 0;
@@ -108,7 +98,6 @@
 }
 
 .leaderboard-row + .leaderboard-row,
-.punishment-row + .punishment-row,
 .system-following-list article + article,
 .notification-list article + article {
   border-top: 1px solid rgba(248, 248, 248, 0.08);
@@ -119,16 +108,14 @@
    Each independent stat/action tile may float, but uses the same recipe.
    ------------------------------------------------------------ */
 
-.player-stat-grid .system-card,
-.vote-card {
+.player-stat-grid .system-card {
   border: 1px solid var(--module-border);
   border-radius: var(--module-radius);
   background: var(--module-bg);
   box-shadow: var(--module-shadow);
 }
 
-.player-stat-grid .system-card:hover,
-.vote-card:hover {
+.player-stat-grid .system-card:hover {
   border-color: var(--module-border-strong);
   background: var(--module-bg-hover);
 }
@@ -143,23 +130,9 @@
 .profile-logout,
 .follow-toggle button,
 .account-security button,
-.punishments-filters input,
-.punishments-filters select,
-.punishments-filters button,
-.punishments-filters > a,
-.punishments-pagination a,
 .mobile-menu-button,
 .mobile-account-button {
   border-radius: var(--module-control-radius);
-}
-
-/* ------------------------------------------------------------
-   Search / filter modules
-   Search fields remain controls; filter collections are modules.
-   ------------------------------------------------------------ */
-
-.punishments-filters {
-  padding: 14px;
 }
 
 .leaderboard-player-search {
@@ -199,9 +172,6 @@
 
   .leaderboard-player-search,
   .leaderboard-list,
-  .vote-grid,
-  .punishments-filters,
-  .punishments-list,
   .profile-account-stats,
   .account-security,
   .system-following-list,
@@ -212,8 +182,7 @@
 
 @media (max-width: 560px) {
   .system-page-header,
-  .account-security__section,
-  .punishments-filters {
+.account-security__section {
     padding: 16px;
   }
 }

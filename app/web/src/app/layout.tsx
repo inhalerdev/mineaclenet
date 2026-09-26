@@ -3,7 +3,6 @@ import "./tokens.css";
 import "./globals.css";
 import "./home.css";
 import "./systems.css";
-import "./punishments.css";
 import "./flat-navigation.css";
 import "./module-system.css";
 
