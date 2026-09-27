@@ -10,14 +10,13 @@ import {
 import { PlayerAvatar } from "@/components/players/PlayerAvatar";
 import { mineacleIcons } from "@/shared/icons/mineacle-icons";
 import styles from "./PlayerSearch.module.css";
+import {
+  USERNAME_PATTERN,
+  usePlayerSuggestions,
+  type PlayerSuggestion,
+} from "./usePlayerSuggestions";
 
-type PlayerSearchResult = {
-  uuid: string;
-  username: string;
-  displayName: string;
-  online: boolean;
-  teamName: string | null;
-};
+type PlayerSearchResult = PlayerSuggestion;
 
 type PlayerSearchProps = {
   className?: string;
@@ -31,8 +30,6 @@ type PlayerSearchProps = {
   inline?: boolean;
   autoFocus?: boolean;
 };
-
-const USERNAME_PATTERN = /^[A-Za-z0-9_]{2,16}$/;
 
 // Second line under a result: the username (if the display name differs)
 // and the team.
@@ -60,8 +57,7 @@ export function PlayerSearch({
   autoFocus = false,
 }: PlayerSearchProps) {
   const [query, setQuery] = useState("");
-  const [players, setPlayers] = useState<PlayerSearchResult[]>([]);
-  const [searching, setSearching] = useState(false);
+  const { players, searching } = usePlayerSuggestions(query);
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -92,56 +88,9 @@ export function PlayerSearch({
     };
   }, [inline]);
 
+  // A new search starts with nothing highlighted.
   useEffect(() => {
-    const trimmed = query.trim();
     setActiveIndex(-1);
-
-    if (!USERNAME_PATTERN.test(trimmed)) {
-      setPlayers([]);
-      setSearching(false);
-      return;
-    }
-
-    const controller = new AbortController();
-
-    const timer = window.setTimeout(async () => {
-      setSearching(true);
-
-      try {
-        const response = await fetch(
-          `/api/players/search?q=${encodeURIComponent(trimmed)}`,
-          {
-            cache: "no-store",
-            signal: controller.signal,
-          },
-        );
-
-        if (!response.ok) {
-          setPlayers([]);
-          return;
-        }
-
-        const data = (await response.json()) as {
-          players?: PlayerSearchResult[];
-        };
-
-        setPlayers((data.players || []).slice(0, 6));
-        setOpen(true);
-      } catch {
-        if (!controller.signal.aborted) {
-          setPlayers([]);
-        }
-      } finally {
-        if (!controller.signal.aborted) {
-          setSearching(false);
-        }
-      }
-    }, 180);
-
-    return () => {
-      controller.abort();
-      window.clearTimeout(timer);
-    };
   }, [query]);
 
   function submit(event: FormEvent) {

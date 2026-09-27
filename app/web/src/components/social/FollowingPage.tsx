@@ -32,7 +32,18 @@ export function FollowingPage({
       variant="content"
     >
       <div className={content.content}>
-        <PageIntro tag="Social" title="Following" footer={<div className={styles.add}><FollowPlayer /></div>}>
+        <PageIntro
+          tag="Social"
+          title="Following"
+          footer={
+            <div className={styles.add}>
+              <FollowPlayer
+                viewerUuid={viewer.uuid}
+                followingUuids={following?.map(({ profile }) => profile.uuid) ?? []}
+              />
+            </div>
+          }
+        >
           Keep up with your friends and rivals. Follow players here or from
           their profile.
         </PageIntro>
