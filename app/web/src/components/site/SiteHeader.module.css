@@ -202,6 +202,9 @@
   align-items: center;
   justify-content: flex-end;
   gap: 16px;
+  /* The search panel is placed against this box, so it lines up with the
+     right edge of the header like the profile menu. */
+  position: relative;
 }
 
 .searchMenu,
@@ -209,6 +212,10 @@
   position: relative;
   display: flex;
   align-items: center;
+}
+
+.searchMenu {
+  position: static;
 }
 
 .header .headerToolButton {
@@ -653,8 +660,8 @@
   animation: panelIn var(--motion) both;
 }
 
-/* Opens under the Search button, lined up with its right edge (like the
-   profile menu under My Profile). */
+/* Opens under Search, lined up with the right edge of the header (same
+   edge as the profile menu under My Profile). */
 .searchPanel {
   right: 0;
   width: min(540px, calc(100vw - 64px));
