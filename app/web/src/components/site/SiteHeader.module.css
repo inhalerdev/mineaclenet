@@ -192,13 +192,16 @@
 /* ==========================================================================
  * Search / My Profile buttons (right side of the header)
  * ========================================================================== */
+/* Search and My Profile sit together on the right, spaced like the nav
+   links on the left. */
 .headerTools {
   grid-column: 3;
   min-width: 0;
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
+  gap: 16px;
 }
 
 .searchMenu,
@@ -206,10 +209,6 @@
   position: relative;
   display: flex;
   align-items: center;
-}
-
-.profileMenu {
-  margin-left: auto;
 }
 
 .header .headerToolButton {
@@ -654,8 +653,10 @@
   animation: panelIn var(--motion) both;
 }
 
+/* Opens under the Search button, lined up with its right edge (like the
+   profile menu under My Profile). */
 .searchPanel {
-  left: 0;
+  right: 0;
   width: min(540px, calc(100vw - 64px));
   gap: 14px;
 }
