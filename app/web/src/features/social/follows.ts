@@ -73,6 +73,37 @@ export async function getFollowingPlayers(
   return result;
 }
 
+export type OnlineFriend = {
+  uuid: string;
+  username: string;
+  displayName: string;
+};
+
+/*
+ * Players this account follows who are online in game right now (the
+ * server keeps `online` up to date in mineacle_web_profiles). Used for the
+ * "friend online" pop-ups.
+ */
+export async function getOnlineFollowing(accountId: number): Promise<OnlineFriend[]> {
+  await ensureAuthSchema();
+
+  const [rows] = await getCoreDb().execute<RowDataPacket[]>(
+    `SELECT p.uuid, p.username, p.display_name
+     FROM mineacle_web_follows f
+     JOIN mineacle_web_profiles p ON p.uuid = f.target_uuid
+     WHERE f.follower_account_id = ?
+       AND p.online = 1
+     LIMIT 50`,
+    [accountId],
+  );
+
+  return rows.map((row) => ({
+    uuid: String(row.uuid),
+    username: String(row.username),
+    displayName: String(row.display_name || row.username),
+  }));
+}
+
 export async function isFollowing(
   accountId: number,
   targetUuid: string,

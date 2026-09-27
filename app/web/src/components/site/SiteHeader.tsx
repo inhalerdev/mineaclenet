@@ -6,6 +6,7 @@ import {
   playerAvatarUrl,
 } from "@/components/players/PlayerAvatar";
 import { PlayerSearch } from "@/components/players/PlayerSearch";
+import { FriendOnlineToasts } from "@/components/social/FriendOnlineToasts";
 import type { Viewer } from "@/features/auth/types";
 import {
   mineacleIcons,
@@ -591,6 +592,9 @@ export function SiteHeader({
           ) : null}
         </div>
       </div>
+
+      {/* "Friend online" pop-ups, for logged-in players on every page. */}
+      {viewer ? <FriendOnlineToasts /> : null}
     </header>
   );
 }
