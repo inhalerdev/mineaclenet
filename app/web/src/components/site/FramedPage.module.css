@@ -3,8 +3,12 @@
  * (SiteFrame.module.css): one full-height framed box instead of the
  * homepage's hero + quick-link cards.
  */
+/* The framed box fills the screen; the footer sits under it in the
+   page margin (the bottom margin shrinks to make room). */
 .page.page {
-  grid-template-rows: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 12px;
+  padding-bottom: 12px;
 }
 
 /* Panel pages: darker than the homepage so the panel reads over the video. */

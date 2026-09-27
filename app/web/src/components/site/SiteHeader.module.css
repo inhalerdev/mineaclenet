@@ -266,14 +266,75 @@
   image-rendering: auto;
 }
 
-/* Signed in: the player's head replaces the profile icon. */
-.headerToolButton > img.profileHead,
-.mobileNavigationItem > img.profileHead {
+/* Signed in: the player's head replaces the profile icon (ProfileHead in
+   SiteHeader.tsx). Written with the parent class so it beats the icon and
+   label rules above and in the small-screen menu. */
+.headerToolButton > .profileHeadWrap,
+.mobileNavigationItem > .profileHeadWrap {
+  position: relative;
   width: 18px;
   height: 18px;
+  display: block;
   margin-block: -3px;
+  justify-self: center;
+  transform: none;
+}
+
+.profileHeadWrap > .profileHead {
+  width: 18px;
+  height: 18px;
+  display: block;
   box-shadow: 0 0 0 1px var(--mc-outline);
   image-rendering: pixelated;
+}
+
+/* Unread notifications: a small red dot on the head's top-right corner,
+   like an app badge on a phone. It pops in, then pulses a few times to
+   catch the eye. Same red as the dot on the notification bell icon. */
+.alertDot {
+  position: absolute;
+  z-index: 1;
+  top: -4px;
+  right: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--mc-alert);
+  box-shadow: 0 0 0 2px #222222;
+  animation: alertPop 260ms cubic-bezier(0.2, 1.4, 0.4, 1) both;
+  pointer-events: none;
+}
+
+.alertDot::after {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--mc-alert);
+  animation: alertPulse 1.6s ease-out 400ms 3;
+  content: "";
+  opacity: 0;
+}
+
+@keyframes alertPop {
+  from {
+    transform: scale(0);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes alertPulse {
+  from {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(2.6);
+  }
 }
 
 .headerToolButton > span {
@@ -376,6 +437,20 @@
 
   .mobileMenuButtonOpen {
     background: #333333;
+  }
+
+  /* Red dot on the menu button's corner when there are unread
+     notifications (the head isn't visible until the menu opens). */
+  .mobileMenuButton {
+    position: relative;
+  }
+
+  .mobileMenuButton > .alertDot {
+    top: -6px;
+    right: -6px;
+    width: 10px;
+    height: 10px;
+    box-shadow: 0 0 0 2px var(--mc-outline);
   }
 
   .mobileMenuButton:focus-visible {
@@ -1126,5 +1201,10 @@
   .topPlayerCard:hover,
   .topPlayerCard:active {
     transform: none;
+  }
+
+  .alertDot,
+  .alertDot::after {
+    animation: none;
   }
 }

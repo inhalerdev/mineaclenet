@@ -30,10 +30,25 @@ function bucket(action: string, identity: string) {
     .digest("hex");
 }
 
+/*
+ * The visitor's IP address, used for rate limits.
+ *
+ * The site only listens on 127.0.0.1 and is reached through the Cloudflare
+ * Tunnel, so every request comes via Cloudflare, which sets
+ * CF-Connecting-IP to the real visitor address (and overwrites any value a
+ * visitor sends). The first X-Forwarded-For entry is NOT trusted: a visitor
+ * can put anything there to dodge rate limits. The last entry is the one
+ * added by the proxy closest to us, so it's the fallback.
+ */
 export function requestClientIp(request: Request) {
-  const forwarded = request.headers.get("x-forwarded-for");
-  const realIp = request.headers.get("x-real-ip");
-  const value = forwarded?.split(",")[0]?.trim() || realIp?.trim() || "unknown";
+  const cloudflare = request.headers.get("cf-connecting-ip")?.trim();
+  const forwardedList = (request.headers.get("x-forwarded-for") || "")
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+  const forwarded = forwardedList[forwardedList.length - 1];
+  const value = cloudflare || forwarded || "unknown";
+
   return value.slice(0, 64);
 }
 

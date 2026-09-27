@@ -15,6 +15,7 @@ import {
   SESSION_COOKIE,
 } from "@/features/auth/session";
 import { getCoreDb } from "@/lib/db";
+import { readJsonBody, textField } from "@/shared/server/user-error";
 
 type AccountRow = RowDataPacket & {
   password_hash: string;
@@ -35,13 +36,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Log in required" }, { status: 401 });
   }
 
-  const body = (await request.json()) as {
-    currentPassword?: string;
-    newPassword?: string;
-  };
-
-  const currentPassword = body.currentPassword || "";
-  const newPassword = body.newPassword || "";
+  const body = await readJsonBody(request);
+  const currentPassword = textField(body, "currentPassword");
+  const newPassword = textField(body, "newPassword");
 
   if (
     currentPassword.length < 1 ||

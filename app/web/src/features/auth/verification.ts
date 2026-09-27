@@ -2,6 +2,7 @@ import { createHash, randomBytes, randomInt } from "node:crypto";
 import type { RowDataPacket } from "mysql2";
 import { ensureAuthSchema } from "@/features/auth/schema";
 import { getCoreDb } from "@/lib/db";
+import { UserFacingError } from "@/shared/server/user-error";
 
 const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 const TTL_SECONDS = 600;
@@ -33,7 +34,7 @@ export async function beginVerification(usernameValue: string) {
   const username = usernameValue.trim();
 
   if (!/^[A-Za-z0-9_]{3,16}$/.test(username)) {
-    throw new Error("Enter your exact Minecraft username");
+    throw new UserFacingError("Enter your exact Minecraft username");
   }
 
   const db = getCoreDb();
@@ -48,7 +49,7 @@ export async function beginVerification(usernameValue: string) {
   const profile = profiles[0];
 
   if (!profile) {
-    throw new Error(
+    throw new UserFacingError(
       "That player has not joined Mineacle yet. Join the server once, then try again",
     );
   }
@@ -62,7 +63,7 @@ export async function beginVerification(usernameValue: string) {
   );
 
   if (uuidAccounts[0]) {
-    throw new Error("That player already has an account. Log in instead");
+    throw new UserFacingError("That player already has an account. Log in instead");
   }
 
   const [nameAccounts] = await db.execute<RowDataPacket[]>(
@@ -100,12 +101,12 @@ export async function beginVerification(usernameValue: string) {
           ],
         );
       } catch {
-        throw new Error(
+        throw new UserFacingError(
           "That username is still linked to an older web account. Try again later",
         );
       }
     } else {
-      throw new Error("That player already has an account. Log in instead");
+      throw new UserFacingError("That player already has an account. Log in instead");
     }
   }
 

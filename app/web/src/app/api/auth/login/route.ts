@@ -14,6 +14,7 @@ import {
   SESSION_COOKIE,
 } from "@/features/auth/session";
 import { getCoreDb } from "@/lib/db";
+import { readJsonBody, textField } from "@/shared/server/user-error";
 
 type Account = RowDataPacket & {
   id: number | string;
@@ -26,6 +27,14 @@ type Account = RowDataPacket & {
 
 const PAIR_POLICY = {
   maximum: 6,
+  windowSeconds: 900,
+  blockSeconds: 900,
+};
+
+/* Per username, whatever the IP: stops password guessing spread across
+   many addresses. Generous so a real player is rarely locked out. */
+const USER_POLICY = {
+  maximum: 20,
   windowSeconds: 900,
   blockSeconds: 900,
 };
@@ -51,13 +60,9 @@ function limited(retryAfter: number) {
 }
 
 export async function POST(request: Request) {
-  const body = (await request.json()) as {
-    username?: string;
-    password?: string;
-  };
-
-  const username = (body.username || "").trim();
-  const password = body.password || "";
+  const body = await readJsonBody(request);
+  const username = textField(body, "username").trim();
+  const password = textField(body, "password");
 
   if (
     !/^[A-Za-z0-9_]{3,16}$/.test(username) ||
@@ -76,9 +81,12 @@ export async function POST(request: Request) {
   try {
     const pairState = await getRateLimitState("login-pair", pairIdentity);
     const ipState = await getRateLimitState("login-ip", ip);
+    const userState = await getRateLimitState("login-user", username.toLowerCase());
 
-    if (pairState.blocked || ipState.blocked) {
-      return limited(Math.max(pairState.retryAfter, ipState.retryAfter));
+    if (pairState.blocked || ipState.blocked || userState.blocked) {
+      return limited(
+        Math.max(pairState.retryAfter, ipState.retryAfter, userState.retryAfter),
+      );
     }
 
     await ensureAuthSchema();
@@ -118,10 +126,19 @@ export async function POST(request: Request) {
         ip,
         IP_POLICY,
       );
+      const userFailure = await recordRateLimitFailure(
+        "login-user",
+        username.toLowerCase(),
+        USER_POLICY,
+      );
 
-      if (pairFailure.blocked || ipFailure.blocked) {
+      if (pairFailure.blocked || ipFailure.blocked || userFailure.blocked) {
         return limited(
-          Math.max(pairFailure.retryAfter, ipFailure.retryAfter),
+          Math.max(
+            pairFailure.retryAfter,
+            ipFailure.retryAfter,
+            userFailure.retryAfter,
+          ),
         );
       }
 

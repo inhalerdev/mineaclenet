@@ -6,6 +6,7 @@ import {
 } from "@/features/players/repository";
 import type { PlayerProfile } from "@/features/players/types";
 import { getCoreDb } from "@/lib/db";
+import { UserFacingError } from "@/shared/server/user-error";
 
 type FollowRow = RowDataPacket & {
   target_uuid: string;
@@ -100,11 +101,11 @@ export async function followByUsername(
   const player = await getPlayerByUsername(username);
 
   if (!player) {
-    throw new Error("That player has not joined Mineacle");
+    throw new UserFacingError("That player has not joined Mineacle");
   }
 
   if (player.uuid === viewerUuid) {
-    throw new Error("You cannot follow yourself");
+    throw new UserFacingError("You cannot follow yourself");
   }
 
   const now = Math.floor(Date.now() / 1000);

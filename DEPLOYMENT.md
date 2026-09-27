@@ -21,8 +21,6 @@ cp .env.example .env.local   # then fill in values
 pnpm dev
 ```
 
-Generate development-gateway credentials (`/admin`) with `pnpm gate:hash`.
-
 ## One-time server setup (Ubuntu, systemd)
 
 Replace the current "pull every 60 seconds" job with this. Run as an admin user.
@@ -91,9 +89,6 @@ automatically; re-run the matching `install` lines from step 4/5.
 
 All settings are listed in `app/web/.env.example`. Notes:
 
-- `ADMIN_GATE_PASSWORD_HASH` should be the **base64** value printed by
-  `pnpm gate:hash`. A raw `$2b$...` bcrypt hash is corrupted by `.env` variable
-  expansion unless every `$` is written as `\$`.
 - `NEXT_PUBLIC_*` values are baked in during `next build`, so changing them
   needs a rebuild (`FORCE=1`).
 - `NEXT_PUBLIC_MEDIA_BASE_URL` should point at the R2 bucket's custom domain

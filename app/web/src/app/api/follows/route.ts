@@ -4,6 +4,12 @@ import {
   followByUsername,
   unfollowByUuid,
 } from "@/features/social/follows";
+import {
+  publicMessage,
+  readJsonBody,
+  textField,
+  UserFacingError,
+} from "@/shared/server/user-error";
 
 export const runtime = "nodejs";
 
@@ -14,8 +20,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Log in required" }, { status: 401 });
   }
 
-  const body = (await request.json()) as { username?: string };
-  const username = (body.username || "").trim();
+  const body = await readJsonBody(request);
+  const username = textField(body, "username").trim();
 
   if (!/^[A-Za-z0-9_]{3,16}$/.test(username)) {
     return NextResponse.json(
@@ -39,14 +45,13 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
+    if (!(error instanceof UserFacingError)) {
+      console.error("[mineacle-social] Follow failed", error);
+    }
+
     return NextResponse.json(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Unable to follow that player",
-      },
-      { status: 400 },
+      { error: publicMessage(error, "Unable to follow that player right now") },
+      { status: error instanceof UserFacingError ? 400 : 503 },
     );
   }
 }
@@ -58,8 +63,8 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: "Log in required" }, { status: 401 });
   }
 
-  const body = (await request.json()) as { uuid?: string };
-  const uuid = (body.uuid || "").trim();
+  const body = await readJsonBody(request);
+  const uuid = textField(body, "uuid").trim();
 
   if (
     !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(

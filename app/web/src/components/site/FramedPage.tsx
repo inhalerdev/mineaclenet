@@ -7,6 +7,7 @@ import type { Viewer } from "@/features/auth/types";
 import { homeContent } from "@/features/home/home-content";
 import frame from "./SiteFrame.module.css";
 import styles from "./FramedPage.module.css";
+import { SiteFooter } from "./SiteFooter";
 
 /*
  * Layout for inner pages: one full-height framed box with the site header
@@ -17,6 +18,8 @@ import styles from "./FramedPage.module.css";
  *   variant="content"  plain dark background; content starts under the
  *                      logo at the same left edge as the homepage hero
  *                      text and runs the full width (vote, bans)
+ *
+ * The footer (SiteFooter.tsx) sits under the framed box on these pages.
  */
 export function FramedPage({
   viewer = null,
@@ -63,6 +66,8 @@ export function FramedPage({
           {children}
         </main>
       </section>
+
+      <SiteFooter />
     </div>
   );
 }

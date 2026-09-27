@@ -1,17 +1,21 @@
 "use client";
 
 import { useState } from "react";
+import block from "@/components/site/BlockButton.module.css";
 
+/* "Mark all read" button on /notifications. Reloads the page when done so
+   the list and the header bell update together. */
 export function MarkNotificationsRead({
   hasUnread,
 }: {
   hasUnread: boolean;
 }) {
-  const [visible, setVisible] = useState(hasUnread);
   const [busy, setBusy] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   async function markRead() {
     setBusy(true);
+    setFailed(false);
 
     try {
       const response = await fetch("/api/notifications/read", {
@@ -19,26 +23,30 @@ export function MarkNotificationsRead({
       });
 
       if (response.ok) {
-        setVisible(false);
-        window.setTimeout(() => window.location.reload(), 250);
+        window.location.reload();
+        return;
       }
+
+      setFailed(true);
+    } catch {
+      setFailed(true);
     } finally {
       setBusy(false);
     }
   }
 
-  if (!visible) {
+  if (!hasUnread) {
     return null;
   }
 
   return (
     <button
-      className="system-inline-action"
+      className={block.button}
       disabled={busy}
       onClick={markRead}
       type="button"
     >
-      {busy ? "Updating..." : "Mark all read"}
+      {busy ? "Updating..." : failed ? "Try again" : "Mark all read"}
     </button>
   );
 }

@@ -12,6 +12,7 @@ import {
   SESSION_COOKIE,
 } from "@/features/auth/session";
 import { getCoreDb } from "@/lib/db";
+import { readJsonBody, textField, UserFacingError } from "@/shared/server/user-error";
 
 type Challenge = RowDataPacket & {
   uuid: string;
@@ -39,13 +40,9 @@ function challengeReady(challenge: Challenge | undefined, now: number) {
 }
 
 export async function POST(request: Request) {
-  const body = (await request.json()) as {
-    challengeId?: string;
-    password?: string;
-  };
-
-  const challengeId = body.challengeId || "";
-  const password = body.password || "";
+  const body = await readJsonBody(request);
+  const challengeId = textField(body, "challengeId");
+  const password = textField(body, "password");
 
   if (!/^[a-f0-9]{32}$/.test(challengeId)) {
     return NextResponse.json(
@@ -123,7 +120,7 @@ export async function POST(request: Request) {
       const challenge = rows[0];
 
       if (!challengeReady(challenge, now)) {
-        throw new Error(
+        throw new UserFacingError(
           "Verify this account in Minecraft before creating your password",
         );
       }
@@ -137,7 +134,7 @@ export async function POST(request: Request) {
       );
 
       if (existing[0]) {
-        throw new Error("An account already exists for this player");
+        throw new UserFacingError("An account already exists for this player");
       }
 
       const [result] = await connection.execute<ResultSetHeader>(
@@ -170,15 +167,11 @@ export async function POST(request: Request) {
     } catch (error) {
       await connection.rollback();
 
-      return NextResponse.json(
-        {
-          error:
-            error instanceof Error
-              ? error.message
-              : "Unable to create account",
-        },
-        { status: 409 },
-      );
+      if (!(error instanceof UserFacingError)) {
+        throw error;
+      }
+
+      return NextResponse.json({ error: error.message }, { status: 409 });
     } finally {
       connection.release();
     }

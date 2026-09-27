@@ -58,6 +58,25 @@ type SiteHeaderProps = {
   currentPath?: string;
 };
 
+/*
+ * The signed-in player's head in the header, with a red alert dot (like an
+ * app badge on a phone) when they have unread notifications.
+ */
+function ProfileHead({ uuid, alert }: { uuid: string; alert: boolean }) {
+  return (
+    <span className={styles.profileHeadWrap}>
+      <img
+        className={styles.profileHead}
+        src={playerAvatarUrl(uuid, 32)}
+        alt=""
+        referrerPolicy="no-referrer"
+        draggable={false}
+      />
+      {alert ? <span className={styles.alertDot} aria-hidden="true" /> : null}
+    </span>
+  );
+}
+
 export function SiteHeader({
   viewer = null,
   topPlayers = [],
@@ -67,6 +86,14 @@ export function SiteHeader({
   const [searchOpen, setSearchOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+
+  // Unread notifications light up a red dot on the player's head (and on
+  // the menu button on small screens).
+  const unread = viewer?.unreadNotifications ?? 0;
+  const hasAlert = unread > 0;
+  const alertLabel = hasAlert
+    ? `, ${unread > 99 ? "99+" : unread} unread notification${unread === 1 ? "" : "s"}`
+    : "";
 
   const searchRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
@@ -151,7 +178,7 @@ export function SiteHeader({
           aria-label={
             mobileMenuOpen
               ? "Close navigation menu"
-              : "Open navigation menu"
+              : `Open navigation menu${alertLabel}`
           }
           aria-expanded={mobileMenuOpen}
           aria-controls="home-mobile-navigation"
@@ -164,6 +191,9 @@ export function SiteHeader({
           <span />
           <span />
           <span />
+          {hasAlert && !mobileMenuOpen ? (
+            <i className={styles.alertDot} aria-hidden="true" />
+          ) : null}
         </button>
 
         {mobileMenuOpen ? (
@@ -222,6 +252,7 @@ export function SiteHeader({
             <button
               className={styles.mobileNavigationItem}
               type="button"
+              aria-label={hasAlert ? `My Profile${alertLabel}` : undefined}
               onClick={() => {
                 setMobileMenuOpen(false);
                 setProfileOpen(true);
@@ -229,13 +260,7 @@ export function SiteHeader({
               }}
             >
               {viewer ? (
-                <img
-                  className={styles.profileHead}
-                  src={playerAvatarUrl(viewer.uuid, 32)}
-                  alt=""
-                  referrerPolicy="no-referrer"
-                  draggable={false}
-                />
+                <ProfileHead uuid={viewer.uuid} alert={hasAlert} />
               ) : (
                 <img
                   src={mineacleIcons.profile}
@@ -429,6 +454,7 @@ export function SiteHeader({
             type="button"
             aria-expanded={profileOpen}
             aria-controls="home-profile-menu"
+            aria-label={hasAlert ? `My Profile${alertLabel}` : undefined}
             onClick={() => {
               setProfileOpen((value) => !value);
               setSearchOpen(false);
@@ -436,13 +462,7 @@ export function SiteHeader({
             }}
           >
             {viewer ? (
-              <img
-                className={styles.profileHead}
-                src={playerAvatarUrl(viewer.uuid, 32)}
-                alt=""
-                referrerPolicy="no-referrer"
-                draggable={false}
-              />
+              <ProfileHead uuid={viewer.uuid} alert={hasAlert} />
             ) : (
               <img
                 src={mineacleIcons.profile}

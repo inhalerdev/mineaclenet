@@ -1,75 +1,39 @@
 import { redirect } from "next/navigation";
-import { PlayerAvatar } from "@/components/players/PlayerAvatar";
-import { AppSidebar } from "@/components/shell/AppSidebar";
-import { FollowPlayer } from "@/components/social/FollowPlayer";
-import { FollowToggle } from "@/components/social/FollowToggle";
+import { FollowingPage } from "@/components/social/FollowingPage";
 import { getCurrentViewer } from "@/features/auth/session";
-import { getFollowingPlayers } from "@/features/social/follows";
+import { getTopPlayers } from "@/features/players/top-players";
+import {
+  getFollowingPlayers,
+  type FollowingPlayer,
+} from "@/features/social/follows";
+import { withReturnPath } from "@/shared/navigation/return-path";
 
 export const dynamic = "force-dynamic";
 
-export default async function FollowingPage() {
+export const metadata = {
+  title: "Following | Mineacle",
+};
+
+async function loadFollowing(accountId: number): Promise<FollowingPlayer[] | null> {
+  try {
+    return await getFollowingPlayers(accountId);
+  } catch (error) {
+    console.error("[mineacle-social] Failed to load following", error);
+    return null;
+  }
+}
+
+export default async function Following() {
   const viewer = await getCurrentViewer();
 
   if (!viewer) {
-    redirect("/login");
+    redirect(withReturnPath("/login", "/following"));
   }
 
-  const following = await getFollowingPlayers(viewer.accountId);
+  const [topPlayers, following] = await Promise.all([
+    getTopPlayers(),
+    loadFollowing(viewer.accountId),
+  ]);
 
-  return (
-    <div className="mineacle-app">
-      <AppSidebar viewer={viewer} />
-      <main className="system-page">
-        <section className="system-card is-wide">
-          <header className="system-page-header">
-            <div>
-              <small>SOCIAL</small>
-              <h1>Following</h1>
-              <p>
-                Players here are compared against you on your Mineacle home.
-              </p>
-            </div>
-          </header>
-
-          <FollowPlayer />
-
-          <div className="following-list system-following-list">
-            {following.length ? (
-              following.map(({ profile }) => (
-                <article key={profile.uuid}>
-                  <a href={`/player/${encodeURIComponent(profile.username)}`}>
-                    <PlayerAvatar
-                      uuid={profile.uuid}
-                      size={34}
-                      className="leaderboard-avatar"
-                    />
-                    <span>
-                      <strong>{profile.displayName || profile.username}</strong>
-                      <small>
-                        {profile.online
-                          ? "Online"
-                          : profile.teamName || "Following"}
-                      </small>
-                    </span>
-                  </a>
-
-                  <FollowToggle
-                    uuid={profile.uuid}
-                    username={profile.username}
-                    initialFollowing
-                  />
-                </article>
-              ))
-            ) : (
-              <div className="system-empty">
-                <strong>No followed players yet</strong>
-                <p>Follow a player above or from their public profile.</p>
-              </div>
-            )}
-          </div>
-        </section>
-      </main>
-    </div>
-  );
+  return <FollowingPage viewer={viewer} topPlayers={topPlayers} following={following} />;
 }

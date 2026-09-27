@@ -1,7 +1,9 @@
 /*
  * Mineacle color system: the single source of truth for colors.
  *
- * Built from the brand palette and the logo itself. The logo is drawn as a
+ * Built from the brand palette (same codes as the in-game TAB / scoreboard
+ * config: #8436FE primary, #B078FF secondary, #D0AFFF light, #BBBBBB muted
+ * text) and the logo itself. The logo is drawn as a
  * flat purple face (#B078FF), a darker purple 3D edge (#6F4FA0) and a thick
  * near-black outline (#111111). Interactive elements reuse that exact recipe,
  * which also matches the blocky Minecraft button style.
@@ -22,7 +24,7 @@
 
   /* Text */
   --mc-text: #f8f8f8;
-  --mc-text-muted: #b3b3b3;
+  --mc-text-muted: #bbbbbb;
 
   /* Purple (logo) */
   --mc-purple: #8436fe;
@@ -52,6 +54,15 @@
 
   /* Status */
   --mc-live: #11fc7b;
+  /* Unread alert dot (same red as the dot on the bell icon) */
+  --mc-alert: #ed1c24;
+
+  /* Stat colors, matching the in-game scoreboard (TAB config) */
+  --mc-stat-money: #11fc7b;
+  --mc-stat-playtime: #fcd511;
+  --mc-stat-kills: #fc1111;
+  --mc-stat-deaths: #fc8611;
+  --mc-stat-keyall: #11fcf0;
 
   /* Block bar under / beside nav links */
   --mc-bar: 3px;

@@ -1,34 +1,41 @@
 import { redirect } from "next/navigation";
-import { AppSidebar } from "@/components/shell/AppSidebar";
+import content from "@/components/site/ContentPage.module.css";
+import { FramedPage } from "@/components/site/FramedPage";
+import { PageIntro } from "@/components/site/PageIntro";
 import { getCurrentViewer } from "@/features/auth/session";
-import { getDashboard } from "@/features/social/dashboard";
+import { getPlayerByUuid } from "@/features/players/repository";
+import { getTopPlayers } from "@/features/players/top-players";
+import { withReturnPath } from "@/shared/navigation/return-path";
 
 export const dynamic = "force-dynamic";
-export const revalidate = 0;
 
-export default async function TeamPage() {
+export const metadata = {
+  title: "Team | Mineacle",
+};
+
+/* Team (/team): your in-game team, if you have one. */
+export default async function Team() {
   const viewer = await getCurrentViewer();
 
   if (!viewer) {
-    redirect("/login");
+    redirect(withReturnPath("/login", "/team"));
   }
 
-  const dashboard = await getDashboard(viewer);
+  const [topPlayers, player] = await Promise.all([
+    getTopPlayers(),
+    getPlayerByUuid(viewer.uuid).catch(() => null),
+  ]);
+  const team = player?.teamName || "";
 
   return (
-    <div className="mineacle-app">
-      <AppSidebar viewer={viewer} />
-      <main className="utility-page">
-        <section className="utility-card">
-          <small>TEAM HUB</small>
-          <h1>{dashboard.viewerTeam || "No team"}</h1>
-          <p>
-            {dashboard.viewerTeam
-              ? `${dashboard.viewerTeamRole || "Member"} on ${dashboard.viewerTeam}`
-              : "Join or create a team in-game to connect your team here"}
-          </p>
-        </section>
-      </main>
-    </div>
+    <FramedPage viewer={viewer} topPlayers={topPlayers} currentPath="/team" variant="content">
+      <div className={content.content}>
+        <PageIntro tag="Team" title={team || "No team yet"}>
+          {team
+            ? `You're ${player?.teamRole ? `a ${player.teamRole}` : "a member"} of ${team}.`
+            : "Join or create a team in-game and it will show up here."}
+        </PageIntro>
+      </div>
+    </FramedPage>
   );
 }

@@ -8,8 +8,7 @@
     "start": "next start -H 127.0.0.1",
     "migrate": "node scripts/migrate.mjs",
     "cleanup": "node scripts/cleanup.mjs",
-    "typecheck": "tsc --noEmit",
-    "gate:hash": "node scripts/gate-hash.mjs"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "bcryptjs": "3.0.2",

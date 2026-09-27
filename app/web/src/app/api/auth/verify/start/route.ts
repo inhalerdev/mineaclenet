@@ -4,6 +4,12 @@ import {
   requestClientIp,
 } from "@/features/auth/rate-limit";
 import { beginVerification } from "@/features/auth/verification";
+import {
+  publicMessage,
+  readJsonBody,
+  textField,
+  UserFacingError,
+} from "@/shared/server/user-error";
 
 export const runtime = "nodejs";
 
@@ -21,8 +27,8 @@ const IP_POLICY = {
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as { username?: string };
-    const username = (body.username || "").trim();
+    const body = await readJsonBody(request);
+    const username = textField(body, "username").trim();
 
     if (!/^[A-Za-z0-9_]{3,16}$/.test(username)) {
       return NextResponse.json(
@@ -66,14 +72,13 @@ export async function POST(request: Request) {
     const result = await beginVerification(username);
     return NextResponse.json(result);
   } catch (error) {
+    if (!(error instanceof UserFacingError)) {
+      console.error("[mineacle-auth] Verification start failed", error);
+    }
+
     return NextResponse.json(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Verification is temporarily unavailable",
-      },
-      { status: 400 },
+      { error: publicMessage(error, "Verification is temporarily unavailable") },
+      { status: error instanceof UserFacingError ? 400 : 503 },
     );
   }
 }

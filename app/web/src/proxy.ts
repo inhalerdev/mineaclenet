@@ -1,62 +1,34 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import {
-  ADMIN_GATE_COOKIE,
-  verifyAdminGateToken,
-} from "@/features/admin-gate/gate";
+
+/*
+ * Runs before every /api request.
+ *
+ * Blocks requests that change something (log in, follow, change password...)
+ * when a browser says they came from another website. This stops other sites
+ * from quietly making a visitor's browser act on Mineacle (CSRF), on top of
+ * the session cookie's SameSite=Lax setting.
+ *
+ * Browsers send Sec-Fetch-Site on every request: "same-origin" for our own
+ * pages, "cross-site" for other websites. Tools without it (curl, scripts)
+ * are let through; they can't use a visitor's cookies anyway.
+ */
+const SAFE_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
 
 export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-
-  // The development gateway itself and public server-status projection must
-  // remain reachable without an admin-gate cookie.
-  //
-  // /api/server/status only returns public Minecraft availability/count data.
-  // Keeping it outside the development gate also matches the old working
-  // Mineacle status endpoint behavior.
   if (
-    pathname === "/admin" ||
-    pathname === "/api/server/status"
+    !SAFE_METHODS.has(request.method) &&
+    request.headers.get("sec-fetch-site") === "cross-site"
   ) {
-    return NextResponse.next();
-  }
-
-  const gateToken =
-    request.cookies.get(ADMIN_GATE_COOKIE)?.value;
-  const unlocked = verifyAdminGateToken(gateToken);
-
-  if (unlocked) {
-    return NextResponse.next();
-  }
-
-  // All other application APIs remain hidden behind the development gateway.
-  if (pathname.startsWith("/api/")) {
     return NextResponse.json(
-      {
-        error:
-          "Development gateway authentication required",
-      },
-      { status: 401 },
+      { error: "Cross-site requests are not allowed" },
+      { status: 403 },
     );
   }
 
-  const adminUrl = new URL(
-    "/admin",
-    request.url,
-  );
-  const requestedPath = `${pathname}${request.nextUrl.search}`;
-
-  if (requestedPath !== "/") {
-    adminUrl.searchParams.set(
-      "next",
-      requestedPath,
-    );
-  }
-
-  return NextResponse.redirect(adminUrl);
+  return NextResponse.next();
 }
 
 export const config = {
-  // Next internals and public files must remain available so /admin can load.
-  matcher: ["/((?!_next|.*\\..*$).*)"],
+  matcher: ["/api/:path*"],
 };
