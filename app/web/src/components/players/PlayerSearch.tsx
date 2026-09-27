@@ -15,6 +15,7 @@ import {
   usePlayerSuggestions,
   type PlayerSuggestion,
 } from "./usePlayerSuggestions";
+import { RankPrefix } from "./RankPrefix";
 
 type PlayerSearchResult = PlayerSuggestion;
 
@@ -206,7 +207,10 @@ export function PlayerSearch({
                 />
 
                 <span className={styles.identity}>
-                  <strong>{player.displayName || player.username}</strong>
+                  <strong>
+                    <RankPrefix rankKey={player.rankKey} />
+                    {player.displayName || player.username}
+                  </strong>
                   {detail(player) ? <small>{detail(player)}</small> : null}
                 </span>
 

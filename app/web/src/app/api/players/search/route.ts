@@ -25,6 +25,7 @@ export async function GET(request: Request) {
           displayName: player.displayName,
           online: player.online,
           teamName: player.teamName,
+          rankKey: player.rankKey,
         })),
       },
       { headers: { "Cache-Control": "no-store" } },

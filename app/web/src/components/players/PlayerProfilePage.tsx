@@ -14,7 +14,10 @@ import {
 import type { PlayerProfile } from "@/features/players/types";
 import { withReturnPath } from "@/shared/navigation/return-path";
 import styles from "./PlayerProfilePage.module.css";
+import type { SocialLink } from "@/features/social/social-platforms";
+import { SocialLinks } from "./SocialLinks";
 import { VerifiedBadge } from "./VerifiedBadge";
+import { RankPrefix } from "./RankPrefix";
 
 /*
  * Public player profile (/player/<name>): head and name, follow button,
@@ -28,6 +31,7 @@ export function PlayerProfilePage({
   isSelf,
   following,
   verified,
+  socialLinks = [],
 }: {
   viewer: Viewer | null;
   topPlayers: HomeLeaderboardPlayer[];
@@ -36,6 +40,7 @@ export function PlayerProfilePage({
   following: boolean;
   /* Their Minecraft account is linked to a website account. */
   verified: boolean;
+  socialLinks?: SocialLink[];
 }) {
   const name = player.displayName || player.username;
   const color = rankColor(player);
@@ -117,10 +122,14 @@ export function PlayerProfilePage({
               </span>
             </div>
             <h1 className={styles.name}>
-              <span>{name}</span>
+              <span>
+                <RankPrefix rankKey={player.rankKey} />
+                {name}
+              </span>
               {verified ? <VerifiedBadge size="large" /> : null}
             </h1>
             {name !== player.username ? <p>{player.username}</p> : null}
+            <SocialLinks links={socialLinks} />
           </div>
 
           <div className={styles.actions}>

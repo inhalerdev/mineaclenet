@@ -5,11 +5,13 @@ import { createPortal } from "react-dom";
 import { playerAvatarUrl } from "@/components/players/PlayerAvatar";
 import type { OnlineFriend } from "@/features/social/follows";
 import styles from "./FriendOnlineToasts.module.css";
+import { RankPrefix } from "@/components/players/RankPrefix";
 
 /*
  * Xbox-style pop-up at the bottom of the screen when a player you follow
- * comes online in game: their head, "Friend online" and their name. Stays
- * for about 6 seconds, then slides away; click it to open their profile.
+ * comes online in game: their head, "Friend online", their name and the
+ * world they're in. Stays for about 6 seconds, then slides away; click it
+ * to open their profile. Each one is also saved to your notifications.
  *
  * Checks /api/friends/online every 30 seconds while the tab is visible.
  * Friends who were already online when you opened the site don't pop up;
@@ -74,6 +76,13 @@ export function FriendOnlineToasts() {
 
           if (joined.length) {
             setQueue((current) => [...current, ...joined]);
+
+            // Also keep them in the notifications list.
+            void fetch("/api/friends/online", {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({ uuids: joined.map((friend) => friend.uuid) }),
+            }).catch(() => undefined);
           }
         }
 
@@ -144,7 +153,11 @@ export function FriendOnlineToasts() {
             <i aria-hidden="true" />
             Friend online
           </span>
-          <strong>{current.displayName || current.username}</strong>
+          <strong>
+            <RankPrefix rankKey={current.rankKey} />
+            {current.displayName || current.username}
+          </strong>
+          {current.world ? <small>Playing in {current.world}</small> : null}
         </span>
         {queue.length > 1 ? (
           <span className={styles.more} aria-label={`${queue.length - 1} more`}>

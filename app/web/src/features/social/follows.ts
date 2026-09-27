@@ -77,6 +77,10 @@ export type OnlineFriend = {
   uuid: string;
   username: string;
   displayName: string;
+  /* The world they're in, e.g. "Survival" ("" if unknown). */
+  world: string;
+  /* LuckPerms group, for the rank prefix. */
+  rankKey: string;
 };
 
 /*
@@ -88,7 +92,7 @@ export async function getOnlineFollowing(accountId: number): Promise<OnlineFrien
   await ensureAuthSchema();
 
   const [rows] = await getCoreDb().execute<RowDataPacket[]>(
-    `SELECT p.uuid, p.username, p.display_name
+    `SELECT p.uuid, p.username, p.display_name, p.world_name, p.world_group, p.rank_key
      FROM mineacle_web_follows f
      JOIN mineacle_web_profiles p ON p.uuid = f.target_uuid
      WHERE f.follower_account_id = ?
@@ -101,7 +105,82 @@ export async function getOnlineFollowing(accountId: number): Promise<OnlineFrien
     uuid: String(row.uuid),
     username: String(row.username),
     displayName: String(row.display_name || row.username),
+    world: String(row.world_name || row.world_group || ""),
+    rankKey: String(row.rank_key || ""),
   }));
+}
+
+/*
+ * Saves "<friend> is online" in the viewer's notifications for friends the
+ * pop-up just showed. Only players they follow who really are online count,
+ * the same friend is saved at most once every 30 minutes, and the entries
+ * are stored as already read (the pop-up was the alert).
+ */
+export async function recordFriendsOnline(accountId: number, uuids: string[]) {
+  const wanted = new Set(uuids.map((uuid) => uuid.toLowerCase()));
+  const friends = (await getOnlineFollowing(accountId)).filter((friend) =>
+    wanted.has(friend.uuid.toLowerCase()),
+  );
+  const now = Math.floor(Date.now() / 1000);
+  const db = getCoreDb();
+
+  for (const friend of friends.slice(0, 10)) {
+    const title = `${friend.displayName || friend.username} is online`.slice(0, 120);
+    const [recent] = await db.execute<RowDataPacket[]>(
+      `SELECT 1
+       FROM mineacle_web_notifications
+       WHERE account_id = ?
+         AND category = 'Friends'
+         AND title = ?
+         AND created_at > ?
+       LIMIT 1`,
+      [accountId, title, now - 30 * 60],
+    );
+
+    if (recent[0]) {
+      continue;
+    }
+
+    await db.execute(
+      `INSERT INTO mineacle_web_notifications
+         (account_id, category, title, body, created_at, read_at)
+       VALUES (?, 'Friends', ?, ?, ?, ?)`,
+      [
+        accountId,
+        title,
+        friend.world ? `Playing in ${friend.world}.` : "Playing on Mineacle.",
+        now,
+        now,
+      ],
+    );
+  }
+}
+
+/*
+ * Players with a website account who follow this player (newest first).
+ * Followers are accounts, so they're looked up by the account's UUID.
+ */
+export async function getFollowers(targetUuid: string): Promise<FollowingPlayer[]> {
+  await ensureAuthSchema();
+
+  const [rows] = await getCoreDb().execute<RowDataPacket[]>(
+    `SELECT a.uuid, f.created_at
+     FROM mineacle_web_follows f
+     JOIN mineacle_web_accounts a ON a.id = f.follower_account_id
+     WHERE f.target_uuid = ?
+       AND a.disabled = 0
+     ORDER BY f.created_at DESC
+     LIMIT 100`,
+    [targetUuid],
+  );
+
+  const profiles = await getPlayersByUuids(rows.map((row) => String(row.uuid)));
+  const byUuid = new Map(profiles.map((profile) => [profile.uuid, profile]));
+
+  return rows.flatMap((row) => {
+    const profile = byUuid.get(String(row.uuid));
+    return profile ? [{ profile, createdAt: Number(row.created_at || 0) }] : [];
+  });
 }
 
 export async function isFollowing(

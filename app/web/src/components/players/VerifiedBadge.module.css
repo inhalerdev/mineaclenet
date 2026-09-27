@@ -18,10 +18,13 @@
   vertical-align: middle;
 }
 
-.badge img {
+/* Written as .badge.badge so list styles for player heads (".player img")
+   can't resize the check. */
+.badge.badge img {
   width: 8px;
   height: 8px;
   display: block;
+  box-shadow: none;
   image-rendering: pixelated;
 }
 
@@ -37,7 +40,7 @@
     3px 3px 0 2px #000000;
 }
 
-.badge[data-size="large"] img {
+.badge.badge[data-size="large"] img {
   width: 16px;
   height: 16px;
 }
@@ -49,7 +52,7 @@
     flex-basis: 22px;
   }
 
-  .badge[data-size="large"] img {
+  .badge.badge[data-size="large"] img {
     width: 12px;
     height: 12px;
   }

@@ -15,6 +15,8 @@ export type PlayerSuggestion = {
   displayName: string;
   online: boolean;
   teamName: string | null;
+  /* LuckPerms group, for the rank prefix. */
+  rankKey?: string;
 };
 
 export const USERNAME_PATTERN = /^[A-Za-z0-9_]{2,16}$/;

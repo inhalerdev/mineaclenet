@@ -6,6 +6,7 @@ import {
   playerAvatarUrl,
 } from "@/components/players/PlayerAvatar";
 import { PlayerSearch } from "@/components/players/PlayerSearch";
+import { RankPrefix } from "@/components/players/RankPrefix";
 import { FriendOnlineToasts } from "@/components/social/FriendOnlineToasts";
 import type { Viewer } from "@/features/auth/types";
 import {
@@ -50,6 +51,7 @@ export type HomeLeaderboardPlayer = {
   username: string;
   displayName: string;
   online: boolean;
+  rankKey?: string;
 };
 
 type SiteHeaderProps = {
@@ -417,6 +419,7 @@ export function SiteHeader({
                         className={styles.topPlayerAvatar}
                       />
                       <strong>
+                        <RankPrefix rankKey={player.rankKey} />
                         {player.displayName || player.username}
                       </strong>
                       <small data-online={player.online}>

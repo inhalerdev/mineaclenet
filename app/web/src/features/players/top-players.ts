@@ -13,6 +13,8 @@ export type TopPlayer = {
   online: boolean;
   /** Balance as shown in game, e.g. "$54,210.00". */
   balance: string;
+  /** LuckPerms group, for the rank prefix. */
+  rankKey: string;
 };
 
 export const getTopPlayers = memoryCache<TopPlayer[]>(
@@ -26,6 +28,7 @@ export const getTopPlayers = memoryCache<TopPlayer[]>(
       displayName: player.displayName,
       online: player.online,
       balance: player.balanceFormatted,
+      rankKey: player.rankKey,
     }));
   },
   [],

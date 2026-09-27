@@ -6,6 +6,7 @@ import {
 } from "@/features/auth/session";
 import { getPlayerByUuid } from "@/features/players/repository";
 import { getTopPlayers } from "@/features/players/top-players";
+import { getSocialLinksForAccount } from "@/features/social/social-links";
 import { withReturnPath } from "@/shared/navigation/return-path";
 
 export const dynamic = "force-dynamic";
@@ -21,10 +22,11 @@ export default async function Profile() {
     redirect(withReturnPath("/login", "/profile"));
   }
 
-  const [topPlayers, player, sessionCount] = await Promise.all([
+  const [topPlayers, player, sessionCount, socialLinks] = await Promise.all([
     getTopPlayers(),
     getPlayerByUuid(viewer.uuid),
     getActiveSessionCount(viewer.accountId),
+    getSocialLinksForAccount(viewer.accountId).catch(() => []),
   ]);
 
   return (
@@ -33,6 +35,7 @@ export default async function Profile() {
       topPlayers={topPlayers}
       player={player}
       sessionCount={sessionCount}
+      socialLinks={socialLinks}
     />
   );
 }

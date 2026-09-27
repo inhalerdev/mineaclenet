@@ -8,7 +8,9 @@ import { StatTile } from "@/components/site/PageIntro";
 import type { HomeLeaderboardPlayer } from "@/components/site/SiteHeader";
 import type { Viewer } from "@/features/auth/types";
 import type { PlayerProfile } from "@/features/players/types";
+import type { SocialLink } from "@/features/social/social-platforms";
 import styles from "./AccountSettings.module.css";
+import { SocialLinksCard } from "./SocialLinksCard";
 
 /*
  * Your account (/profile): who you're logged in as, quick links to your
@@ -20,11 +22,13 @@ export function AccountSettingsPage({
   topPlayers,
   player,
   sessionCount,
+  socialLinks,
 }: {
   viewer: Viewer;
   topPlayers: HomeLeaderboardPlayer[];
   player: PlayerProfile | null;
   sessionCount: number;
+  socialLinks: SocialLink[];
 }) {
   const publicHref = `/player/${encodeURIComponent(viewer.username)}`;
 
@@ -81,7 +85,12 @@ export function AccountSettingsPage({
         </div>
 
         <div className={styles.grid}>
-          <PasswordCard />
+          <div className={styles.side}>
+            <SocialLinksCard
+              initial={Object.fromEntries(socialLinks.map((link) => [link.platform, link.handle]))}
+            />
+            <PasswordCard />
+          </div>
 
           <div className={styles.side}>
             <SessionsCard sessionCount={sessionCount} />

@@ -11,6 +11,7 @@ import { playerAvatarUrl } from "@/components/players/PlayerAvatar";
 import { usePlayerSuggestions } from "@/components/players/usePlayerSuggestions";
 import block from "@/components/site/BlockButton.module.css";
 import styles from "./FollowPlayer.module.css";
+import { RankPrefix } from "@/components/players/RankPrefix";
 
 type Message = { tone: "ok" | "error"; text: string } | null;
 
@@ -192,7 +193,10 @@ export function FollowPlayer({
                       referrerPolicy="no-referrer"
                     />
                     <span className={styles.identity}>
-                      <strong>{player.displayName || player.username}</strong>
+                      <strong>
+                        <RankPrefix rankKey={player.rankKey} />
+                        {player.displayName || player.username}
+                      </strong>
                       <small data-online={player.online || undefined}>
                         {player.online ? "Online" : player.teamName || "Offline"}
                       </small>

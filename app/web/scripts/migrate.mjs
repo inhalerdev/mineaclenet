@@ -116,6 +116,22 @@ const TABLES = [
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
     `,
   ],
+  [
+    "mineacle_web_social_links",
+    `
+      CREATE TABLE mineacle_web_social_links (
+        account_id BIGINT UNSIGNED NOT NULL,
+        platform VARCHAR(16) NOT NULL,
+        handle VARCHAR(64) NOT NULL,
+        verified_at BIGINT UNSIGNED NULL,
+        updated_at BIGINT UNSIGNED NOT NULL,
+        PRIMARY KEY (account_id, platform),
+        CONSTRAINT fk_mineacle_social_account
+          FOREIGN KEY (account_id) REFERENCES mineacle_web_accounts(id)
+          ON DELETE CASCADE
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    `,
+  ],
 ];
 
 const pool = createMineaclePool(1);

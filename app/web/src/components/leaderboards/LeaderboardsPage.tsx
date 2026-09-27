@@ -12,6 +12,7 @@ import {
 import type { LeaderboardSort, PlayerProfile } from "@/features/players/types";
 import { VerifiedBadge } from "@/components/players/VerifiedBadge";
 import styles from "./LeaderboardsPage.module.css";
+import { RankPrefix } from "@/components/players/RankPrefix";
 
 /*
  * Leaderboards (/leaderboards): pick a ranking, see the top 3 on a podium
@@ -96,7 +97,10 @@ export function LeaderboardsPage({
                       referrerPolicy="no-referrer"
                     />
                     <strong className={styles.podiumName}>
-                      <span>{name(player)}</span>
+                      <span>
+                        <RankPrefix rankKey={player.rankKey} />
+                        {name(player)}
+                      </span>
                       {isVerified(player) ? <VerifiedBadge /> : null}
                       {isYou(player) ? <em className={styles.you}>You</em> : null}
                     </strong>
@@ -138,7 +142,10 @@ export function LeaderboardsPage({
                           />
                           <span className={styles.playerText}>
                             <strong>
-                              <span>{name(player)}</span>
+                              <span>
+                                <RankPrefix rankKey={player.rankKey} />
+                                {name(player)}
+                              </span>
                               {isVerified(player) ? <VerifiedBadge /> : null}
                               {isYou(player) ? <em className={styles.you}>You</em> : null}
                             </strong>
