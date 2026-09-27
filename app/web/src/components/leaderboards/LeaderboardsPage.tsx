@@ -15,6 +15,8 @@ import styles from "./LeaderboardsPage.module.css";
 /*
  * Leaderboards (/leaderboards): pick a ranking, see the top 3 on a podium
  * and places 4–50 in a table with every stat (the chosen one lit up).
+ * Your own spot is marked with a YOU tag: in your medal color on the
+ * podium, and as the "selected hotbar slot" (white frame) in the table.
  * The data is loaded by app/leaderboards/page.tsx.
  */
 export function LeaderboardsPage({
@@ -87,7 +89,10 @@ export function LeaderboardsPage({
                       alt=""
                       referrerPolicy="no-referrer"
                     />
-                    <strong className={styles.podiumName}>{name(player)}</strong>
+                    <strong className={styles.podiumName}>
+                      <span>{name(player)}</span>
+                      {isYou(player) ? <em className={styles.you}>You</em> : null}
+                    </strong>
                     <small className={styles.podiumSub} data-online={player.online || undefined}>
                       {subtitle(player)}
                     </small>

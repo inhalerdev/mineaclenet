@@ -135,12 +135,20 @@
 
 .podiumName {
   max-width: 100%;
-  overflow: hidden;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 18px;
   font-weight: 400;
   line-height: 1.15;
-  text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.podiumName span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .podiumSub,
@@ -172,9 +180,49 @@
   text-transform: uppercase;
 }
 
-/* Your own card / row: purple edge. */
+/* --- Your own spot ---------------------------------------------------------
+ * YOU tag next to your name. On the podium it's in your medal color and
+ * the card gets a matching outline and glow; in the table your row looks
+ * like the selected hotbar slot (white frame). */
+.you {
+  flex: 0 0 auto;
+  padding: 3px 5px 4px;
+  background: #ffffff;
+  box-shadow:
+    inset 0 -2px 0 #b8b8b8,
+    0 0 0 2px var(--mc-outline);
+  color: #1e1e1e;
+  font-size: 10px;
+  font-style: normal;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.podiumCard .you {
+  background: var(--place);
+  box-shadow:
+    inset 0 2px 0 var(--place-light),
+    inset 0 -2px 0 var(--place-edge),
+    0 0 0 2px var(--mc-outline);
+  color: var(--place-text);
+  font-size: 11px;
+}
+
 .podium .podiumCard[data-you] {
-  border-color: var(--mc-purple-face);
+  border-color: var(--place);
+  background:
+    radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--place) 26%, transparent), transparent 60%),
+    #262626;
+  box-shadow:
+    inset 0 2px 0 #333333,
+    inset 0 -4px 0 #181818,
+    inset 0 4px 0 var(--place),
+    0 0 24px color-mix(in srgb, var(--place) 30%, transparent);
+}
+
+.podium .podiumCard[data-you]:hover,
+.podium .podiumCard[data-you]:focus-visible {
+  border-color: #ffffff;
 }
 
 /* ==========================================================================
@@ -240,8 +288,14 @@
 }
 
 .table .row[data-you] {
-  background: rgba(132, 54, 254, 0.12);
-  box-shadow: inset 3px 0 0 var(--mc-purple-face);
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow:
+    inset 0 0 0 2px #ffffff,
+    inset 0 0 0 4px rgba(0, 0, 0, 0.55);
+}
+
+.table .row[data-you] .rank {
+  color: #ffffff;
 }
 
 .rank {
@@ -288,18 +342,6 @@
 
 .table .row:hover .playerText strong {
   color: var(--mc-purple-face);
-}
-
-.you {
-  flex: 0 0 auto;
-  padding: 3px 5px 4px;
-  background: var(--mc-purple);
-  box-shadow: 0 0 0 2px var(--mc-outline);
-  color: #ffffff;
-  font-size: 10px;
-  font-style: normal;
-  line-height: 1;
-  text-transform: uppercase;
 }
 
 .stat {
