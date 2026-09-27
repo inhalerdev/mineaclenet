@@ -20,6 +20,7 @@
 .site {
   position: relative;
   display: grid;
+  align-content: start;
   gap: 16px;
   padding: 20px;
   border: 2px solid var(--mc-outline);
@@ -95,6 +96,118 @@
 .voteButton.voteButton {
   height: 44px;
   font-size: 14px;
+}
+
+/* --- Today's progress: one block per site, green once voted ------------- */
+.sitesBlock {
+  display: grid;
+  gap: 14px;
+}
+
+.progress {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin: 0;
+  color: var(--mc-text-muted);
+  font-size: 13px;
+}
+
+.progressBar {
+  display: flex;
+  gap: 4px;
+}
+
+.progressBar i {
+  width: 22px;
+  height: 10px;
+  background: #2b2b2b;
+  box-shadow: 0 0 0 2px var(--mc-outline);
+}
+
+.progressBar i[data-done] {
+  background: var(--mc-green);
+  box-shadow:
+    inset 0 2px 0 var(--mc-green-light),
+    0 0 0 2px var(--mc-outline);
+}
+
+/* --- Voted: the card goes grey until the site's timer runs out ------------ */
+.site[data-voted] {
+  background: #1b1b1b;
+  box-shadow:
+    inset 0 2px 0 #242424,
+    inset 0 -4px 0 #141414;
+}
+
+.site[data-voted] .siteName strong,
+.site[data-voted] .siteReward {
+  color: var(--mc-text-muted);
+}
+
+.site[data-voted] .siteReward img {
+  opacity: 0.6;
+}
+
+/* The number block becomes a green check. */
+.site[data-voted] .siteNumber {
+  background: var(--mc-green);
+  box-shadow:
+    inset 0 2px 0 var(--mc-green-light),
+    inset 0 -3px 0 var(--mc-green-edge),
+    0 0 0 2px var(--mc-outline);
+}
+
+.siteNumber img {
+  width: 12px;
+  height: 12px;
+  image-rendering: pixelated;
+}
+
+/* In place of Vote now: "Voted · Again in 13h 22m", not clickable.
+   Written with .site so it beats the block button's own look and hover. */
+.site .voteButton.voteDone {
+  gap: 10px;
+  background: #242424;
+  box-shadow:
+    inset 0 2px 0 #2e2e2e,
+    inset 0 -4px 0 #161616;
+  cursor: default;
+}
+
+.site .voteButton.voteDone:hover,
+.site .voteButton.voteDone:active {
+  border-color: var(--mc-outline);
+  background: #242424;
+  box-shadow:
+    inset 0 2px 0 #2e2e2e,
+    inset 0 -4px 0 #161616;
+  transform: none;
+}
+
+.votedLabel {
+  color: var(--mc-live);
+}
+
+.again {
+  color: var(--mc-text-muted);
+  font-size: 12px;
+}
+
+/* Waiting: "Vote now" was clicked, the vote hasn't arrived yet. */
+.site[data-waiting] {
+  box-shadow:
+    inset 0 2px 0 #2e2e2e,
+    inset 0 -4px 0 #181818,
+    inset 0 0 0 2px rgba(98, 194, 73, 0.35);
+}
+
+.waitingNote {
+  margin: 0;
+  color: var(--mc-text-muted);
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 /* --- Logged out: "Log in to vote" box ----------------------------------- */
@@ -227,6 +340,10 @@
     grid-column: 3;
     grid-row: 1 / span 2;
     min-width: 128px;
+  }
+
+  .waitingNote {
+    grid-column: 1 / -1;
   }
 }
 

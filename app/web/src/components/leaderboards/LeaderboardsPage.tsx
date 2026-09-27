@@ -10,6 +10,7 @@ import {
   leaderboardValue,
 } from "@/features/players/leaderboard";
 import type { LeaderboardSort, PlayerProfile } from "@/features/players/types";
+import { VerifiedBadge } from "@/components/players/VerifiedBadge";
 import styles from "./LeaderboardsPage.module.css";
 
 /*
@@ -24,16 +25,21 @@ export function LeaderboardsPage({
   topPlayers,
   sort,
   players,
+  verifiedUuids = [],
 }: {
   viewer: Viewer | null;
   topPlayers: HomeLeaderboardPlayer[];
   sort: LeaderboardSort;
   /* null when the database can't be reached. */
   players: PlayerProfile[] | null;
+  /* Lower-case UUIDs of players with a linked website account. */
+  verifiedUuids?: string[];
 }) {
   const sortLabel = leaderboardSorts.find((item) => item.key === sort)?.label ?? "";
   const podium = players?.slice(0, 3) ?? [];
   const rest = players?.slice(3) ?? [];
+  const verified = new Set(verifiedUuids);
+  const isVerified = (player: PlayerProfile) => verified.has(player.uuid.toLowerCase());
   const isYou = (player: PlayerProfile) => Boolean(viewer && viewer.uuid === player.uuid);
   const profileHref = (player: PlayerProfile) => `/player/${encodeURIComponent(player.username)}`;
   const name = (player: PlayerProfile) => player.displayName || player.username;
@@ -91,6 +97,7 @@ export function LeaderboardsPage({
                     />
                     <strong className={styles.podiumName}>
                       <span>{name(player)}</span>
+                      {isVerified(player) ? <VerifiedBadge /> : null}
                       {isYou(player) ? <em className={styles.you}>You</em> : null}
                     </strong>
                     <small className={styles.podiumSub} data-online={player.online || undefined}>
@@ -132,6 +139,7 @@ export function LeaderboardsPage({
                           <span className={styles.playerText}>
                             <strong>
                               <span>{name(player)}</span>
+                              {isVerified(player) ? <VerifiedBadge /> : null}
                               {isYou(player) ? <em className={styles.you}>You</em> : null}
                             </strong>
                             <small data-online={player.online || undefined}>{subtitle(player)}</small>

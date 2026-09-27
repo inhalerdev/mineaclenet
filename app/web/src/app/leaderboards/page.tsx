@@ -17,7 +17,7 @@ export default async function Leaderboards({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const sort = readLeaderboardSort((await searchParams).sort);
-  const [viewer, topPlayers, players] = await Promise.all([
+  const [viewer, topPlayers, data] = await Promise.all([
     getCurrentViewer(),
     getTopPlayers(),
     getLeaderboard(sort),
@@ -28,7 +28,8 @@ export default async function Leaderboards({
       viewer={viewer}
       topPlayers={topPlayers}
       sort={sort}
-      players={players}
+      players={data?.players ?? null}
+      verifiedUuids={data?.verified ?? []}
     />
   );
 }

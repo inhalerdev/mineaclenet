@@ -1,6 +1,7 @@
 import { VotePage } from "@/components/vote/VotePage";
 import { getCurrentViewer } from "@/features/auth/session";
 import { getTopPlayers } from "@/features/players/top-players";
+import { getVoteStatus } from "@/features/vote/vote-status";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +16,14 @@ export default async function Vote() {
     getCurrentViewer(),
     getTopPlayers(),
   ]);
+  const voteStatus = viewer ? await getVoteStatus(viewer) : null;
 
-  return <VotePage viewer={viewer} topPlayers={topPlayers} />;
+  return (
+    <VotePage
+      viewer={viewer}
+      topPlayers={topPlayers}
+      voteStatus={voteStatus}
+      serverNow={Date.now()}
+    />
+  );
 }

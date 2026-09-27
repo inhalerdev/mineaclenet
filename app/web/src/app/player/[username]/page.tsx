@@ -4,6 +4,7 @@ import { PlayerProfilePage } from "@/components/players/PlayerProfilePage";
 import { getCurrentViewer } from "@/features/auth/session";
 import { getPlayerByUsername } from "@/features/players/repository";
 import { getTopPlayers } from "@/features/players/top-players";
+import { isVerifiedPlayer } from "@/features/players/verified";
 import { isFollowing } from "@/features/social/follows";
 
 export const dynamic = "force-dynamic";
@@ -44,8 +45,10 @@ export default async function Player({
   }
 
   const isSelf = Boolean(viewer && viewer.uuid === player.uuid);
-  const following =
-    viewer && !isSelf ? await isFollowing(viewer.accountId, player.uuid) : false;
+  const [following, verified] = await Promise.all([
+    viewer && !isSelf ? isFollowing(viewer.accountId, player.uuid) : false,
+    isVerifiedPlayer(player.uuid),
+  ]);
 
   return (
     <PlayerProfilePage
@@ -54,6 +57,7 @@ export default async function Player({
       player={player}
       isSelf={isSelf}
       following={following}
+      verified={verified}
     />
   );
 }

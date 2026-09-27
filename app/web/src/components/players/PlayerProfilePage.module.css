@@ -74,16 +74,25 @@
   box-shadow: 0 0 6px var(--mc-live);
 }
 
+/* Name, with the verified badge after it when their account is linked. */
 .identity h1 {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
   margin: 16px 0 0;
-  overflow: hidden;
   color: #ffffff;
   font-size: clamp(30px, 3vw, 44px);
   font-weight: 400;
   line-height: 1.05;
-  text-overflow: ellipsis;
   text-shadow: 3px 3px 0 #000000;
   white-space: nowrap;
+}
+
+.identity h1 > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .identity p {
@@ -259,6 +268,7 @@
   }
 
   .identity h1 {
+    gap: 10px;
     margin-top: 12px;
     font-size: 26px;
   }
