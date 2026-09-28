@@ -326,6 +326,8 @@
   display: block;
   object-fit: contain;
   image-rendering: pixelated;
+  /* Keeps the icon readable over a card's background art. */
+  filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.85));
 }
 
 .quickCard > strong {
@@ -338,6 +340,8 @@
   line-height: 1.15;
   text-align: center;
   text-wrap: balance;
+  /* Readable over a card's background art. */
+  text-shadow: 2px 2px 0 #000000;
 }
 
 /* Small line under a card's title (e.g. Discord member counts). Hangs

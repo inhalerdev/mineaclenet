@@ -58,8 +58,8 @@ export const homeContent = {
   // Quick-link card backgrounds. Empty = plain card (no image). To add art
   // later, put the file in public/images/home/ and set its path here.
   mineaclePlus: {
-    media: "",
-    mediaLabel: "Mineacle+ showcase artwork",
+    media: "/images/home/marketplace.png",
+    mediaLabel: "Pixel-art night market with striped stalls",
   },
   rewards: {
     media: "",
