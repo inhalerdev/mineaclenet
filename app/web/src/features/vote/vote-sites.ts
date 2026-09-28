@@ -44,6 +44,28 @@ export const voteSites: VoteSite[] = [
     href: "https://minecraft-mp.com/server/359207/vote/",
     cooldownHours: 24,
   },
+  {
+    id: "mc-servers",
+    name: "MC-Servers",
+    domain: "mc-servers.com",
+    href: "https://mc-servers.com/vote/7135",
+    cooldownHours: 24,
+  },
+  {
+    id: "minecraft-buzz",
+    name: "Minecraft.buzz",
+    domain: "minecraft.buzz",
+    href: "https://minecraft.buzz/vote/mineacle",
+    cooldownHours: 24,
+  },
+  {
+    // Not the same site as "Minecraft Server List" above (note the dash).
+    id: "minecraft-serverlist",
+    name: "Minecraft-Serverlist",
+    domain: "minecraft-serverlist.com",
+    href: "https://minecraft-serverlist.com/server/6617/vote",
+    cooldownHours: 24,
+  },
 ];
 
 /* What one vote is worth in-game. */
@@ -55,7 +77,29 @@ function normalize(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
-/* The site a vote came from, by the service name the server saved. */
+/* Like normalize() but keeps dots and dashes, to tell apart sites whose
+   names only differ by punctuation ("minecraft-server-list.com" and
+   "minecraft-serverlist.com"). */
+function loose(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9.-]/g, "");
+}
+
+/* Names a site's votes may arrive under: its domain with and without
+   .com/.org/.net, its name, and any extra `services`. (Other endings are
+   kept, so "minecraft.buzz" doesn't turn into just "minecraft".) */
+function siteKeys(site: VoteSite) {
+  return [
+    site.domain.replace(/\.(com|org|net)$/i, ""),
+    site.domain,
+    site.name,
+    ...(site.services ?? []),
+  ];
+}
+
+/* The site a vote came from, by the service name the server saved.
+   First by name with punctuation kept, then by letters and digits only;
+   if that second check fits more than one site, the vote isn't matched
+   (add the exact service name to that site's `services` to fix it). */
 export function matchVoteSite(service: string): VoteSite | undefined {
   const name = normalize(service);
 
@@ -63,9 +107,27 @@ export function matchVoteSite(service: string): VoteSite | undefined {
     return undefined;
   }
 
-  return voteSites.find((site) =>
-    [site.domain.replace(/\.[a-z]+$/i, ""), site.domain, site.name, ...(site.services ?? [])]
+  const raw = loose(service);
+  const exact = voteSites.filter((site) =>
+    siteKeys(site)
+      .map(loose)
+      .some((key) => key && raw.startsWith(key)),
+  );
+
+  if (exact.length) {
+    // The longest matching key is the most specific one.
+    return exact.sort(
+      (a, b) =>
+        Math.max(...siteKeys(b).map(loose).filter((key) => raw.startsWith(key)).map((key) => key.length)) -
+        Math.max(...siteKeys(a).map(loose).filter((key) => raw.startsWith(key)).map((key) => key.length)),
+    )[0];
+  }
+
+  const fuzzy = voteSites.filter((site) =>
+    siteKeys(site)
       .map(normalize)
       .some((key) => key && name.startsWith(key)),
   );
+
+  return fuzzy.length === 1 ? fuzzy[0] : undefined;
 }
