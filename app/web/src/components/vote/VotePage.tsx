@@ -37,7 +37,7 @@ export function VotePage({
       text: "Enter your Minecraft username. Sites you've voted on turn grey until you can vote again.",
     },
     {
-      icon: mineacleIcons.crate,
+      icon: mineacleIcons.key,
       title: `Get a ${voteReward}`,
       text: "Every vote on every site sends one key to you in-game.",
     },
@@ -63,7 +63,7 @@ export function VotePage({
             <dl className={content.stats}>
               <StatTile label="Vote sites">{voteSites.length}</StatTile>
               <StatTile label="Keys per day">
-                <img src={mineacleIcons.crate} alt="" />
+                <img src={mineacleIcons.key} alt="" />
                 Up to {voteSites.length}
               </StatTile>
               {viewer ? (
@@ -92,7 +92,7 @@ export function VotePage({
           />
         ) : (
           <section className={styles.locked} aria-labelledby="vote-login">
-            <img src={mineacleIcons.crate} alt="" />
+            <img src={mineacleIcons.key} alt="" />
             <div>
               <h2 id="vote-login">Log in to vote</h2>
               <p>

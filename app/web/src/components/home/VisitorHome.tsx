@@ -480,7 +480,7 @@ export function VisitorHome({
                 </span>
               </button>
               <a className={styles.voteButton} href="/vote">
-                <img src={mineacleIcons.crate} alt="" draggable={false} />
+                <img src={mineacleIcons.key} alt="" draggable={false} />
                 <span>Vote for Keys</span>
                 {voteCount ? (
                   <em className={styles.voteCount} data-done={votes?.left === 0 || undefined}>

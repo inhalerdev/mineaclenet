@@ -13,6 +13,9 @@ export const mineacleIcons = {
   friends: `${MINEACLE_ICON_ROOT}/friends.svg`,
   crate: `${MINEACLE_ICON_ROOT}/crate.png`,
   gift: `${MINEACLE_ICON_ROOT}/gift.png`,
+  // Vote Crate Key (vote page, homepage Vote button). Replace the file to
+  // change it everywhere.
+  key: `${MINEACLE_ICON_ROOT}/key.png`,
   location: `${MINEACLE_ICON_ROOT}/location.png`,
   play: `${MINEACLE_ICON_ROOT}/play.png`,
   // The profile icon lives with the nav icons now.

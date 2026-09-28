@@ -153,7 +153,7 @@ export function VoteSites({
                 <small>{site.domain}</small>
               </div>
               <p className={styles.siteReward}>
-                <img src={mineacleIcons.crate} alt="" />
+                <img src={mineacleIcons.key} alt="" />
                 {voted ? `${reward} earned` : `+1 ${reward}`}
               </p>
 
