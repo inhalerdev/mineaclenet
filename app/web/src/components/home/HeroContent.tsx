@@ -4,7 +4,7 @@ import styles from "./HeroContent.module.css";
 /*
  * Text block in the homepage hero, bottom-left over the background video:
  *
- *   OPEN BETA · Now open for Java Edition      (one quiet line)
+ *   [OPEN BETA] Now open for Java Edition     (gold tag + quiet news)
  *   Big headline, last part in purple
  *   A line of text. For visitors the words for what Mineacle is about
  *   (fight, survive, trade, friends) are in their in-game stat colors.
