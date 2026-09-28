@@ -54,55 +54,71 @@
   order: 3;
 }
 
+/* Each card is a block: black outline, a thick cap in the place color on
+   top, light/dark bevel edges and a hard drop shadow. The outline and drop
+   shadow are variables so "your" card can swap in the hotbar frame. */
 .podium .podiumCard {
+  --frame: 0 0 0 2px var(--mc-outline);
+  --drop: 4px 4px 0 2px rgba(0, 0, 0, 0.55);
+
   position: relative;
   display: grid;
   justify-items: center;
   gap: 8px;
-  padding: 28px 16px 20px;
-  border: 2px solid var(--mc-outline);
-  background:
-    radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--place) 14%, transparent), transparent 55%),
-    #222222;
+  padding: 40px 16px 24px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--place) 12%, #232323) 0%,
+    #202020 60%
+  );
   box-shadow:
-    inset 0 2px 0 #2e2e2e,
-    inset 0 -4px 0 #181818,
-    inset 0 4px 0 var(--place);
+    inset 0 6px 0 var(--place),
+    inset 0 8px 0 var(--place-edge),
+    inset 2px 0 0 #2d2d2d,
+    inset -2px 0 0 #191919,
+    inset 0 -4px 0 #171717,
+    var(--frame),
+    var(--drop);
   color: #ffffff;
   text-align: center;
   transition:
     transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    box-shadow 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    border-color 140ms ease;
+    filter 110ms ease;
 }
 
 .podiumPlace[data-place="1"] .podiumCard {
-  padding-top: 48px;
-  padding-bottom: 28px;
+  padding-top: 56px;
+  padding-bottom: 32px;
 }
 
 .podium .podiumCard:hover,
 .podium .podiumCard:focus-visible {
-  border-color: #ffffff;
   outline: 0;
-  box-shadow:
-    inset 0 2px 0 #333333,
-    inset 0 -4px 0 #181818,
-    inset 0 4px 0 var(--place),
-    0 4px 0 rgba(0, 0, 0, 0.45);
-  transform: translateY(-2px);
+  filter: brightness(1.1);
+  transform: translateY(-3px);
 }
 
 .podium .podiumCard:active {
-  transform: translateY(2px);
+  filter: none;
+  transform: translateY(1px);
   transition-duration: 50ms;
+}
+
+/* Your card: the selected hotbar slot frame (white between black lines),
+   the same look as your row in the table. */
+.podium .podiumCard[data-you] {
+  --frame:
+    0 0 0 2px var(--mc-outline),
+    0 0 0 5px #ffffff,
+    0 0 0 7px var(--mc-outline);
+  --drop: 4px 4px 0 7px rgba(0, 0, 0, 0.55);
 }
 
 /* Place number block in the corner. */
 .medal {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: 18px;
+  left: 14px;
   width: 32px;
   height: 32px;
   display: grid;
@@ -147,6 +163,7 @@
 
 .podiumName span {
   min-width: 0;
+  padding: 2px 0;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -181,9 +198,9 @@
 }
 
 /* --- Your own spot ---------------------------------------------------------
- * YOU tag next to your name. On the podium it's in your medal color and
- * the card gets a matching outline and glow; in the table your row looks
- * like the selected hotbar slot (white frame). */
+ * White YOU tag (next to your name in the table, in the corner on the
+ * podium). Your podium card and table row look like the selected hotbar
+ * slot (white frame). */
 .you {
   flex: 0 0 auto;
   padding: 3px 5px 4px;
@@ -198,31 +215,17 @@
   text-transform: uppercase;
 }
 
+/* On the podium the YOU tag sits in the top-right corner, level with the
+   place number, so names line up across all three cards. */
 .podiumCard .you {
-  background: var(--place);
-  box-shadow:
-    inset 0 2px 0 var(--place-light),
-    inset 0 -2px 0 var(--place-edge),
-    0 0 0 2px var(--mc-outline);
-  color: var(--place-text);
-  font-size: 11px;
-}
-
-.podium .podiumCard[data-you] {
-  border-color: var(--place);
-  background:
-    radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--place) 26%, transparent), transparent 60%),
-    #262626;
-  box-shadow:
-    inset 0 2px 0 #333333,
-    inset 0 -4px 0 #181818,
-    inset 0 4px 0 var(--place),
-    0 0 24px color-mix(in srgb, var(--place) 30%, transparent);
-}
-
-.podium .podiumCard[data-you]:hover,
-.podium .podiumCard[data-you]:focus-visible {
-  border-color: #ffffff;
+  position: absolute;
+  top: 18px;
+  right: 14px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  padding: 0 8px 2px;
+  font-size: 12px;
 }
 
 /* ==========================================================================
@@ -336,6 +339,7 @@
 
 .playerText strong span {
   min-width: 0;
+  padding: 2px 0;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -358,15 +362,20 @@
  * ========================================================================== */
 @media (max-width: 960px) {
   .podium {
-    gap: 10px;
+    gap: 16px;
   }
 
   .podium .podiumCard {
-    padding: 44px 10px 16px;
+    padding: 60px 10px 18px;
   }
 
   .podiumPlace[data-place="1"] .podiumCard {
-    padding-top: 56px;
+    padding-top: 72px;
+  }
+
+  .podiumCard .you {
+    height: 26px;
+    font-size: 10px;
   }
 
   .podiumHead,
@@ -415,13 +424,21 @@
     align-items: center;
     column-gap: 12px;
     row-gap: 4px;
-    padding: 12px 14px;
+    padding: 18px 14px 14px;
     text-align: left;
   }
 
   .medal {
     position: static;
     grid-area: medal;
+  }
+
+  .podiumCard .you {
+    top: -10px;
+    right: 10px;
+    height: 20px;
+    padding: 0 6px 2px;
+    font-size: 10px;
   }
 
   .podiumHead,

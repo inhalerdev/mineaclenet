@@ -17,8 +17,8 @@ import { RankPrefix } from "@/components/players/RankPrefix";
 /*
  * Leaderboards (/leaderboards): pick a ranking, see the top 3 on a podium
  * and places 4–50 in a table with every stat (the chosen one lit up).
- * Your own spot is marked with a YOU tag: in your medal color on the
- * podium, and as the "selected hotbar slot" (white frame) in the table.
+ * Your own spot looks like the "selected hotbar slot" (white frame), with
+ * a YOU tag: in the card's corner on the podium, by your name in the table.
  * The data is loaded by app/leaderboards/page.tsx.
  */
 export function LeaderboardsPage({
@@ -90,6 +90,7 @@ export function LeaderboardsPage({
                 <li key={player.uuid} className={styles.podiumPlace} data-place={index + 1}>
                   <a className={styles.podiumCard} href={profileHref(player)} data-you={isYou(player) || undefined}>
                     <span className={styles.medal}>{index + 1}</span>
+                    {isYou(player) ? <em className={styles.you}>You</em> : null}
                     <img
                       className={styles.podiumHead}
                       src={playerAvatarUrl(player.uuid, 96)}
@@ -102,7 +103,6 @@ export function LeaderboardsPage({
                         {name(player)}
                       </span>
                       {isVerified(player) ? <VerifiedBadge /> : null}
-                      {isYou(player) ? <em className={styles.you}>You</em> : null}
                     </strong>
                     <small className={styles.podiumSub} data-online={player.online || undefined}>
                       {subtitle(player)}

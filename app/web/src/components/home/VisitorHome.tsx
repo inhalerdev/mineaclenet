@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { AchievementToast } from "@/components/home/AchievementToast";
 import { HeroContent, type HeroStat } from "@/components/home/HeroContent";
-import { playerAvatarUrl } from "@/components/players/PlayerAvatar";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import type { Viewer } from "@/features/auth/types";
 import { homeContent } from "@/features/home/home-content";
@@ -288,7 +287,6 @@ export function VisitorHome({
   // Live stat tiles under Play Now. A tile is left out until its number is
   // known (e.g. while the first status check runs, or if the database is
   // unreachable).
-  const topPlayer = topPlayers[0];
   const heroTiles: HeroStat[] = [
     ...(serverStatus
       ? [
@@ -308,16 +306,6 @@ export function VisitorHome({
             key: "joined",
             value: heroStats.playersJoined.toLocaleString(),
             label: "Unique players",
-          },
-        ]
-      : []),
-    ...(topPlayer
-      ? [
-          {
-            key: "top",
-            value: topPlayer.displayName || topPlayer.username,
-            label: "#1 player",
-            image: playerAvatarUrl(topPlayer.uuid, 40),
           },
         ]
       : []),
