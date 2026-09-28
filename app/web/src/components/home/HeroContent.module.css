@@ -211,14 +211,16 @@
 .stats {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: baseline;
   gap: 8px 0;
   margin: 14px 0 0;
 }
 
+/* Items sit on one text baseline, so the big numbers and small labels
+   line up. */
 .stat {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 7px;
   padding: 0 12px;
   box-shadow: inset 2px 0 0 rgba(255, 255, 255, 0.16);
@@ -243,7 +245,7 @@
 
 .stat dd {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 8px;
   min-width: 0;
   margin: 0;
@@ -258,6 +260,7 @@
   width: 16px;
   height: 16px;
   flex: 0 0 16px;
+  align-self: center;
   box-shadow: 0 0 0 2px var(--mc-outline);
   image-rendering: pixelated;
 }
@@ -267,6 +270,7 @@
   width: 8px;
   height: 8px;
   flex: 0 0 8px;
+  align-self: center;
   background: var(--mc-live);
   box-shadow: 0 0 0 2px #0b3d22;
   animation: livePulse 1.6s steps(2, jump-none) infinite;

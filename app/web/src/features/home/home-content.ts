@@ -33,11 +33,11 @@ export const homeContent = {
     // The headline, then a last word shown in brand purple.
     headline: "Fight. Trade.",
     headlineAccent: "Rise.",
-    text: "Fight for your turf, survive the wild and trade your way to the top. It's all better with friends.",
+    text: "Duel for loot, survive the wild and trade your way to the top. It's all better with friends.",
     // Words in the text shown in the in-game stat colors: the four things
     // Mineacle is about. Each must appear in `text` above.
     highlights: [
-      { word: "Fight", color: "#fc1111" },
+      { word: "Duel", color: "#fc1111" },
       { word: "survive", color: "#fc8611" },
       { word: "trade", color: "#11fc7b" },
       { word: "friends", color: "#b078ff" },
