@@ -15,30 +15,11 @@ import {
  * with Discord / Twitch / YouTube" sign-in buttons). Until then links show
  * without the verified badge.
  */
-let tableReady = false;
-
-/* Creates the table if the deploy hasn't run migrations (scripts/migrate.mjs
-   creates the same table). */
-async function ensureSocialTable() {
-  if (tableReady) {
-    return;
-  }
-
-  await getCoreDb().query(`
-    CREATE TABLE IF NOT EXISTS mineacle_web_social_links (
-      account_id BIGINT UNSIGNED NOT NULL,
-      platform VARCHAR(16) NOT NULL,
-      handle VARCHAR(64) NOT NULL,
-      verified_at BIGINT UNSIGNED NULL,
-      updated_at BIGINT UNSIGNED NOT NULL,
-      PRIMARY KEY (account_id, platform),
-      CONSTRAINT fk_mineacle_social_account
-        FOREIGN KEY (account_id) REFERENCES mineacle_web_accounts(id)
-        ON DELETE CASCADE
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-  `);
-  tableReady = true;
-}
+/*
+ * The table is created by scripts/migrate.mjs (like every other
+ * mineacle_web_* table), so the website's database user never needs
+ * permission to create or change tables.
+ */
 
 function toLinks(rows: RowDataPacket[]): SocialLink[] {
   return rows
@@ -55,7 +36,6 @@ function toLinks(rows: RowDataPacket[]): SocialLink[] {
    throws: a database problem just shows no links. */
 export async function getSocialLinksForPlayer(uuid: string): Promise<SocialLink[]> {
   try {
-    await ensureSocialTable();
     const [rows] = await getCoreDb().execute<RowDataPacket[]>(
       `SELECT s.platform, s.handle, s.verified_at
        FROM mineacle_web_social_links s
@@ -71,7 +51,6 @@ export async function getSocialLinksForPlayer(uuid: string): Promise<SocialLink[
 }
 
 export async function getSocialLinksForAccount(accountId: number): Promise<SocialLink[]> {
-  await ensureSocialTable();
   const [rows] = await getCoreDb().execute<RowDataPacket[]>(
     `SELECT platform, handle, verified_at
      FROM mineacle_web_social_links
@@ -89,7 +68,6 @@ export async function saveSocialLinks(
   accountId: number,
   handles: Partial<Record<SocialPlatform, string>>,
 ) {
-  await ensureSocialTable();
   const db = getCoreDb();
   const now = Math.floor(Date.now() / 1000);
 
