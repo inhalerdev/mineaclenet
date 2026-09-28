@@ -284,7 +284,7 @@ export function VisitorHome({
   const currentlyPlaying = serverStatus
     ? serverStatus.currentlyPlaying.toLocaleString()
     : "—";
-  // Live stat tiles under Play Now. A tile is left out until its number is
+  // Live strip under the buttons. An item is left out until its number is
   // known (e.g. while the first status check runs, or if the database is
   // unreachable).
   const heroTiles: HeroStat[] = [
@@ -294,7 +294,7 @@ export function VisitorHome({
             ? {
                 key: "online",
                 value: currentlyPlaying,
-                label: "Online now",
+                label: "Playing now",
                 live: true,
               }
             : { key: "online", value: "Offline", label: "Server" },
@@ -305,10 +305,11 @@ export function VisitorHome({
           {
             key: "joined",
             value: heroStats.playersJoined.toLocaleString(),
-            label: "Unique players",
+            label: "Players joined",
           },
         ]
       : []),
+    { key: "ip", value: SERVER_ADDRESS, label: "Java IP" },
   ];
 
   const playState = copied
@@ -349,8 +350,11 @@ export function VisitorHome({
                 : []),
             ]}
             headline={heroText.headline}
+            headlineAccent={heroText.headlineAccent}
             text={heroText.text}
+            pillars={heroText.pillars}
             action={
+              <>
               <button
                 className={styles.playButton}
                 data-state={playState}
@@ -392,6 +396,14 @@ export function VisitorHome({
                   </span>
                 </span>
               </button>
+              <a className={styles.voteButton} href="/vote">
+                <img src={mineacleIcons.crate} alt="" draggable={false} />
+                <span>
+                  Vote for Keys
+                  <small>Free crate keys every day</small>
+                </span>
+              </a>
+              </>
             }
             stats={heroTiles}
           />

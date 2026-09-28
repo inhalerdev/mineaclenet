@@ -1,8 +1,9 @@
 /*
  * Homepage hero text (see HeroContent.tsx): tags, headline, a line of text,
- * Play Now and live stat tiles, bottom-left over the background video with a
- * dark fade behind it so it's readable on any frame. Colors come from
- * app/tokens.css; Play Now's own look is in VisitorHome.module.css.
+ * the four pillars, the buttons and the live strip, bottom-left over the
+ * background video with a dark fade behind it so it's readable on any
+ * frame. Colors come from app/tokens.css; the buttons' own look is in
+ * VisitorHome.module.css.
  */
 .hero {
   position: absolute;
@@ -11,21 +12,23 @@
   pointer-events: none;
 }
 
-/* Darken the left and bottom so the text reads over any video frame. */
+/* Darken the left and bottom so the text reads over any video frame, with
+   a faint purple tint from the bottom-left corner. */
 .hero::before {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(8, 8, 8, 0.72), rgba(8, 8, 8, 0.25) 55%, transparent 80%),
-    linear-gradient(0deg, rgba(8, 8, 8, 0.5), transparent 45%);
+    radial-gradient(ellipse at 0% 100%, rgba(132, 54, 254, 0.22), transparent 55%),
+    linear-gradient(90deg, rgba(8, 8, 8, 0.82), rgba(8, 8, 8, 0.4) 50%, transparent 78%),
+    linear-gradient(0deg, rgba(8, 8, 8, 0.6), transparent 50%);
   content: "";
 }
 
 .content {
   position: absolute;
-  bottom: 48px;
+  bottom: 44px;
   left: var(--content-inset);
-  width: min(620px, calc(100% - 2 * var(--content-inset)));
+  width: min(720px, calc(100% - 2 * var(--content-inset)));
   pointer-events: auto;
 }
 
@@ -59,21 +62,29 @@
 }
 
 .headline {
-  margin: 18px 0 12px;
+  margin: 18px 0 20px;
   color: #ffffff;
-  font-size: clamp(32px, 3.4vw, 56px);
+  font-size: clamp(40px, 4.6vw, 80px);
   font-weight: 400;
-  line-height: 1.05;
-  text-shadow: 3px 3px 0 #000000;
+  line-height: 1.1;
+  text-shadow: 4px 4px 0 #000000;
+}
+
+/* The last word, in brand purple with a darker purple drop. */
+.accent {
+  color: var(--mc-purple-face);
+  text-shadow:
+    4px 4px 0 var(--mc-purple-deep),
+    6px 6px 0 #000000;
 }
 
 .text {
-  max-width: 46ch;
+  max-width: 52ch;
   margin: 0;
   color: #e6e6e6;
   font-size: 15px;
   line-height: 1.5;
-  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7);
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.8);
 }
 
 /* Live numbers inside the text (e.g. the player count). */
@@ -82,35 +93,119 @@
   font-weight: 400;
 }
 
-.action {
-  margin-top: 22px;
+/* ==========================================================================
+ * Pillars: PvP, Survival, Trade, Friends. Small dark blocks with a pixel
+ * icon in the pillar's color.
+ * ========================================================================== */
+.pillars {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
 }
 
-/* Live stat tiles under Play Now: dark inventory-style slots with a big
-   value and a small label. */
+.pillar {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px 10px;
+  background: rgba(17, 17, 17, 0.8);
+  box-shadow:
+    inset 0 2px 0 color-mix(in srgb, var(--pillar) 55%, transparent),
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 0 0 3px rgba(255, 255, 255, 0.08);
+}
+
+.pillarIcon {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--pillar) 16%, #141414);
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.35);
+  color: var(--pillar);
+}
+
+.pillarIcon svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+  fill: currentColor;
+  filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.8));
+}
+
+.pillarText {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.pillarText strong {
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.pillarText small {
+  overflow: hidden;
+  color: var(--mc-text-muted);
+  font-size: 11px;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+ * Buttons (Play Now + Vote) and the live strip under them.
+ * ========================================================================== */
+.action {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+/* One thin line of live info: "● 3 PLAYING NOW | 120 PLAYERS JOINED | ...".
+   Deliberately small so the buttons stay the biggest thing. */
 .stats {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin: 22px 0 0;
+  align-items: center;
+  gap: 8px 0;
+  margin: 18px 0 0;
 }
 
 .stat {
-  min-width: 128px;
   display: flex;
-  flex-direction: column-reverse;
+  align-items: center;
   gap: 8px;
-  padding: 10px 14px 12px;
-  background: rgba(17, 17, 17, 0.78);
-  box-shadow:
-    inset 0 0 0 2px var(--mc-outline),
-    inset 0 0 0 3px rgba(255, 255, 255, 0.1);
+  padding: 0 16px;
+  box-shadow: inset 2px 0 0 rgba(255, 255, 255, 0.16);
+}
+
+.stat:first-child {
+  padding-left: 0;
+  box-shadow: none;
+}
+
+/* The IP reads "JAVA IP mineacle.net" (label first). */
+.stat[data-key="ip"] {
+  flex-direction: row-reverse;
 }
 
 .stat dt {
   color: var(--mc-text-muted);
   font-size: 11px;
-  line-height: 1.2;
+  line-height: 1;
   text-transform: uppercase;
 }
 
@@ -121,31 +216,34 @@
   min-width: 0;
   margin: 0;
   color: #ffffff;
-  font-size: 18px;
+  font-size: 14px;
   line-height: 1;
+  text-shadow: 2px 2px 0 #000000;
   white-space: nowrap;
 }
 
-.stat dd span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .stat dd img {
-  width: 20px;
-  height: 20px;
-  flex: 0 0 20px;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
   box-shadow: 0 0 0 2px var(--mc-outline);
   image-rendering: pixelated;
 }
 
-/* Green status light (e.g. players online). */
+/* Green status light (e.g. players online), gently pulsing. */
 .live {
   width: 8px;
   height: 8px;
   flex: 0 0 8px;
   background: var(--mc-live);
   box-shadow: 0 0 0 2px #0b3d22;
+  animation: livePulse 1.6s steps(2, jump-none) infinite;
+}
+
+@keyframes livePulse {
+  50% {
+    background: #0fb85c;
+  }
 }
 
 /* ==========================================================================
@@ -154,36 +252,76 @@
 @media (max-width: 1320px) {
   .content {
     bottom: 32px;
-    width: min(560px, calc(100% - 2 * var(--content-inset)));
+    width: min(620px, calc(100% - 2 * var(--content-inset)));
+  }
+
+  .pillarText small {
+    display: none;
   }
 }
 
-/* Short screens: smaller headline; then drop the line of text. */
-@media (max-height: 760px) {
+/* Short screens: smaller headline and gaps; then drop the pillars' extra
+   line, then the text and pillars. */
+@media (max-height: 820px) {
   .content {
     bottom: 28px;
   }
 
   .headline {
     margin: 14px 0 10px;
-    font-size: clamp(28px, 3vw, 40px);
+    font-size: clamp(34px, 3.8vw, 58px);
+  }
+
+  .pillars {
+    margin-top: 14px;
+  }
+
+  .pillar {
+    padding: 6px 8px 7px;
+  }
+
+  .pillarIcon {
+    width: 26px;
+    height: 26px;
+    flex-basis: 26px;
+  }
+
+  .pillarIcon svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .pillarText small {
+    display: none;
+  }
+
+  .action {
+    margin-top: 16px;
   }
 
   .stats {
-    margin-top: 16px;
+    margin-top: 14px;
   }
 }
 
-@media (max-height: 620px) {
+@media (max-height: 680px) {
   .text {
     display: none;
   }
 }
 
-/* Phones: text across the full width, button full width. */
+@media (max-height: 580px) {
+  .pillars {
+    display: none;
+  }
+}
+
+/* Phones: text across the full width, pillars 2 by 2, buttons full width. */
 @media (max-width: 720px) {
   .hero::before {
-    background: linear-gradient(0deg, rgba(8, 8, 8, 0.8), rgba(8, 8, 8, 0.2) 70%);
+    background:
+      radial-gradient(ellipse at 0% 100%, rgba(132, 54, 254, 0.22), transparent 60%),
+      linear-gradient(0deg, rgba(8, 8, 8, 0.88), rgba(8, 8, 8, 0.25) 75%);
   }
 
   .content {
@@ -193,37 +331,58 @@
   }
 
   .headline {
-    font-size: 30px;
+    font-size: 36px;
+    text-shadow: 3px 3px 0 #000000;
+  }
+
+  .accent {
+    text-shadow:
+      3px 3px 0 var(--mc-purple-deep),
+      4px 4px 0 #000000;
   }
 
   .text {
     font-size: 13px;
   }
 
-  .action {
-    margin-top: 18px;
-  }
-
-  /* Three tiles side by side, sharing the width. */
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .pillars {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 6px;
     margin-top: 14px;
   }
 
-  .stat {
-    min-width: 0;
-    padding: 9px 8px 10px;
+  .pillarText small {
+    display: none;
+  }
+
+  .action {
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .stats {
+    margin-top: 14px;
+  }
+
+  /* No dividers on phones: the strip can wrap onto two lines. */
+  .stat,
+  .stat:first-child {
+    padding: 0 14px 0 0;
+    box-shadow: none;
   }
 
   .stat dd {
-    font-size: 15px;
+    font-size: 12px;
   }
 
-  .stat dd img {
-    width: 16px;
-    height: 16px;
-    flex-basis: 16px;
+  .stat dt {
+    font-size: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live {
+    animation: none;
   }
 }

@@ -1,10 +1,11 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import styles from "./HeroContent.module.css";
 
 /*
- * Text block in the homepage hero, bottom-left over the background video
- * (the minecraft.net layout): small tags, a big headline, a line of text,
- * the main button, and a row of live stat tiles under it.
+ * Text block in the homepage hero, bottom-left over the background video:
+ * small tags, a big headline (last word in purple), a line of text, the
+ * four things Mineacle is about (PvP, survival, trading, friends), the
+ * buttons, and a thin live strip (players online, players joined, IP).
  */
 
 export type HeroStat = {
@@ -17,10 +18,92 @@ export type HeroStat = {
   live?: boolean;
 };
 
+export type HeroPillarIcon = "sword" | "heart" | "emerald" | "friends";
+
+export type HeroPillar = {
+  icon: HeroPillarIcon;
+  label: string;
+  detail: string;
+  /** Icon color (the stat colors from the in-game tab list). */
+  color: string;
+};
+
+/* Pixel icons drawn from little grids ("#" = filled pixel). */
+const PIXEL_ICONS: Record<HeroPillarIcon, string[]> = {
+  sword: [
+    ".......##",
+    "......###",
+    ".....###.",
+    "#...###..",
+    ".#.###...",
+    "..###....",
+    "..##.....",
+    ".#..#....",
+    "#........",
+  ],
+  heart: [
+    ".##...##.",
+    "####.####",
+    "#########",
+    "#########",
+    ".#######.",
+    "..#####..",
+    "...###...",
+    "....#....",
+  ],
+  emerald: [
+    "...##...",
+    "..####..",
+    ".######.",
+    "########",
+    "########",
+    ".######.",
+    "..####..",
+    "...##...",
+  ],
+  friends: [
+    ".##...##.",
+    ".##...##.",
+    ".........",
+    "####.####",
+    "####.####",
+    "####.####",
+  ],
+};
+
+function pixelPath(rows: string[]) {
+  let path = "";
+  rows.forEach((row, y) => {
+    for (let x = 0; x < row.length; x += 1) {
+      if (row[x] === "#") {
+        path += `M${x} ${y}h1v1H${x}z`;
+      }
+    }
+  });
+  return path;
+}
+
+function PixelIcon({ icon }: { icon: HeroPillarIcon }) {
+  const rows = PIXEL_ICONS[icon];
+  return (
+    <svg
+      viewBox={`0 0 ${rows[0].length} ${rows.length}`}
+      aria-hidden="true"
+      focusable="false"
+      shapeRendering="crispEdges"
+    >
+      <path d={pixelPath(rows)} />
+    </svg>
+  );
+}
+
 type HeroContentProps = {
   tags: { label: string; tone: "gold" | "dark" }[];
   headline: string;
+  /** Shown after the headline in brand purple (e.g. "Rise."). */
+  headlineAccent?: string;
   text: ReactNode;
+  pillars?: HeroPillar[];
   action: ReactNode;
   stats?: HeroStat[];
 };
@@ -28,7 +111,9 @@ type HeroContentProps = {
 export function HeroContent({
   tags,
   headline,
+  headlineAccent,
   text,
+  pillars = [],
   action,
   stats = [],
 }: HeroContentProps) {
@@ -44,14 +129,43 @@ export function HeroContent({
             ))}
           </div>
         ) : null}
-        <h1 className={styles.headline}>{headline}</h1>
+        <h1 className={styles.headline}>
+          {headline}
+          {headlineAccent ? (
+            <>
+              {" "}
+              <span className={styles.accent}>{headlineAccent}</span>
+            </>
+          ) : null}
+        </h1>
         <p className={styles.text}>{text}</p>
+
+        {pillars.length > 0 ? (
+          <ul className={styles.pillars}>
+            {pillars.map((pillar) => (
+              <li
+                className={styles.pillar}
+                key={pillar.label}
+                style={{ "--pillar": pillar.color } as CSSProperties}
+              >
+                <span className={styles.pillarIcon}>
+                  <PixelIcon icon={pillar.icon} />
+                </span>
+                <span className={styles.pillarText}>
+                  <strong>{pillar.label}</strong>
+                  <small>{pillar.detail}</small>
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+
         <div className={styles.action}>{action}</div>
 
         {stats.length > 0 ? (
           <dl className={styles.stats}>
             {stats.map((stat) => (
-              <div className={styles.stat} key={stat.key}>
+              <div className={styles.stat} data-key={stat.key} key={stat.key}>
                 <dd>
                   {stat.live ? (
                     <i className={styles.live} aria-hidden="true" />
