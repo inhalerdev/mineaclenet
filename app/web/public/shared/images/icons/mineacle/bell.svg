@@ -1,1 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" viewBox="0 0 24 24" shape-rendering="crispEdges"><path d="M9 2h6v2H9zM7 4h2v2H7zm8 0h2v2h-2zM5 6h2v7H5zm12 0h2v7h-2zM3 13h2v4H3zm16 0h2v4h-2z"/><path d="M3 15h18v2H3zm5 3h2v2H8zm6 0h2v2h-2zm-4 2h4v2h-4z"/></svg>
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 176 192" width="176" height="192">
+	<defs>
+		<image  width="176" height="176" id="img1" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALAAAACwAQMAAACVeXYdAAAAAXNSR0IB2cksfwAAAAZQTFRF////////VXz1bAAAAAJ0Uk5TAP9bkSK1AAAARUlEQVR4nO3XwQkAIAxD0Xb/ofVgFBWvhVZ+LoGXCeI20tR+FBzDE5fAgbyjDIZhGIZj+DYtMPwFP7UOZ3kCcG6WuxXhDjLJqJE7B78pAAAAAElFTkSuQmCC"/>
+	</defs>
+	<style>
+	</style>
+	<use id="Layer 3" href="#img1" x="0" y="8"/>
+</svg>
