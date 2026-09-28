@@ -66,8 +66,8 @@ export const homeContent = {
     mediaLabel: "Rewards artwork",
   },
   competitive: {
-    media: "",
-    mediaLabel: "Competitive leaderboard showcase artwork",
+    media: "/images/home/leaderboards.png",
+    mediaLabel: "Pixel-art podium with a crowned champion and a duel",
   },
   community: {
     media: "",
