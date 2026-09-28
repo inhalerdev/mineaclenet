@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   HeroContent,
-  type HeroPillar,
+  type HeroQuickStat,
   type HeroStat,
 } from "@/components/home/HeroContent";
 import { IpCopiedToast } from "@/components/home/IpCopiedToast";
@@ -59,9 +59,9 @@ function communityCard(discordStats: DiscordStats | null): QuickLink {
   };
 }
 
-/* A logged-in player's own numbers, as the hero's small blocks. */
-function welcomePillars(welcome: WelcomeData): HeroPillar[] {
-  const plural = (count: number, word: string) => `${count} ${word}${count === 1 ? "" : "s"}`;
+/* A logged-in player's own numbers, as the hero's quick stats. */
+function welcomeStats(welcome: WelcomeData): HeroQuickStat[] {
+  const plural = (count: number, word: string) => `${word}${count === 1 ? "" : "s"}`;
   const votes = welcome.votes;
   const friends = welcome.friendsOnline;
 
@@ -70,33 +70,26 @@ function welcomePillars(welcome: WelcomeData): HeroPillar[] {
       icon: "emerald",
       color: "#11fc7b",
       href: "/leaderboards",
-      label:
-        welcome.moneyRank > 0
-          ? `#${welcome.moneyRank} Richest${welcome.balance ? ` · ${welcome.balance}` : ""}`
-          : welcome.balance || "Balance",
-      detail: "Open the leaderboards",
+      value: welcome.balance || "$0",
+      label: welcome.moneyRank > 0 ? `#${welcome.moneyRank} richest` : "Balance",
     },
     {
       icon: "key",
       color: "#fcd511",
       href: "/vote",
+      value: !votes ? "Vote" : votes.left > 0 ? `${votes.left} of ${votes.total}` : "All in",
       label: !votes
-        ? "Vote for keys"
+        ? "Free crate keys"
         : votes.left > 0
           ? `${plural(votes.left, "vote")} left today`
-          : "All votes in today",
-      detail: "Each vote gives a Vote Crate Key",
+          : "Votes today",
     },
     {
       icon: "friends",
       color: "#b078ff",
       href: "/following",
-      label: friends
-        ? `${plural(friends, "friend")} online`
-        : friends === 0
-          ? "No friends online"
-          : "Friends",
-      detail: "See who's playing",
+      value: friends === null ? "Friends" : String(friends),
+      label: friends === null ? "See who's on" : `${plural(friends, "friend")} online`,
     },
   ];
 }
@@ -390,9 +383,10 @@ export function VisitorHome({
       : "Copy Server IP";
 
   const quickLinks = [MARKETPLACE_CARD, communityCard(discordStats), LEADERBOARDS_CARD];
-  // Logged-in players see how many votes they have left on the Vote button.
+  // Small tag on the Vote button: "Free" for visitors, votes left for
+  // logged-in players.
   const votes = welcome?.votes ?? null;
-  const voteCount = !votes ? "" : votes.left > 0 ? `${votes.left} left` : "Done";
+  const voteCount = !votes ? "Free" : votes.left > 0 ? `${votes.left} left` : "Done";
 
   return (
     <div className={`${frame.page} ${styles.homePage}`}>
@@ -419,20 +413,20 @@ export function VisitorHome({
           <div className={frame.heroShade} aria-hidden="true" />
 
           <HeroContent
-            tags={[{ label: heroText.tag, tone: "gold" as const }]}
+            tag={heroText.tag}
             news={heroText.news}
             {...(welcome
               ? {
                   headline: "Welcome back,",
                   headlineAccent: `${welcome.name}.`,
                   text: "Your world is waiting. Here's where you stand today.",
-                  pillars: welcomePillars(welcome),
+                  quickStats: welcomeStats(welcome),
                 }
               : {
                   headline: heroText.headline,
                   headlineAccent: heroText.headlineAccent,
                   text: heroText.text,
-                  pillars: heroText.pillars,
+                  highlights: heroText.highlights,
                 })}
             action={
               <>

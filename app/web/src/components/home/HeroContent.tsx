@@ -3,14 +3,15 @@ import styles from "./HeroContent.module.css";
 
 /*
  * Text block in the homepage hero, bottom-left over the background video:
- * a tag and a "What's new" line, a big headline (last part in purple), a
- * line of text, a row of small blocks, the buttons, and a thin live strip
- * (players online, players joined, IP).
  *
- * The small blocks are styled like the filter tabs on the other pages.
- * Visitors see the four things Mineacle is about (PvP, survival, trading,
- * friends); logged-in players see their own numbers there (leaderboard
- * spot, votes left, friends online), and each one is a link.
+ *   OPEN BETA · Now open for Java Edition      (one quiet line)
+ *   Big headline, last part in purple
+ *   A line of text. For visitors the words for what Mineacle is about
+ *   (fight, survive, trade, friends) are in their in-game stat colors.
+ *   Quick stats (logged-in players only): their leaderboard spot, votes
+ *   left and friends online, as small tiles that link to those pages.
+ *   Play Now + Vote for Keys
+ *   Thin live strip (players online, players joined, IP)
  */
 
 export type HeroStat = {
@@ -23,50 +24,31 @@ export type HeroStat = {
   live?: boolean;
 };
 
-export type HeroPillarIcon = "sword" | "heart" | "emerald" | "friends" | "key";
+export type HeroIcon = "emerald" | "key" | "friends";
 
-export type HeroPillar = {
-  icon: HeroPillarIcon;
-  label: string;
-  /** Shown when hovering the block. */
-  detail: string;
+export type HeroQuickStat = {
+  icon: HeroIcon;
   /** Icon color (the stat colors from the in-game tab list). */
   color: string;
-  /** Makes the block a link. */
-  href?: string;
+  value: string;
+  label: string;
+  href: string;
+};
+
+export type HeroHighlight = {
+  /** A word in the text to color, e.g. "trade". */
+  word: string;
+  color: string;
 };
 
 export type HeroNews = {
-  /** Small badge, e.g. "New". */
-  label: string;
   text: string;
   /** Optional page to read more on. */
   href?: string;
 };
 
 /* Pixel icons drawn from little grids ("#" = filled pixel). */
-const PIXEL_ICONS: Record<HeroPillarIcon, string[]> = {
-  sword: [
-    ".......##",
-    "......###",
-    ".....###.",
-    "#...###..",
-    ".#.###...",
-    "..###....",
-    "..##.....",
-    ".#..#....",
-    "#........",
-  ],
-  heart: [
-    ".##...##.",
-    "####.####",
-    "#########",
-    "#########",
-    ".#######.",
-    "..#####..",
-    "...###...",
-    "....#....",
-  ],
+const PIXEL_ICONS: Record<HeroIcon, string[]> = {
   emerald: [
     "...##...",
     "..####..",
@@ -77,14 +59,6 @@ const PIXEL_ICONS: Record<HeroPillarIcon, string[]> = {
     "..####..",
     "...##...",
   ],
-  friends: [
-    ".##...##.",
-    ".##...##.",
-    ".........",
-    "####.####",
-    "####.####",
-    "####.####",
-  ],
   key: [
     ".###.",
     ".#.#.",
@@ -93,6 +67,14 @@ const PIXEL_ICONS: Record<HeroPillarIcon, string[]> = {
     "..##.",
     "..#..",
     "..##.",
+  ],
+  friends: [
+    ".##...##.",
+    ".##...##.",
+    ".........",
+    "####.####",
+    "####.####",
+    "####.####",
   ],
 };
 
@@ -108,7 +90,7 @@ function pixelPath(rows: string[]) {
   return path;
 }
 
-function PixelIcon({ icon }: { icon: HeroPillarIcon }) {
+function PixelIcon({ icon }: { icon: HeroIcon }) {
   const rows = PIXEL_ICONS[icon];
   return (
     <svg
@@ -122,59 +104,76 @@ function PixelIcon({ icon }: { icon: HeroPillarIcon }) {
   );
 }
 
-/* "What's new" line: plain text next to the tag, the label in gold. */
-function NewsLine({ news }: { news: HeroNews }) {
-  const inner = (
-    <>
-      <b>{news.label || "New"}</b>
-      <span>{news.text}</span>
-    </>
-  );
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
-  return news.href ? (
-    <a className={styles.news} href={news.href}>
-      {inner}
-    </a>
-  ) : (
-    <span className={styles.news}>{inner}</span>
-  );
+/* The text with each highlight word (whole words, any case) colored. */
+function highlightText(text: string, highlights: HeroHighlight[]): ReactNode {
+  const words = highlights.map((item) => item.word).filter(Boolean);
+
+  if (!words.length) {
+    return text;
+  }
+
+  const colors = new Map(highlights.map((item) => [item.word.toLowerCase(), item.color]));
+  const pattern = new RegExp(`\\b(${words.map(escapeRegExp).join("|")})\\b`, "gi");
+
+  return text.split(pattern).map((part, index) => {
+    const color = colors.get(part.toLowerCase());
+    return color ? (
+      <b key={index} style={{ color }}>
+        {part}
+      </b>
+    ) : (
+      part
+    );
+  });
 }
 
 type HeroContentProps = {
-  tags: { label: string; tone: "gold" | "dark" }[];
+  /** Short status word, e.g. "Open Beta". */
+  tag: string;
   news?: HeroNews | null;
   headline: string;
   /** Shown after the headline in brand purple (e.g. "Rise."). */
   headlineAccent?: string;
-  text: ReactNode;
-  pillars?: HeroPillar[];
+  text: string;
+  highlights?: HeroHighlight[];
+  quickStats?: HeroQuickStat[];
   action: ReactNode;
   stats?: HeroStat[];
 };
 
 export function HeroContent({
-  tags,
+  tag,
   news = null,
   headline,
   headlineAccent,
   text,
-  pillars = [],
+  highlights = [],
+  quickStats = [],
   action,
   stats = [],
 }: HeroContentProps) {
   return (
     <div className={styles.hero}>
       <div className={styles.content}>
-        {tags.length > 0 || news?.text ? (
-          <div className={styles.tags}>
-            {tags.map((tag) => (
-              <span className={styles.tag} data-tone={tag.tone} key={tag.label}>
-                {tag.label}
-              </span>
-            ))}
-            {news?.text ? <NewsLine news={news} /> : null}
-          </div>
+        {tag || news?.text ? (
+          <p className={styles.eyebrow}>
+            {tag ? <span className={styles.tag}>{tag}</span> : null}
+            {news?.text ? (
+              news.href ? (
+                <a className={styles.news} href={news.href}>
+                  {news.text}
+                </a>
+              ) : (
+                <span className={styles.news}>{news.text}</span>
+              )
+            ) : null}
+          </p>
         ) : null}
+
         <h1 className={styles.headline}>
           {headline}
           {headlineAccent ? (
@@ -184,34 +183,27 @@ export function HeroContent({
             </>
           ) : null}
         </h1>
-        <p className={styles.text}>{text}</p>
+        <p className={styles.text}>{highlightText(text, highlights)}</p>
 
-        {pillars.length > 0 ? (
-          <ul className={styles.pillars}>
-            {pillars.map((pillar) => {
-              const inner = (
-                <>
-                  <span className={styles.pillarIcon}>
-                    <PixelIcon icon={pillar.icon} />
+        {quickStats.length > 0 ? (
+          <ul className={styles.quickStats}>
+            {quickStats.map((stat) => (
+              <li key={stat.icon}>
+                <a
+                  className={styles.quickStat}
+                  href={stat.href}
+                  style={{ "--quick": stat.color } as CSSProperties}
+                >
+                  <span className={styles.quickIcon}>
+                    <PixelIcon icon={stat.icon} />
                   </span>
-                  <span>{pillar.label}</span>
-                </>
-              );
-
-              return (
-                <li key={pillar.icon} style={{ "--pillar": pillar.color } as CSSProperties}>
-                  {pillar.href ? (
-                    <a className={styles.pillar} href={pillar.href} title={pillar.detail}>
-                      {inner}
-                    </a>
-                  ) : (
-                    <span className={styles.pillar} title={pillar.detail}>
-                      {inner}
-                    </span>
-                  )}
-                </li>
-              );
-            })}
+                  <span className={styles.quickText}>
+                    <strong>{stat.value}</strong>
+                    <small>{stat.label}</small>
+                  </span>
+                </a>
+              </li>
+            ))}
           </ul>
         ) : null}
 

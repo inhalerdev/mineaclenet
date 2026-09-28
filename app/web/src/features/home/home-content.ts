@@ -22,26 +22,25 @@ export const homeContent = {
   // Words in the homepage hero. The live strip under the buttons (players
   // online, players joined, IP) is filled in automatically.
   heroText: {
+    // Quiet status line above the headline: "OPEN BETA · <news>".
     tag: "Open Beta",
-    // "What's new" line next to the tag: a short piece of news, e.g.
-    // "Season 1 starts Oct 3". `href` is optional (a page to read more on).
-    // Leave `text` empty to hide it.
+    // Short news next to it, e.g. "Season 1 starts Oct 3". `href` is
+    // optional (a page to read more on). Leave `text` empty to hide it.
     news: {
-      label: "New",
       text: "Now open for Java Edition",
       href: "",
     },
     // The headline, then a last word shown in brand purple.
     headline: "Fight. Trade.",
     headlineAccent: "Rise.",
-    text: "Survive the wild, fight for your turf and trade your way to the top. It's all better with friends.",
-    // The four things Mineacle is about. Colors are the in-game stat colors;
-    // `detail` shows when hovering one.
-    pillars: [
-      { icon: "sword" as const, label: "PvP", detail: "Fight for turf", color: "#fc1111" },
-      { icon: "heart" as const, label: "Survival", detail: "Tame the wild", color: "#fc8611" },
-      { icon: "emerald" as const, label: "Trade", detail: "Top the market", color: "#11fc7b" },
-      { icon: "friends" as const, label: "Friends", detail: "Build together", color: "#b078ff" },
+    text: "Fight for your turf, survive the wild and trade your way to the top. It's all better with friends.",
+    // Words in the text shown in the in-game stat colors: the four things
+    // Mineacle is about. Each must appear in `text` above.
+    highlights: [
+      { word: "Fight", color: "#fc1111" },
+      { word: "survive", color: "#fc8611" },
+      { word: "trade", color: "#11fc7b" },
+      { word: "friends", color: "#b078ff" },
     ],
   },
   // Joining the server. `javaVersion` is shown in the "how to join" steps

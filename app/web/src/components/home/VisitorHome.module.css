@@ -118,10 +118,10 @@
 }
 
 /* ==========================================================================
- * Vote for Keys: dark block button next to Play Now, so Play Now stays the
- * one bright button. Same build as the site's other dark blocks (light top
- * edge, dark bottom edge, black outline). Logged-in players get a small
- * gold "2 left" tag on it.
+ * Vote for Keys: purple block button next to Play Now, the daily reason to
+ * come back. Same build as Play Now (face, light top edge, dark bottom edge,
+ * black outline), with a small gold tag: "Free", or "2 left" for logged-in
+ * players.
  * ========================================================================== */
 .voteButton.voteButton {
   height: 52px;
@@ -130,16 +130,16 @@
   gap: 10px;
   padding: 0 18px 4px 16px;
   border: 2px solid var(--mc-outline);
-  background: #262626;
+  background: var(--mc-purple);
   box-shadow:
-    inset 0 3px 0 #3a3a3a,
-    inset 0 -5px 0 #161616,
+    inset 0 3px 0 var(--mc-purple-face),
+    inset 0 -5px 0 var(--mc-purple-deep),
     0 10px 26px rgba(0, 0, 0, 0.25);
   color: #ffffff;
   font-size: 14px;
   line-height: 1;
   text-decoration: none;
-  text-shadow: 2px 2px 0 #000000;
+  text-shadow: 2px 2px 0 var(--mc-purple-deep);
   text-transform: uppercase;
   white-space: nowrap;
   transition:
@@ -153,10 +153,10 @@
 .voteButton.voteButton:focus-visible {
   outline: 0;
   border-color: #ffffff;
-  background: #303030;
+  background: #9150ff;
   box-shadow:
-    inset 0 3px 0 #474747,
-    inset 0 -5px 0 #161616,
+    inset 0 3px 0 var(--mc-purple-hover),
+    inset 0 -5px 0 var(--mc-purple-deep),
     0 4px 0 rgba(0, 0, 0, 0.45),
     0 14px 28px rgba(0, 0, 0, 0.3);
   transform: translateY(-2px);
@@ -165,8 +165,8 @@
 .voteButton.voteButton:active {
   border-color: #ffffff;
   box-shadow:
-    inset 0 3px 0 #3a3a3a,
-    inset 0 -2px 0 #161616,
+    inset 0 3px 0 var(--mc-purple-face),
+    inset 0 -2px 0 var(--mc-purple-deep),
     0 1px 0 rgba(0, 0, 0, 0.45);
   transform: translateY(3px);
   transition-duration: 50ms;
@@ -182,7 +182,7 @@
   filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.5));
 }
 
-/* "2 left" / "Done" tag. */
+/* "Free" / "2 left" / "Done" tag. */
 .voteCount {
   padding: 3px 5px 4px;
   background: var(--mc-gold);
@@ -197,12 +197,12 @@
 }
 
 .voteCount[data-done] {
-  background: #3a3a3a;
+  background: var(--mc-purple-deep);
   box-shadow:
-    inset 0 2px 0 #4a4a4a,
-    inset 0 -2px 0 #1f1f1f,
+    inset 0 2px 0 var(--mc-purple-edge),
+    inset 0 -2px 0 #2e1757,
     0 0 0 2px var(--mc-outline);
-  color: #cfcfcf;
+  color: #e6dcff;
 }
 
 /* Screen-reader announcement when the IP is copied. */

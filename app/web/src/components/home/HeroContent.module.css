@@ -1,9 +1,9 @@
 /*
- * Homepage hero text (see HeroContent.tsx): tags, headline, a line of text,
- * the four pillars, the buttons and the live strip, bottom-left over the
- * background video with a dark fade behind it so it's readable on any
- * frame. Colors come from app/tokens.css; the buttons' own look is in
- * VisitorHome.module.css.
+ * Homepage hero text (see HeroContent.tsx): a quiet status line, headline,
+ * a line of text, quick stats (logged in), the buttons and the live strip,
+ * bottom-left over the background video with a dark fade behind it so it's
+ * readable on any frame. Colors come from app/tokens.css; the buttons' own
+ * look is in VisitorHome.module.css.
  */
 .hero {
   position: absolute;
@@ -32,75 +32,52 @@
   pointer-events: auto;
 }
 
-.tags {
+/* "OPEN BETA · Now open for Java Edition": one quiet line, so the buttons
+   get the attention. */
+.eyebrow {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px 14px;
-}
-
-/* Small block tags, same recipe as the site's other blocks. */
-.tag {
-  padding: 5px 8px 7px;
-  background: #2b2b2b;
-  box-shadow:
-    inset 0 2px 0 #3a3a3a,
-    inset 0 -3px 0 #161616,
-    0 0 0 2px var(--mc-outline);
-  color: #ffffff;
-  font-size: 11px;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.tag[data-tone="gold"] {
-  background: var(--mc-gold);
-  box-shadow:
-    inset 0 2px 0 var(--mc-gold-light),
-    inset 0 -3px 0 var(--mc-gold-edge),
-    0 0 0 2px var(--mc-outline);
-  color: var(--mc-gold-text);
-}
-
-/* "What's new": plain text next to the tag, its label in gold (like the
-   highlighted words on the other pages). Written with .tags in front so it
-   beats the page's link reset when it's a link. */
-.tags .news {
-  min-width: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: #e6e6e6;
+  gap: 4px 10px;
+  margin: 0;
+  color: var(--mc-text-muted);
   font-size: 12px;
   line-height: 1.2;
-  text-decoration: none;
   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.8);
 }
 
-.tags .news b {
-  color: var(--mc-gold-light);
-  font-weight: 400;
+.tag {
+  color: #ffffff;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
-.tags .news b::after {
-  content: ":";
+/* Small square between the tag and the news. */
+.tag + .news::before {
+  width: 4px;
+  height: 4px;
+  display: inline-block;
+  margin: 0 10px 2px 0;
+  background: #5c5c5c;
+  vertical-align: middle;
+  content: "";
 }
 
-.tags .news span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.eyebrow a.news {
+  color: var(--mc-text-muted);
+  text-decoration: none;
 }
 
-.tags a.news:hover,
-.tags a.news:focus-visible {
+.eyebrow a.news:hover,
+.eyebrow a.news:focus-visible {
   outline: 0;
   color: #ffffff;
   text-decoration: underline;
 }
 
 .headline {
-  margin: 16px 0 16px;
+  margin: 14px 0 16px;
   color: #ffffff;
   font-size: clamp(32px, 3.2vw, 54px);
   font-weight: 400;
@@ -125,72 +102,97 @@
   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.8);
 }
 
-/* Live numbers inside the text (e.g. the player count). */
+/* Colored words in the text (fight, survive, trade, friends). */
 .text b {
-  color: #ffffff;
   font-weight: 400;
 }
 
 /* ==========================================================================
- * Pillars: small dark blocks styled like the filter tabs on the other pages
- * (site/ContentPage.module.css .chip), with a pixel icon in the pillar's
- * color as the only accent.
+ * Quick stats (logged-in players): small tiles in the same slot look as the
+ * stat tiles on the other pages (site/ContentPage.module.css .stat): a
+ * value, a small label, and a pixel icon in the stat's color. Each links to
+ * its page.
  * ========================================================================== */
-.pillars {
+.quickStats {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
   margin: 18px 0 0;
   padding: 0;
   list-style: none;
 }
 
-.pillars li {
+.quickStats li {
   display: flex;
 }
 
-.pillars .pillar {
-  height: 32px;
-  display: inline-flex;
+.quickStats .quickStat {
+  min-width: 128px;
+  display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 0 12px 2px 10px;
-  background: rgba(28, 28, 28, 0.92);
+  gap: 10px;
+  padding: 8px 14px 9px 10px;
+  background: rgba(17, 17, 17, 0.78);
   box-shadow:
     inset 0 0 0 2px var(--mc-outline),
-    inset 0 -3px 0 #111111;
-  color: #cfcfcf;
-  font-size: 12px;
-  line-height: 1;
+    inset 0 0 0 3px rgba(255, 255, 255, 0.1);
+  color: #ffffff;
   text-decoration: none;
-  white-space: nowrap;
-}
-
-.pillars a.pillar {
   transition:
     background-color var(--motion),
-    color var(--motion);
+    transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.pillars a.pillar:hover,
-.pillars a.pillar:focus-visible {
+.quickStats .quickStat:hover,
+.quickStats .quickStat:focus-visible {
   outline: 0;
-  background: #2b2b2b;
-  color: #ffffff;
+  background: rgba(40, 40, 40, 0.9);
+  box-shadow:
+    inset 0 0 0 2px #ffffff,
+    inset 0 0 0 3px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
 }
 
-.pillarIcon {
+/* The icon in a small dark square tinted with the stat's color. */
+.quickIcon {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
   display: grid;
   place-items: center;
-  color: var(--pillar);
+  background: color-mix(in srgb, var(--quick) 16%, #141414);
+  box-shadow: inset 0 0 0 2px var(--mc-outline);
+  color: var(--quick);
 }
 
-.pillarIcon svg {
-  width: 12px;
-  height: 12px;
+.quickIcon svg {
+  width: 13px;
+  height: 13px;
   display: block;
   fill: currentColor;
   filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.8));
+}
+
+.quickText {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.quickText strong {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1;
+  text-shadow: 2px 2px 0 #000000;
+  white-space: nowrap;
+}
+
+.quickText small {
+  color: var(--mc-text-muted);
+  font-size: 10px;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 /* ==========================================================================
@@ -287,7 +289,7 @@
 }
 
 /* Short screens: smaller headline and gaps; then drop the text, then the
-   pillars. */
+   quick stats. */
 @media (max-height: 820px) {
   .content {
     bottom: 28px;
@@ -298,12 +300,13 @@
     font-size: clamp(28px, 2.8vw, 44px);
   }
 
-  .pillars {
+  .quickStats {
     margin-top: 12px;
   }
 
-  .pillars .pillar {
-    height: 28px;
+  .quickStats .quickStat {
+    padding-top: 6px;
+    padding-bottom: 7px;
   }
 
   .action {
@@ -322,7 +325,7 @@
 }
 
 @media (max-height: 580px) {
-  .pillars {
+  .quickStats {
     display: none;
   }
 }
@@ -349,8 +352,29 @@
     font-size: 13px;
   }
 
-  .pillars {
+  /* Three quick stats side by side, sharing the width. */
+  .quickStats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
     margin-top: 12px;
+  }
+
+  .quickStats .quickStat {
+    min-width: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 8px 9px;
+  }
+
+  .quickText strong {
+    font-size: 14px;
+  }
+
+  .quickText small {
+    font-size: 9px;
+    white-space: normal;
   }
 
   .action {
@@ -382,5 +406,10 @@
 @media (prefers-reduced-motion: reduce) {
   .live {
     animation: none;
+  }
+
+  .quickStats .quickStat:hover,
+  .quickStats .quickStat:focus-visible {
+    transform: none;
   }
 }
