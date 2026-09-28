@@ -34,8 +34,9 @@ export const homeContent = {
     // The headline, then a last word shown in brand purple.
     headline: "Fight. Trade.",
     headlineAccent: "Rise.",
-    text: "Survive the wild, battle for every block and trade your way to the richest name on the server. Legends aren't made alone, so bring your friends.",
-    // The four things Mineacle is about. Colors are the in-game stat colors.
+    text: "Survive the wild, fight for your turf and trade your way to the top. It's all better with friends.",
+    // The four things Mineacle is about. Colors are the in-game stat colors;
+    // `detail` shows when hovering one.
     pillars: [
       { icon: "sword" as const, label: "PvP", detail: "Fight for turf", color: "#fc1111" },
       { icon: "heart" as const, label: "Survival", detail: "Tame the wild", color: "#fc8611" },

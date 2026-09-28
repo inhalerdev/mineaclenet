@@ -7,9 +7,10 @@ import styles from "./HeroContent.module.css";
  * line of text, a row of small blocks, the buttons, and a thin live strip
  * (players online, players joined, IP).
  *
+ * The small blocks are styled like the filter tabs on the other pages.
  * Visitors see the four things Mineacle is about (PvP, survival, trading,
- * friends) in the blocks; logged-in players see their own numbers there
- * (leaderboard spot, votes left, friends online), and each one is a link.
+ * friends); logged-in players see their own numbers there (leaderboard
+ * spot, votes left, friends online), and each one is a link.
  */
 
 export type HeroStat = {
@@ -27,6 +28,7 @@ export type HeroPillarIcon = "sword" | "heart" | "emerald" | "friends" | "key";
 export type HeroPillar = {
   icon: HeroPillarIcon;
   label: string;
+  /** Shown when hovering the block. */
   detail: string;
   /** Icon color (the stat colors from the in-game tab list). */
   color: string;
@@ -120,7 +122,7 @@ function PixelIcon({ icon }: { icon: HeroPillarIcon }) {
   );
 }
 
-/* "What's new" line: a small purple badge and the news text. */
+/* "What's new" line: plain text next to the tag, the label in gold. */
 function NewsLine({ news }: { news: HeroNews }) {
   const inner = (
     <>
@@ -185,28 +187,27 @@ export function HeroContent({
         <p className={styles.text}>{text}</p>
 
         {pillars.length > 0 ? (
-          <ul className={styles.pillars} data-count={pillars.length}>
+          <ul className={styles.pillars}>
             {pillars.map((pillar) => {
               const inner = (
                 <>
                   <span className={styles.pillarIcon}>
                     <PixelIcon icon={pillar.icon} />
                   </span>
-                  <span className={styles.pillarText}>
-                    <strong>{pillar.label}</strong>
-                    <small>{pillar.detail}</small>
-                  </span>
+                  <span>{pillar.label}</span>
                 </>
               );
 
               return (
                 <li key={pillar.icon} style={{ "--pillar": pillar.color } as CSSProperties}>
                   {pillar.href ? (
-                    <a className={styles.pillar} href={pillar.href}>
+                    <a className={styles.pillar} href={pillar.href} title={pillar.detail}>
                       {inner}
                     </a>
                   ) : (
-                    <span className={styles.pillar}>{inner}</span>
+                    <span className={styles.pillar} title={pillar.detail}>
+                      {inner}
+                    </span>
                   )}
                 </li>
               );

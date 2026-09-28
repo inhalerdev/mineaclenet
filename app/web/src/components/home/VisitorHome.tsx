@@ -70,26 +70,33 @@ function welcomePillars(welcome: WelcomeData): HeroPillar[] {
       icon: "emerald",
       color: "#11fc7b",
       href: "/leaderboards",
-      label: welcome.moneyRank > 0 ? `#${welcome.moneyRank} Richest` : "Balance",
-      detail: welcome.balance || "Start trading",
+      label:
+        welcome.moneyRank > 0
+          ? `#${welcome.moneyRank} Richest${welcome.balance ? ` · ${welcome.balance}` : ""}`
+          : welcome.balance || "Balance",
+      detail: "Open the leaderboards",
     },
     {
       icon: "key",
       color: "#fcd511",
       href: "/vote",
-      label: !votes ? "Vote" : votes.left > 0 ? `${plural(votes.left, "vote")} left` : "All voted",
-      detail: votes && votes.left === 0 ? "Back tomorrow" : "Free crate keys",
+      label: !votes
+        ? "Vote for keys"
+        : votes.left > 0
+          ? `${plural(votes.left, "vote")} left today`
+          : "All votes in today",
+      detail: "Each vote gives a Vote Crate Key",
     },
     {
       icon: "friends",
       color: "#b078ff",
       href: "/following",
-      label: friends ? `${friends} online` : "Friends",
-      detail: friends
-        ? `${friends === 1 ? "Friend" : "Friends"} playing now`
+      label: friends
+        ? `${plural(friends, "friend")} online`
         : friends === 0
-          ? "None online right now"
-          : "See who's playing",
+          ? "No friends online"
+          : "Friends",
+      detail: "See who's playing",
     },
   ];
 }
@@ -383,12 +390,9 @@ export function VisitorHome({
       : "Copy Server IP";
 
   const quickLinks = [MARKETPLACE_CARD, communityCard(discordStats), LEADERBOARDS_CARD];
+  // Logged-in players see how many votes they have left on the Vote button.
   const votes = welcome?.votes ?? null;
-  const voteDetail = !votes
-    ? "Free crate keys every day"
-    : votes.left > 0
-      ? `${votes.left} of ${votes.total} left today`
-      : "All done for today";
+  const voteCount = !votes ? "" : votes.left > 0 ? `${votes.left} left` : "Done";
 
   return (
     <div className={`${frame.page} ${styles.homePage}`}>
@@ -475,10 +479,12 @@ export function VisitorHome({
               </button>
               <a className={styles.voteButton} href="/vote">
                 <img src={mineacleIcons.crate} alt="" draggable={false} />
-                <span>
-                  Vote for Keys
-                  <small>{voteDetail}</small>
-                </span>
+                <span>Vote for Keys</span>
+                {voteCount ? (
+                  <em className={styles.voteCount} data-done={votes?.left === 0 || undefined}>
+                    {voteCount}
+                  </em>
+                ) : null}
               </a>
               </>
             }
