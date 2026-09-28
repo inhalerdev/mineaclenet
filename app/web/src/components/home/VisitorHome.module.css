@@ -254,6 +254,13 @@
     #222222;
 }
 
+/* Discord blurple glow. */
+.quickCard[data-card="discord"] {
+  background:
+    radial-gradient(circle at 50% 38%, rgba(88, 101, 242, 0.16), transparent 40%),
+    #222222;
+}
+
 .quickCard:hover,
 .quickCard:focus-visible {
   border-color: #ffffff;
@@ -317,6 +324,19 @@
   line-height: 1.15;
   text-align: center;
   text-wrap: balance;
+}
+
+/* Small line under a card's title (e.g. Discord member counts). Hangs
+   below the title so the title stays level with the other cards'. */
+.quickCardDetail {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  color: var(--mc-text-muted);
+  font-size: 11px;
+  line-height: 1.2;
+  white-space: nowrap;
+  transform: translateX(-50%);
 }
 
 /* ==========================================================================
@@ -413,7 +433,7 @@
 
 /* Phones: the page scrolls. The hero keeps most of the screen (the first
    card peeks in underneath), then the cards stack full width, all the same
-   size, in nav-menu order: Leaderboards, Vote, Marketplace. */
+   size: Leaderboards, Discord (or Vote), Marketplace. */
 @media (max-width: 720px) {
   .homePage.homePage {
     height: auto;
@@ -435,7 +455,8 @@
     order: 1;
   }
 
-  .homePage .quickCard[data-card="vote"] {
+  .homePage .quickCard[data-card="vote"],
+  .homePage .quickCard[data-card="discord"] {
     order: 2;
   }
 

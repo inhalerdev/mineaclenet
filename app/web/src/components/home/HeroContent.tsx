@@ -3,9 +3,13 @@ import styles from "./HeroContent.module.css";
 
 /*
  * Text block in the homepage hero, bottom-left over the background video:
- * small tags, a big headline (last word in purple), a line of text, the
- * four things Mineacle is about (PvP, survival, trading, friends), the
- * buttons, and a thin live strip (players online, players joined, IP).
+ * a tag and a "What's new" line, a big headline (last part in purple), a
+ * line of text, a row of small blocks, the buttons, and a thin live strip
+ * (players online, players joined, IP).
+ *
+ * Visitors see the four things Mineacle is about (PvP, survival, trading,
+ * friends) in the blocks; logged-in players see their own numbers there
+ * (leaderboard spot, votes left, friends online), and each one is a link.
  */
 
 export type HeroStat = {
@@ -18,7 +22,7 @@ export type HeroStat = {
   live?: boolean;
 };
 
-export type HeroPillarIcon = "sword" | "heart" | "emerald" | "friends";
+export type HeroPillarIcon = "sword" | "heart" | "emerald" | "friends" | "key";
 
 export type HeroPillar = {
   icon: HeroPillarIcon;
@@ -26,6 +30,16 @@ export type HeroPillar = {
   detail: string;
   /** Icon color (the stat colors from the in-game tab list). */
   color: string;
+  /** Makes the block a link. */
+  href?: string;
+};
+
+export type HeroNews = {
+  /** Small badge, e.g. "New". */
+  label: string;
+  text: string;
+  /** Optional page to read more on. */
+  href?: string;
 };
 
 /* Pixel icons drawn from little grids ("#" = filled pixel). */
@@ -69,6 +83,15 @@ const PIXEL_ICONS: Record<HeroPillarIcon, string[]> = {
     "####.####",
     "####.####",
   ],
+  key: [
+    ".###.",
+    ".#.#.",
+    ".###.",
+    "..#..",
+    "..##.",
+    "..#..",
+    "..##.",
+  ],
 };
 
 function pixelPath(rows: string[]) {
@@ -97,8 +120,27 @@ function PixelIcon({ icon }: { icon: HeroPillarIcon }) {
   );
 }
 
+/* "What's new" line: a small purple badge and the news text. */
+function NewsLine({ news }: { news: HeroNews }) {
+  const inner = (
+    <>
+      <b>{news.label || "New"}</b>
+      <span>{news.text}</span>
+    </>
+  );
+
+  return news.href ? (
+    <a className={styles.news} href={news.href}>
+      {inner}
+    </a>
+  ) : (
+    <span className={styles.news}>{inner}</span>
+  );
+}
+
 type HeroContentProps = {
   tags: { label: string; tone: "gold" | "dark" }[];
+  news?: HeroNews | null;
   headline: string;
   /** Shown after the headline in brand purple (e.g. "Rise."). */
   headlineAccent?: string;
@@ -110,6 +152,7 @@ type HeroContentProps = {
 
 export function HeroContent({
   tags,
+  news = null,
   headline,
   headlineAccent,
   text,
@@ -120,13 +163,14 @@ export function HeroContent({
   return (
     <div className={styles.hero}>
       <div className={styles.content}>
-        {tags.length > 0 ? (
+        {tags.length > 0 || news?.text ? (
           <div className={styles.tags}>
             {tags.map((tag) => (
               <span className={styles.tag} data-tone={tag.tone} key={tag.label}>
                 {tag.label}
               </span>
             ))}
+            {news?.text ? <NewsLine news={news} /> : null}
           </div>
         ) : null}
         <h1 className={styles.headline}>
@@ -141,22 +185,32 @@ export function HeroContent({
         <p className={styles.text}>{text}</p>
 
         {pillars.length > 0 ? (
-          <ul className={styles.pillars}>
-            {pillars.map((pillar) => (
-              <li
-                className={styles.pillar}
-                key={pillar.label}
-                style={{ "--pillar": pillar.color } as CSSProperties}
-              >
-                <span className={styles.pillarIcon}>
-                  <PixelIcon icon={pillar.icon} />
-                </span>
-                <span className={styles.pillarText}>
-                  <strong>{pillar.label}</strong>
-                  <small>{pillar.detail}</small>
-                </span>
-              </li>
-            ))}
+          <ul className={styles.pillars} data-count={pillars.length}>
+            {pillars.map((pillar) => {
+              const inner = (
+                <>
+                  <span className={styles.pillarIcon}>
+                    <PixelIcon icon={pillar.icon} />
+                  </span>
+                  <span className={styles.pillarText}>
+                    <strong>{pillar.label}</strong>
+                    <small>{pillar.detail}</small>
+                  </span>
+                </>
+              );
+
+              return (
+                <li key={pillar.icon} style={{ "--pillar": pillar.color } as CSSProperties}>
+                  {pillar.href ? (
+                    <a className={styles.pillar} href={pillar.href}>
+                      {inner}
+                    </a>
+                  ) : (
+                    <span className={styles.pillar}>{inner}</span>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         ) : null}
 

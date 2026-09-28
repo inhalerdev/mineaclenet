@@ -6,6 +6,7 @@ import { playerAvatarUrl } from "@/components/players/PlayerAvatar";
 import type { OnlineFriend } from "@/features/social/follows";
 import styles from "./FriendOnlineToasts.module.css";
 import { RankPrefix } from "@/components/players/RankPrefix";
+import { useToastRoot } from "@/components/site/useToastRoot";
 
 /*
  * Xbox-style pop-up at the bottom of the screen when a player you follow
@@ -19,8 +20,8 @@ import { RankPrefix } from "@/components/players/RankPrefix";
  * tab (sessionStorage), so moving between pages doesn't repeat pop-ups.
  * Several friends joining together are shown one after another.
  *
- * Drawn straight into <body> so no page box or frame edge can sit on top of
- * it.
+ * Drawn into the shared pop-up area at the bottom of the screen
+ * (site/useToastRoot.ts), so it stacks with other pop-ups.
  */
 const POLL_EVERY_MS = 30_000;
 const SHOW_MS = 6_000;
@@ -48,6 +49,7 @@ export function FriendOnlineToasts() {
   const [queue, setQueue] = useState<OnlineFriend[]>([]);
   const [leaving, setLeaving] = useState(false);
   const seenRef = useRef<Set<string> | null>(null);
+  const toastRoot = useToastRoot();
 
   // Poll for online friends.
   useEffect(() => {
@@ -130,7 +132,7 @@ export function FriendOnlineToasts() {
     return () => window.clearTimeout(doneTimer);
   }, [leaving]);
 
-  if (!current || typeof document === "undefined") {
+  if (!current || !toastRoot) {
     return null;
   }
 
@@ -166,6 +168,6 @@ export function FriendOnlineToasts() {
         ) : null}
       </a>
     </div>,
-    document.body,
+    toastRoot,
   );
 }

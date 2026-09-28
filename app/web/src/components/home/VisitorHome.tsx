@@ -1,57 +1,115 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { AchievementToast } from "@/components/home/AchievementToast";
-import { HeroContent, type HeroStat } from "@/components/home/HeroContent";
+import {
+  HeroContent,
+  type HeroPillar,
+  type HeroStat,
+} from "@/components/home/HeroContent";
+import { IpCopiedToast } from "@/components/home/IpCopiedToast";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import type { Viewer } from "@/features/auth/types";
 import { homeContent } from "@/features/home/home-content";
+import type { DiscordStats } from "@/features/home/discord";
 import type { HeroStats } from "@/features/home/hero-stats";
+import type { WelcomeData } from "@/features/home/welcome";
 import type { TopPlayer } from "@/features/players/top-players";
 import { mineacleIcons } from "@/shared/icons/mineacle-icons";
 import frame from "@/components/site/SiteFrame.module.css";
 import styles from "./VisitorHome.module.css";
 
-const SERVER_ADDRESS = "mineacle.net";
+const SERVER_ADDRESS = homeContent.join.address;
 const heroText = homeContent.heroText;
 const STATUS_CACHE_KEY = "mineacle:home-status:mineacle.net";
 const STATUS_CACHE_MAX_AGE = 15_000;
 
-// Shown in the "Advancement Made!" toast when the IP is copied.
-// A different one is picked each time (never the same twice in a row).
-const IP_COPIED_ADVANCEMENTS = [
-  "The Journey Begins",
-  "Pack Your Bags",
-  "Portal Primed",
-  "Destination: Mineacle",
-  "First Steps",
-  "Adventure Awaits",
-] as const;
+type QuickLink = {
+  title: string;
+  /* Small line under the title (e.g. Discord member counts). */
+  detail?: string;
+  href: string;
+  media: string;
+  icon: string;
+  card: string;
+  external?: boolean;
+};
 
-const QUICK_LINKS = [
-  {
-    title: "Marketplace",
-    href: "https://store.mineacle.net/",
-    media: homeContent.mineaclePlus.media,
-    icon: mineacleIcons.crate,
-    card: "marketplace",
+/* The Discord card, or the Vote card if no invite is set. */
+function communityCard(discordStats: DiscordStats | null): QuickLink {
+  if (!homeContent.discord.invite) {
+    return {
+      title: "Vote / Earn a Reward",
+      href: "/vote",
+      media: homeContent.rewards.media,
+      icon: mineacleIcons.gift,
+      card: "vote",
+    };
+  }
+
+  return {
+    title: "Join the Discord",
+    detail: discordStats
+      ? `${discordStats.members.toLocaleString()} members · ${discordStats.online.toLocaleString()} online`
+      : "Find friends and squad up",
+    href: homeContent.discord.invite,
+    media: homeContent.community.media,
+    icon: mineacleIcons.socialDiscord,
+    card: "discord",
     external: true,
-  },
-  {
-    title: "Vote / Earn a Reward",
-    href: "/vote",
-    media: homeContent.rewards.media,
-    icon: mineacleIcons.gift,
-    card: "vote",
-  },
-  {
-    title: "Leaderboards",
-    href: "/leaderboards",
-    media: homeContent.competitive.media,
-    icon: mineacleIcons.trophy,
-    card: "leaderboards",
-  },
-] as const;
+  };
+}
+
+/* A logged-in player's own numbers, as the hero's small blocks. */
+function welcomePillars(welcome: WelcomeData): HeroPillar[] {
+  const plural = (count: number, word: string) => `${count} ${word}${count === 1 ? "" : "s"}`;
+  const votes = welcome.votes;
+  const friends = welcome.friendsOnline;
+
+  return [
+    {
+      icon: "emerald",
+      color: "#11fc7b",
+      href: "/leaderboards",
+      label: welcome.moneyRank > 0 ? `#${welcome.moneyRank} Richest` : "Balance",
+      detail: welcome.balance || "Start trading",
+    },
+    {
+      icon: "key",
+      color: "#fcd511",
+      href: "/vote",
+      label: !votes ? "Vote" : votes.left > 0 ? `${plural(votes.left, "vote")} left` : "All voted",
+      detail: votes && votes.left === 0 ? "Back tomorrow" : "Free crate keys",
+    },
+    {
+      icon: "friends",
+      color: "#b078ff",
+      href: "/following",
+      label: friends ? `${friends} online` : "Friends",
+      detail: friends
+        ? `${friends === 1 ? "Friend" : "Friends"} playing now`
+        : friends === 0
+          ? "None online right now"
+          : "See who's playing",
+    },
+  ];
+}
+
+const MARKETPLACE_CARD: QuickLink = {
+  title: "Marketplace",
+  href: "https://store.mineacle.net/",
+  media: homeContent.mineaclePlus.media,
+  icon: mineacleIcons.crate,
+  card: "marketplace",
+  external: true,
+};
+
+const LEADERBOARDS_CARD: QuickLink = {
+  title: "Leaderboards",
+  href: "/leaderboards",
+  media: homeContent.competitive.media,
+  icon: mineacleIcons.trophy,
+  card: "leaderboards",
+};
 
 type ServerStatus = {
   online: boolean;
@@ -64,18 +122,21 @@ type VisitorHomeProps = {
   viewer?: Viewer | null;
   topPlayers?: TopPlayer[];
   heroStats?: HeroStats | null;
+  discordStats?: DiscordStats | null;
+  /* Set for logged-in players: their "Welcome back" hero. */
+  welcome?: WelcomeData | null;
 };
 
 export function VisitorHome({
   viewer = null,
   topPlayers = [],
   heroStats = null,
+  discordStats = null,
+  welcome = null,
 }: VisitorHomeProps) {
   const [copied, setCopied] = useState(false);
-  const [achievement, setAchievement] = useState<{
-    id: number;
-    title: string;
-  } | null>(null);
+  // The "IP copied" pop-up; a new id each copy restarts it.
+  const [copyToast, setCopyToast] = useState<number | null>(null);
   const [playHovered, setPlayHovered] = useState(false);
   const [serverStatus, setServerStatus] =
     useState<ServerStatus | null>(null);
@@ -257,18 +318,7 @@ export function VisitorHome({
     setCopied(copiedSuccessfully);
 
     if (copiedSuccessfully) {
-      setAchievement((previous) => {
-        const choices = IP_COPIED_ADVANCEMENTS.filter(
-          (title) => title !== previous?.title,
-        );
-
-        return {
-          id: Date.now(),
-          title:
-            choices[Math.floor(Math.random() * choices.length)] ??
-            IP_COPIED_ADVANCEMENTS[0],
-        };
-      });
+      setCopyToast(Date.now());
     }
 
     if (copyTimerRef.current !== null) {
@@ -290,14 +340,22 @@ export function VisitorHome({
   const heroTiles: HeroStat[] = [
     ...(serverStatus
       ? [
-          serverStatus.online
-            ? {
-                key: "online",
-                value: currentlyPlaying,
-                label: "Playing now",
-                live: true,
-              }
-            : { key: "online", value: "Offline", label: "Server" },
+          !serverStatus.online
+            ? { key: "online", value: "Offline", label: "Server" }
+            : serverStatus.currentlyPlaying > 0
+              ? {
+                  key: "online",
+                  value: currentlyPlaying,
+                  label: "Playing now",
+                  live: true,
+                }
+              : // Nobody on: don't show a 0, invite them in instead.
+                {
+                  key: "online",
+                  value: "Online",
+                  label: "Be the first in today",
+                  live: true,
+                },
         ]
       : []),
     ...(heroStats
@@ -317,6 +375,20 @@ export function VisitorHome({
     : playHovered
       ? "players"
       : "idle";
+  // Hovering Play Now shows the player count, or "Copy Server IP" when
+  // nobody's on (or the count isn't known yet).
+  const hoverLabel =
+    serverStatus && serverStatus.currentlyPlaying > 0
+      ? `${currentlyPlaying} Currently Playing`
+      : "Copy Server IP";
+
+  const quickLinks = [MARKETPLACE_CARD, communityCard(discordStats), LEADERBOARDS_CARD];
+  const votes = welcome?.votes ?? null;
+  const voteDetail = !votes
+    ? "Free crate keys every day"
+    : votes.left > 0
+      ? `${votes.left} of ${votes.total} left today`
+      : "All done for today";
 
   return (
     <div className={`${frame.page} ${styles.homePage}`}>
@@ -343,16 +415,21 @@ export function VisitorHome({
           <div className={frame.heroShade} aria-hidden="true" />
 
           <HeroContent
-            tags={[
-              { label: heroText.tag, tone: "gold" as const },
-              ...(heroText.subtag
-                ? [{ label: heroText.subtag, tone: "dark" as const }]
-                : []),
-            ]}
-            headline={heroText.headline}
-            headlineAccent={heroText.headlineAccent}
-            text={heroText.text}
-            pillars={heroText.pillars}
+            tags={[{ label: heroText.tag, tone: "gold" as const }]}
+            news={heroText.news}
+            {...(welcome
+              ? {
+                  headline: "Welcome back,",
+                  headlineAccent: `${welcome.name}.`,
+                  text: "Your world is waiting. Here's where you stand today.",
+                  pillars: welcomePillars(welcome),
+                }
+              : {
+                  headline: heroText.headline,
+                  headlineAccent: heroText.headlineAccent,
+                  text: heroText.text,
+                  pillars: heroText.pillars,
+                })}
             action={
               <>
               <button
@@ -362,7 +439,7 @@ export function VisitorHome({
                 aria-label={
                   copied
                     ? "Mineacle IP copied"
-                    : playHovered
+                    : playHovered && serverStatus && serverStatus.currentlyPlaying > 0
                       ? `${currentlyPlaying} players currently playing. Copy Mineacle IP`
                       : "Copy Mineacle IP"
                 }
@@ -385,7 +462,7 @@ export function VisitorHome({
                     data-active={playState === "players"}
                   >
                     <img src={mineacleIcons.copy} alt="" draggable={false} />
-                    <span>{currentlyPlaying} Currently Playing</span>
+                    <span>{hoverLabel}</span>
                   </span>
                   <span
                     className={styles.playButtonState}
@@ -400,7 +477,7 @@ export function VisitorHome({
                 <img src={mineacleIcons.crate} alt="" draggable={false} />
                 <span>
                   Vote for Keys
-                  <small>Free crate keys every day</small>
+                  <small>{voteDetail}</small>
                 </span>
               </a>
               </>
@@ -414,16 +491,16 @@ export function VisitorHome({
         className={styles.quickGrid}
         aria-label="Mineacle quick links"
       >
-        {QUICK_LINKS.map((item) => (
+        {quickLinks.map((item) => (
           <a
             className={styles.quickCard}
             data-card={item.card}
             href={item.href}
             key={item.title}
-            {...("external" in item && item.external
+            {...(item.external
               ? {
                   target: "_blank",
-                  rel: "noreferrer",
+                  rel: "noopener noreferrer",
                 }
               : {})}
           >
@@ -442,18 +519,23 @@ export function VisitorHome({
                 draggable={false}
               />
             </span>
-            <strong>{item.title}</strong>
+            <strong>
+              {item.title}
+              {item.detail ? (
+                <small className={styles.quickCardDetail}>{item.detail}</small>
+              ) : null}
+            </strong>
           </a>
         ))}
       </section>
 
-      {achievement ? (
-        <AchievementToast
-          key={achievement.id}
-          kicker="Advancement Made!"
-          title={achievement.title}
-          iconSrc="/shared/images/branding/mineacle-mark.png"
-          onDone={() => setAchievement(null)}
+      {copyToast !== null ? (
+        <IpCopiedToast
+          key={copyToast}
+          address={SERVER_ADDRESS}
+          playerName={viewer ? (welcome?.name ?? viewer.username) : null}
+          javaVersion={homeContent.join.javaVersion}
+          onDone={() => setCopyToast(null)}
         />
       ) : null}
 

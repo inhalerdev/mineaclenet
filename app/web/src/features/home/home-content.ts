@@ -23,8 +23,14 @@ export const homeContent = {
   // online, players joined, IP) is filled in automatically.
   heroText: {
     tag: "Open Beta",
-    // Second tag next to it. Leave empty to hide it.
-    subtag: "Now open for Java Edition",
+    // "What's new" line next to the tag: a short piece of news, e.g.
+    // "Season 1 starts Oct 3". `href` is optional (a page to read more on).
+    // Leave `text` empty to hide it.
+    news: {
+      label: "New",
+      text: "Now open for Java Edition",
+      href: "",
+    },
     // The headline, then a last word shown in brand purple.
     headline: "Fight. Trade.",
     headlineAccent: "Rise.",
@@ -36,6 +42,18 @@ export const homeContent = {
       { icon: "emerald" as const, label: "Trade", detail: "Top the market", color: "#11fc7b" },
       { icon: "friends" as const, label: "Friends", detail: "Build together", color: "#b078ff" },
     ],
+  },
+  // Joining the server. `javaVersion` is shown in the "how to join" steps
+  // when the IP is copied, e.g. "1.21+". Leave empty to hide it.
+  join: {
+    address: "mineacle.net",
+    javaVersion: "1.21+",
+  },
+  // The Discord invite (same one as /discord in game). The homepage card
+  // shows the member and online counts from Discord. Leave empty to show the
+  // Vote card there instead.
+  discord: {
+    invite: "https://discord.gg/4xrYFxdSWg",
   },
   // Quick-link card backgrounds. Empty = plain card (no image). To add art
   // later, put the file in public/images/home/ and set its path here.
@@ -50,5 +68,9 @@ export const homeContent = {
   competitive: {
     media: "",
     mediaLabel: "Competitive leaderboard showcase artwork",
+  },
+  community: {
+    media: "",
+    mediaLabel: "Mineacle Discord community artwork",
   },
 };

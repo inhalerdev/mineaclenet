@@ -1,21 +1,14 @@
 /*
  * "Friend online" pop-up (FriendOnlineToasts.tsx): bottom centre of the
- * screen, Xbox style, in the site's block look. Slides up, waits, slides
- * back down. Link rules start with the region class so they beat the page's
- * font reset (.page a { font: inherit }).
+ * screen, in the shared pop-up area (site/ToastRoot.module.css). Xbox
+ * style, in the site's block look. Slides up, waits, slides back down.
+ * Link rules start with the region class so they beat the page's font
+ * reset (.page a { font: inherit }).
  */
 .region {
-  position: fixed;
-  z-index: 90;
-  right: 0;
-  bottom: 28px;
-  left: 0;
+  width: 100%;
   display: flex;
   justify-content: center;
-  padding: 0 12px;
-  /* Lives outside the page box (see FriendOnlineToasts.tsx), so it sets
-     the site font itself. */
-  font-family: "Mineacle Primary", monospace;
   pointer-events: none;
 }
 
@@ -128,12 +121,6 @@
   to {
     opacity: 0;
     transform: translateY(calc(100% + 28px));
-  }
-}
-
-@media (max-width: 720px) {
-  .region {
-    bottom: 16px;
   }
 }
 
