@@ -22,7 +22,7 @@ export function SocialLinks({ links }: { links: SocialLink[] }) {
           <>
             <span className={styles.platform}>{rule.label}</span>
             <span className={styles.handle}>{rule.display(link.handle)}</span>
-            {link.verified ? <VerifiedBadge /> : null}
+            {link.verified ? <VerifiedBadge label={`${rule.label} account verified`} /> : null}
           </>
         );
 

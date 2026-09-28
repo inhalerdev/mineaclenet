@@ -15,6 +15,7 @@
     inset 0 2px 0 var(--mc-purple-face),
     inset 0 -2px 0 var(--mc-purple-deep),
     0 0 0 2px var(--mc-outline);
+  position: relative;
   vertical-align: middle;
 }
 
@@ -43,6 +44,59 @@
 .badge.badge[data-size="large"] img {
   width: 16px;
   height: 16px;
+}
+
+/* Name styles in lists (e.g. ".podiumName span", ".identity h1 > span")
+   hide overflow on spans; doubled selectors keep the tooltip visible. */
+.badge.badge {
+  overflow: visible;
+}
+
+/* Hover tooltip, styled like a Minecraft item tooltip: near-black box
+   with a purple inner border. */
+.badge.badge .tip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  z-index: 50;
+  padding: 6px 9px 7px;
+  background: #100414;
+  box-shadow:
+    inset 0 0 0 2px #2c0f5c,
+    0 0 0 2px #000000;
+  color: var(--mc-purple-hover);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.2;
+  text-shadow: 2px 2px 0 #3a1d5e;
+  text-transform: none;
+  overflow: visible;
+  min-width: max-content;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 4px);
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease,
+    visibility 0s linear 120ms;
+}
+
+.badge.badge:hover .tip {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .badge.badge .tip {
+    transition: none;
+  }
 }
 
 @media (max-width: 640px) {
