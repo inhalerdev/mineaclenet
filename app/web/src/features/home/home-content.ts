@@ -70,7 +70,7 @@ export const homeContent = {
     mediaLabel: "Pixel-art podium with a crowned champion and a duel",
   },
   community: {
-    media: "",
-    mediaLabel: "Mineacle Discord community artwork",
+    media: "/images/home/discord.png",
+    mediaLabel: "Pixel-art friends around a campfire at night",
   },
 };

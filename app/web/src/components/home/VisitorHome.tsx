@@ -27,6 +27,8 @@ type QuickLink = {
   title: string;
   /* Small line under the title (e.g. Discord member counts). */
   detail?: string;
+  /* Shown when the card is hovered, e.g. "Open store". */
+  cta: string;
   href: string;
   media: string;
   icon: string;
@@ -39,6 +41,7 @@ function communityCard(discordStats: DiscordStats | null): QuickLink {
   if (!homeContent.discord.invite) {
     return {
       title: "Vote / Earn a Reward",
+      cta: "Vote now",
       href: "/vote",
       media: homeContent.rewards.media,
       icon: mineacleIcons.gift,
@@ -51,6 +54,7 @@ function communityCard(discordStats: DiscordStats | null): QuickLink {
     detail: discordStats
       ? `${discordStats.members.toLocaleString()} members · ${discordStats.online.toLocaleString()} online`
       : "Find friends and squad up",
+    cta: "Join server",
     href: homeContent.discord.invite,
     media: homeContent.community.media,
     icon: mineacleIcons.socialDiscord,
@@ -96,6 +100,8 @@ function welcomeStats(welcome: WelcomeData): HeroQuickStat[] {
 
 const MARKETPLACE_CARD: QuickLink = {
   title: "Marketplace",
+  detail: "The official Mineacle store",
+  cta: "Open store",
   href: "https://store.mineacle.net/",
   media: homeContent.mineaclePlus.media,
   icon: mineacleIcons.crate,
@@ -105,6 +111,8 @@ const MARKETPLACE_CARD: QuickLink = {
 
 const LEADERBOARDS_CARD: QuickLink = {
   title: "Leaderboards",
+  detail: "Top 50 in balance, kills and more",
+  cta: "See rankings",
   href: "/leaderboards",
   media: homeContent.competitive.media,
   icon: mineacleIcons.trophy,
@@ -512,19 +520,20 @@ export function VisitorHome({
                 draggable={false}
               />
             ) : null}
-            <span className={styles.quickCardIcon} aria-hidden="true">
-              <img
-                src={item.icon}
-                alt=""
-                draggable={false}
-              />
+            <span className={styles.quickCardCaption}>
+              <span className={styles.quickCardIcon} aria-hidden="true">
+                <img src={item.icon} alt="" draggable={false} />
+              </span>
+              <span className={styles.quickCardText}>
+                <strong>{item.title}</strong>
+                {item.detail ? (
+                  <small className={styles.quickCardDetail}>{item.detail}</small>
+                ) : null}
+              </span>
             </span>
-            <strong>
-              {item.title}
-              {item.detail ? (
-                <small className={styles.quickCardDetail}>{item.detail}</small>
-              ) : null}
-            </strong>
+            <span className={styles.quickCardCta} aria-hidden="true">
+              {item.cta}
+            </span>
           </a>
         ))}
       </section>
