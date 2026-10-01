@@ -97,6 +97,21 @@ const TABLES = [
     `,
   ],
   [
+    // Also created by MineacleCore (same schema); read for bounty claims
+    "mineacle_connection_log",
+    `
+      CREATE TABLE mineacle_connection_log (
+        id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        player_a CHAR(36) NOT NULL,
+        player_b CHAR(36) NOT NULL,
+        kind VARCHAR(16) NOT NULL,
+        ended_at BIGINT NOT NULL,
+        INDEX idx_connection_a (player_a, ended_at),
+        INDEX idx_connection_b (player_b, ended_at)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    `,
+  ],
+  [
     "mineacle_web_notifications",
     `
       CREATE TABLE mineacle_web_notifications (

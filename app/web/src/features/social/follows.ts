@@ -1,4 +1,4 @@
-import type { RowDataPacket } from "mysql2";
+import type { ResultSetHeader, RowDataPacket } from "mysql2";
 import { ensureAuthSchema } from "@/features/auth/schema";
 import {
   getPlayerByUsername,
@@ -238,10 +238,33 @@ export async function unfollowByUuid(
 ) {
   await ensureAuthSchema();
 
-  await getCoreDb().execute(
+  const [result] = await getCoreDb().execute<ResultSetHeader>(
     `DELETE FROM mineacle_web_follows
      WHERE follower_account_id = ?
        AND target_uuid = ?`,
     [accountId, targetUuid],
   );
+
+  if (result.affectedRows > 0) {
+    await logUnfollow(accountId, targetUuid);
+  }
+}
+
+/**
+ * The server refuses bounty claims between players who were connected
+ * recently, and temp-bans an unfollow-then-kill. It reads this log, which
+ * MineacleCore creates. Never blocks the unfollow if the log is missing.
+ */
+async function logUnfollow(accountId: number, targetUuid: string) {
+  try {
+    await getCoreDb().execute(
+      `INSERT INTO mineacle_connection_log (player_a, player_b, kind, ended_at)
+       SELECT uuid, ?, 'follow', ?
+       FROM mineacle_web_accounts
+       WHERE id = ?`,
+      [targetUuid, Date.now(), accountId],
+    );
+  } catch (error) {
+    console.warn("Could not record unfollow in mineacle_connection_log", error);
+  }
 }
