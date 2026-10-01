@@ -192,16 +192,34 @@ export async function getPunishments({
       type: row.type,
       uuid,
       username: (uuid && names.get(uuid)) || "Unknown player",
-      reason: row.reason?.trim() || "No reason provided",
-      staffName: row.staff_name?.trim() || "Console",
+      reason: plainText(row.reason) || "No reason provided",
+      staffName: plainText(row.staff_name) || "Console",
       createdAt: normalizeEpoch(row.time),
       expiresAt,
       permanent,
       active: bitValue(row.active) && (expiresAt === null || expiresAt > Date.now()),
-      removedByName: row.removed_by_name?.trim() || null,
-      removedReason: row.removed_reason?.trim() || null,
+      removedByName: plainText(row.removed_by_name) || null,
+      removedReason: plainText(row.removed_reason) || null,
     };
   });
 
   return { records, total, page: boundedPage, pageSize: safePageSize, totalPages, matchedPlayer };
+}
+
+/*
+ * LiteBans stores staff display names (and sometimes reasons) with
+ * Minecraft formatting, e.g. "§x§b§b§b§b§b§bnotator" for a hex-coloured
+ * name. The website shows plain text, so strip every colour/format code:
+ * §x§r§r§g§g§b§b hex, &#rrggbb / <#rrggbb> hex, and §a / &a style codes.
+ */
+function plainText(value: string | null | undefined): string {
+  if (!value) {
+    return "";
+  }
+
+  return value
+    .replace(/[§&]x(?:[§&][0-9a-f]){6}/gi, "")
+    .replace(/&#[0-9a-f]{6}|<#[0-9a-f]{6}>/gi, "")
+    .replace(/[§&][0-9a-fk-or]/gi, "")
+    .trim();
 }
