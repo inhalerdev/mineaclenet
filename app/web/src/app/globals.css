@@ -179,9 +179,9 @@ video {
 }
 
 /*
- * Mineacle pixel icons get the same small hard drop shadow as the key on
- * the Vote for Keys button. Component styles that set their own filter
- * (e.g. the darkened header nav icons) load later and still win.
+ * Every Mineacle icon (icons/mineacle and icons/mineacle/nav) gets the same
+ * small hard drop shadow as the key on the Vote for Keys button. Component
+ * styles that set their own filter must end with this same drop-shadow.
  */
 img[src^="/shared/images/icons/mineacle/"] {
   filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.5));
