@@ -1,0 +1,147 @@
+/*
+ * Blocky dropdown (BlockMenu.tsx). Same block recipe as the rest of the
+ * site: grey face, lighter top edge, darker bottom edge, black outline,
+ * square corners; the chosen option is purple. Colors from app/tokens.css.
+ *
+ * Rules on links start with a parent class so they beat the page's font
+ * reset in SiteFrame.module.css (.page a { font: inherit }).
+ */
+.menu {
+  position: relative;
+  min-width: 0;
+}
+
+.trigger {
+  height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px 3px;
+  background: #2b2b2b;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 3px 0 #3a3a3a,
+    inset 0 -4px 0 #161616;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1;
+  list-style: none;
+  user-select: none;
+  transition: background-color var(--motion);
+}
+
+.trigger::-webkit-details-marker {
+  display: none;
+}
+
+.trigger:hover,
+.trigger:focus-visible,
+.menu[open] > .trigger {
+  background: #353535;
+}
+
+.trigger:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 0;
+}
+
+/* "Type" / "Status": small muted name before the chosen value. */
+.label {
+  color: var(--mc-text-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.value {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.value i,
+.option i {
+  width: 10px;
+  height: 10px;
+  flex: 0 0 10px;
+  box-shadow: 0 0 0 2px var(--mc-outline);
+}
+
+/* Pixel arrow: a small chevron built from two borders. */
+.arrow {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
+  margin-top: -3px;
+  border-right: 3px solid #ffffff;
+  border-bottom: 3px solid #ffffff;
+  transform: rotate(45deg);
+  transition: transform var(--motion), margin var(--motion);
+}
+
+.menu[open] .arrow {
+  margin-top: 4px;
+  transform: rotate(225deg);
+}
+
+.list {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 100%;
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 6px;
+  background: #1c1c1c;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 2px 0 #262626,
+    0 6px 0 rgba(0, 0, 0, 0.35);
+  list-style: none;
+}
+
+.list .option {
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px 2px;
+  color: var(--mc-text);
+  font-size: 13px;
+  white-space: nowrap;
+  transition: background-color var(--motion);
+}
+
+.list .option:hover,
+.list .option:focus-visible {
+  background: #2b2b2b;
+  color: #ffffff;
+}
+
+.list .option[aria-current] {
+  background: var(--mc-purple);
+  box-shadow:
+    inset 0 2px 0 var(--mc-purple-face),
+    inset 0 -3px 0 var(--mc-purple-deep);
+  color: #ffffff;
+}
+
+/* Narrow screens: the value alone ("Any status") fits; the field name
+   stays for screen readers. */
+@media (max-width: 480px) {
+  .label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}

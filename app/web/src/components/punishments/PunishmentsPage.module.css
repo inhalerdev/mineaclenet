@@ -70,6 +70,29 @@
   flex: 0 0 auto;
 }
 
+/* Type and Status dropdowns (site/BlockMenu.tsx) and Clear filters. */
+.menus {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.menus > details {
+  min-width: 190px;
+}
+
+.filters .clear {
+  padding: 4px 2px;
+  color: var(--mc-red-light);
+  font-size: 12px;
+}
+
+.filters .clear:hover,
+.filters .clear:focus-visible {
+  color: #ffffff;
+}
+
 .context {
   margin: 0;
   color: var(--mc-text-muted);
@@ -303,6 +326,22 @@
   .search {
     max-width: none;
     flex-basis: 100%;
+  }
+
+  /* Phones: the two dropdowns share one row, Clear goes under them. */
+  .menus {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .menus > details {
+    min-width: 0;
+  }
+
+  .menus .clear {
+    grid-column: 1 / -1;
+    justify-self: start;
   }
 
   .table {

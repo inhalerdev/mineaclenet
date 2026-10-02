@@ -70,3 +70,32 @@
     padding-top: 52px;
   }
 }
+
+/* Phones and small tablets: no scroll area inside the box. The box grows
+   with its content and the whole page scrolls (the body already scrolls
+   at this width, app/globals.css), so nothing is cut off at the box edge
+   and the footer follows the content like on a normal page. */
+@media (max-width: 800px) {
+  .page.page {
+    height: auto;
+    min-height: 100dvh;
+    grid-template-rows: auto auto;
+    overflow: visible;
+  }
+
+  .frame.frame {
+    min-height: calc(100dvh - 2 * var(--page-margin));
+  }
+
+  .stage {
+    position: relative;
+    inset: auto;
+    min-height: calc(100dvh - 2 * var(--page-margin) - var(--header-height) - 4px);
+    margin-top: var(--header-height);
+    overflow: visible;
+  }
+
+  .stage[data-variant="content"] {
+    padding-bottom: 28px;
+  }
+}

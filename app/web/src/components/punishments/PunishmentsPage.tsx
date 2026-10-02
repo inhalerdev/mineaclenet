@@ -1,4 +1,5 @@
 import { playerAvatarUrl } from "@/components/players/PlayerAvatar";
+import { BlockMenu } from "@/components/site/BlockMenu";
 import block from "@/components/site/BlockButton.module.css";
 import content from "@/components/site/ContentPage.module.css";
 import { FramedPage } from "@/components/site/FramedPage";
@@ -21,6 +22,13 @@ import styles from "./PunishmentsPage.module.css";
 
 const TYPE_LABEL = { ban: "Ban", mute: "Mute", warning: "Warning", kick: "Kick" } as const;
 const STATE_LABEL = { active: "Active", removed: "Removed", expired: "Expired" } as const;
+/* Same colors as the type badges in the list. */
+const TYPE_SWATCH: Record<string, string> = {
+  ban: "var(--mc-red)",
+  mute: "var(--mc-purple)",
+  warning: "var(--mc-gold)",
+  kick: "#6b6b6b",
+};
 
 /*
  * Public records (/punishments): bans, mutes, warnings and kicks from
@@ -89,37 +97,30 @@ export function PunishmentsPage({
             </button>
           </form>
 
-          <nav className={content.chips} aria-label="Type">
-            {punishmentTypes.map((item) => (
-              <a
-                key={item.key}
-                className={content.chip}
-                href={punishmentsHref({ ...filters, type: item.key })}
-                aria-current={filters.type === item.key ? "true" : undefined}
-                data-type={item.key}
-              >
-                {item.label}
-              </a>
-            ))}
-          </nav>
-
-          <nav className={content.chips} aria-label="Status">
-            {punishmentStatuses.map((item) => (
-              <a
-                key={item.key}
-                className={content.chip}
-                href={punishmentsHref({ ...filters, status: item.key })}
-                aria-current={filters.status === item.key ? "true" : undefined}
-              >
-                {item.label}
-              </a>
-            ))}
+          <div className={styles.menus}>
+            <BlockMenu
+              label="Type"
+              options={punishmentTypes.map((item) => ({
+                label: item.label,
+                href: punishmentsHref({ ...filters, type: item.key }),
+                current: filters.type === item.key,
+                swatch: TYPE_SWATCH[item.key],
+              }))}
+            />
+            <BlockMenu
+              label="Status"
+              options={punishmentStatuses.map((item) => ({
+                label: item.label,
+                href: punishmentsHref({ ...filters, status: item.key }),
+                current: filters.status === item.key,
+              }))}
+            />
             {filtered ? (
-              <a className={content.clear} href="/punishments">
-                Clear
+              <a className={styles.clear} href="/punishments">
+                Clear filters
               </a>
             ) : null}
-          </nav>
+          </div>
         </div>
 
         {!data ? (

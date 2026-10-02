@@ -36,7 +36,7 @@ export function FramedPage({
 }) {
   return (
     <div className={`${frame.page} ${styles.page}`}>
-      <section className={frame.heroFrame}>
+      <section className={`${frame.heroFrame} ${styles.frame}`}>
         <SiteHeader
           viewer={viewer}
           topPlayers={topPlayers}
