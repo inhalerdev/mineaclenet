@@ -218,11 +218,12 @@
 }
 
 /* ==========================================================================
- * Quick-link cards: each shows its background art (set in
- * features/home/home-content.ts) with the icon, title and a small line in
- * the bottom-left corner. On hover the art zooms in slightly and dims, the
- * caption glides up to the middle of the card and a gold "Open store" style
- * tag pops in under it. Click sinks the card like the site's buttons.
+ * Quick-link cards, as chunky game buttons: the card's art on top and a
+ * solid plate along the bottom in the card's own color (gold Marketplace,
+ * Discord blurple, purple Leaderboards, green Vote) with an item-frame icon
+ * slot, the title and a small line, and an arrow block. Hover bounces the
+ * card up and wiggles the icon; pressing sinks it like the site's buttons.
+ * Art is set in features/home/home-content.ts.
  * ========================================================================== */
 .quickGrid {
   min-width: 0;
@@ -230,6 +231,42 @@
   display: grid;
   grid-template-columns: minmax(0, 6fr) repeat(2, minmax(0, 5fr));
   gap: var(--content-gap);
+}
+
+.quickCard[data-card="marketplace"] {
+  --card: var(--mc-gold);
+  --card-light: var(--mc-gold-light);
+  --card-edge: var(--mc-gold-edge);
+  --card-text: var(--mc-gold-text);
+  --card-shadow: none;
+  --card-glow: rgba(242, 181, 30, 0.16);
+}
+
+.quickCard[data-card="discord"] {
+  --card: #5865f2;
+  --card-light: #8c95ff;
+  --card-edge: #343da8;
+  --card-text: #ffffff;
+  --card-shadow: 2px 2px 0 #1d2270;
+  --card-glow: rgba(88, 101, 242, 0.18);
+}
+
+.quickCard[data-card="leaderboards"] {
+  --card: var(--mc-purple);
+  --card-light: var(--mc-purple-face);
+  --card-edge: var(--mc-purple-deep);
+  --card-text: #ffffff;
+  --card-shadow: 2px 2px 0 #2b1554;
+  --card-glow: rgba(176, 120, 255, 0.18);
+}
+
+.quickCard[data-card="vote"] {
+  --card: var(--mc-green);
+  --card-light: var(--mc-green-light);
+  --card-edge: var(--mc-green-edge);
+  --card-text: #ffffff;
+  --card-shadow: 2px 2px 0 #123a0b;
+  --card-glow: rgba(17, 252, 123, 0.14);
 }
 
 .quickCard {
@@ -242,60 +279,18 @@
   overflow: hidden;
   border: 2px solid var(--mc-outline);
   border-radius: 0;
-  background: #222222;
+  background:
+    radial-gradient(circle at 50% 38%, var(--card-glow), transparent 45%),
+    #222222;
   box-shadow:
-    inset 0 2px 0 #2e2e2e,
-    inset 0 -4px 0 #181818;
+    inset 0 2px 0 rgba(255, 255, 255, 0.08),
+    0 4px 0 rgba(0, 0, 0, 0.5);
   color: #ffffff;
   isolation: isolate;
   transition:
-    transform 110ms var(--card-ease),
-    box-shadow 110ms var(--card-ease),
+    transform 140ms var(--card-ease),
+    box-shadow 140ms var(--card-ease),
     border-color 140ms ease;
-}
-
-/* A soft glow in each card's color, shown when a card has no art. */
-.quickCard[data-card="marketplace"] {
-  background:
-    radial-gradient(circle at 50% 38%, rgba(242, 181, 30, 0.12), transparent 40%),
-    #222222;
-}
-
-.quickCard[data-card="vote"] {
-  background:
-    radial-gradient(circle at 50% 38%, rgba(17, 252, 123, 0.1), transparent 40%),
-    #222222;
-}
-
-.quickCard[data-card="leaderboards"] {
-  background:
-    radial-gradient(circle at 50% 38%, rgba(176, 120, 255, 0.14), transparent 40%),
-    #222222;
-}
-
-.quickCard[data-card="discord"] {
-  background:
-    radial-gradient(circle at 50% 38%, rgba(88, 101, 242, 0.16), transparent 40%),
-    #222222;
-}
-
-.quickCard:hover,
-.quickCard:focus-visible {
-  border-color: #ffffff;
-  outline: 0;
-  box-shadow:
-    inset 0 2px 0 #333333,
-    inset 0 -4px 0 #181818,
-    0 4px 0 rgba(0, 0, 0, 0.45);
-  transform: translateY(-2px);
-}
-
-.quickCard:active {
-  box-shadow:
-    inset 0 2px 0 #333333,
-    inset 0 -1px 0 #181818;
-  transform: translateY(2px);
-  transition-duration: 50ms;
 }
 
 /* Background art. */
@@ -306,80 +301,60 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: brightness(0.7) saturate(0.95);
+  filter: brightness(0.82) saturate(1);
   image-rendering: pixelated;
   transition:
-    transform 700ms var(--card-ease),
+    transform 600ms var(--card-ease),
     filter 300ms ease;
 }
 
-/* Dark fade along the bottom so the caption reads over any art... */
+/* Soft fade behind the plate. */
 .quickCard::before {
   position: absolute;
   z-index: -1;
   inset: 0;
-  background: linear-gradient(
-    0deg,
-    rgba(8, 8, 8, 0.9) 0%,
-    rgba(8, 8, 8, 0.5) 32%,
-    transparent 62%
-  );
+  background: linear-gradient(0deg, rgba(8, 8, 8, 0.65) 0%, transparent 55%);
   content: "";
   pointer-events: none;
-  transition: opacity 300ms ease;
 }
 
-/* ...and a dark pool in the middle for when the caption moves there. */
-.quickCard::after {
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  background: radial-gradient(
-    ellipse 75% 70% at 50% 50%,
-    rgba(8, 8, 8, 0.88),
-    rgba(8, 8, 8, 0.5) 55%,
-    transparent 90%
-  );
-  content: "";
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 300ms ease;
-}
-
-/* Icon + title + small line, bottom-left. */
+/* The plate: a solid block button along the bottom of the card. */
 .quickCardCaption {
   position: absolute;
-  left: 20px;
-  bottom: 18px;
-  /* Its own width, so it isn't squeezed when it moves to the middle. */
-  width: max-content;
-  max-width: calc(100% - 40px);
+  right: 10px;
+  bottom: 10px;
+  left: 10px;
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: 12px;
-  transform: translate(0, 0);
-  transition:
-    left 420ms var(--card-ease),
-    bottom 420ms var(--card-ease),
-    transform 420ms var(--card-ease);
+  padding: 8px 10px 11px 8px;
+  background: var(--card);
+  box-shadow:
+    inset 0 3px 0 var(--card-light),
+    inset 0 -4px 0 var(--card-edge),
+    0 0 0 2px var(--mc-outline),
+    0 4px 0 2px rgba(0, 0, 0, 0.35);
+  color: var(--card-text);
 }
 
-/* The icon sits in a small dark slot, like the stat tiles. */
+/* Item-frame slot for the icon. */
 .quickCardIcon {
   width: 44px;
   height: 44px;
   flex: 0 0 44px;
   display: grid;
   place-items: center;
-  background: rgba(17, 17, 17, 0.8);
+  background: rgba(0, 0, 0, 0.3);
   box-shadow:
     inset 0 0 0 2px var(--mc-outline),
-    inset 0 0 0 3px rgba(255, 255, 255, 0.1);
+    inset 0 3px 0 rgba(0, 0, 0, 0.35),
+    inset 0 -2px 0 rgba(255, 255, 255, 0.12);
 }
 
 .quickCardIcon img {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   display: block;
   object-fit: contain;
   image-rendering: pixelated;
@@ -388,105 +363,121 @@
 
 .quickCardText {
   min-width: 0;
+  flex: 1;
   display: grid;
-  gap: 6px;
+  gap: 5px;
 }
 
 .quickCardText strong {
   overflow: hidden;
-  font-size: clamp(15px, 1.3vw, 21px);
+  font-size: clamp(15px, 1.3vw, 20px);
   font-weight: 400;
   line-height: 1.1;
   text-overflow: ellipsis;
-  text-shadow: 2px 2px 0 #000000;
+  text-shadow: var(--card-shadow);
   white-space: nowrap;
 }
 
 /* Small line under the title (e.g. Discord member counts). */
 .quickCardDetail {
   overflow: hidden;
-  color: #d4d4d4;
   font-size: 12px;
   line-height: 1.2;
+  opacity: 0.85;
   text-overflow: ellipsis;
-  text-shadow: 1px 1px 0 #000000;
   white-space: nowrap;
 }
 
-/* Gold tag that pops in under the caption on hover. */
+/* Arrow block on the right; its label ("Shop now") slides out on hover. */
 .quickCardCta {
-  position: absolute;
-  top: calc(50% + 28px);
-  left: 50%;
-  padding: 5px 8px 7px;
-  background: var(--mc-gold);
+  height: 34px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0 11px 3px;
+  background: rgba(0, 0, 0, 0.28);
   box-shadow:
-    inset 0 2px 0 var(--mc-gold-light),
-    inset 0 -3px 0 var(--mc-gold-edge),
-    0 0 0 2px var(--mc-outline);
-  color: var(--mc-gold-text);
-  font-size: 11px;
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.3);
+  color: #ffffff;
+  font-size: 12px;
   line-height: 1;
   white-space: nowrap;
   text-transform: uppercase;
-  opacity: 0;
-  pointer-events: none;
-  transform: translate(-50%, 10px);
-  transition:
-    opacity 200ms ease,
-    transform 420ms var(--card-ease);
+  transition: gap 200ms var(--card-ease);
 }
 
-/* The hover move (only where there's a real pointer; keyboard focus too). */
-@media (hover: hover) {
-  .quickCard:hover .quickCardMedia {
-    filter: brightness(0.5) saturate(1.05);
-    transform: scale(1.06);
-  }
-
-  .quickCard:hover::before {
-    opacity: 0.25;
-  }
-
-  .quickCard:hover::after {
-    opacity: 1;
-  }
-
-  .quickCard:hover .quickCardCaption {
-    left: 50%;
-    bottom: 50%;
-    transform: translate(-50%, calc(50% - 12px)) scale(1.08);
-  }
-
-  .quickCard:hover .quickCardCta {
-    opacity: 1;
-    transform: translate(-50%, 0);
-    transition-delay: 90ms;
-  }
+.quickCardCta > span {
+  max-width: 0;
+  overflow: hidden;
+  transition: max-width 260ms var(--card-ease);
 }
 
+/* Pixel chevron drawn from two borders. */
+.quickCardCta > b {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
+  margin: 1px 2px 0 0;
+  border-top: 3px solid #ffffff;
+  border-right: 3px solid #ffffff;
+  transform: rotate(45deg);
+  transition: transform 200ms var(--card-ease);
+}
+
+@keyframes iconWiggle {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  25% { transform: rotate(-12deg) translateY(-3px); }
+  50% { transform: rotate(10deg) translateY(-1px); }
+  75% { transform: rotate(-6deg) translateY(-2px); }
+}
+
+/* Hover / keyboard focus: bounce up, white frame, icon wiggles, the arrow
+   block opens with its label. */
+.quickCard:hover,
+.quickCard:focus-visible {
+  border-color: #ffffff;
+  outline: 0;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.12),
+    0 8px 0 rgba(0, 0, 0, 0.5);
+  transform: translateY(-4px);
+}
+
+.quickCard:hover .quickCardMedia,
 .quickCard:focus-visible .quickCardMedia {
-  filter: brightness(0.5) saturate(1.05);
-  transform: scale(1.06);
+  filter: brightness(1) saturate(1.1);
+  transform: scale(1.05);
 }
 
-.quickCard:focus-visible::before {
-  opacity: 0.25;
+.quickCard:hover .quickCardIcon img,
+.quickCard:focus-visible .quickCardIcon img {
+  animation: iconWiggle 520ms steps(8, jump-none) 1;
 }
 
-.quickCard:focus-visible::after {
-  opacity: 1;
-}
-
-.quickCard:focus-visible .quickCardCaption {
-  left: 50%;
-  bottom: 50%;
-  transform: translate(-50%, calc(50% - 12px)) scale(1.08);
-}
-
+.quickCard:hover .quickCardCta,
 .quickCard:focus-visible .quickCardCta {
-  opacity: 1;
-  transform: translate(-50%, 0);
+  gap: 8px;
+}
+
+.quickCard:hover .quickCardCta > span,
+.quickCard:focus-visible .quickCardCta > span {
+  max-width: 160px;
+}
+
+.quickCard:hover .quickCardCta > b,
+.quickCard:focus-visible .quickCardCta > b {
+  transform: translateX(2px) rotate(45deg);
+}
+
+/* Press: the card sinks into its shadow. */
+.quickCard:active {
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.08),
+    0 1px 0 rgba(0, 0, 0, 0.5);
+  transform: translateY(3px);
+  transition-duration: 50ms;
 }
 
 /* ==========================================================================
@@ -524,8 +515,9 @@
   }
 
   .quickCardCaption {
-    left: 16px;
-    bottom: 14px;
+    right: 8px;
+    bottom: 8px;
+    left: 8px;
   }
 }
 
@@ -566,59 +558,47 @@
   }
 }
 
-/* Phones: still one screen, no scrolling. The hero fills the space and the
-   three cards become a row of compact tiles (icon and name) under it. */
+/* Phones: the page scrolls. The hero keeps most of the screen (the first
+   card peeks in under it), then the cards stack as big full-width buttons:
+   Leaderboards, Discord (or Vote), Marketplace. */
 @media (max-width: 720px) {
   .homePage.homePage {
-    height: 100svh;
-    min-height: 0;
-    overflow: hidden;
-    grid-template-rows: minmax(0, 1fr) 96px;
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+    grid-template-rows: auto auto;
+  }
+
+  .homePage.homePage .heroSection {
+    height: max(440px, calc(100svh - 2 * var(--page-margin) - 72px));
   }
 
   .homePage .quickGrid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: 136px;
+    gap: 14px;
   }
 
-  .homePage .quickCardCaption {
-    inset: 0;
-    width: auto;
-    max-width: none;
-    padding: 0 6px;
-    display: grid;
-    place-content: center;
-    justify-items: center;
-    gap: 8px;
-    text-align: center;
+  .homePage .quickCard[data-card="leaderboards"] {
+    order: 1;
   }
 
-  .homePage .quickCardIcon {
-    width: 36px;
-    height: 36px;
-    flex-basis: 36px;
+  .homePage .quickCard[data-card="vote"],
+  .homePage .quickCard[data-card="discord"] {
+    order: 2;
   }
 
-  .homePage .quickCardIcon img {
-    width: 18px;
-    height: 18px;
+  .homePage .quickCard[data-card="marketplace"] {
+    order: 3;
   }
 
   .homePage .quickCardText strong {
-    overflow: visible;
-    font-size: 11px;
-    line-height: 1.2;
-    white-space: normal;
+    font-size: 15px;
   }
 
-  .homePage .quickCardDetail,
+  /* Phones: just the arrow block, so titles get the room. */
   .homePage .quickCardCta {
-    display: none;
-  }
-
-  /* Darker art so the centered name reads. */
-  .homePage .quickCard::before {
-    background: rgba(8, 8, 8, 0.55);
+    padding: 0 10px 3px 8px;
   }
 }
 
@@ -643,9 +623,8 @@
     transform: none;
   }
 
-  /* Caption and tag switch places without gliding. */
-  .quickCardCaption,
-  .quickCardCta {
-    transition: none;
+  .quickCard:hover .quickCardIcon img,
+  .quickCard:focus-visible .quickCardIcon img {
+    animation: none;
   }
 }

@@ -529,9 +529,10 @@ export function VisitorHome({
                   <small className={styles.quickCardDetail}>{item.detail}</small>
                 ) : null}
               </span>
-            </span>
-            <span className={styles.quickCardCta} aria-hidden="true">
-              {item.cta}
+              <span className={styles.quickCardCta} aria-hidden="true">
+                <span>{item.cta}</span>
+                <b />
+              </span>
             </span>
           </a>
         ))}
