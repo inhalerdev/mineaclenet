@@ -564,7 +564,7 @@
 }
 
 /* ==========================================================================
- * Screen sizes: the panel becomes a scrolling row of tabs above the items
+ * Screen sizes: the panel becomes rows of tabs above the items
  * ========================================================================== */
 @media (max-width: 900px) {
   .layout {
@@ -574,23 +574,21 @@
 
   .panel {
     position: static;
+    min-width: 0;
     padding: 10px;
   }
 
+  /* Categories wrap onto more rows instead of running off the screen. */
   .categories {
+    min-width: 0;
     display: flex;
-    gap: 6px;
-    overflow-x: auto;
-    padding-bottom: 4px;
-    scrollbar-width: thin;
+    flex-wrap: wrap;
+    gap: 8px;
   }
 
   .categories > li {
-    flex: 0 0 auto;
-  }
-
-  .categories .category span {
-    overflow: visible;
+    min-width: 0;
+    flex: 0 1 auto;
   }
 }
 

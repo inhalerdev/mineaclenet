@@ -50,6 +50,9 @@
 }
 
 .filters .search input {
+  /* width 0 + flex 1: the field fills the box but never forces it wider
+     than a small phone. */
+  width: 0;
   min-width: 0;
   height: 100%;
   flex: 1;
