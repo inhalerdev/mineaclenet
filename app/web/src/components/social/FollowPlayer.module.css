@@ -1,0 +1,186 @@
+/*
+ * "Follow a player" box (FollowPlayer.tsx): sunken input like the header
+ * search, purple Follow button, and a suggestion list that drops down under
+ * the input while typing (same panel look as the header menus).
+ * Input rules start with a parent class so they beat the page's font reset
+ * (.page input { font: inherit } in site/SiteFrame.module.css).
+ */
+.root {
+  width: min(520px, 100%);
+}
+
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.field {
+  position: relative;
+  min-width: 0;
+  flex: 1 1 240px;
+}
+
+.form .field input {
+  width: 100%;
+  height: 40px;
+  padding: 0 36px 0 14px;
+  border: 0;
+  border-radius: 0;
+  outline: none;
+  background: #111111;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 3px 3px 0 0 #0a0a0a,
+    inset -3px -3px 0 0 #2e2e2e;
+  color: #ffffff;
+  font-size: 13px;
+}
+
+.form .field input::placeholder {
+  color: #7a7a7a;
+}
+
+.form .field input:focus {
+  box-shadow:
+    inset 0 0 0 2px #ffffff,
+    inset 4px 4px 0 0 #0a0a0a,
+    inset -4px -4px 0 0 #2e2e2e;
+}
+
+/* Little blinking square while suggestions load. */
+.searching {
+  position: absolute;
+  top: 16px;
+  right: 14px;
+  width: 8px;
+  height: 8px;
+  background: var(--mc-purple-face);
+  animation: blink 700ms ease-in-out infinite;
+}
+
+.form button {
+  min-width: 110px;
+}
+
+/* --- Suggestions ------------------------------------------------------------ */
+.suggestions {
+  position: absolute;
+  z-index: 50;
+  top: calc(100% + 6px);
+  right: 0;
+  left: 0;
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 8px;
+  list-style: none;
+  background: #1f1f1f;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 0 0 4px #4a4a4a,
+    0 18px 40px rgba(0, 0, 0, 0.45);
+}
+
+.suggestion {
+  min-height: 48px;
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.suggestion[data-active] {
+  background: var(--mc-surface-raised);
+}
+
+.suggestion[data-disabled] {
+  cursor: default;
+}
+
+.suggestion img {
+  width: 32px;
+  height: 32px;
+  box-shadow: 0 0 0 2px var(--mc-outline);
+  image-rendering: pixelated;
+}
+
+.identity {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.identity strong {
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.identity small {
+  color: var(--mc-text-muted);
+  font-size: 11px;
+  line-height: 1;
+}
+
+.identity small[data-online] {
+  color: var(--mc-live);
+}
+
+/* Right side: "Follow" (purple), or "Following" / "You" (grey). */
+.action {
+  color: var(--mc-purple-face);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.suggestion[data-active]:not([data-disabled]) .action {
+  color: var(--mc-purple-hover);
+}
+
+.suggestion[data-disabled] .action,
+.suggestion[data-disabled] .identity strong {
+  color: var(--mc-text-muted);
+}
+
+.message {
+  margin: 10px 0 0;
+  color: var(--mc-live);
+  font-size: 12px;
+}
+
+.message[data-tone="error"] {
+  color: var(--mc-red-light);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .searching {
+    animation: none;
+  }
+}

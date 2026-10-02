@@ -1,0 +1,1218 @@
+/*
+ * Site header: bar, nav links, Marketplace button, logo, the Search and
+ * My Profile buttons, the hamburger menu (1320px and narrower), and the
+ * Search and My Profile dropdown panels.
+ *
+ * Sits at the top of the hero box and uses the frame's variables
+ * (site/SiteFrame.module.css). Nav text and icon sizes come from
+ * app/tokens.css.
+ *
+ * Rules on links and buttons start with .header so they beat the page's
+ * font reset (.page a, .page button { font: inherit } in SiteFrame).
+ */
+
+/* ==========================================================================
+ * Header bar
+ * ========================================================================== */
+.header {
+  /* Space kept clear on each side of the logo. */
+  --logo-width: 200px;
+  --logo-clearance: 16px;
+
+  position: absolute;
+  z-index: 30;
+  inset: 0 0 auto;
+  height: var(--header-height);
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    calc(var(--logo-width) + 2 * var(--logo-clearance))
+    minmax(0, 1fr);
+  align-items: center;
+  padding: 0 16px;
+  /* Block edge along the bottom: dark shade line, then the black outline. */
+  border-bottom: 2px solid var(--mc-outline);
+  background: rgba(34, 34, 34, 0.97);
+  box-shadow: inset 0 -3px 0 #181818;
+}
+
+/* ==========================================================================
+ * Nav links: grouped from the left, 16px apart
+ * ========================================================================== */
+.headerNavigation {
+  grid-column: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+.header .headerNavItem {
+  min-width: 0;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 0;
+  color: #f5f5f5;
+  font-size: var(--mc-nav-font);
+  white-space: nowrap;
+  transition:
+    background-color var(--motion),
+    box-shadow var(--motion);
+}
+
+/* Icons are shown exactly as supplied in icons/mineacle/nav: as tall as
+   --mc-nav-icon and as wide as their own shape, so any PNG dropped in
+   works. Normal scaling keeps pixel icons crisp and smooth art smooth. */
+.headerNavItem img {
+  width: auto;
+  height: var(--mc-nav-icon);
+  display: block;
+  flex: 0 0 auto;
+}
+
+.headerNavItem > span {
+  height: 14px;
+  display: flex;
+  align-items: center;
+  line-height: 14px;
+  transform: translateY(-1px);
+}
+
+/* Hover and the current page: a soft raised tile behind the link. */
+.header .headerNavItem:not(.featuredNavItem):hover,
+.header .headerNavItem:not(.featuredNavItem):focus-visible {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--mc-text);
+}
+
+.header .headerNavItem[aria-current="page"]:not(.featuredNavItem) {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.35);
+}
+
+/* Marketplace: gold block button, a little taller than the other links. */
+.header .featuredNavItem {
+  height: 36px;
+  padding: 0 14px;
+  border: 2px solid var(--mc-outline);
+  background: var(--mc-gold);
+  box-shadow:
+    inset 0 2px 0 var(--mc-gold-light),
+    inset 0 -3px 0 var(--mc-gold-edge);
+  color: var(--mc-gold-text);
+  transition:
+    transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease;
+}
+
+.featuredNavItem img {
+  filter: brightness(0) opacity(0.85);
+}
+
+.header .featuredNavItem:hover,
+.header .featuredNavItem:focus-visible {
+  border-color: #ffffff;
+  background: var(--mc-gold-hover);
+  box-shadow:
+    inset 0 2px 0 var(--mc-gold-light),
+    inset 0 -3px 0 var(--mc-gold-edge),
+    0 3px 0 rgba(0, 0, 0, 0.45);
+  transform: translateY(-2px);
+}
+
+.header .featuredNavItem:active {
+  border-color: #ffffff;
+  background: var(--mc-gold);
+  box-shadow:
+    inset 0 2px 0 var(--mc-gold-light),
+    inset 0 -1px 0 var(--mc-gold-edge);
+  transform: translateY(2px);
+  transition-duration: 50ms;
+}
+
+/* ==========================================================================
+ * Logo
+ *   Hover: snaps up 5px and stays up while the pointer is over it.
+ *   The hover / click area follows the logo's outline, not its rectangle:
+ *   the link ignores the pointer and an invisible layer cut to the logo's
+ *   shape (traced from mineacle-logo.png) catches it instead. That layer
+ *   doesn't move with the hop, so the logo doesn't flicker at its edge.
+ *   If the logo file changes shape, the outline needs re-tracing.
+ * ========================================================================== */
+.brand {
+  position: absolute;
+  z-index: 34;
+  top: 4px;
+  left: 50%;
+  width: 200px;
+  height: 96px;
+  display: grid;
+  place-items: start center;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.brand img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.34));
+  pointer-events: none;
+}
+
+.brand:hover img,
+.brand:focus-visible img {
+  transform: translateY(-5px);
+}
+
+.brand::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 1920 / 840;
+  clip-path: polygon(0.4% 70%, 4.5% 17.3%, 8.6% 14.9%, 12.8% 12.6%, 16.9% 10.7%, 21% 8.9%, 25.2% 7.5%, 29.3% 6.3%, 33.4% 5.4%, 37.6% 4.5%, 41.7% 4%, 45.8% 3.8%, 50% 3.8%, 54.1% 3.8%, 58.2% 3.9%, 62.4% 4.3%, 66.5% 4.9%, 70.6% 5.7%, 74.8% 6.9%, 78.9% 8.3%, 83% 10%, 87.2% 12%, 91.3% 14.3%, 95.5% 17%, 99.6% 70.8%, 99.6% 87.5%, 95.5% 94.9%, 91.3% 95.7%, 87.2% 92.7%, 83% 88.8%, 78.9% 76.8%, 74.8% 73.5%, 70.6% 70.8%, 66.5% 68.7%, 62.4% 67%, 58.2% 65.7%, 54.1% 64.9%, 50% 64.5%, 45.8% 64.9%, 41.7% 65.7%, 37.6% 67.1%, 33.4% 68.8%, 29.3% 71.2%, 25.2% 73.9%, 21% 77.4%, 16.9% 89.2%, 12.8% 93.1%, 8.6% 96.1%, 4.5% 94.8%, 0.4% 87.5%);
+  content: "";
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+/* ==========================================================================
+ * Search / My Profile buttons (right side of the header)
+ * ========================================================================== */
+/* Search and My Profile sit together on the right, spaced like the nav
+   links on the left. */
+.headerTools {
+  grid-column: 3;
+  min-width: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  /* The search panel is placed against this box, so it lines up with the
+     right edge of the header like the profile menu. */
+  position: relative;
+}
+
+.searchMenu,
+.profileMenu {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchMenu {
+  position: static;
+}
+
+.header .headerToolButton {
+  height: var(--header-height);
+  display: inline-grid;
+  grid-template-columns: auto max-content 10px;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  border: 0;
+  background: transparent;
+  color: #f7f7f7;
+  cursor: pointer;
+  font-size: var(--mc-nav-font);
+  white-space: nowrap;
+  transition:
+    transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease;
+}
+
+.header .headerToolButtonOpen {
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
+}
+
+.header .headerToolButton:hover,
+.header .headerToolButton:focus-visible {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--mc-text);
+}
+
+.header .headerToolButton:active {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(1px);
+  transition-duration: 50ms;
+}
+
+.headerToolButton img {
+  width: 14px;
+  height: 14px;
+  display: block;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+/* Search / profile icon: same height as the nav icons. */
+.headerToolButton > img:first-child {
+  width: auto;
+  height: var(--mc-nav-icon);
+  flex: 0 0 auto;
+  image-rendering: auto;
+}
+
+/* Signed in: the player's head replaces the profile icon (ProfileHead in
+   SiteHeader.tsx). Written with the parent class so it beats the icon and
+   label rules above and in the small-screen menu. */
+.headerToolButton > .profileHeadWrap,
+.mobileNavigationItem > .profileHeadWrap {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  display: block;
+  margin-block: -3px;
+  justify-self: center;
+  transform: none;
+}
+
+.profileHeadWrap > .profileHead {
+  width: 18px;
+  height: 18px;
+  display: block;
+  box-shadow: 0 0 0 1px var(--mc-outline);
+  image-rendering: pixelated;
+}
+
+/* Unread notifications: a small red dot on the head's top-right corner,
+   like an app badge on a phone. It pops in, then pulses a few times to
+   catch the eye. Same red as the dot on the notification bell icon. */
+.alertDot {
+  position: absolute;
+  z-index: 1;
+  top: -4px;
+  right: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--mc-alert);
+  box-shadow: 0 0 0 2px #222222;
+  animation: alertPop 260ms cubic-bezier(0.2, 1.4, 0.4, 1) both;
+  pointer-events: none;
+}
+
+.alertDot::after {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--mc-alert);
+  animation: alertPulse 1.6s ease-out 400ms 3;
+  content: "";
+  opacity: 0;
+}
+
+@keyframes alertPop {
+  from {
+    transform: scale(0);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes alertPulse {
+  from {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+
+.headerToolButton > span {
+  height: 14px;
+  display: flex;
+  align-items: center;
+  line-height: 14px;
+  transform: translateY(-1px);
+}
+
+/* Down arrow: nudges down on hover, stays put while the menu is open. */
+.headerToolButton .menuArrow {
+  width: 10px;
+  height: 10px;
+  transition: transform 140ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.headerToolButton:hover .menuArrow,
+.headerToolButton:focus-visible .menuArrow {
+  transform: translateY(2px);
+}
+
+.headerToolButtonOpen .menuArrow,
+.headerToolButtonOpen:hover .menuArrow {
+  transform: none;
+}
+
+/* ==========================================================================
+ * Hamburger menu (1320px and narrower)
+ * ========================================================================== */
+.mobileMenuShell {
+  display: none;
+}
+
+/* The gavel is diagonal, so at the same height it looks smaller than the
+   boxy icons. Draw it a little taller without moving the row. */
+.headerNavItem img[src$="/nav/gavel.png"],
+.mobileNavigationItem img[src$="/nav/gavel.png"] {
+  height: calc(var(--mc-nav-icon) * 1.2);
+  margin-block: calc(var(--mc-nav-icon) * -0.1);
+}
+
+@keyframes panelIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 1320px) {
+  .headerTools {
+    display: contents;
+  }
+
+  .searchMenu,
+  .profileMenu {
+    position: static;
+    margin: 0;
+  }
+
+  .header .headerToolButton {
+    display: none;
+  }
+
+  .mobileMenuShell {
+    position: relative;
+    z-index: 48;
+    grid-column: 1;
+    width: 40px;
+    height: 40px;
+    display: block;
+  }
+
+  /* Hamburger / X: neutral block button. */
+  .mobileMenuButton {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-content: center;
+    gap: 5px;
+    padding: 0;
+    border: 2px solid var(--mc-outline);
+    border-radius: 0;
+    background: #2b2b2b;
+    box-shadow:
+      inset 0 2px 0 #3a3a3a,
+      inset 0 -3px 0 #161616;
+    cursor: pointer;
+    transition:
+      transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 110ms ease,
+      background-color 140ms ease,
+      border-color 140ms ease;
+  }
+
+  .mobileMenuButtonOpen {
+    background: #333333;
+  }
+
+  /* Red dot on the menu button's corner when there are unread
+     notifications (the head isn't visible until the menu opens). */
+  .mobileMenuButton {
+    position: relative;
+  }
+
+  .mobileMenuButton > .alertDot {
+    top: -6px;
+    right: -6px;
+    width: 10px;
+    height: 10px;
+    box-shadow: 0 0 0 2px var(--mc-outline);
+  }
+
+  .mobileMenuButton:focus-visible {
+    background: #363636;
+    outline: 0;
+  }
+
+  .mobileMenuButton:active {
+    box-shadow:
+      inset 0 2px 0 #3a3a3a,
+      inset 0 -1px 0 #161616;
+    transform: translateY(2px);
+    transition-duration: 50ms;
+  }
+
+  .mobileMenuButton > span {
+    width: 20px;
+    height: 2px;
+    display: block;
+    background: #ffffff;
+    image-rendering: pixelated;
+    transform-origin: center;
+    transition:
+      transform var(--motion),
+      opacity var(--motion);
+  }
+
+  .mobileMenuButtonOpen > span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .mobileMenuButtonOpen > span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .mobileMenuButtonOpen > span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* The menu: same game-UI panel as the dropdowns. */
+  .mobileNavigation {
+    position: absolute;
+    z-index: 50;
+    top: 48px;
+    left: 0;
+    width: min(320px, calc(100vw - 58px));
+    display: grid;
+    gap: 2px;
+    padding: 10px;
+    background: #1f1f1f;
+    box-shadow:
+      inset 0 0 0 2px var(--mc-outline),
+      inset 0 0 0 4px #4a4a4a,
+      0 18px 40px rgba(0, 0, 0, 0.45);
+    animation: panelIn var(--motion) both;
+  }
+
+  /* Links: soft tile on hover and for the current page. */
+  .header .mobileNavigationItem {
+    width: 100%;
+    min-height: 40px;
+    display: grid;
+    grid-template-columns: calc(var(--mc-nav-icon) * 1.4) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: var(--mc-nav-font);
+    text-align: left;
+    transition:
+      transform 90ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      background-color 120ms ease;
+  }
+
+  .header .mobileNavigationItem:focus-visible {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--mc-text);
+    outline: 0;
+  }
+
+  .header .mobileNavigationItem[aria-current="page"] {
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.35);
+  }
+
+  .header .mobileNavigationItem:not(.mobileFeaturedItem):active {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateY(1px);
+    transition-duration: 40ms;
+  }
+
+  /* Icons: as tall as --mc-nav-icon, as wide as their own shape. */
+  .mobileNavigationItem img {
+    width: auto;
+    height: var(--mc-nav-icon);
+    display: block;
+    flex: 0 0 auto;
+  }
+
+  .mobileNavigationItem > img:first-child {
+    justify-self: center;
+  }
+
+  /* Only Search and My Profile (which open a panel) get this arrow. */
+  .mobileNavigationItem > .mobileMenuArrow {
+    width: 12px;
+    height: 12px;
+    object-fit: contain;
+  }
+
+  .mobileNavigationItem > span {
+    height: 14px;
+    display: flex;
+    align-items: center;
+    line-height: 14px;
+    transform: translateY(-1px);
+  }
+
+  /* Marketplace in the menu: gold. */
+  .header .mobileFeaturedItem {
+    border: 2px solid var(--mc-outline);
+    background: var(--mc-gold);
+    color: var(--mc-gold-text);
+  }
+
+  .mobileFeaturedItem img {
+    filter: brightness(0) opacity(0.85);
+  }
+
+  .header .mobileFeaturedItem:hover,
+  .header .mobileFeaturedItem:focus-visible {
+    background: var(--mc-gold-hover);
+    box-shadow:
+      inset 0 2px 0 var(--mc-gold-light),
+      inset 0 -3px 0 var(--mc-gold-edge);
+    color: var(--mc-gold-text);
+  }
+
+  .header .mobileFeaturedItem:active {
+    box-shadow:
+      inset 0 2px 0 var(--mc-gold-light),
+      inset 0 -1px 0 var(--mc-gold-edge);
+    transform: translateY(2px);
+    transition-duration: 50ms;
+  }
+}
+
+/* Hover only on devices with a real pointer, so a tapped link on a phone
+   doesn't stay highlighted. */
+@media (max-width: 1320px) and (hover: hover) {
+  .mobileMenuButton:hover {
+    background: #363636;
+    transform: translateY(-1px);
+  }
+
+  .header .mobileNavigationItem:not(.mobileFeaturedItem):hover {
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: none;
+  }
+
+  .header .mobileFeaturedItem:hover {
+    border-color: #ffffff;
+    background: var(--mc-gold-hover);
+  }
+}
+
+@media (max-width: 720px) {
+  .mobileNavigation {
+    width: min(320px, calc(100vw - 42px));
+  }
+}
+
+@media (max-width: 480px) {
+  .mobileNavigation {
+    width: calc(100vw - 34px);
+  }
+}
+
+/* ==========================================================================
+ * Dropdown panels (Search, My Profile): game-UI panel with a black outline
+ * and a grey inner ring.
+ * ========================================================================== */
+.searchPanel,
+.profilePanel {
+  position: absolute;
+  z-index: 40;
+  top: calc(var(--header-height) + 6px);
+  display: grid;
+  padding: 16px;
+  background: #1f1f1f;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 0 0 4px #4a4a4a,
+    0 18px 40px rgba(0, 0, 0, 0.45);
+  animation: panelIn var(--motion) both;
+}
+
+/* Opens under Search, lined up with the right edge of the header (same
+   edge as the profile menu under My Profile). */
+.searchPanel {
+  right: 0;
+  width: min(540px, calc(100vw - 64px));
+  gap: 14px;
+}
+
+.profilePanel {
+  right: 0;
+  width: 250px;
+  gap: 10px;
+}
+
+/* --- Search panel (the box itself is PlayerSearch; these adjust it) ------ */
+.searchInputRow {
+  position: relative;
+}
+
+.searchField {
+  position: relative;
+  z-index: 4;
+}
+
+.searchField form {
+  padding-right: 52px; /* room for the X button */
+}
+
+.searchField form input {
+  font-size: var(--mc-menu-font);
+}
+
+/* Results scroll inside the panel if there are many. */
+.searchField [data-player-results] {
+  max-height: min(336px, calc(100dvh - 220px));
+  overflow-y: auto;
+  scrollbar-color: #4a4a4a transparent;
+  scrollbar-width: thin;
+}
+
+/* While typing, the results take the place of the Top 3. */
+.searchPanel:has([data-has-query]) .topPlayersHeading,
+.searchPanel:has([data-has-query]) .topPlayersGrid {
+  display: none;
+}
+
+/* Close (X): grey block, red while there's text in the box. */
+.closeSearch {
+  position: absolute;
+  z-index: 8;
+  top: 6px;
+  right: 6px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  padding: 0 0 3px;
+  border: 2px solid var(--mc-outline);
+  background: #2b2b2b;
+  box-shadow:
+    inset 0 2px 0 #3a3a3a,
+    inset 0 -3px 0 #161616;
+  cursor: pointer;
+  transition:
+    transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease;
+}
+
+.closeSearch:hover,
+.closeSearch:focus-visible {
+  border-color: #ffffff;
+  background: #3a3a3a;
+  transform: translateY(-1px);
+}
+
+.closeSearch:active {
+  padding-bottom: 0;
+  box-shadow:
+    inset 0 2px 0 #3a3a3a,
+    inset 0 -1px 0 #161616;
+  transform: translateY(2px);
+  transition-duration: 50ms;
+}
+
+.closeSearch img {
+  width: 12px;
+  height: 12px;
+  display: block;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.searchInputRow:has(input:not(:placeholder-shown)) .closeSearch {
+  background: var(--mc-red);
+  box-shadow:
+    inset 0 2px 0 var(--mc-red-light),
+    inset 0 -3px 0 var(--mc-red-edge);
+}
+
+.searchInputRow:has(input:not(:placeholder-shown)) .closeSearch:hover,
+.searchInputRow:has(input:not(:placeholder-shown)) .closeSearch:focus-visible {
+  background: var(--mc-red-hover);
+}
+
+.searchInputRow:has(input:not(:placeholder-shown)) .closeSearch:active {
+  background: var(--mc-red);
+  box-shadow:
+    inset 0 2px 0 var(--mc-red-light),
+    inset 0 -1px 0 var(--mc-red-edge);
+}
+
+/* --- Top 3 players ------------------------------------------------------------ */
+.topPlayersHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--content-gap);
+  color: var(--mc-text-muted);
+  font-size: var(--mc-menu-font-small);
+  line-height: 1;
+}
+
+/* "View leaderboards >": the arrow nudges right on hover. */
+.header .topPlayersHeading a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--mc-text);
+  font-size: var(--mc-menu-font-small);
+  transition: color var(--motion);
+}
+
+.header .topPlayersHeading a:hover,
+.header .topPlayersHeading a:focus-visible {
+  color: #ffffff;
+  outline: none;
+}
+
+.topPlayersHeading b {
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1;
+  transition: transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.topPlayersHeading a:hover b,
+.topPlayersHeading a:focus-visible b {
+  transform: translateX(3px);
+}
+
+.topPlayersGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.topPlayerCard {
+  position: relative;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-content: center;
+  align-items: center;
+  gap: 6px 10px;
+  padding: 14px 10px 16px;
+  overflow: hidden;
+  border: 2px solid var(--mc-outline);
+  background: #262626;
+  box-shadow:
+    inset 0 2px 0 #333333,
+    inset 0 -4px 0 #181818;
+  color: var(--mc-text);
+  transition:
+    transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease;
+}
+
+.topPlayerCard:hover,
+.topPlayerCard:focus-visible {
+  border-color: #ffffff;
+  background: #2c2c2c;
+  box-shadow:
+    inset 0 2px 0 #363636,
+    inset 0 -4px 0 #181818,
+    0 4px 0 rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+.topPlayerCard:active {
+  box-shadow:
+    inset 0 2px 0 #363636,
+    inset 0 -2px 0 #181818;
+  transform: translateY(1px);
+  transition-duration: 50ms;
+}
+
+.topPlayerAvatar,
+.topPlayerPlaceholder {
+  width: 40px;
+  height: 40px;
+  grid-row: 1 / 3;
+  border: 2px solid var(--mc-outline);
+  image-rendering: pixelated;
+}
+
+.topPlayerPlaceholder {
+  display: block;
+  background: #1a1a1a;
+  box-shadow: inset 3px 3px 0 #0f0f0f;
+}
+
+.topPlayerCard strong,
+.topPlayerCard small {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.topPlayerCard strong {
+  align-self: end;
+  font-size: var(--mc-menu-font);
+  font-weight: 400;
+}
+
+.topPlayerCard small {
+  align-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--mc-text-muted);
+  font-size: 10px;
+}
+
+.topPlayerCard small[data-online="true"] {
+  color: var(--mc-text);
+}
+
+.topPlayerCard small[data-online="true"]::before {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 6px;
+  background: var(--mc-live);
+  box-shadow: 0 0 0 2px #0b3d22;
+  content: "";
+}
+
+/* #1 / #2 / #3 as little gold, silver and bronze blocks, on the
+   Online / Offline line so long names get the full width. */
+.topPlayerRank {
+  position: absolute;
+  right: 8px;
+  bottom: 12px;
+  padding: 3px 5px 5px;
+  background: #3a3a3a;
+  box-shadow: inset 0 -2px 0 #1a1a1a;
+  color: #111111;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.topPlayerRank[data-rank="1"] {
+  background: #ffd83d;
+  box-shadow: inset 0 -2px 0 #b08a12;
+}
+
+.topPlayerRank[data-rank="2"] {
+  background: #dcdcdc;
+  box-shadow: inset 0 -2px 0 #8c8c8c;
+}
+
+.topPlayerRank[data-rank="3"] {
+  background: #e08a4a;
+  box-shadow: inset 0 -2px 0 #8a4b1e;
+}
+
+/* ==========================================================================
+ * My Profile panel
+ * ========================================================================== */
+.panelKicker {
+  color: var(--mc-purple-face);
+  font-size: var(--mc-menu-font-small);
+  line-height: 1;
+  text-shadow: 1px 1px 0 var(--mc-purple-deep);
+}
+
+.panelHint {
+  margin: 2px 0 0;
+  color: var(--mc-text-muted);
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+/* Signed in: head + name at the top (opens the profile). */
+.panelAccount {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 4px 12px 2px;
+  color: var(--mc-text);
+}
+
+.panelAccount img {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--mc-outline);
+  background: #1a1a1a;
+  image-rendering: pixelated;
+  transition: transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.panelAccount:hover img,
+.panelAccount:focus-visible img {
+  transform: translateY(-2px);
+}
+
+.panelAccount:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.panelAccount > span {
+  min-width: 0;
+  display: grid;
+  gap: 7px;
+}
+
+.panelAccount small {
+  color: var(--mc-text-muted);
+  font-size: 11px;
+  line-height: 1;
+}
+
+.panelAccount strong {
+  overflow: hidden;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menuDivider {
+  height: 2px;
+  margin: 2px 0;
+  background: #2e2e2e;
+  box-shadow: 0 1px 0 #151515;
+}
+
+.menuList {
+  display: grid;
+  gap: 2px;
+  margin-bottom: 4px;
+}
+
+/* Rows: icon column + label + optional count. */
+.header .menuRow {
+  height: 34px;
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  color: #ffffff;
+  font-size: var(--mc-menu-font);
+  line-height: 1;
+  transition:
+    background-color var(--motion),
+    box-shadow var(--motion);
+}
+
+.header .menuRow:hover,
+.header .menuRow:focus-visible {
+  background: var(--mc-surface-raised);
+}
+
+.header .menuRow:active {
+  background: #333333;
+}
+
+.menuIcon {
+  width: 18px;
+  height: 18px;
+  display: block;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+/* The bell and friends icons are drawn on a 24px pixel grid with space
+   around them: show them at 24px (crisp) without making the row taller. */
+.menuIcon[src*="/bell"],
+.menuIcon[src*="/friends"] {
+  width: 24px;
+  height: 24px;
+  margin: -3px;
+  image-rendering: auto;
+}
+
+/* Unread count: red, to match the red dot on the bell. */
+.badge {
+  min-width: 22px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  padding: 0 6px 2px;
+  background: var(--mc-red);
+  box-shadow: inset 0 -2px 0 var(--mc-red-edge);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 400;
+}
+
+/* ==========================================================================
+ * Screen sizes
+ * ========================================================================== */
+@media (max-width: 1320px) {
+  .header {
+    grid-template-columns: 40px minmax(0, 1fr) 40px;
+    padding: 0 12px;
+  }
+
+  .headerNavigation {
+    display: none;
+  }
+
+  .brand {
+    width: 164px;
+    height: 84px;
+  }
+
+  .searchPanel,
+  .profilePanel {
+    top: var(--header-height);
+    right: auto;
+    left: 8px;
+  }
+
+  .searchPanel {
+    width: min(512px, calc(100% - 16px));
+  }
+
+  .profilePanel {
+    width: min(250px, calc(100% - 16px));
+  }
+}
+
+@media (max-width: 720px) {
+  .header {
+    padding: 0 8px;
+  }
+
+  .brand {
+    width: 148px;
+    height: 80px;
+  }
+
+  .searchPanel {
+    right: 8px;
+    width: auto;
+    padding: 12px;
+  }
+
+  .topPlayersGrid {
+    gap: 8px;
+  }
+
+  .topPlayerCard {
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 4px 6px;
+    padding: 8px;
+  }
+
+  .topPlayerAvatar,
+  .topPlayerPlaceholder {
+    width: 36px;
+    height: 36px;
+  }
+
+  .topPlayerRank {
+    top: 5px;
+    right: 5px;
+    bottom: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand {
+    width: 132px;
+  }
+
+  .searchPanel,
+  .profilePanel {
+    right: 6px;
+    left: 6px;
+  }
+
+  .searchPanel {
+    padding: 10px;
+  }
+
+  .topPlayersGrid {
+    gap: 6px;
+  }
+
+  /* Cards stack: head on top, name under it. */
+  .topPlayerCard {
+    grid-template-columns: 1fr;
+    grid-template-rows: 36px auto;
+    justify-items: center;
+    gap: 5px;
+    padding: 8px 4px;
+    text-align: center;
+  }
+
+  .topPlayerAvatar,
+  .topPlayerPlaceholder {
+    grid-row: auto;
+  }
+
+  .topPlayerCard strong {
+    max-width: 100%;
+    align-self: auto;
+  }
+
+  .topPlayerCard small {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header .featuredNavItem:hover,
+  .header .featuredNavItem:active,
+  .header .headerToolButton:active,
+  .headerToolButton:hover .menuArrow,
+  .closeSearch:hover,
+  .closeSearch:active,
+  .topPlayerCard:hover,
+  .topPlayerCard:active {
+    transform: none;
+  }
+
+  .alertDot,
+  .alertDot::after {
+    animation: none;
+  }
+}

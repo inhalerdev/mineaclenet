@@ -1,0 +1,159 @@
+/*
+ * Page frame shared by the homepage and the account pages:
+ * the dark page, the framed hero box, and the hero background video.
+ *
+ * Colors and sizes that are used across the site live in app/tokens.css.
+ * The variables below are layout values for this frame; the header and
+ * homepage styles read them too.
+ */
+@font-face {
+  font-family: "Mineacle Primary";
+  src: url("/shared/fonts/mineacle-primary.ttf") format("truetype");
+  /* Wait briefly for the font instead of flashing a different one first.
+     app/layout.tsx preloads the file so the wait is short. */
+  font-display: block;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.page {
+  --page-margin: 32px;
+  --content-gap: 16px;
+  --section-gap: 16px;
+  --header-height: 48px;
+  /* Where page content starts, measured from the frame's left edge. The
+     homepage hero text and inner pages (vote, bans...) both use it so
+     content lines up from page to page. */
+  --content-inset: 48px;
+  --surface: #222222;
+  --border: rgba(255, 255, 255, 0.28);
+  --border-soft: rgba(255, 255, 255, 0.14);
+  --text: #ffffff;
+  --muted: #bbbbbb;
+  --motion: 180ms cubic-bezier(0.2, 0.75, 0.25, 1);
+
+  width: 100%;
+  height: 100dvh;
+  min-width: 320px;
+  display: grid;
+  grid-template-rows: minmax(0, 2.45fr) minmax(0, 1fr);
+  gap: var(--section-gap);
+  padding: var(--page-margin);
+  overflow: hidden;
+  background: #111111;
+  color: #ffffff;
+  font-family: "Mineacle Primary", monospace;
+}
+
+.page,
+.page * {
+  box-sizing: border-box;
+}
+
+.page button,
+.page a,
+.page input {
+  font: inherit;
+}
+
+.page a {
+  text-decoration: none;
+}
+
+/* --- Hero box -------------------------------------------------------------- */
+.heroFrame {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border: 2px solid var(--mc-outline);
+  background: #1a1a1a;
+}
+
+/* Block edge: a thin light ring just inside the black outline, drawn on top
+   of the video and header so it shows all the way round (same recipe as the
+   cards and menus). */
+.heroFrame::after {
+  position: absolute;
+  z-index: 40;
+  inset: 0;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.1);
+  content: "";
+  pointer-events: none;
+}
+
+/* Everything under the header: background video + shade. */
+.hero {
+  position: absolute;
+  z-index: 1;
+  inset: var(--header-height) 0 0;
+  overflow: hidden;
+  background: #1b1b1b;
+}
+
+.heroVideo,
+.heroShade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.heroVideo {
+  object-fit: cover;
+  object-position: center center;
+  filter: saturate(0.82) contrast(1.03);
+}
+
+.heroShade {
+  background:
+    linear-gradient(180deg, rgba(8, 8, 8, 0.32), rgba(8, 8, 8, 0.54)),
+    linear-gradient(90deg, rgba(10, 10, 10, 0.14), rgba(10, 10, 10, 0.03) 58%, rgba(10, 10, 10, 0.22));
+}
+
+/* --- Screen sizes ---------------------------------------------------------- */
+@media (max-width: 1320px) {
+  .page {
+    --page-margin: 16px;
+    --content-inset: 32px;
+  }
+}
+
+@media (max-width: 720px) {
+  .page {
+    --page-margin: 12px;
+    --content-inset: 16px;
+    grid-template-rows: minmax(0, 2.65fr) minmax(124px, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    --page-margin: 8px;
+  }
+}
+
+@media (max-height: 720px) {
+  .page {
+    --page-margin: 12px;
+    grid-template-rows: minmax(0, 2.7fr) minmax(120px, 1fr);
+  }
+}
+
+@media (max-height: 560px) {
+  .page {
+    --page-margin: 8px;
+    grid-template-rows: minmax(0, 2.8fr) minmax(104px, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page *,
+  .page *::before,
+  .page *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

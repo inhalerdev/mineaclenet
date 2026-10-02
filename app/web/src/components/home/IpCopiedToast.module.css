@@ -1,0 +1,199 @@
+/*
+ * "IP copied" pop-up (IpCopiedToast.tsx). Same look as the "Friend online"
+ * pop-up (social/FriendOnlineToasts.module.css), with the Mineacle mark in a
+ * purple frame, and the three join steps for visitors. Lives in the shared
+ * pop-up area at the bottom of the screen (site/ToastRoot.module.css).
+ */
+.region {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.toast {
+  width: min(340px, 100%);
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 12px;
+  border: 2px solid var(--mc-outline);
+  background: #1f1f1f;
+  box-shadow:
+    inset 0 0 0 2px #3c3c3c,
+    inset 0 -4px 0 #141414,
+    0 16px 36px rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  pointer-events: auto;
+  animation: toastUp 380ms cubic-bezier(0.2, 0.8, 0.25, 1) both;
+}
+
+.toast[data-steps] {
+  width: min(380px, 100%);
+  row-gap: 12px;
+}
+
+.toast[data-leaving] {
+  animation: toastDown 320ms cubic-bezier(0.5, 0, 0.75, 0) both;
+}
+
+/* The Mineacle mark in a purple frame (where the friend's head goes). */
+.mark {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  background: #2a1a44;
+  box-shadow:
+    0 0 0 2px var(--mc-outline),
+    0 0 0 4px var(--mc-purple-face);
+}
+
+.mark img {
+  width: 34px;
+  height: auto;
+  display: block;
+}
+
+.copy {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--mc-live);
+  font-size: 11px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.kicker i {
+  width: 7px;
+  height: 7px;
+  background: var(--mc-live);
+  box-shadow: 0 0 0 2px #0b3d22;
+}
+
+.copy strong {
+  overflow: hidden;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.copy small {
+  color: var(--mc-text-muted);
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+/* Small square X, top right. */
+.toast .close {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  align-self: start;
+  padding: 0;
+  border: 0;
+  background: #2b2b2b;
+  box-shadow:
+    inset 0 2px 0 #3a3a3a,
+    inset 0 -2px 0 #161616,
+    0 0 0 2px var(--mc-outline);
+  cursor: pointer;
+}
+
+.toast .close:hover,
+.toast .close:focus-visible {
+  outline: 0;
+  background: #3a3a3a;
+  box-shadow:
+    inset 0 2px 0 #4a4a4a,
+    inset 0 -2px 0 #161616,
+    0 0 0 2px #ffffff;
+}
+
+.close img {
+  width: 10px;
+  height: 10px;
+  display: block;
+  image-rendering: pixelated;
+}
+
+/* The three join steps, full width under the top row. */
+.steps {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 10px 0 0;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.08);
+  list-style: none;
+}
+
+.steps li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #e6e6e6;
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+/* Step number in a small purple block. */
+.steps b {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  display: grid;
+  place-items: center;
+  padding-bottom: 2px;
+  background: var(--mc-purple);
+  box-shadow:
+    inset 0 2px 0 var(--mc-purple-face),
+    inset 0 -2px 0 var(--mc-purple-deep),
+    0 0 0 2px var(--mc-outline);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+@keyframes toastUp {
+  from {
+    opacity: 0;
+    transform: translateY(calc(100% + 28px));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes toastDown {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(calc(100% + 28px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast,
+  .toast[data-leaving] {
+    animation-duration: 0.01ms;
+  }
+}

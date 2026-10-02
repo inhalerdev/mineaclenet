@@ -1,0 +1,27 @@
+{
+  "name": "mineaclenet-web",
+  "version": "0.4.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start -H 127.0.0.1",
+    "migrate": "node scripts/migrate.mjs",
+    "cleanup": "node scripts/cleanup.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "bcryptjs": "3.0.2",
+    "mysql2": "3.24.2",
+    "next": "16.3.3",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.0",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.5",
+    "typescript": "5.9.2"
+  },
+  "packageManager": "pnpm@11.19.0"
+}

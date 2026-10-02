@@ -1,0 +1,416 @@
+/*
+ * Homepage hero text (see HeroContent.tsx): a quiet status line, headline,
+ * a line of text, quick stats (logged in), the buttons and the live strip,
+ * bottom-left over the background video with a dark fade behind it so it's
+ * readable on any frame. Colors come from app/tokens.css; the buttons' own
+ * look is in VisitorHome.module.css.
+ */
+.hero {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Darken the left and bottom so the text reads over any video frame, with
+   a faint purple tint from the bottom-left corner. */
+.hero::before {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 0% 100%, rgba(132, 54, 254, 0.22), transparent 55%),
+    linear-gradient(90deg, rgba(8, 8, 8, 0.82), rgba(8, 8, 8, 0.4) 50%, transparent 78%),
+    linear-gradient(0deg, rgba(8, 8, 8, 0.6), transparent 50%);
+  content: "";
+}
+
+.content {
+  position: absolute;
+  bottom: 44px;
+  left: var(--content-inset);
+  width: min(600px, calc(100% - 2 * var(--content-inset)));
+  pointer-events: auto;
+}
+
+/* "[OPEN BETA] Now open for Java Edition": the gold block tag used across
+   the site, then the news as quiet text. */
+.eyebrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  margin: 0;
+  color: var(--mc-text-muted);
+  font-size: 12px;
+  line-height: 1.2;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.8);
+}
+
+/* Same recipe as the tag above page titles (site/ContentPage.module.css). */
+.tag {
+  padding: 5px 8px 7px;
+  background: var(--mc-gold);
+  box-shadow:
+    inset 0 2px 0 var(--mc-gold-light),
+    inset 0 -3px 0 var(--mc-gold-edge),
+    0 0 0 2px var(--mc-outline);
+  color: var(--mc-gold-text);
+  font-size: 11px;
+  line-height: 1;
+  text-shadow: none;
+  text-transform: uppercase;
+}
+
+.eyebrow a.news {
+  color: var(--mc-text-muted);
+  text-decoration: none;
+}
+
+.eyebrow a.news:hover,
+.eyebrow a.news:focus-visible {
+  outline: 0;
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.headline {
+  margin: 16px 0 16px;
+  color: #ffffff;
+  font-size: clamp(32px, 3.2vw, 54px);
+  font-weight: 400;
+  line-height: 1.1;
+  text-shadow: 3px 3px 0 #000000;
+}
+
+/* The last word, in brand purple with a darker purple drop. */
+.accent {
+  color: var(--mc-purple-face);
+  text-shadow:
+    3px 3px 0 var(--mc-purple-deep),
+    4px 4px 0 #000000;
+}
+
+.text {
+  max-width: 50ch;
+  margin: 0;
+  color: #e6e6e6;
+  font-size: 14px;
+  line-height: 1.5;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.8);
+}
+
+/* Colored words in the text (fight, survive, trade, friends). */
+.text b {
+  font-weight: 400;
+}
+
+/* ==========================================================================
+ * Quick stats (logged-in players): small tiles in the same slot look as the
+ * stat tiles on the other pages (site/ContentPage.module.css .stat): a
+ * value, a small label, and a pixel icon in the stat's color. Each links to
+ * its page.
+ * ========================================================================== */
+.quickStats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.quickStats li {
+  display: flex;
+}
+
+.quickStats .quickStat {
+  min-width: 128px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px 9px 10px;
+  background: rgba(17, 17, 17, 0.78);
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 0 0 3px rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  text-decoration: none;
+  transition:
+    background-color var(--motion),
+    transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.quickStats .quickStat:hover,
+.quickStats .quickStat:focus-visible {
+  outline: 0;
+  background: rgba(40, 40, 40, 0.9);
+  box-shadow:
+    inset 0 0 0 2px #ffffff,
+    inset 0 0 0 3px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+/* The icon in a small dark square tinted with the stat's color. */
+.quickIcon {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--quick) 16%, #141414);
+  box-shadow: inset 0 0 0 2px var(--mc-outline);
+  color: var(--quick);
+}
+
+.quickIcon svg {
+  width: 13px;
+  height: 13px;
+  display: block;
+  fill: currentColor;
+  filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.8));
+}
+
+.quickText {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.quickText strong {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1;
+  text-shadow: 2px 2px 0 #000000;
+  white-space: nowrap;
+}
+
+.quickText small {
+  color: var(--mc-text-muted);
+  font-size: 10px;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+ * Buttons (Play Now + Vote) and the live strip under them.
+ * ========================================================================== */
+.action {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+/* One thin line of live info: "● 3 PLAYING NOW | 120 PLAYERS JOINED | ...".
+   Deliberately small so the buttons stay the biggest thing. */
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 0;
+  margin: 14px 0 0;
+}
+
+/* Items sit on one text baseline, so the big numbers and small labels
+   line up. */
+.stat {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 0 12px;
+  box-shadow: inset 2px 0 0 rgba(255, 255, 255, 0.16);
+}
+
+.stat:first-child {
+  padding-left: 0;
+  box-shadow: none;
+}
+
+/* The IP reads "JAVA IP mineacle.net" (label first). */
+.stat[data-key="ip"] {
+  flex-direction: row-reverse;
+}
+
+.stat dt {
+  color: var(--mc-text-muted);
+  font-size: 10px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.stat dd {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  color: #ffffff;
+  font-size: 13px;
+  line-height: 1;
+  text-shadow: 2px 2px 0 #000000;
+  white-space: nowrap;
+}
+
+.stat dd img {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  align-self: center;
+  box-shadow: 0 0 0 2px var(--mc-outline);
+  image-rendering: pixelated;
+}
+
+/* Green status light (e.g. players online), gently pulsing. */
+.live {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
+  align-self: center;
+  background: var(--mc-live);
+  box-shadow: 0 0 0 2px #0b3d22;
+  animation: livePulse 1.6s steps(2, jump-none) infinite;
+}
+
+@keyframes livePulse {
+  50% {
+    background: #0fb85c;
+  }
+}
+
+/* ==========================================================================
+ * Screen sizes
+ * ========================================================================== */
+@media (max-width: 1320px) {
+  .content {
+    bottom: 32px;
+    width: min(540px, calc(100% - 2 * var(--content-inset)));
+  }
+}
+
+/* Short screens: smaller headline and gaps; then drop the text, then the
+   quick stats. */
+@media (max-height: 820px) {
+  .content {
+    bottom: 28px;
+  }
+
+  .headline {
+    margin: 12px 0 10px;
+    font-size: clamp(28px, 2.8vw, 44px);
+  }
+
+  .quickStats {
+    margin-top: 12px;
+  }
+
+  .quickStats .quickStat {
+    padding-top: 6px;
+    padding-bottom: 7px;
+  }
+
+  .action {
+    margin-top: 14px;
+  }
+
+  .stats {
+    margin-top: 12px;
+  }
+}
+
+@media (max-height: 680px) {
+  .text {
+    display: none;
+  }
+}
+
+@media (max-height: 580px) {
+  .quickStats {
+    display: none;
+  }
+}
+
+/* Phones: text across the full width, buttons full width. */
+@media (max-width: 720px) {
+  .hero::before {
+    background:
+      radial-gradient(ellipse at 0% 100%, rgba(132, 54, 254, 0.22), transparent 60%),
+      linear-gradient(0deg, rgba(8, 8, 8, 0.88), rgba(8, 8, 8, 0.25) 75%);
+  }
+
+  .content {
+    right: var(--content-inset);
+    bottom: 20px;
+    width: auto;
+  }
+
+  .headline {
+    font-size: 30px;
+  }
+
+  .text {
+    font-size: 13px;
+  }
+
+  /* Three quick stats side by side, sharing the width. */
+  .quickStats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .quickStats .quickStat {
+    min-width: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 8px 9px;
+  }
+
+  .quickText strong {
+    font-size: 14px;
+  }
+
+  .quickText small {
+    font-size: 9px;
+    white-space: normal;
+  }
+
+  .action {
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .stats {
+    margin-top: 14px;
+  }
+
+  /* No dividers on phones: the strip can wrap onto two lines. */
+  .stat,
+  .stat:first-child {
+    padding: 0 14px 0 0;
+    box-shadow: none;
+  }
+
+  .stat dd {
+    font-size: 12px;
+  }
+
+  .stat dt {
+    font-size: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live {
+    animation: none;
+  }
+
+  .quickStats .quickStat:hover,
+  .quickStats .quickStat:focus-visible {
+    transform: none;
+  }
+}

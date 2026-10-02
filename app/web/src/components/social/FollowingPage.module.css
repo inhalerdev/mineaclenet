@@ -1,0 +1,83 @@
+/*
+ * Following page (FollowingPage.tsx): a grid of player cards. The intro
+ * and empty box are shared (site/ContentPage.module.css).
+ *
+ * Link rules start with a parent class so they beat the page's font reset
+ * (.page a { font: inherit } in site/SiteFrame.module.css).
+ */
+.add {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 2px solid var(--mc-outline);
+  background: #222222;
+  box-shadow:
+    inset 0 2px 0 #2e2e2e,
+    inset 0 -4px 0 #181818;
+}
+
+.card .player {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #ffffff;
+}
+
+.player img {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  box-shadow: 0 0 0 2px var(--mc-outline);
+  image-rendering: pixelated;
+}
+
+.playerText {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.playerText strong {
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 400;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card .player:hover strong,
+.card .player:focus-visible strong {
+  color: var(--mc-purple-face);
+}
+
+.playerText small {
+  color: var(--mc-text-muted);
+  font-size: 11px;
+}
+
+.playerText small[data-online] {
+  color: var(--mc-live);
+}
+
+/* The Following button: a little narrower than elsewhere. */
+.card button {
+  min-width: 108px;
+}
