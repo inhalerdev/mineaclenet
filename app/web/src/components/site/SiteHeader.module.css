@@ -145,6 +145,55 @@
     color 140ms ease;
 }
 
+/* Shimmer: a bright two-stripe band (like an enchantment glint) sweeps
+   across the gold button once every 4 seconds. */
+.header .featuredNavItem,
+.header .mobileFeaturedItem {
+  position: relative;
+  overflow: hidden;
+}
+
+.header .featuredNavItem::after,
+.header .mobileFeaturedItem::after {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  left: -60px;
+  width: 46px;
+  background: linear-gradient(
+    90deg,
+    transparent 0 10px,
+    rgba(255, 249, 214, 0.55) 10px 22px,
+    transparent 22px 28px,
+    rgba(255, 249, 214, 0.35) 28px 34px,
+    transparent 34px
+  );
+  content: "";
+  pointer-events: none;
+  transform: skewX(-20deg);
+  animation: goldShimmer 4s steps(24) infinite;
+}
+
+/* Moves by `left` so the sweep fits any button width (desktop button or
+   the full-width item in the phone menu). The sweep takes the first 0.9s;
+   the rest of the 4s it waits. */
+@keyframes goldShimmer {
+  0% {
+    left: -60px;
+  }
+
+  22%,
+  100% {
+    left: calc(100% + 14px);
+  }
+}
+
+/* Marketplace is the current page: white outline instead of black. */
+.header .featuredNavItem[aria-current="page"],
+.header .mobileFeaturedItem[aria-current="page"] {
+  border-color: #ffffff;
+}
+
 /* On gold the usual hard black icon shadow is too heavy: a soft 1px
    shadow in the button's own edge color instead. */
 .featuredNavItem img {
@@ -579,7 +628,7 @@
 
   /* Current page in the menu: raised block with a purple bar down the
      left edge. */
-  .header .mobileNavigationItem[aria-current="page"] {
+  .header .mobileNavigationItem[aria-current="page"]:not(.mobileFeaturedItem) {
     background: #2e2e2e;
     box-shadow:
       inset 0 0 0 2px var(--mc-outline),
@@ -627,6 +676,10 @@
     border: 2px solid var(--mc-outline);
     background: var(--mc-gold);
     color: var(--mc-gold-text);
+  }
+
+  .header .mobileFeaturedItem[aria-current="page"] {
+    border-color: #ffffff;
   }
 
   .mobileFeaturedItem img {
@@ -1257,7 +1310,14 @@
   }
 
   .alertDot,
-  .alertDot::after {
+  .alertDot::after,
+  .header .featuredNavItem::after,
+  .header .mobileFeaturedItem::after {
     animation: none;
+  }
+
+  .header .featuredNavItem::after,
+  .header .mobileFeaturedItem::after {
+    display: none;
   }
 }
