@@ -1,13 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import block from "@/components/site/BlockButton.module.css";
-import styles from "./MarketplacePage.module.css";
 
 /*
- * Buy: asks our server for a Tebex basket (api/marketplace/checkout), then
- * opens Tebex.js checkout over the page. Tebex.js loads on the first click.
- * On phones Tebex opens checkout in a new tab instead of over the page.
+ * Opens Tebex checkout for a list of items: asks our server for a Tebex
+ * basket (api/marketplace/checkout), then shows Tebex.js checkout over the
+ * page. Tebex.js loads on the first checkout. On phones Tebex opens
+ * checkout in a new tab instead of over the page.
  */
 
 type TebexCheckout = {
@@ -29,6 +28,7 @@ declare global {
 const TEBEX_JS = "https://js.tebex.io/v/1.js";
 
 let tebexLoading: Promise<TebexCheckout> | null = null;
+let onComplete: (() => void) | null = null;
 let completeListener = false;
 
 function loadTebex(): Promise<TebexCheckout> {
@@ -53,21 +53,23 @@ function loadTebex(): Promise<TebexCheckout> {
   return tebexLoading;
 }
 
-export function BuyButton({ packageId, label }: { packageId: number; label: string }) {
+export type CheckoutItem = { packageId: number; quantity: number };
+
+export function useTebexCheckout(completed?: () => void) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
-  async function buy() {
+  async function checkout(items: CheckoutItem[]) {
     setBusy(true);
     setError("");
 
     try {
-      const [checkout, response] = await Promise.all([
+      const [tebex, response] = await Promise.all([
         loadTebex(),
         fetch("/api/marketplace/checkout", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ packageId }),
+          body: JSON.stringify({ items }),
         }),
       ]);
       const result = (await response.json().catch(() => ({}))) as {
@@ -79,7 +81,7 @@ export function BuyButton({ packageId, label }: { packageId: number; label: stri
         throw new Error(result.error || "Checkout is unavailable right now");
       }
 
-      checkout.init({
+      tebex.init({
         ident: result.ident,
         theme: "dark",
         colors: [
@@ -87,13 +89,17 @@ export function BuyButton({ packageId, label }: { packageId: number; label: stri
           { name: "secondary", color: "#D0AFFF" },
         ],
       });
+      onComplete = completed ?? null;
+
       if (!completeListener) {
         completeListener = true;
-        checkout.on("payment:complete", () => {
+        tebex.on("payment:complete", () => {
+          onComplete?.();
           window.location.assign("/marketplace?purchased=1");
         });
       }
-      checkout.launch();
+
+      tebex.launch();
     } catch (caught) {
       setError(
         caught instanceof Error && caught.message.includes("Tebex.js")
@@ -107,22 +113,5 @@ export function BuyButton({ packageId, label }: { packageId: number; label: stri
     }
   }
 
-  return (
-    <div className={styles.buy}>
-      <button
-        type="button"
-        className={`${block.button} ${block.primary} ${styles.buyButton}`}
-        onClick={buy}
-        disabled={busy}
-        aria-label={`Buy ${label}`}
-      >
-        {busy ? "Opening checkout…" : "Buy"}
-      </button>
-      {error ? (
-        <p className={styles.buyError} role="alert">
-          {error}
-        </p>
-      ) : null}
-    </div>
-  );
+  return { checkout, busy, error };
 }

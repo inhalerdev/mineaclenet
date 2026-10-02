@@ -1,5 +1,4 @@
 import { playerAvatarUrl } from "@/components/players/PlayerAvatar";
-import block from "@/components/site/BlockButton.module.css";
 import content from "@/components/site/ContentPage.module.css";
 import { FramedPage } from "@/components/site/FramedPage";
 import { PageIntro, StatTile } from "@/components/site/PageIntro";
@@ -9,16 +8,16 @@ import type {
   MarketplaceCategory,
   MarketplacePackage,
 } from "@/features/marketplace/tebex";
+import { formatPrice } from "@/features/marketplace/format";
 import { mineacleIcons } from "@/shared/icons/mineacle-icons";
-import { withReturnPath } from "@/shared/navigation/return-path";
-import { BuyButton } from "./BuyButton";
+import { AddToCartButton, CartButton, CartProvider } from "./Cart";
 import styles from "./MarketplacePage.module.css";
 
 /*
  * Marketplace (/marketplace): categories in a panel on the left, the chosen
  * category's items on the right. Items and prices come from Tebex
- * (features/marketplace/tebex.ts); Buy opens Tebex checkout over the page
- * (BuyButton.tsx). Categories are links (?category=slug), so each one has
+ * (features/marketplace/tebex.ts). Items go into the cart (Cart.tsx), which
+ * checks out as one Tebex basket over the page. Categories are links (?category=slug), so each one has
  * its own address and works without JavaScript. On phones the panel
  * becomes a row of tabs above the items.
  */
@@ -37,7 +36,7 @@ export function MarketplacePage({
 }) {
   const active =
     categories.find((category) => category.slug === activeSlug) ?? categories[0] ?? null;
-  const returnPath = active ? `/marketplace?category=${active.slug}` : "/marketplace";
+  const allPackages = categories.flatMap((category) => category.packages);
 
   return (
     <FramedPage
@@ -46,11 +45,13 @@ export function MarketplacePage({
       currentPath="/marketplace"
       variant="content"
     >
+      <CartProvider packages={allPackages} loggedIn={Boolean(viewer)}>
       <div className={content.content}>
         <PageIntro
           tag="Marketplace"
           tone="purple"
           title="Mineacle Marketplace"
+          aside={active ? <CartButton /> : undefined}
           footer={
             viewer ? (
               <dl className={content.stats}>
@@ -121,39 +122,19 @@ export function MarketplacePage({
 
               <ul className={styles.grid}>
                 {active.packages.map((pkg) => (
-                  <PackageCard
-                    key={pkg.id}
-                    pkg={pkg}
-                    loggedIn={Boolean(viewer)}
-                    returnPath={returnPath}
-                  />
+                  <PackageCard key={pkg.id} pkg={pkg} />
                 ))}
               </ul>
             </section>
           </div>
         )}
       </div>
+      </CartProvider>
     </FramedPage>
   );
 }
 
-function formatPrice(value: number, currency: string) {
-  try {
-    return new Intl.NumberFormat("en-US", { style: "currency", currency }).format(value);
-  } catch {
-    return `${value.toFixed(2)} ${currency}`;
-  }
-}
-
-function PackageCard({
-  pkg,
-  loggedIn,
-  returnPath,
-}: {
-  pkg: MarketplacePackage;
-  loggedIn: boolean;
-  returnPath: string;
-}) {
+function PackageCard({ pkg }: { pkg: MarketplacePackage }) {
   const onSale = pkg.basePrice > pkg.price;
 
   return (
@@ -173,17 +154,7 @@ function PackageCard({
           {onSale ? <s>{formatPrice(pkg.basePrice, pkg.currency)}</s> : null}
           <span>{formatPrice(pkg.price, pkg.currency)}</span>
         </p>
-
-        {loggedIn ? (
-          <BuyButton packageId={pkg.id} label={pkg.name} />
-        ) : (
-          <a
-            className={`${block.button} ${block.primary} ${styles.buyButton}`}
-            href={withReturnPath("/login", returnPath)}
-          >
-            Log in to buy
-          </a>
-        )}
+        <AddToCartButton pkg={pkg} />
       </div>
     </li>
   );

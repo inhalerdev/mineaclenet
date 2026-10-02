@@ -5,7 +5,12 @@ import {
   requestClientIp,
 } from "@/features/auth/rate-limit";
 import { getCurrentViewer } from "@/features/auth/session";
-import { createCheckout } from "@/features/marketplace/tebex";
+import {
+  type CartLine,
+  createCheckout,
+  MAX_CART_LINES,
+  MAX_LINE_QUANTITY,
+} from "@/features/marketplace/tebex";
 import {
   publicMessage,
   readJsonBody,
@@ -18,9 +23,31 @@ export const runtime = "nodejs";
 const CHECKOUT_LIMIT = { maximum: 15, windowSeconds: 300, blockSeconds: 300 };
 
 /*
- * POST { packageId } → { ident } for Tebex.js. The basket is always for the
- * logged-in player's own Minecraft account.
+ * POST { items: [{ packageId, quantity }] } → { ident } for Tebex.js. The
+ * basket is always for the logged-in player's own Minecraft account.
  */
+function readLines(body: Record<string, unknown>): CartLine[] | null {
+  if (!Array.isArray(body.items) || body.items.length === 0 || body.items.length > MAX_CART_LINES) {
+    return null;
+  }
+
+  const lines = new Map<number, number>();
+
+  for (const item of body.items) {
+    const packageId = Number((item as Record<string, unknown>)?.packageId);
+    const quantity = Number((item as Record<string, unknown>)?.quantity ?? 1);
+
+    if (!Number.isSafeInteger(packageId) || packageId <= 0
+        || !Number.isInteger(quantity) || quantity < 1 || quantity > MAX_LINE_QUANTITY) {
+      return null;
+    }
+
+    lines.set(packageId, Math.min(MAX_LINE_QUANTITY, (lines.get(packageId) ?? 0) + quantity));
+  }
+
+  return [...lines].map(([packageId, quantity]) => ({ packageId, quantity }));
+}
+
 export async function POST(request: Request) {
   const viewer = await getCurrentViewer();
 
@@ -28,11 +55,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Log in to buy" }, { status: 401 });
   }
 
-  const body = await readJsonBody(request);
-  const packageId = Number(body.packageId);
+  const lines = readLines(await readJsonBody(request));
 
-  if (!Number.isSafeInteger(packageId) || packageId <= 0) {
-    return NextResponse.json({ error: "Choose an item" }, { status: 400 });
+  if (!lines) {
+    return NextResponse.json({ error: "Your cart couldn't be read. Refresh and try again." }, { status: 400 });
   }
 
   const identity = `account:${viewer.accountId}`;
@@ -52,7 +78,7 @@ export async function POST(request: Request) {
     const ident = await createCheckout({
       username: viewer.username,
       uuid: viewer.uuid,
-      packageId,
+      lines,
       ipAddress: requestClientIp(request),
     });
 

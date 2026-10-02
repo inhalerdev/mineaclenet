@@ -6,15 +6,18 @@ import { UserFacingError } from "@/shared/server/user-error";
  *
  *   https://docs.tebex.io/developers/headless-api/introduction
  *
- * Only the store's Public Token is needed (TEBEX_PUBLIC_TOKEN). Listing
- * packages and creating baskets need no secret key, and the private key
- * must never be added here: it gives full access to the Tebex account.
+ * TEBEX_PUBLIC_TOKEN lists the store and creates baskets.
+ * TEBEX_PRIVATE_KEY (optional, server env only) lets basket creation pass
+ * the player's IP address: Tebex only accepts ip_address with the key
+ * (HTTP Basic auth). Without it the basket is tied to the web server's IP,
+ * which still works but weakens Tebex's fraud and region checks. The key
+ * never leaves this file: nothing here is sent to browsers.
  *
  * Checkout flow: the page lists categories and packages from Tebex (kept in
- * memory for a minute). Buying creates a basket for the logged-in player's
- * Minecraft name, adds the package and returns the basket ident; the
- * browser opens Tebex.js checkout with it (BuyButton.tsx). Tebex's plugin
- * on the game server then runs the package's commands.
+ * memory for a minute). Checkout creates a basket for the logged-in
+ * player's Minecraft name, adds the cart's packages and returns the basket
+ * ident; the browser opens Tebex.js checkout with it (useTebexCheckout.ts).
+ * Tebex's plugin on the game server then runs the packages' commands.
  */
 
 const API = "https://headless.tebex.io/api";
@@ -30,6 +33,8 @@ export type MarketplacePackage = {
   /** Price before a sale, when there is one. */
   basePrice: number;
   currency: string;
+  /** Tebex "disable quantity": at most one per checkout. */
+  single: boolean;
 };
 
 export type MarketplaceCategory = {
@@ -51,6 +56,7 @@ type TebexPackage = {
   discount?: number;
   currency?: string;
   order?: number;
+  disable_quantity?: boolean;
 };
 
 type TebexCategory = {
@@ -71,6 +77,14 @@ export function tebexConfigured() {
 
 function publicToken() {
   return (process.env.TEBEX_PUBLIC_TOKEN || "").trim();
+}
+
+function privateKey() {
+  return (process.env.TEBEX_PRIVATE_KEY || "").trim();
+}
+
+function basicAuth() {
+  return `Basic ${Buffer.from(`${publicToken()}:${privateKey()}`).toString("base64")}`;
 }
 
 function accountUrl(path: string) {
@@ -153,6 +167,7 @@ async function loadCategories(): Promise<MarketplaceCategory[]> {
           price: Number(pkg.total_price ?? pkg.base_price ?? 0),
           basePrice: Number(pkg.base_price ?? pkg.total_price ?? 0),
           currency: pkg.currency || "USD",
+          single: Boolean(pkg.disable_quantity),
         })),
     }))
     .filter((category) => category.packages.length > 0);
@@ -165,65 +180,82 @@ export const getMarketplaceCategories = memoryCache<MarketplaceCategory[]>(
   [],
 );
 
+export type CartLine = { packageId: number; quantity: number };
+
+export const MAX_CART_LINES = 10;
+export const MAX_LINE_QUANTITY = 10;
+
 /**
- * Creates a Tebex basket for this player with one package in it and
+ * Creates a Tebex basket for this player with the cart's packages and
  * returns its ident for Tebex.js. Only packages listed on the page can be
  * bought.
  */
 export async function createCheckout({
   username,
   uuid,
-  packageId,
+  lines,
   ipAddress,
 }: {
   username: string;
   uuid: string;
-  packageId: number;
+  lines: CartLine[];
   ipAddress: string;
 }) {
   if (!tebexConfigured()) {
     throw new UserFacingError("The marketplace isn't open yet");
   }
 
+  if (!lines.length) {
+    throw new UserFacingError("Your cart is empty");
+  }
+
   const categories = await getMarketplaceCategories();
-  const listed = categories.some((category) =>
-    category.packages.some((pkg) => pkg.id === packageId),
+  const listed = new Map(
+    categories.flatMap((category) => category.packages.map((pkg) => [pkg.id, pkg] as const)),
   );
 
-  if (!listed) {
-    throw new UserFacingError("That item isn't available");
+  for (const line of lines) {
+    if (!listed.has(line.packageId)) {
+      throw new UserFacingError("An item in your cart isn't available anymore");
+    }
   }
 
   const site = (process.env.SITE_URL || "https://mineacle.net").replace(/\/+$/, "");
+  const withKey = Boolean(privateKey());
   const { data: basket } = await tebexFetch<{
     data: { ident: string; username_id?: number | string };
   }>(accountUrl("/baskets"), {
     method: "POST",
+    headers: withKey ? { Authorization: basicAuth() } : undefined,
     body: JSON.stringify({
       // Minecraft store: the basket belongs to this player's account
       username,
       complete_url: `${site}/marketplace?purchased=1`,
       cancel_url: `${site}/marketplace`,
       complete_auto_redirect: false,
-      // Created by our server, so pass the player's address (Tebex fraud checks)
-      ...(ipAddress && ipAddress !== "unknown" ? { ip_address: ipAddress } : {}),
+      // The player's address, for Tebex's fraud checks (needs the private key)
+      ...(withKey && ipAddress && ipAddress !== "unknown" ? { ip_address: ipAddress } : {}),
       custom: { mineacle_uuid: uuid },
     }),
   });
 
-  await tebexFetch(
-    `${API}/baskets/${encodeURIComponent(basket.ident)}/packages`,
-    {
-      method: "POST",
-      body: JSON.stringify({
-        package_id: String(packageId),
-        quantity: 1,
-        ...(basket.username_id
-          ? { variable_data: { username_id: String(basket.username_id) } }
-          : {}),
-      }),
-    },
-  );
+  for (const line of lines) {
+    const single = listed.get(line.packageId)?.single;
+
+    await tebexFetch(
+      `${API}/baskets/${encodeURIComponent(basket.ident)}/packages`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          package_id: String(line.packageId),
+          quantity: single ? 1 : line.quantity,
+          ...(basket.username_id
+            ? { variable_data: { username_id: String(basket.username_id) } }
+            : {}),
+        }),
+      },
+    );
+  }
 
   return basket.ident;
 }

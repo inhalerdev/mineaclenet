@@ -7,6 +7,7 @@ export const mineacleIcons = {
   // Notifications: plain bell, and the bell with the red dot for unread.
   bell: `${MINEACLE_ICON_ROOT}/bell.svg`,
   bellUnread: `${MINEACLE_ICON_ROOT}/bell-unread.png`,
+  cart: `${MINEACLE_ICON_ROOT}/cart.png`,
   check: `${MINEACLE_ICON_ROOT}/check.png`,
   close: `${MINEACLE_ICON_ROOT}/close.png`,
   copy: `${MINEACLE_ICON_ROOT}/copy.png`,
