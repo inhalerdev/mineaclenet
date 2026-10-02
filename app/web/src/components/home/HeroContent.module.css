@@ -26,9 +26,9 @@
 
 .content {
   position: absolute;
-  bottom: 44px;
+  bottom: 56px;
   left: var(--content-inset);
-  width: min(600px, calc(100% - 2 * var(--content-inset)));
+  width: min(680px, calc(100% - 2 * var(--content-inset)));
   pointer-events: auto;
 }
 
@@ -74,9 +74,9 @@
 }
 
 .headline {
-  margin: 16px 0 16px;
+  margin: 18px 0 14px;
   color: #ffffff;
-  font-size: clamp(32px, 3.2vw, 54px);
+  font-size: clamp(36px, 4vw, 68px);
   font-weight: 400;
   line-height: 1.1;
   text-shadow: 3px 3px 0 #000000;
@@ -91,10 +91,10 @@
 }
 
 .text {
-  max-width: 50ch;
+  max-width: 46ch;
   margin: 0;
   color: #e6e6e6;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.5;
   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.8);
 }
@@ -193,14 +193,14 @@
 }
 
 /* ==========================================================================
- * Buttons (Play Now + Vote) and the live strip under them.
+ * Buttons (Play Now + Vote), side by side at the same width, and the live
+ * strip under them.
  * ========================================================================== */
 .action {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-  gap: 10px;
-  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 270px));
+  gap: 12px;
+  margin-top: 24px;
 }
 
 /* One thin line of live info: "● 3 PLAYING NOW | 120 PLAYERS JOINED | ...".
@@ -210,7 +210,7 @@
   flex-wrap: wrap;
   align-items: baseline;
   gap: 8px 0;
-  margin: 14px 0 0;
+  margin: 18px 0 0;
 }
 
 /* Items sit on one text baseline, so the big numbers and small labels
@@ -235,7 +235,7 @@
 
 .stat dt {
   color: var(--mc-text-muted);
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1;
   text-transform: uppercase;
 }
@@ -247,7 +247,7 @@
   min-width: 0;
   margin: 0;
   color: #ffffff;
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1;
   text-shadow: 2px 2px 0 #000000;
   white-space: nowrap;
@@ -284,8 +284,8 @@
  * ========================================================================== */
 @media (max-width: 1320px) {
   .content {
-    bottom: 32px;
-    width: min(540px, calc(100% - 2 * var(--content-inset)));
+    bottom: 40px;
+    width: min(620px, calc(100% - 2 * var(--content-inset)));
   }
 }
 
@@ -379,9 +379,9 @@
   }
 
   .action {
-    flex-direction: column;
+    grid-template-columns: minmax(0, 1fr);
     gap: 8px;
-    margin-top: 14px;
+    margin-top: 16px;
   }
 
   .stats {

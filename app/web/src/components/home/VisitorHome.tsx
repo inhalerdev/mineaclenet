@@ -6,7 +6,6 @@ import {
   type HeroQuickStat,
   type HeroStat,
 } from "@/components/home/HeroContent";
-import { HomeMore } from "@/components/home/HomeMore";
 import { IpCopiedToast } from "@/components/home/IpCopiedToast";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import type { Viewer } from "@/features/auth/types";
@@ -397,9 +396,6 @@ export function VisitorHome({
   const voteCount = !votes ? "Free" : votes.left > 0 ? `${votes.left} left` : "Done";
 
   return (
-    // First screen (hero + cards) as before; the page then scrolls on into
-    // the feature blocks, join steps and footer (HomeMore.tsx).
-    <div className={styles.homeScroll}>
     <div className={`${frame.page} ${styles.homePage}`}>
       <section className={`${frame.heroFrame} ${styles.heroSection}`}>
         <SiteHeader
@@ -554,8 +550,6 @@ export function VisitorHome({
       <span className={styles.copyStatus} role="status" aria-live="polite">
         {copied ? `${SERVER_ADDRESS} copied to clipboard` : ""}
       </span>
-    </div>
-    <HomeMore />
     </div>
   );
 }
