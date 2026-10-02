@@ -103,7 +103,7 @@ export function VotePage({
             </div>
             <div className={styles.lockedActions}>
               <a
-                className={`${block.button} ${block.primary}`}
+                className={`${block.button} ${block.blue}`}
                 href={withReturnPath("/login", "/vote")}
               >
                 Log in

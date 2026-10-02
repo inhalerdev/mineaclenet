@@ -49,6 +49,7 @@
   /* Vote page accent (Vote Crate Key blue). */
   --mc-blue: #77bbff;
   --mc-blue-light: #a9d4ff;
+  --mc-blue-hover: #8cc6ff;
   --mc-blue-edge: #2f6fb3;
   --mc-blue-text: #08223d;
 
