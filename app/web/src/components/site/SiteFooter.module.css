@@ -95,7 +95,7 @@
   }
 }
 
-/* Phones: one centered column (social buttons, links, then the text). */
+/* Phones: one centered column (the text, social buttons, then links). */
 @media (max-width: 560px) {
   .footer {
     grid-template-columns: minmax(0, 1fr);
@@ -104,17 +104,17 @@
     text-align: center;
   }
 
-  .social {
+  .legal {
     grid-row: 1;
   }
 
-  .policies {
+  .social {
     grid-row: 2;
-    justify-content: center;
   }
 
-  .legal {
+  .policies {
     grid-row: 3;
+    justify-content: center;
   }
 
   /* Disclaimer on its own line under the copyright. */
