@@ -27,7 +27,7 @@ import styles from "./SiteHeader.module.css";
 const HEADER_NAVIGATION = [
   { label: "Home", href: "/", icon: mineacleNavIcons.home },
   {
-    label: "Leaderboard",
+    label: "Leaderboards",
     href: "/leaderboards",
     icon: mineacleNavIcons.leaderboards,
   },

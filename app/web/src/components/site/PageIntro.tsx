@@ -15,14 +15,14 @@ export function PageIntro({
   footer,
 }: {
   tag: string;
-  tone?: "gold" | "red" | "purple";
+  tone?: "gold" | "red" | "purple" | "blue";
   title: string;
   children: ReactNode;
   aside?: ReactNode;
   footer?: ReactNode;
 }) {
   return (
-    <header className={styles.intro}>
+    <header className={styles.intro} data-tone={tone}>
       <div className={styles.introText}>
         <span className={styles.tag} data-tone={tone}>
           {tag}

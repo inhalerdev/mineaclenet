@@ -58,6 +58,7 @@ export function VotePage({
       <div className={content.content}>
         <PageIntro
           tag="Vote & Rewards"
+          tone="blue"
           title="Vote for Mineacle"
           footer={
             <dl className={content.stats}>
