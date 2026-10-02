@@ -325,6 +325,11 @@ function CartPanelContent() {
                 {error}
               </p>
             ) : null}
+            <p className={styles.cartLegal}>
+              Payments are handled by Tebex, our official reseller. By checking out you
+              agree to our <a href="/terms">Terms</a> and{" "}
+              <a href="/refunds">Refund Policy</a>.
+            </p>
             <button type="button" className={styles.cartClear} onClick={clear}>
               Empty cart
             </button>

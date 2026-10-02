@@ -1,4 +1,5 @@
 import { homeContent } from "@/features/home/home-content";
+import { legalDocuments } from "@/features/legal/legal-content";
 import { mineacleIcons } from "@/shared/icons/mineacle-icons";
 import styles from "./SiteFooter.module.css";
 
@@ -6,8 +7,9 @@ import styles from "./SiteFooter.module.css";
  * Footer under the framed box on every page except the homepage
  * (FramedPage.tsx). Kept to one quiet line so the eye stays on the box:
  * the copyright, the disclaimer the Minecraft Usage Guidelines require on
- * community sites (https://www.minecraft.net/en-us/usage-guidelines) and
- * two small social buttons. The pages themselves are in the header.
+ * community sites (https://www.minecraft.net/en-us/usage-guidelines), the
+ * Terms / Privacy / Refunds links and two small social buttons. The pages
+ * themselves are in the header.
  */
 const STUDIO_X_URL = "https://x.com/mineaclestudios";
 
@@ -26,6 +28,14 @@ export function SiteFooter() {
         Not an official Minecraft service. Not approved by or associated with
         Mojang or Microsoft.
       </p>
+
+      <nav className={styles.policies} aria-label="Legal">
+        {legalDocuments.map((doc) => (
+          <a key={doc.slug} href={doc.path}>
+            {doc.label}
+          </a>
+        ))}
+      </nav>
 
       <div className={styles.social}>
         {discord ? (

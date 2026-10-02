@@ -1,0 +1,195 @@
+/*
+ * Legal pages (LegalPage.tsx): a sticky contents list on the left on wide
+ * screens and the document as a column of numbered blocks. Same block
+ * recipe as the rest of the site; colors from app/tokens.css.
+ *
+ * Link rules start with a parent class so they beat the page's font reset
+ * in SiteFrame.module.css (.page a { font: inherit }).
+ */
+.tabs {
+  margin-top: 16px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  align-items: start;
+  gap: 24px;
+}
+
+/* --- Contents ---------------------------------------------------------------- */
+.toc {
+  position: sticky;
+  top: 0;
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  background: #1c1c1c;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 2px 0 #262626;
+}
+
+.toc strong {
+  color: var(--mc-purple-face);
+  font-size: 11px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.toc ol {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: toc;
+}
+
+.toc li {
+  counter-increment: toc;
+}
+
+.layout .toc a {
+  display: flex;
+  gap: 8px;
+  padding: 5px 6px 6px;
+  color: var(--mc-text-muted);
+  font-size: 12px;
+  line-height: 1.3;
+  transition:
+    background-color var(--motion),
+    color var(--motion),
+    padding-left 120ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.toc a::before {
+  min-width: 14px;
+  color: #5a5a5a;
+  content: counter(toc);
+}
+
+.layout .toc a:hover,
+.layout .toc a:focus-visible {
+  padding-left: 10px;
+  background: #2b2b2b;
+  color: #ffffff;
+}
+
+/* --- Document ---------------------------------------------------------------- */
+.doc {
+  min-width: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.section {
+  display: grid;
+  gap: 10px;
+  padding: 18px 22px 20px;
+  background: #1c1c1c;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 2px 0 #262626,
+    inset 0 -3px 0 #141414;
+  scroll-margin-top: 12px;
+}
+
+.section h2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 2px;
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+/* Number in a small purple block, like a hotbar slot count. */
+.number {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  display: grid;
+  place-items: center;
+  padding-bottom: 2px;
+  background: var(--mc-purple);
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 2px 0 var(--mc-purple-face),
+    inset 0 -3px 0 var(--mc-purple-deep);
+  color: #ffffff;
+  font-size: 12px;
+}
+
+.section p,
+.section ul {
+  margin: 0;
+  color: #cfcfcf;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.section ul {
+  display: grid;
+  gap: 6px;
+  padding: 0;
+  list-style: none;
+}
+
+/* Square pixel bullets. */
+.section li {
+  position: relative;
+  padding-left: 18px;
+}
+
+.section li::before {
+  position: absolute;
+  top: 0.62em;
+  left: 2px;
+  width: 6px;
+  height: 6px;
+  background: var(--mc-purple-face);
+  content: "";
+}
+
+.doc .section a {
+  color: var(--mc-purple-face);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color var(--motion);
+}
+
+.doc .section a:hover,
+.doc .section a:focus-visible {
+  color: #ffffff;
+}
+
+/* --- Screen sizes ------------------------------------------------------------ */
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Phones: the tabs are enough to move around; sections follow. */
+  .toc {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .section {
+    padding: 16px 16px 18px;
+  }
+
+  .section h2 {
+    font-size: 15px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toc a {
+    transition: none;
+  }
+}

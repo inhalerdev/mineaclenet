@@ -536,6 +536,25 @@
   border-top: 2px solid var(--mc-outline);
 }
 
+/* "Payments are handled by Tebex…" under Checkout. */
+.cartLegal {
+  margin: 0;
+  color: var(--mc-text-muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.cartLegal a {
+  color: #cfcfcf;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.cartLegal a:hover,
+.cartLegal a:focus-visible {
+  color: var(--mc-purple-face);
+}
+
 .cartTotal {
   display: flex;
   align-items: baseline;

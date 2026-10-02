@@ -40,6 +40,24 @@
   vertical-align: middle;
 }
 
+/* Terms · Privacy · Refunds */
+.policies {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 14px;
+  margin-left: auto;
+}
+
+.footer .policies a {
+  color: #9a9a9a;
+  transition: color var(--motion);
+}
+
+.footer .policies a:hover,
+.footer .policies a:focus-visible {
+  color: var(--mc-purple-face);
+}
+
 /* Social: small grey blocks that pop up on hover like every button. */
 .social {
   display: flex;
@@ -87,7 +105,30 @@
   image-rendering: pixelated;
 }
 
+@media (max-width: 900px) {
+  .footer {
+    flex-wrap: wrap;
+  }
+
+  .legal {
+    flex: 1 1 100%;
+  }
+
+  .policies {
+    margin-left: 0;
+  }
+
+  .social {
+    margin-left: auto;
+  }
+}
+
 @media (max-width: 560px) {
+  .policies,
+  .social {
+    margin: 0;
+  }
+
   .footer {
     flex-direction: column-reverse;
     gap: 12px;
