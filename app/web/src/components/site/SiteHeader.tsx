@@ -39,9 +39,8 @@ const HEADER_NAVIGATION = [
   },
   {
     label: "Marketplace",
-    href: "https://store.mineacle.net/",
+    href: "/marketplace",
     icon: mineacleNavIcons.marketplace,
-    external: true,
     featured: true,
   },
 ] as const;

@@ -34,6 +34,23 @@ const nextConfig = {
         source: "/:path*",
         headers: securityHeaders,
       },
+      {
+        // Tebex checkout runs in a frame over this page: let it use the
+        // browser's payment sheet (Apple Pay / Google Pay) and open payment
+        // popups such as PayPal. Later rules win for the same header.
+        source: "/marketplace",
+        headers: [
+          {
+            key: "Permissions-Policy",
+            value:
+              'camera=(), microphone=(), geolocation=(), usb=(), payment=(self "https://pay.tebex.io")',
+          },
+          {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin-allow-popups",
+          },
+        ],
+      },
     ];
   },
 };

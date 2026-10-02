@@ -17,10 +17,5 @@ export const siteNavigation: SiteNavItem[] = [
   { label: "Leaderboards", href: "/leaderboards", icon: "leaderboard" },
   { label: "Vote & Rewards", href: "/vote", icon: "rewards" },
   { label: "Public Records", href: "/punishments", icon: "punishments" },
-  {
-    label: "Marketplace",
-    href: "https://store.mineacle.net/",
-    icon: "marketplace",
-    external: true,
-  },
+  { label: "Marketplace", href: "/marketplace", icon: "marketplace" },
 ];

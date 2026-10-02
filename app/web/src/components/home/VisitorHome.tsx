@@ -102,11 +102,10 @@ const MARKETPLACE_CARD: QuickLink = {
   title: "Marketplace",
   detail: "The official Mineacle store",
   cta: "Open store",
-  href: "https://store.mineacle.net/",
+  href: "/marketplace",
   media: homeContent.mineaclePlus.media,
   icon: mineacleIcons.crate,
   card: "marketplace",
-  external: true,
 };
 
 const LEADERBOARDS_CARD: QuickLink = {

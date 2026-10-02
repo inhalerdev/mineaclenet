@@ -1,0 +1,335 @@
+/*
+ * Marketplace page (see MarketplacePage.tsx): category panel on the left,
+ * item cards on the right. The intro and stat tiles are shared
+ * (site/ContentPage.module.css); Buy buttons are site/BlockButton.module.css
+ * (purple). Same block recipe as the rest of the site: colored face, light
+ * top edge, dark bottom edge, black outline, square corners. Colors come
+ * from app/tokens.css.
+ *
+ * Rules on links start with a parent class so they beat the page's font
+ * reset in SiteFrame.module.css (.page a { font: inherit }).
+ */
+
+/* --- Layout: panel + items --------------------------------------------------- */
+.layout {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  align-items: start;
+  gap: 24px;
+}
+
+/* --- Category panel ---------------------------------------------------------- */
+.panel {
+  position: sticky;
+  top: 0;
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 2px solid var(--mc-outline);
+  background: #1c1c1c;
+  box-shadow:
+    inset 0 2px 0 #262626,
+    inset 0 -4px 0 #141414;
+}
+
+.panelTitle {
+  margin: 0;
+  padding: 0 4px;
+  color: var(--mc-text-muted);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.categories {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.categories .category {
+  min-height: 42px;
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 0 10px 2px;
+  background: #222222;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 2px 0 #2e2e2e,
+    inset 0 -3px 0 #181818;
+  color: var(--mc-text);
+  font-size: 13px;
+  line-height: 1.1;
+  transition:
+    background-color var(--motion),
+    box-shadow var(--motion);
+}
+
+.category img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.category span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.category small {
+  min-width: 22px;
+  padding: 3px 5px 4px;
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--mc-text-muted);
+  font-size: 11px;
+  line-height: 1;
+  text-align: center;
+}
+
+.categories .category:hover,
+.categories .category:focus-visible {
+  background: #2b2b2b;
+}
+
+/* The chosen category: purple, like the block bar under nav links. */
+.categories .category[aria-current] {
+  background: var(--mc-purple);
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 2px 0 var(--mc-purple-face),
+    inset 0 -3px 0 var(--mc-purple-deep);
+  color: #ffffff;
+}
+
+.category[aria-current] small {
+  background: rgba(0, 0, 0, 0.25);
+  color: #ffffff;
+}
+
+/* --- Items -------------------------------------------------------------------- */
+.items {
+  min-width: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.itemsHeader {
+  display: grid;
+  gap: 6px;
+}
+
+.itemsHeader h2 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.1;
+  text-shadow: 2px 2px 0 #000000;
+}
+
+.itemsHeader p {
+  max-width: 70ch;
+  margin: 0;
+  color: var(--mc-text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 14px;
+  padding: 16px;
+  border: 2px solid var(--mc-outline);
+  background: #222222;
+  box-shadow:
+    inset 0 2px 0 #2e2e2e,
+    inset 0 -4px 0 #181818;
+  transition: border-color var(--motion);
+}
+
+.card:hover,
+.card:focus-within {
+  border-color: var(--mc-purple-face);
+}
+
+.cardMedia {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(176, 120, 255, 0.18), transparent 65%),
+    #1a1a1a;
+  box-shadow: inset 0 0 0 2px var(--mc-outline);
+}
+
+.cardMedia img {
+  width: 62%;
+  height: 62%;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.sale {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 4px 6px 6px;
+  background: var(--mc-red);
+  box-shadow:
+    inset 0 2px 0 var(--mc-red-light),
+    inset 0 -3px 0 var(--mc-red-edge),
+    0 0 0 2px var(--mc-outline);
+  color: #ffffff;
+  font-size: 11px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.cardText {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  min-width: 0;
+}
+
+.cardText h3 {
+  margin: 0;
+  color: var(--mc-purple-face);
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.cardText p {
+  margin: 0;
+  color: var(--mc-text);
+  font-size: 13px;
+  line-height: 1.45;
+  white-space: pre-line;
+}
+
+.cardFooter {
+  display: grid;
+  gap: 10px;
+}
+
+.price {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0;
+  color: #ffffff;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.price s {
+  color: var(--mc-text-muted);
+  font-size: 13px;
+}
+
+.buy {
+  display: grid;
+  gap: 8px;
+}
+
+.buyButton.buyButton {
+  width: 100%;
+  height: 42px;
+  font-size: 14px;
+}
+
+.buyError {
+  margin: 0;
+  color: var(--mc-red-light);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+/* --- Purchase notice ------------------------------------------------------------ */
+.notice {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 2px solid var(--mc-outline);
+  background: #1d2a1a;
+  box-shadow:
+    inset 0 2px 0 #2a3d25,
+    inset 0 -4px 0 #131c11;
+}
+
+.notice img {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  image-rendering: pixelated;
+}
+
+.notice strong {
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.notice p {
+  margin: 4px 0 0;
+  color: var(--mc-text);
+  font-size: 13px;
+}
+
+/* ==========================================================================
+ * Screen sizes: the panel becomes a scrolling row of tabs above the items
+ * ========================================================================== */
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .panel {
+    position: static;
+    padding: 10px;
+  }
+
+  .categories {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+  }
+
+  .categories > li {
+    flex: 0 0 auto;
+  }
+
+  .categories .category span {
+    overflow: visible;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
