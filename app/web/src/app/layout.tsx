@@ -16,7 +16,7 @@ const SITE_URL = process.env.SITE_URL?.trim() || "https://mineacle.net";
  */
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Mineacle | Fight. Trade. Rise.",
+  title: "Home | Mineacle",
   description:
     "A Minecraft Java survival server with PvP, a player-run economy and friends to build with. Join at mineacle.net.",
   openGraph: {
