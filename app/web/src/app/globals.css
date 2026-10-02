@@ -111,9 +111,13 @@ textarea {
   color: var(--brand-text);
 }
 
+/* Icons and logos keep their own ratio: an image in a box of another shape
+   fits inside it instead of stretching. Photos that should fill a box set
+   object-fit: cover themselves. */
 img,
 video {
   display: block;
+  object-fit: contain;
 }
 
 @media (max-width: 800px) {
