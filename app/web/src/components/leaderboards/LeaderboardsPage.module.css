@@ -28,15 +28,17 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 14px 15px;
+  padding: 12px 14px 16px;
   background: #262626;
   box-shadow:
     inset 0 0 0 2px var(--mc-outline),
     inset 0 3px 0 #333333,
-    inset 0 -4px 0 #181818;
+    inset 0 -5px 0 #181818,
+    0 6px 16px rgba(0, 0, 0, 0.25);
   color: var(--mc-text);
   transition:
     background-color var(--motion),
+    box-shadow 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
     transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
@@ -54,15 +56,23 @@
 .hotbar .slot:focus-visible {
   background: #303030;
   box-shadow:
-    inset 0 0 0 2px var(--mc-outline),
+    inset 0 0 0 2px #ffffff,
     inset 0 3px 0 #3a3a3a,
-    inset 0 -4px 0 #181818,
-    0 4px 0 rgba(0, 0, 0, 0.5);
+    inset 0 -5px 0 #181818,
+    0 6px 0 rgba(0, 0, 0, 0.5),
+    0 14px 28px rgba(0, 0, 0, 0.3);
   transform: translateY(-3px);
 }
 
+/* Same press as every block button: sinks into its bottom edge. */
 .hotbar .slot:active {
-  transform: translateY(2px);
+  padding-bottom: 13px;
+  box-shadow:
+    inset 0 0 0 2px #ffffff,
+    inset 0 3px 0 #3a3a3a,
+    inset 0 -2px 0 #181818,
+    0 1px 0 rgba(0, 0, 0, 0.45);
+  transform: translateY(3px);
   transition-duration: 50ms;
 }
 
@@ -86,7 +96,7 @@
     0 0 0 3px #ffffff,
     0 0 0 5px var(--mc-outline),
     inset 0 3px 0 #444444,
-    inset 0 -4px 0 #1c1c1c;
+    inset 0 -5px 0 #1c1c1c;
   transform: none;
 }
 

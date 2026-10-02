@@ -83,30 +83,11 @@
 }
 
 /* Small square X, top right. */
+/* Close (X): a small square block button (site/BlockButton). */
 .toast .close {
-  width: 26px;
-  height: 26px;
-  display: grid;
-  place-items: center;
-  align-self: start;
-  padding: 0;
-  border: 0;
-  background: #2b2b2b;
-  box-shadow:
-    inset 0 2px 0 #3a3a3a,
-    inset 0 -2px 0 #161616,
-    0 0 0 2px var(--mc-outline);
-  cursor: pointer;
-}
+  --btn-size: 28px;
 
-.toast .close:hover,
-.toast .close:focus-visible {
-  outline: 0;
-  background: #3a3a3a;
-  box-shadow:
-    inset 0 2px 0 #4a4a4a,
-    inset 0 -2px 0 #161616,
-    0 0 0 2px #ffffff;
+  align-self: start;
 }
 
 .close img {

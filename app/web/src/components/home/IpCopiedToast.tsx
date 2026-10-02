@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import block from "@/components/site/BlockButton.module.css";
 import { useToastRoot } from "@/components/site/useToastRoot";
 import { mineacleIcons } from "@/shared/icons/mineacle-icons";
 import styles from "./IpCopiedToast.module.css";
@@ -94,7 +95,7 @@ export function IpCopiedToast({
           {showSteps ? null : <small>Paste it in Multiplayer. See you in game, {playerName}!</small>}
         </span>
         <button
-          className={styles.close}
+          className={`${block.button} ${block.square} ${styles.close}`}
           type="button"
           aria-label="Close"
           onClick={() => setLeaving(true)}

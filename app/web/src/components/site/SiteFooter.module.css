@@ -58,44 +58,13 @@
   color: var(--mc-purple-face);
 }
 
-/* Social: small grey blocks that pop up on hover like every button. */
+/* Social: small square block buttons (site/BlockButton). */
 .social {
+  --btn-size: 32px;
+
   display: flex;
   flex: 0 0 auto;
   gap: 8px;
-}
-
-.footer .social a {
-  width: 30px;
-  height: 30px;
-  display: grid;
-  place-items: center;
-  padding-bottom: 2px;
-  background: #242424;
-  box-shadow:
-    inset 0 0 0 2px var(--mc-outline),
-    inset 0 2px 0 #333333,
-    inset 0 -3px 0 #141414;
-  transition:
-    background-color var(--motion),
-    transform 120ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    box-shadow 120ms cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.footer .social a:hover,
-.footer .social a:focus-visible {
-  background: var(--mc-purple);
-  box-shadow:
-    inset 0 0 0 2px var(--mc-outline),
-    inset 0 2px 0 var(--mc-purple-face),
-    inset 0 -3px 0 var(--mc-purple-deep),
-    0 4px 0 rgba(0, 0, 0, 0.5);
-  transform: translateY(-3px);
-}
-
-.footer .social a:active {
-  transform: translateY(1px);
-  transition-duration: 50ms;
 }
 
 /* Same height for every icon; width follows each icon's own ratio. */
@@ -145,9 +114,3 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .footer .social a:hover,
-  .footer .social a:active {
-    transform: none;
-  }
-}

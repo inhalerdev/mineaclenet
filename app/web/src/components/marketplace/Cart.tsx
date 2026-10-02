@@ -253,7 +253,7 @@ function CartPanelContent() {
           </h2>
           <button
             type="button"
-            className={styles.cartClose}
+            className={`${block.button} ${block.square} ${styles.cartClose}`}
             onClick={() => setOpen(false)}
             aria-label="Close cart"
           >
@@ -275,6 +275,7 @@ function CartPanelContent() {
                 <div className={styles.quantity}>
                   <button
                     type="button"
+                    className={`${block.button} ${block.square} ${styles.quantityButton}`}
                     onClick={() => setQuantity(pkg.id, quantity - 1)}
                     aria-label={quantity === 1 ? `Remove ${pkg.name}` : `One less ${pkg.name}`}
                   >
@@ -283,6 +284,7 @@ function CartPanelContent() {
                   <span aria-label="Quantity">{quantity}</span>
                   <button
                     type="button"
+                    className={`${block.button} ${block.square} ${styles.quantityButton}`}
                     onClick={() => setQuantity(pkg.id, quantity + 1)}
                     disabled={quantity >= maxFor(pkg)}
                     aria-label={`One more ${pkg.name}`}

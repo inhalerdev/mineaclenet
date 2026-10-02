@@ -6,32 +6,51 @@
  *   <button className={`${block.button} ${block.primary}`}> purple
  *   <button className={`${block.button} ${block.danger}`}>  red
  *   <a className={`${block.button} ${block.green}`}>         green
+ *   <a className={`${block.button} ${block.blue}`}>          blue (Vote page)
  *
- * Built like the logo: a colored face, a lighter top edge, a darker bottom
- * edge and a black outline. Playful like a game button: hover pops it up
- * 3px with a white outline and a chunky shadow (its icon hops), click sinks
- * it into its bottom edge.
+ * The site's one button recipe, the same as Play Now and Vote for Keys on
+ * the homepage (and the gold Marketplace button in the header):
  *
- * Each class is written twice (.button.button) so these styles beat the
- * page's font reset in SiteFrame.module.css (.page button { font: inherit }).
+ *   rest    colored face, 3px lighter top edge, 5px darker bottom edge with
+ *           the label sitting above it, black outline, a soft shadow under
+ *           it and a hard 2px text shadow in the edge color
+ *   hover   pops up 3px with a white outline, a chunky black shadow under
+ *           it and its icon hops
+ *   press   sinks 3px into its bottom edge
+ *
+ * Each color only sets the --btn-* variables, so every color moves the same
+ * way. Each class is written twice (.button.button) so these styles beat
+ * the page's font reset in SiteFrame.module.css (.page button { font:
+ * inherit }).
  */
 .button.button {
-  height: 38px;
+  --btn-face: #2b2b2b;
+  --btn-hover: #383838;
+  --btn-light: #3d3d3d;
+  --btn-edge: #161616;
+  --btn-text: #ffffff;
+  --btn-text-shadow: 2px 2px 0 #111111;
+  /* Bottom edge thickness; small square buttons use 4px. */
+  --btn-depth: 5px;
+
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 14px 4px;
+  padding: 0 16px 5px;
   border: 2px solid var(--mc-outline);
   border-radius: 0;
-  background: #2b2b2b;
+  background: var(--btn-face);
   box-shadow:
-    inset 0 3px 0 #3a3a3a,
-    inset 0 -4px 0 #161616;
-  color: #ffffff;
+    inset 0 3px 0 var(--btn-light),
+    inset 0 calc(-1 * var(--btn-depth)) 0 var(--btn-edge),
+    0 6px 16px rgba(0, 0, 0, 0.25);
+  color: var(--btn-text);
   cursor: pointer;
   font-size: var(--mc-menu-font);
   font-weight: 400;
   line-height: 1;
+  text-shadow: var(--btn-text-shadow);
   transition:
     transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
     box-shadow 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
@@ -42,27 +61,28 @@
 
 .button.button:hover,
 .button.button:focus-visible {
+  outline: 0;
   border-color: #ffffff;
-  background: #3a3a3a;
+  background: var(--btn-hover);
   box-shadow:
-    inset 0 3px 0 #4a4a4a,
-    inset 0 -4px 0 #161616,
-    0 5px 0 rgba(0, 0, 0, 0.5);
+    inset 0 3px 0 var(--btn-light),
+    inset 0 calc(-1 * var(--btn-depth)) 0 var(--btn-edge),
+    0 6px 0 rgba(0, 0, 0, 0.5),
+    0 14px 28px rgba(0, 0, 0, 0.3);
+  color: var(--btn-text);
   transform: translateY(-3px);
 }
 
 .button.button:active {
-  padding-bottom: 1px;
+  padding-bottom: 2px;
   border-color: #ffffff;
+  background: var(--btn-face);
   box-shadow:
-    inset 0 3px 0 #3a3a3a,
-    inset 0 -1px 0 #161616;
+    inset 0 3px 0 var(--btn-light),
+    inset 0 -2px 0 var(--btn-edge),
+    0 1px 0 rgba(0, 0, 0, 0.45);
   transform: translateY(3px);
   transition-duration: 50ms;
-}
-
-.button.button img {
-  transition: transform 120ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .button.button:hover img,
@@ -82,102 +102,71 @@
   opacity: 0.65;
 }
 
-/* --- Purple -------------------------------------------------------------- */
+/* A disabled button stays put (e.g. + at the most you can buy). */
+.button.button:disabled:hover,
+.button.button:disabled:active {
+  padding-bottom: 5px;
+  border-color: var(--mc-outline);
+  background: var(--btn-face);
+  box-shadow:
+    inset 0 3px 0 var(--btn-light),
+    inset 0 calc(-1 * var(--btn-depth)) 0 var(--btn-edge);
+  transform: none;
+}
+
+/* Square icon button (close, +/-, social): set --btn-size for its size. */
+.square.square {
+  --btn-depth: 4px;
+
+  width: var(--btn-size, 40px);
+  height: var(--btn-size, 40px);
+  flex: 0 0 auto;
+  padding: 0 0 4px;
+}
+
+.square.square:active,
+.square.square:disabled:hover {
+  padding-bottom: 1px;
+}
+
+.square.square:disabled:hover {
+  padding-bottom: 4px;
+}
+
+/* --- Colors ---------------------------------------------------------------- */
 .primary.primary {
-  background: var(--mc-purple);
-  box-shadow:
-    inset 0 3px 0 var(--mc-purple-face),
-    inset 0 -4px 0 var(--mc-purple-deep);
+  --btn-face: var(--mc-purple);
+  --btn-hover: #9150ff;
+  --btn-light: var(--mc-purple-face);
+  --btn-edge: var(--mc-purple-deep);
+  --btn-text-shadow: 2px 2px 0 var(--mc-purple-deep);
 }
 
-.primary.primary:hover,
-.primary.primary:focus-visible {
-  background: #9450ff;
-  box-shadow:
-    inset 0 3px 0 var(--mc-purple-face),
-    inset 0 -4px 0 var(--mc-purple-deep),
-    0 5px 0 rgba(0, 0, 0, 0.5);
-}
-
-.primary.primary:active {
-  background: var(--mc-purple);
-  box-shadow:
-    inset 0 3px 0 var(--mc-purple-face),
-    inset 0 -1px 0 var(--mc-purple-deep);
-}
-
-/* --- Red ------------------------------------------------------------------ */
 .danger.danger {
-  background: var(--mc-red);
-  box-shadow:
-    inset 0 3px 0 var(--mc-red-light),
-    inset 0 -4px 0 var(--mc-red-edge);
+  --btn-face: var(--mc-red);
+  --btn-hover: var(--mc-red-hover);
+  --btn-light: var(--mc-red-light);
+  --btn-edge: var(--mc-red-edge);
+  --btn-text-shadow: 2px 2px 0 var(--mc-red-edge);
 }
 
-.danger.danger:hover,
-.danger.danger:focus-visible {
-  background: var(--mc-red-hover);
-  box-shadow:
-    inset 0 3px 0 var(--mc-red-light),
-    inset 0 -4px 0 var(--mc-red-edge),
-    0 5px 0 rgba(0, 0, 0, 0.5);
-}
-
-.danger.danger:active {
-  background: var(--mc-red);
-  box-shadow:
-    inset 0 3px 0 var(--mc-red-light),
-    inset 0 -1px 0 var(--mc-red-edge);
-}
-
-/* --- Green (same colors as Play Now) --------------------------------------- */
+/* Same colors as Play Now. */
 .green.green {
-  background: var(--mc-green);
-  box-shadow:
-    inset 0 3px 0 var(--mc-green-light),
-    inset 0 -4px 0 var(--mc-green-edge);
+  --btn-face: var(--mc-green);
+  --btn-hover: var(--mc-green-hover);
+  --btn-light: var(--mc-green-light);
+  --btn-edge: var(--mc-green-edge);
+  --btn-text-shadow: 2px 2px 0 var(--mc-green-edge);
 }
 
-.green.green:hover,
-.green.green:focus-visible {
-  background: var(--mc-green-hover);
-  box-shadow:
-    inset 0 3px 0 var(--mc-green-light),
-    inset 0 -4px 0 var(--mc-green-edge),
-    0 5px 0 rgba(0, 0, 0, 0.5);
-}
-
-.green.green:active {
-  background: var(--mc-green);
-  box-shadow:
-    inset 0 3px 0 var(--mc-green-light),
-    inset 0 -1px 0 var(--mc-green-edge);
-}
-
-/* --- Blue (Vote page: Vote Crate Key blue, dark text like its tag) ------- */
+/* Vote Crate Key blue with dark text, like the Vote page's tag. */
 .blue.blue {
-  background: var(--mc-blue);
-  box-shadow:
-    inset 0 3px 0 var(--mc-blue-light),
-    inset 0 -4px 0 var(--mc-blue-edge);
-  color: var(--mc-blue-text);
-}
-
-.blue.blue:hover,
-.blue.blue:focus-visible {
-  background: var(--mc-blue-hover);
-  box-shadow:
-    inset 0 3px 0 var(--mc-blue-light),
-    inset 0 -4px 0 var(--mc-blue-edge),
-    0 5px 0 rgba(0, 0, 0, 0.5);
-  color: var(--mc-blue-text);
-}
-
-.blue.blue:active {
-  background: var(--mc-blue);
-  box-shadow:
-    inset 0 3px 0 var(--mc-blue-light),
-    inset 0 -1px 0 var(--mc-blue-edge);
+  --btn-face: var(--mc-blue);
+  --btn-hover: var(--mc-blue-hover);
+  --btn-light: var(--mc-blue-light);
+  --btn-edge: var(--mc-blue-edge);
+  --btn-text: var(--mc-blue-text);
+  --btn-text-shadow: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

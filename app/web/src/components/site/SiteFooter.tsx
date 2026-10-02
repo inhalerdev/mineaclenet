@@ -1,6 +1,7 @@
 import { homeContent } from "@/features/home/home-content";
 import { legalDocuments } from "@/features/legal/legal-content";
 import { mineacleIcons } from "@/shared/icons/mineacle-icons";
+import block from "./BlockButton.module.css";
 import styles from "./SiteFooter.module.css";
 
 /*
@@ -40,6 +41,7 @@ export function SiteFooter() {
       <div className={styles.social}>
         {discord ? (
           <a
+            className={`${block.button} ${block.square}`}
             href={discord}
             target="_blank"
             rel="noopener noreferrer"
@@ -49,6 +51,7 @@ export function SiteFooter() {
           </a>
         ) : null}
         <a
+          className={`${block.button} ${block.square}`}
           href={STUDIO_X_URL}
           target="_blank"
           rel="noopener noreferrer"

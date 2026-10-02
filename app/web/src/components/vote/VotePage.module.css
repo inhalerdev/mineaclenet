@@ -171,18 +171,19 @@
   gap: 10px;
   background: #242424;
   box-shadow:
-    inset 0 2px 0 #2e2e2e,
-    inset 0 -4px 0 #161616;
+    inset 0 3px 0 #2e2e2e,
+    inset 0 -5px 0 #161616;
   cursor: default;
 }
 
 .site .voteButton.voteDone:hover,
 .site .voteButton.voteDone:active {
+  padding-bottom: 5px;
   border-color: var(--mc-outline);
   background: #242424;
   box-shadow:
-    inset 0 2px 0 #2e2e2e,
-    inset 0 -4px 0 #161616;
+    inset 0 3px 0 #2e2e2e,
+    inset 0 -5px 0 #161616;
   transform: none;
 }
 

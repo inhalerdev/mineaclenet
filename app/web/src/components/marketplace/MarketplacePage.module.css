@@ -56,12 +56,12 @@
   grid-template-columns: 22px minmax(0, 1fr) auto;
   align-items: center;
   gap: 10px;
-  padding: 0 10px 2px;
+  padding: 0 10px 4px;
   background: #222222;
   box-shadow:
     inset 0 0 0 2px var(--mc-outline),
-    inset 0 2px 0 #2e2e2e,
-    inset 0 -3px 0 #181818;
+    inset 0 3px 0 #2e2e2e,
+    inset 0 -5px 0 #181818;
   color: var(--mc-text);
   font-size: 13px;
   line-height: 1.1;
@@ -94,15 +94,26 @@
   text-align: center;
 }
 
-/* Categories nudge right on hover and sink when pressed. */
+/* Pop up on hover and sink when pressed, like every block button. */
 .categories .category:hover,
 .categories .category:focus-visible {
+  outline: 0;
   background: #2b2b2b;
-  transform: translateX(4px);
+  box-shadow:
+    inset 0 0 0 2px #ffffff,
+    inset 0 3px 0 #383838,
+    inset 0 -5px 0 #181818,
+    0 6px 0 rgba(0, 0, 0, 0.5);
+  transform: translateY(-3px);
 }
 
 .categories .category:active {
-  transform: translate(4px, 2px);
+  padding-bottom: 1px;
+  box-shadow:
+    inset 0 0 0 2px #ffffff,
+    inset 0 3px 0 #383838,
+    inset 0 -2px 0 #181818;
+  transform: translateY(3px);
   transition-duration: 50ms;
 }
 
@@ -111,9 +122,10 @@
   background: var(--mc-purple);
   box-shadow:
     inset 0 0 0 2px var(--mc-outline),
-    inset 0 2px 0 var(--mc-purple-face),
-    inset 0 -3px 0 var(--mc-purple-deep);
+    inset 0 3px 0 var(--mc-purple-face),
+    inset 0 -5px 0 var(--mc-purple-deep);
   color: #ffffff;
+  text-shadow: 2px 2px 0 var(--mc-purple-deep);
 }
 
 .category[aria-current] small {
@@ -410,18 +422,9 @@
   font-weight: 400;
 }
 
-.cartPanel .cartClose {
-  width: 32px;
-  height: 32px;
-  display: grid;
-  place-items: center;
-  border: 0;
-  background: #2b2b2b;
-  box-shadow:
-    inset 0 2px 0 #3a3a3a,
-    inset 0 -3px 0 #161616,
-    0 0 0 2px var(--mc-outline);
-  cursor: pointer;
+/* Close (X): a small square block button (site/BlockButton). */
+.cartClose {
+  --btn-size: 34px;
 }
 
 .cartClose img {
@@ -492,36 +495,11 @@
   gap: 6px;
 }
 
-.cartPanel .quantity button {
-  width: 26px;
-  height: 26px;
-  padding: 0 0 2px;
-  border: 0;
-  background: #2b2b2b;
-  box-shadow:
-    inset 0 2px 0 #3a3a3a,
-    inset 0 -3px 0 #161616,
-    0 0 0 2px var(--mc-outline);
-  color: #ffffff;
-  cursor: pointer;
-  font-size: 14px;
-  line-height: 1;
-}
+/* - and +: small square block buttons (site/BlockButton). */
+.quantityButton.quantityButton {
+  --btn-size: 30px;
 
-.cartPanel .quantity button:not(:disabled):hover,
-.cartPanel .cartClose:hover {
-  background: #3a3a3a;
-  transform: translateY(-2px);
-}
-
-.cartPanel .quantity button:not(:disabled):active,
-.cartPanel .cartClose:active {
-  transform: translateY(1px);
-}
-
-.cartPanel .quantity button:disabled {
-  cursor: default;
-  opacity: 0.4;
+  font-size: 15px;
 }
 
 .quantity > span {
@@ -619,5 +597,13 @@
 @media (max-width: 480px) {
   .grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .categories .category:hover,
+  .categories .category:focus-visible,
+  .categories .category:active {
+    transform: none;
   }
 }
