@@ -67,7 +67,8 @@
   line-height: 1.1;
   transition:
     background-color var(--motion),
-    box-shadow var(--motion);
+    box-shadow var(--motion),
+    transform 120ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .category img {
@@ -93,9 +94,16 @@
   text-align: center;
 }
 
+/* Categories nudge right on hover and sink when pressed. */
 .categories .category:hover,
 .categories .category:focus-visible {
   background: #2b2b2b;
+  transform: translateX(4px);
+}
+
+.categories .category:active {
+  transform: translate(4px, 2px);
+  transition-duration: 50ms;
 }
 
 /* The chosen category: purple, like the block bar under nav links. */
@@ -498,6 +506,17 @@
   cursor: pointer;
   font-size: 14px;
   line-height: 1;
+}
+
+.cartPanel .quantity button:not(:disabled):hover,
+.cartPanel .cartClose:hover {
+  background: #3a3a3a;
+  transform: translateY(-2px);
+}
+
+.cartPanel .quantity button:not(:disabled):active,
+.cartPanel .cartClose:active {
+  transform: translateY(1px);
 }
 
 .cartPanel .quantity button:disabled {

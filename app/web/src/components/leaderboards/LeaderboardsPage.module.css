@@ -53,7 +53,28 @@
 .hotbar .slot:hover,
 .hotbar .slot:focus-visible {
   background: #303030;
-  transform: translateY(-2px);
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 3px 0 #3a3a3a,
+    inset 0 -4px 0 #181818,
+    0 4px 0 rgba(0, 0, 0, 0.5);
+  transform: translateY(-3px);
+}
+
+.hotbar .slot:active {
+  transform: translateY(2px);
+  transition-duration: 50ms;
+}
+
+@keyframes iconHop {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  30% { transform: translateY(-4px) rotate(-10deg); }
+  60% { transform: translateY(-1px) rotate(8deg); }
+}
+
+.hotbar .slot:hover img,
+.hotbar .slot:focus-visible img {
+  animation: iconHop 420ms steps(6, jump-none) 1;
 }
 
 /* The chosen ranking: the selected hotbar slot (white frame). */
@@ -533,7 +554,13 @@
 
 @media (prefers-reduced-motion: reduce) {
   .hotbar .slot:hover,
+  .hotbar .slot:active,
   .podium .standing:hover {
     transform: none;
+  }
+
+  .hotbar .slot:hover img,
+  .hotbar .slot:focus-visible img {
+    animation: none;
   }
 }
