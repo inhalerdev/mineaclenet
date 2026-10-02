@@ -16,6 +16,25 @@
  * so it wins over SiteFrame's own rules whatever order they load in.
  */
 
+/* The whole homepage scrolls: first screen (the frame below), then the
+   sections and footer from HomeMore.tsx. Desktop keeps the body still
+   (app/globals.css), so this wrapper is the scroll area there; on phones
+   the body scrolls. */
+.homeScroll {
+  height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: #111111;
+}
+
+@media (max-width: 800px) {
+  .homeScroll {
+    height: auto;
+    overflow: visible;
+  }
+}
+
 /* ==========================================================================
  * Play Now: green block button. Hover shows the player count, click copies
  * the IP. Built like the logo: green face, light top edge, dark bottom

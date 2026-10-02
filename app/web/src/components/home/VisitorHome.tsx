@@ -6,6 +6,7 @@ import {
   type HeroQuickStat,
   type HeroStat,
 } from "@/components/home/HeroContent";
+import { HomeMore } from "@/components/home/HomeMore";
 import { IpCopiedToast } from "@/components/home/IpCopiedToast";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import type { Viewer } from "@/features/auth/types";
@@ -53,7 +54,7 @@ function communityCard(discordStats: DiscordStats | null): QuickLink {
     title: "Join the Discord",
     detail: discordStats
       ? `${discordStats.members.toLocaleString()} members · ${discordStats.online.toLocaleString()} online`
-      : "Find friends and squad up",
+      : "Find a team and squad up",
     cta: "Join server",
     href: homeContent.discord.invite,
     media: homeContent.community.media,
@@ -100,8 +101,8 @@ function welcomeStats(welcome: WelcomeData): HeroQuickStat[] {
 
 const MARKETPLACE_CARD: QuickLink = {
   title: "Marketplace",
-  detail: "The official Mineacle store",
-  cta: "Open store",
+  detail: "Crate keys, pick your reward",
+  cta: "Shop now",
   href: "/marketplace",
   media: homeContent.mineaclePlus.media,
   icon: mineacleIcons.crate,
@@ -110,8 +111,8 @@ const MARKETPLACE_CARD: QuickLink = {
 
 const LEADERBOARDS_CARD: QuickLink = {
   title: "Leaderboards",
-  detail: "Top 50 in balance, kills and more",
-  cta: "See rankings",
+  detail: "Richest, deadliest, most played",
+  cta: "See who's on top",
   href: "/leaderboards",
   media: homeContent.competitive.media,
   icon: mineacleIcons.trophy,
@@ -396,6 +397,9 @@ export function VisitorHome({
   const voteCount = !votes ? "Free" : votes.left > 0 ? `${votes.left} left` : "Done";
 
   return (
+    // First screen (hero + cards) as before; the page then scrolls on into
+    // the feature blocks, join steps and footer (HomeMore.tsx).
+    <div className={styles.homeScroll}>
     <div className={`${frame.page} ${styles.homePage}`}>
       <section className={`${frame.heroFrame} ${styles.heroSection}`}>
         <SiteHeader
@@ -550,6 +554,8 @@ export function VisitorHome({
       <span className={styles.copyStatus} role="status" aria-live="polite">
         {copied ? `${SERVER_ADDRESS} copied to clipboard` : ""}
       </span>
+    </div>
+    <HomeMore />
     </div>
   );
 }

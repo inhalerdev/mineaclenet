@@ -27,19 +27,19 @@ export const homeContent = {
     // Short news next to it, e.g. "Season 1 starts Oct 3". `href` is
     // optional (a page to read more on). Leave `text` empty to hide it.
     news: {
-      text: "Now open for Java Edition",
+      text: "Free to play on Java 1.21+",
       href: "",
     },
     // The headline, then a last word shown in brand purple.
     headline: "Fight. Trade.",
     headlineAccent: "Rise.",
-    text: "Duel for loot, survive the wild and trade your way to the top. It's all better with friends.",
+    text: "Survival with 1.8-style PvP, a player-run economy and a bounty on every head. Squad up with friends and take the top spot.",
     // Words in the text shown in the in-game stat colors: the four things
     // Mineacle is about. Each must appear in `text` above.
     highlights: [
-      { word: "Duel", color: "#fc1111" },
-      { word: "survive", color: "#fc8611" },
-      { word: "trade", color: "#11fc7b" },
+      { word: "PvP", color: "#fc1111" },
+      { word: "economy", color: "#11fc7b" },
+      { word: "bounty", color: "#fc8611" },
       { word: "friends", color: "#b078ff" },
     ],
   },
