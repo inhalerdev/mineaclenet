@@ -45,3 +45,11 @@ export const mineacleNavIcons = {
   bans: `${MINEACLE_NAV_ICON_ROOT}/gavel.png`,
   marketplace: `${MINEACLE_NAV_ICON_ROOT}/shop.png`,
 } as const;
+
+/* Pixel item icons for stats (leaderboards): emerald, sword, skull, clock. */
+export const mineacleStatIcons = {
+  balance: `${MINEACLE_ICON_ROOT}/stats/emerald.png`,
+  kills: `${MINEACLE_ICON_ROOT}/stats/sword.png`,
+  kd: `${MINEACLE_ICON_ROOT}/stats/skull.png`,
+  playtime: `${MINEACLE_ICON_ROOT}/stats/clock.png`,
+};

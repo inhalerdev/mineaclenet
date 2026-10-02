@@ -1,206 +1,403 @@
 /*
- * Leaderboards page (see LeaderboardsPage.tsx): the top-3 podium and the
- * table for places 4–50. The intro, ranking tabs and empty box are shared
- * (site/ContentPage.module.css). Colors come from app/tokens.css.
+ * Leaderboards page (see LeaderboardsPage.tsx): stat hotbar, podium and
+ * rows. The intro and empty box are shared (site/ContentPage.module.css).
+ * Colors come from app/tokens.css; --stat is the chosen ranking's color,
+ * set on the page column.
  *
  * Rules on links start with a parent class so they beat the page's font
  * reset in SiteFrame.module.css (.page a { font: inherit }).
  */
 
-/* Place colors: gold, silver, bronze. */
-.podiumPlace[data-place="1"] {
-  --place: var(--mc-gold);
-  --place-light: var(--mc-gold-light);
-  --place-edge: var(--mc-gold-edge);
-  --place-text: var(--mc-gold-text);
+/* ==========================================================================
+ * Hotbar: one slot per ranking
+ * ========================================================================== */
+.hotbar {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  padding: 6px;
+  background: #151515;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 2px 0 #222222;
 }
 
-.podiumPlace[data-place="2"] {
-  --place: #c6c6c6;
-  --place-light: #e8e8e8;
-  --place-edge: #7a7a7a;
-  --place-text: #1e1e1e;
+.hotbar .slot {
+  position: relative;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px 15px;
+  background: #262626;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 3px 0 #333333,
+    inset 0 -4px 0 #181818;
+  color: var(--mc-text);
+  transition:
+    background-color var(--motion),
+    transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.podiumPlace[data-place="3"] {
-  --place: #c77d3a;
-  --place-light: #e6a15e;
-  --place-edge: #7a4418;
-  --place-text: #2a1606;
+/* Colored strip along the slot's top edge. */
+.hotbar .slot::before {
+  position: absolute;
+  inset: 2px 2px auto;
+  height: 3px;
+  background: var(--slot);
+  opacity: 0.55;
+  content: "";
+}
+
+.hotbar .slot:hover,
+.hotbar .slot:focus-visible {
+  background: #303030;
+  transform: translateY(-2px);
+}
+
+/* The chosen ranking: the selected hotbar slot (white frame). */
+.hotbar .slot[aria-current] {
+  z-index: 1;
+  background: #333333;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    0 0 0 3px #ffffff,
+    0 0 0 5px var(--mc-outline),
+    inset 0 3px 0 #444444,
+    inset 0 -4px 0 #1c1c1c;
+  transform: none;
+}
+
+.hotbar .slot[aria-current]::before {
+  opacity: 1;
+}
+
+.slot img {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  image-rendering: pixelated;
+}
+
+.slotText {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.slotText strong {
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.slot[aria-current] .slotText strong {
+  color: var(--slot);
+}
+
+.slotText small {
+  overflow: hidden;
+  color: var(--mc-text-muted);
+  font-size: 11px;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* ==========================================================================
- * Podium: 2nd, 1st, 3rd side by side, 1st standing taller.
+ * Podium: 2nd, 1st, 3rd standing on blocks
  * ========================================================================== */
+.place[data-place="1"] {
+  --block: var(--mc-gold);
+  --block-light: var(--mc-gold-light);
+  --block-edge: var(--mc-gold-edge);
+  --block-text: var(--mc-gold-text);
+  --block-height: 120px;
+  order: 2;
+}
+
+.place[data-place="2"] {
+  --block: #c6c6c6;
+  --block-light: #ececec;
+  --block-edge: #7a7a7a;
+  --block-text: #1e1e1e;
+  --block-height: 92px;
+  order: 1;
+}
+
+.place[data-place="3"] {
+  --block: #c77d3a;
+  --block-light: #e6a15e;
+  --block-edge: #7a4418;
+  --block-text: #2a1606;
+  --block-height: 70px;
+  order: 3;
+}
+
 .podium {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: end;
-  gap: 16px;
-  margin: 8px 0 0;
+  gap: 0 10px;
+  max-width: 860px;
+  width: 100%;
+  margin: 12px auto 0;
   padding: 0;
   list-style: none;
 }
 
-.podiumPlace[data-place="1"] {
-  order: 2;
+.place {
+  min-width: 0;
+  display: grid;
 }
 
-.podiumPlace[data-place="2"] {
-  order: 1;
-}
-
-.podiumPlace[data-place="3"] {
-  order: 3;
-}
-
-/* Each card is a block: black outline, a thick cap in the place color on
-   top, light/dark bevel edges and a hard drop shadow. The outline and drop
-   shadow are variables so "your" card can swap in the hotbar frame. */
-.podium .podiumCard {
-  --frame: 0 0 0 2px var(--mc-outline);
-  --drop: 4px 4px 0 2px rgba(0, 0, 0, 0.55);
-
+/* The player standing on the block. */
+.podium .standing {
   position: relative;
+  min-width: 0;
   display: grid;
   justify-items: center;
   gap: 8px;
-  padding: 40px 16px 24px;
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--place) 12%, #232323) 0%,
-    #202020 60%
-  );
-  box-shadow:
-    inset 0 6px 0 var(--place),
-    inset 0 8px 0 var(--place-edge),
-    inset 2px 0 0 #2d2d2d,
-    inset -2px 0 0 #191919,
-    inset 0 -4px 0 #171717,
-    var(--frame),
-    var(--drop);
+  padding: 0 6px 14px;
   color: #ffffff;
   text-align: center;
-  transition:
-    transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    filter 110ms ease;
+  transition: transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.podiumPlace[data-place="1"] .podiumCard {
-  padding-top: 56px;
-  padding-bottom: 32px;
-}
-
-.podium .podiumCard:hover,
-.podium .podiumCard:focus-visible {
+.podium .standing:hover,
+.podium .standing:focus-visible {
   outline: 0;
-  filter: brightness(1.1);
-  transform: translateY(-3px);
+  transform: translateY(-4px);
 }
 
-.podium .podiumCard:active {
-  filter: none;
-  transform: translateY(1px);
-  transition-duration: 50ms;
-}
-
-/* Your card: the selected hotbar slot frame (white between black lines),
-   the same look as your row in the table. */
-.podium .podiumCard[data-you] {
-  --frame:
-    0 0 0 2px var(--mc-outline),
-    0 0 0 5px #ffffff,
-    0 0 0 7px var(--mc-outline);
-  --drop: 4px 4px 0 7px rgba(0, 0, 0, 0.55);
-}
-
-/* Place number block in the corner. */
-.medal {
-  position: absolute;
-  top: 18px;
-  left: 14px;
-  width: 32px;
-  height: 32px;
-  display: grid;
-  place-items: center;
-  padding-bottom: 3px;
-  background: var(--place);
-  box-shadow:
-    inset 0 2px 0 var(--place-light),
-    inset 0 -3px 0 var(--place-edge),
-    0 0 0 2px var(--mc-outline);
-  color: var(--place-text);
-  font-size: 15px;
-  line-height: 1;
-}
-
-.podiumHead {
-  width: 72px;
-  height: 72px;
-  margin-bottom: 6px;
-  box-shadow:
-    0 0 0 2px var(--mc-outline),
-    0 0 0 4px var(--place);
-  image-rendering: pixelated;
-}
-
-.podiumPlace[data-place="1"] .podiumHead {
+.head {
   width: 88px;
   height: 88px;
+  image-rendering: pixelated;
+  box-shadow:
+    0 0 0 2px var(--mc-outline),
+    0 0 0 5px var(--block),
+    0 0 0 7px var(--mc-outline),
+    5px 6px 0 7px rgba(0, 0, 0, 0.45);
 }
 
-.podiumName {
+.place[data-place="1"] .head {
+  width: 104px;
+  height: 104px;
+}
+
+/* Your spot: white selected-slot frame round your head. */
+.standing[data-you] .head {
+  box-shadow:
+    0 0 0 2px var(--mc-outline),
+    0 0 0 5px #ffffff,
+    0 0 0 7px var(--mc-outline),
+    5px 6px 0 7px rgba(0, 0, 0, 0.45);
+}
+
+.name {
   max-width: 100%;
-  min-width: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 18px;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 16px;
   font-weight: 400;
-  line-height: 1.15;
+  line-height: 1.1;
+}
+
+.name > span:first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.podiumName span {
-  min-width: 0;
-  padding: 2px 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.podiumSub,
-.playerText small {
-  color: var(--mc-text-muted);
-  font-size: 11px;
-  line-height: 1.2;
-}
-
-.podiumSub[data-online],
-.playerText small[data-online] {
-  color: var(--mc-live);
-}
-
-.podiumValue {
-  display: grid;
-  gap: 6px;
-  margin-top: 8px;
-  color: var(--place-light);
+.value {
+  color: var(--stat);
   font-size: 22px;
   line-height: 1;
   text-shadow: 2px 2px 0 #000000;
 }
 
-.podiumValue small {
+/* The block itself: place color, bevel edges, number on the front. */
+.block {
+  height: var(--block-height);
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 4px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 30%),
+    var(--block);
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 5px 0 var(--block-light),
+    inset 0 -6px 0 var(--block-edge),
+    inset 4px 0 0 rgba(255, 255, 255, 0.12),
+    inset -4px 0 0 rgba(0, 0, 0, 0.15);
+  color: var(--block-text);
+}
+
+.block span {
+  font-size: 30px;
+  line-height: 1;
+}
+
+.place[data-place="1"] .block span {
+  font-size: 40px;
+}
+
+.block small {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  opacity: 0.75;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+ * Rows: places 4–50
+ * ========================================================================== */
+.list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list .row {
+  min-height: 60px;
+  display: grid;
+  grid-template-columns: 44px 40px minmax(0, 1fr) auto 150px;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 18px 10px 10px;
+  background: #222222;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 2px 0 #2e2e2e,
+    inset 0 -3px 0 #181818;
+  color: var(--mc-text);
+  transition: background-color var(--motion);
+}
+
+.list .row:hover,
+.list .row:focus-visible {
+  background: #2b2b2b;
+}
+
+.list .row[data-you] {
+  background: #2b2b2b;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 0 0 5px #ffffff,
+    inset 0 0 0 7px var(--mc-outline);
+}
+
+.rank {
+  height: 32px;
+  display: grid;
+  place-items: center;
+  padding-bottom: 3px;
+  background: #1a1a1a;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 -3px 0 #111111;
+  color: var(--mc-text-muted);
+  font-size: 14px;
+  line-height: 1;
+}
+
+.rowHead {
+  width: 40px;
+  height: 40px;
+  image-rendering: pixelated;
+  box-shadow: 0 0 0 2px var(--mc-outline);
+}
+
+.who {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.who strong {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.who strong > span:first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.who small {
+  overflow: hidden;
   color: var(--mc-text-muted);
   font-size: 11px;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.who small[data-online] {
+  color: var(--mc-live);
+}
+
+/* The other three stats, small, with their icons. */
+.others {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  color: var(--mc-text-muted);
+  font-size: 12px;
+}
+
+.others > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.others img {
+  width: 14px;
+  height: 14px;
+  image-rendering: pixelated;
+}
+
+/* The chosen stat, large in its color. */
+.main {
+  display: grid;
+  justify-items: end;
+  gap: 4px;
+  color: var(--stat);
+  font-size: 18px;
+  line-height: 1;
+  text-align: right;
+  text-shadow: 2px 2px 0 #000000;
+}
+
+.main small {
+  color: var(--mc-text-muted);
+  font-size: 10px;
   text-shadow: none;
   text-transform: uppercase;
 }
 
-/* --- Your own spot ---------------------------------------------------------
- * White YOU tag (next to your name in the table, in the corner on the
- * podium). Your podium card and table row look like the selected hotbar
- * slot (white frame). */
+/* --- Your own spot: white YOU tag -------------------------------------------- */
 .you {
   flex: 0 0 auto;
   padding: 3px 5px 4px;
@@ -215,270 +412,128 @@
   text-transform: uppercase;
 }
 
-/* On the podium the YOU tag sits in the top-right corner, level with the
-   place number, so names line up across all three cards. */
-.podiumCard .you {
+.standing .you {
   position: absolute;
-  top: 18px;
-  right: 14px;
-  height: 32px;
-  display: grid;
-  place-items: center;
-  padding: 0 8px 2px;
-  font-size: 12px;
-}
-
-/* ==========================================================================
- * Table: places 4–50. Every stat is shown; the chosen ranking is lit up.
- * ========================================================================== */
-.table {
-  --columns: 48px minmax(0, 1fr) 150px 90px 100px 130px;
-
-  border: 2px solid var(--mc-outline);
-  background: rgba(20, 20, 20, 0.88);
-}
-
-.head,
-.table .row {
-  display: grid;
-  grid-template-columns: var(--columns);
-  align-items: center;
-  column-gap: 16px;
-  padding: 0 16px;
-}
-
-.head {
-  height: 38px;
-  background: #1c1c1c;
-  box-shadow: inset 0 -2px 0 var(--mc-outline);
-  color: var(--mc-text-muted);
-  font-size: 11px;
-  text-transform: uppercase;
-}
-
-.head [data-stat],
-.stat {
-  text-align: right;
-}
-
-.head [data-active] {
-  color: #ffffff;
-}
-
-.list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.list li + li {
-  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.05);
-}
-
-.table .row {
-  min-height: 56px;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  color: #cfcfcf;
-  font-size: 13px;
-  line-height: 1.2;
-}
-
-.table .row:hover,
-.table .row:focus-visible {
-  outline: 0;
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.table .row[data-you] {
-  background: rgba(255, 255, 255, 0.07);
-  box-shadow:
-    inset 0 0 0 2px #ffffff,
-    inset 0 0 0 4px rgba(0, 0, 0, 0.55);
-}
-
-.table .row[data-you] .rank {
-  color: #ffffff;
-}
-
-.rank {
-  color: var(--mc-text-muted);
-  font-size: 13px;
-}
-
-.player {
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.player img {
-  width: 28px;
-  height: 28px;
-  flex: 0 0 28px;
-  box-shadow: 0 0 0 2px var(--mc-outline);
-  image-rendering: pixelated;
-}
-
-.playerText {
-  min-width: 0;
-  display: grid;
-  gap: 4px;
-}
-
-.playerText strong {
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #ffffff;
-  font-weight: 400;
-  white-space: nowrap;
-}
-
-.playerText strong span {
-  min-width: 0;
-  padding: 2px 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.table .row:hover .playerText strong {
-  color: var(--mc-purple-face);
-}
-
-.stat {
-  white-space: nowrap;
-}
-
-.stat[data-active] {
-  color: #ffffff;
-  font-size: 14px;
+  z-index: 1;
+  top: -10px;
+  right: calc(50% - 64px);
 }
 
 /* ==========================================================================
  * Screen sizes
  * ========================================================================== */
-@media (max-width: 960px) {
+@media (max-width: 1100px) {
+  .others {
+    display: none;
+  }
+
+  .list .row {
+    grid-template-columns: 44px 40px minmax(0, 1fr) 130px;
+  }
+}
+
+@media (max-width: 760px) {
+  /* Hotbar: four square slots, icon over the name. */
+  .hotbar .slot {
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 4px 13px;
+    text-align: center;
+  }
+
+  .slot img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .slotText strong {
+    font-size: 12px;
+  }
+
+  .slotText small {
+    display: none;
+  }
+
   .podium {
-    gap: 16px;
+    gap: 0 6px;
   }
 
-  .podium .podiumCard {
-    padding: 60px 10px 18px;
+  .place[data-place="1"] {
+    --block-height: 84px;
   }
 
-  .podiumPlace[data-place="1"] .podiumCard {
-    padding-top: 72px;
+  .place[data-place="2"] {
+    --block-height: 60px;
   }
 
-  .podiumCard .you {
-    height: 26px;
-    font-size: 10px;
+  .place[data-place="3"] {
+    --block-height: 42px;
   }
 
-  .podiumHead,
-  .podiumPlace[data-place="1"] .podiumHead {
+  .head,
+  .place[data-place="1"] .head {
     width: 56px;
     height: 56px;
   }
 
-  .podiumName {
-    font-size: 14px;
+  .place[data-place="1"] .head {
+    width: 68px;
+    height: 68px;
   }
 
-  .podiumValue {
-    font-size: 17px;
+  .name {
+    font-size: 12px;
   }
 
-  /* Only the chosen ranking's column. */
-  .table {
-    --columns: 40px minmax(0, 1fr) auto;
+  .value {
+    font-size: 15px;
   }
 
-  .head [data-stat]:not([data-active]),
-  .stat:not([data-active]) {
+  .block span {
+    font-size: 22px;
+  }
+
+  .place[data-place="1"] .block span {
+    font-size: 28px;
+  }
+
+  .block small {
     display: none;
   }
-}
 
-/* Phones: podium stacks 1, 2, 3 as rows. */
-@media (max-width: 560px) {
-  .podium {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 8px;
+  .standing .you {
+    right: 4px;
   }
 
-  .podiumPlace[data-place] {
-    order: 0;
+  .list .row {
+    min-height: 54px;
+    grid-template-columns: 34px 34px minmax(0, 1fr) auto;
+    gap: 10px;
+    padding: 7px 12px 9px 8px;
   }
 
-  .podium .podiumCard,
-  .podiumPlace[data-place="1"] .podiumCard {
-    grid-template-columns: 32px 44px minmax(0, 1fr) auto;
-    grid-template-areas:
-      "medal head name value"
-      "medal head sub value";
-    justify-items: start;
-    align-items: center;
-    column-gap: 12px;
-    row-gap: 4px;
-    padding: 18px 14px 14px;
-    text-align: left;
+  .rank {
+    height: 28px;
+    font-size: 12px;
   }
 
-  .medal {
-    position: static;
-    grid-area: medal;
+  .rowHead {
+    width: 34px;
+    height: 34px;
   }
 
-  .podiumCard .you {
-    top: -10px;
-    right: 10px;
-    height: 20px;
-    padding: 0 6px 2px;
-    font-size: 10px;
+  .who strong {
+    font-size: 13px;
   }
 
-  .podiumHead,
-  .podiumPlace[data-place="1"] .podiumHead {
-    grid-area: head;
-    width: 40px;
-    height: 40px;
-    margin: 0;
-  }
-
-  .podiumName {
-    grid-area: name;
-    align-self: end;
-  }
-
-  .podiumSub {
-    grid-area: sub;
-    align-self: start;
-  }
-
-  .podiumValue {
-    grid-area: value;
-    justify-self: end;
-    justify-items: end;
-    margin: 0;
-    font-size: 16px;
-  }
-
-  .head,
-  .table .row {
-    column-gap: 10px;
-    padding-right: 12px;
-    padding-left: 12px;
+  .main {
+    font-size: 15px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .podium .podiumCard:hover,
-  .podium .podiumCard:focus-visible,
-  .podium .podiumCard:active {
+  .hotbar .slot:hover,
+  .podium .standing:hover {
     transform: none;
   }
 }
