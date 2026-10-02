@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import block from "@/components/site/BlockButton.module.css";
 import content from "@/components/site/ContentPage.module.css";
 import type { VoteSite } from "@/features/vote/vote-sites";
 import type { VoteStatus } from "@/features/vote/vote-status";
 import { mineacleIcons } from "@/shared/icons/mineacle-icons";
 import styles from "./VotePage.module.css";
+import { VoteThanksToast } from "./VoteThanksToast";
 
 /*
  * The vote site cards on /vote, for logged-in players.
@@ -15,7 +16,7 @@ import styles from "./VotePage.module.css";
  * has received a vote from it (see features/vote/vote-status.ts). Clicking
  * "Vote now" only opens the site: the card waits and checks every few
  * seconds until the vote actually arrives, so just opening a link never
- * counts as a vote.
+ * counts as a vote. When it arrives, a "Thanks for voting!" pop-up shows.
  */
 const POLL_EVERY_MS = 8_000;
 const POLL_FOR_MS = 5 * 60_000;
@@ -46,6 +47,13 @@ export function VoteSites({
   const [now, setNow] = useState(serverNow);
   // Site id -> when "Vote now" was clicked.
   const [waiting, setWaiting] = useState<Record<string, number>>({});
+  const waitingRef = useRef(waiting);
+  // "Thanks for voting!" pop-up: which sites' votes just arrived.
+  const [thanks, setThanks] = useState<{ id: number; siteNames: string[] } | null>(null);
+
+  useEffect(() => {
+    waitingRef.current = waiting;
+  }, [waiting]);
 
   const cooldownLeft = (site: VoteSite) => {
     const votedAt = votes[site.id];
@@ -86,6 +94,16 @@ export function VoteSites({
         const data = (await response.json()) as { votes?: VoteStatus };
         const latest = data.votes ?? {};
         const checkedAt = Date.now();
+        const arrivedIds = Object.entries(waitingRef.current)
+          .filter(([id, clickedAt]) => (latest[id] ?? 0) >= clickedAt - 60_000)
+          .map(([id]) => id);
+
+        if (arrivedIds.length) {
+          setThanks({
+            id: checkedAt,
+            siteNames: sites.filter((site) => arrivedIds.includes(site.id)).map((site) => site.name),
+          });
+        }
 
         setVotes(latest);
         setNow(checkedAt);
@@ -185,6 +203,15 @@ export function VoteSites({
           );
         })}
       </ol>
+
+      {thanks ? (
+        <VoteThanksToast
+          key={thanks.id}
+          siteNames={thanks.siteNames}
+          reward={reward}
+          onDone={() => setThanks(null)}
+        />
+      ) : null}
     </div>
   );
 }

@@ -46,6 +46,12 @@
   --mc-gold-edge: #9a6b0a;
   --mc-gold-text: #2b1d00;
 
+  /* Vote page accent (Vote Crate Key blue). */
+  --mc-blue: #77bbff;
+  --mc-blue-light: #a9d4ff;
+  --mc-blue-edge: #2f6fb3;
+  --mc-blue-text: #08223d;
+
   /* Red (Sign out and other "leave / remove" actions) */
   --mc-red: #c3302b;
   --mc-red-hover: #d93d37;

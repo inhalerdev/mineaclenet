@@ -61,6 +61,15 @@
   color: #ffffff;
 }
 
+.tag[data-tone="blue"] {
+  background: var(--mc-blue);
+  box-shadow:
+    inset 0 2px 0 var(--mc-blue-light),
+    inset 0 -3px 0 var(--mc-blue-edge),
+    0 0 0 2px var(--mc-outline);
+  color: var(--mc-blue-text);
+}
+
 .introText h1 {
   margin: 18px 0 12px;
   color: #ffffff;
@@ -78,10 +87,15 @@
   line-height: 1.5;
 }
 
-/* Highlighted words in the text (e.g. "Vote Crate Key"). */
+/* Highlighted words in the text (e.g. "Vote Crate Key"), in the tag's
+   color (gold unless the page picks blue). */
 .introText p b {
   color: var(--mc-gold-light);
   font-weight: 400;
+}
+
+.intro[data-tone="blue"] .introText p b {
+  color: var(--mc-blue);
 }
 
 /* --- Stat tiles (same look as the homepage hero's) ------------------------- */
