@@ -117,7 +117,7 @@
 }
 
 .featuredNavItem img {
-  filter: brightness(0) opacity(0.85);
+  filter: brightness(0) opacity(0.85) drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.5));
 }
 
 .header .featuredNavItem:hover,
@@ -589,7 +589,7 @@
   }
 
   .mobileFeaturedItem img {
-    filter: brightness(0) opacity(0.85);
+    filter: brightness(0) opacity(0.85) drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.5));
   }
 
   .header .mobileFeaturedItem:hover,
