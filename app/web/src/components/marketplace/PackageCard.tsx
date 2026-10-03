@@ -129,7 +129,7 @@ function Description({ text }: { text: string }) {
 }
 
 function PackageDetails({ pkg, onClose }: { pkg: MarketplacePackage; onClose: () => void }) {
-  const closeRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLElement>(null);
   const onSale = pkg.basePrice > pkg.price;
   const titleId = `item-${pkg.id}-title`;
 
@@ -138,7 +138,9 @@ function PackageDetails({ pkg, onClose }: { pkg: MarketplacePackage; onClose: ()
     const key = (event: KeyboardEvent) => event.key === "Escape" && onClose();
     const scroll = document.body.style.overflow;
 
-    closeRef.current?.focus();
+    // Focus the pop-up itself (not the X, which would show it raised as
+    // if hovered), so Tab moves on from here and screen readers read it
+    dialogRef.current?.focus();
     document.body.style.overflow = "hidden";
     window.addEventListener("keydown", key);
 
@@ -160,13 +162,14 @@ function PackageDetails({ pkg, onClose }: { pkg: MarketplacePackage; onClose: ()
         tabIndex={-1}
       />
       <section
+        ref={dialogRef}
+        tabIndex={-1}
         className={styles.detail}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
       >
         <button
-          ref={closeRef}
           type="button"
           className={`${block.button} ${block.square} ${styles.detailClose}`}
           onClick={onClose}

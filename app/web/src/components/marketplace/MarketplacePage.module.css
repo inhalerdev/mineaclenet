@@ -488,6 +488,10 @@
   }
 }
 
+.detail:focus {
+  outline: 0;
+}
+
 .detail .detailClose {
   --btn-size: 34px;
 
