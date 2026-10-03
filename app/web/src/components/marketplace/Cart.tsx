@@ -11,21 +11,26 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import block from "@/components/site/BlockButton.module.css";
-import { formatPrice } from "@/features/marketplace/format";
+import { formatPrice, periodText, priceText } from "@/features/marketplace/format";
 import type { MarketplacePackage } from "@/features/marketplace/tebex";
 import { mineacleIcons } from "@/shared/icons/mineacle-icons";
 import { withReturnPath } from "@/shared/navigation/return-path";
+import { Tag } from "./bits";
+import { MarketImage } from "./Enchanted";
 import styles from "./MarketplacePage.module.css";
 import { useTebexCheckout } from "./useTebexCheckout";
 
 /*
  * Marketplace cart: kept in this browser (localStorage), checked out as one
  * Tebex basket. Limits match the server (api/marketplace/checkout):
- * 10 different items, 10 of each; Tebex "disable quantity" packages, 1.
+ * 10 different items, 10 of each; Tebex "disable quantity" packages and
+ * subscriptions, 1.
  *
  *   <CartProvider packages={...} loggedIn featuredId>   around the page
  *   <AddToCartButton pkg={...} />            on each item card
+ *   <GetButton pkg={...} />                  adds and opens the cart (hero)
  *   <CartButton />                           opens the cart panel
+ *   <CartSummary />                          count, total and Checkout (sidebar)
  *
  * The cart also offers the featured package (Mineacle+) when it isn't in
  * the cart yet, and on phones a bar along the bottom shows the cart's
@@ -64,7 +69,19 @@ function useCart() {
 }
 
 function maxFor(pkg: MarketplacePackage | undefined) {
-  return pkg?.single ? 1 : MAX_QUANTITY;
+  return pkg?.single || pkg?.subscription ? 1 : MAX_QUANTITY;
+}
+
+/* The cart's lines with their packages, and the total. */
+function useCartTotals() {
+  const { lines, packages } = useCart();
+  const items = Object.entries(lines)
+    .map(([id, quantity]) => ({ pkg: packages.get(Number(id)), quantity }))
+    .filter((item): item is { pkg: MarketplacePackage; quantity: number } => Boolean(item.pkg));
+  const currency = items[0]?.pkg.currency ?? "USD";
+  const total = items.reduce((sum, item) => sum + item.pkg.price * item.quantity, 0);
+
+  return { items, currency, total };
 }
 
 function readStored(): Lines {
@@ -166,27 +183,62 @@ export function CartProvider({
   );
 }
 
-/* "Add to cart" on an item card; turns into "In cart (2)" once added. */
+/*
+ * "Add to cart" on an item; turns into "Add another (1)", and "In cart" once
+ * no more fit (which opens the cart).
+ */
 export function AddToCartButton({
   pkg,
   tone = "primary",
+  className,
 }: {
   pkg: MarketplacePackage;
   tone?: "primary" | "gold";
+  className?: string;
 }) {
   const { lines, add, setOpen } = useCart();
   const inCart = lines[pkg.id] ?? 0;
-  const full = inCart >= maxFor(pkg);
+  const max = maxFor(pkg);
+  const full = inCart >= max;
+  const label = !inCart
+    ? "Add to cart"
+    : full
+      ? max === 1 ? "In cart" : `In cart (${inCart})`
+      : `Add another (${inCart})`;
 
   return (
     <button
       type="button"
-      className={`${block.button} ${block[tone]} ${styles.buyButton}`}
+      className={`${block.button} ${block[tone]} ${styles.buyButton} ${className ?? ""}`.trim()}
+      data-tone={tone}
       onClick={() => (full ? setOpen(true) : add(pkg))}
       aria-label={full ? `${pkg.name} is in your cart, view cart` : `Add ${pkg.name} to cart`}
     >
       <img className={styles.buttonIcon} src={mineacleIcons.cart} alt="" />
-      {inCart ? (full ? `In cart (${inCart})` : `Add another (${inCart})`) : "Add to cart"}
+      {label}
+    </button>
+  );
+}
+
+/* The hero's button: "Get Mineacle+" adds it and opens the cart. */
+export function GetButton({ pkg, className }: { pkg: MarketplacePackage; className?: string }) {
+  const { lines, add, setOpen } = useCart();
+  const inCart = Boolean(lines[pkg.id]);
+
+  return (
+    <button
+      type="button"
+      className={`${block.button} ${block.gold} ${styles.buyButton} ${className ?? ""}`.trim()}
+      data-tone="gold"
+      onClick={() => {
+        if (!inCart) {
+          add(pkg);
+        }
+        setOpen(true);
+      }}
+    >
+      <img className={styles.buttonIcon} src={mineacleIcons.cart} alt="" />
+      {inCart ? "In cart · Check out" : `Get ${pkg.name}`}
     </button>
   );
 }
@@ -225,17 +277,21 @@ function CartOffer({ featured }: { featured: MarketplacePackage | undefined }) {
   }
 
   const onSale = featured.basePrice > featured.price;
+  const period = periodText(featured.period);
 
   return (
     <section className={styles.cartOffer} aria-label={`Add ${featured.name}`}>
-      <span className={styles.featuredTag}>Featured</span>
+      <span className={styles.cartOfferTag}>
+        <Tag tone="featured">Featured</Tag>
+      </span>
       <div className={styles.cartOfferRow}>
-        <img src={featured.image || mineacleIcons.crate} alt="" />
+        <MarketImage src={featured.image} width={44} eager className={styles.cartThumb} />
         <div>
           <strong>{featured.name}</strong>
           <span>
             {onSale ? <s>{formatPrice(featured.basePrice, featured.currency)}</s> : null}{" "}
-            {formatPrice(featured.price, featured.currency)}
+            {priceText(featured.price, featured.currency)}
+            {period ? <small> {period}</small> : null}
           </span>
         </div>
         <button
@@ -253,22 +309,11 @@ function CartOffer({ featured }: { featured: MarketplacePackage | undefined }) {
 
 /* Phones: a bar along the bottom with the cart's count and total. */
 function CartBar() {
-  const { lines, packages, count, open, setOpen } = useCart();
+  const { count, open, setOpen } = useCart();
+  const { total, currency } = useCartTotals();
 
   if (!count || open) {
     return null;
-  }
-
-  let total = 0;
-  let currency = "USD";
-
-  for (const [id, quantity] of Object.entries(lines)) {
-    const pkg = packages.get(Number(id));
-
-    if (pkg) {
-      total += pkg.price * quantity;
-      currency = pkg.currency;
-    }
   }
 
   return (
@@ -296,6 +341,52 @@ function CartBar() {
   );
 }
 
+/* Desktop sidebar: what's in the cart, the total and Checkout. */
+export function CartSummary() {
+  const { count, setOpen } = useCart();
+  const { items, total, currency } = useCartTotals();
+
+  return (
+    <section className={styles.summary} aria-labelledby="cart-summary-title">
+      <h2 id="cart-summary-title">
+        <img className={styles.buttonIcon} src={mineacleIcons.cart} alt="" />
+        Your cart
+        {count ? (
+          <span key={count} className={styles.summaryCount}>
+            {count}
+          </span>
+        ) : null}
+      </h2>
+      {items.length ? (
+        <>
+          <ul>
+            {items.slice(0, 4).map(({ pkg, quantity }) => (
+              <li key={pkg.id}>
+                <span>{pkg.name}</span>
+                <small>{quantity > 1 ? `×${quantity}` : priceText(pkg.price, pkg.currency)}</small>
+              </li>
+            ))}
+            {items.length > 4 ? <li className={styles.summaryMore}>+{items.length - 4} more</li> : null}
+          </ul>
+          <p className={styles.summaryTotal}>
+            <span>Total</span>
+            <strong>{formatPrice(total, currency)}</strong>
+          </p>
+          <button
+            type="button"
+            className={`${block.button} ${block.green} ${styles.buyButton}`}
+            onClick={() => setOpen(true)}
+          >
+            Check out
+          </button>
+        </>
+      ) : (
+        <p className={styles.summaryEmpty}>Nothing here yet.</p>
+      )}
+    </section>
+  );
+}
+
 function CartPanel() {
   const { open, setOpen } = useCart();
 
@@ -318,7 +409,7 @@ function CartPanel() {
 }
 
 function CartPanelContent() {
-  const { lines, packages, loggedIn, featuredId, setOpen, setQuantity, clear } = useCart();
+  const { packages, loggedIn, featuredId, setOpen, setQuantity, clear } = useCart();
   const { checkout, busy, error } = useTebexCheckout(() => {
     try {
       window.localStorage.removeItem(STORAGE_KEY);
@@ -326,11 +417,7 @@ function CartPanelContent() {
       // nothing saved
     }
   });
-  const items = Object.entries(lines)
-    .map(([id, quantity]) => ({ pkg: packages.get(Number(id)), quantity }))
-    .filter((item): item is { pkg: MarketplacePackage; quantity: number } => Boolean(item.pkg));
-  const currency = items[0]?.pkg.currency ?? "USD";
-  const total = items.reduce((sum, item) => sum + item.pkg.price * item.quantity, 0);
+  const { items, currency, total } = useCartTotals();
 
   return (
     <div className={styles.cartLayer}>
@@ -363,10 +450,13 @@ function CartPanelContent() {
           <ul className={styles.cartLines}>
             {items.map(({ pkg, quantity }) => (
               <li key={pkg.id} className={styles.cartLine}>
-                <img src={pkg.image || mineacleIcons.crate} alt="" />
+                <MarketImage src={pkg.image} width={44} eager className={styles.cartThumb} />
                 <div>
                   <strong>{pkg.name}</strong>
-                  <span>{formatPrice(pkg.price * quantity, pkg.currency)}</span>
+                  <span>
+                    {priceText(pkg.price * quantity, pkg.currency)}
+                    {pkg.period ? <small> {periodText(pkg.period)}</small> : null}
+                  </span>
                 </div>
                 <div className={styles.quantity}>
                   <button

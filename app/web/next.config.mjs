@@ -28,6 +28,14 @@ const securityHeaders = [
 const nextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
+  images: {
+    // Marketplace images from Tebex's CDN, resized by /_next/image
+    // (features/marketplace/images.ts)
+    remotePatterns: [
+      { protocol: "https", hostname: "dunb17ur4ymx4.cloudfront.net" },
+      { protocol: "https", hostname: "**.tebex.io" },
+    ],
+  },
   async headers() {
     return [
       {

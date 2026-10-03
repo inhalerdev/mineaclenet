@@ -1,0 +1,356 @@
+/*
+ * The Marketplace's enchanted look (Enchanted.tsx). Everything here is
+ * decoration: it sits behind or over the content, never takes clicks, and
+ * holds still for prefers-reduced-motion.
+ *
+ * Places that use the scene set where the item sits with --focus-x and
+ * --focus-y (the glow and light rays centre there).
+ */
+
+/* --- Backdrop ------------------------------------------------------------------- */
+.scene {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      46% 68% at var(--focus-x, 72%) var(--focus-y, 52%),
+      rgba(132, 54, 254, 0.58),
+      rgba(132, 54, 254, 0.16) 46%,
+      transparent 72%
+    ),
+    radial-gradient(34% 50% at 0% 0%, rgba(242, 181, 30, 0.1), transparent 70%),
+    radial-gradient(40% 60% at 0% 100%, rgba(78, 42, 140, 0.45), transparent 70%),
+    linear-gradient(160deg, #27124f 0%, #180c33 42%, #0f0a1c 100%);
+}
+
+.scene[data-variant="panel"] {
+  background:
+    radial-gradient(
+      60% 58% at var(--focus-x, 50%) var(--focus-y, 46%),
+      rgba(132, 54, 254, 0.55),
+      rgba(132, 54, 254, 0.12) 55%,
+      transparent 78%
+    ),
+    linear-gradient(170deg, #23113f 0%, #150b28 60%, #0f0a1a 100%);
+}
+
+/* Pixel stars: three offset dot grids that slowly breathe. */
+.scene::before {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1.5px 1.5px at 23px 31px, rgba(255, 255, 255, 0.85) 50%, transparent 51%) 0 0 / 137px 113px,
+    radial-gradient(1.5px 1.5px at 91px 67px, rgba(222, 196, 255, 0.75) 50%, transparent 51%) 0 0 / 173px 151px,
+    radial-gradient(1px 1px at 47px 121px, rgba(255, 255, 255, 0.6) 50%, transparent 51%) 0 0 / 211px 197px;
+  content: "";
+  opacity: 0.55;
+  /* Places can keep stars off their text with --stars-mask */
+  -webkit-mask-image: var(--stars-mask, none);
+  mask-image: var(--stars-mask, none);
+  animation: starsBreathe 7s ease-in-out infinite alternate;
+}
+
+@keyframes starsBreathe {
+  to {
+    opacity: 0.9;
+  }
+}
+
+/* Soft light rays turning slowly round the item. */
+.rays {
+  position: absolute;
+  top: var(--focus-y, 52%);
+  left: var(--focus-x, 72%);
+  width: var(--rays-size, 1100px);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  background: repeating-conic-gradient(
+    from 0deg,
+    rgba(222, 196, 255, 0.1) 0deg 4deg,
+    transparent 4deg 14deg
+  );
+  -webkit-mask-image: radial-gradient(closest-side, #000 6%, rgba(0, 0, 0, 0.5) 30%, transparent 68%);
+  mask-image: radial-gradient(closest-side, #000 6%, rgba(0, 0, 0, 0.5) 30%, transparent 68%);
+  animation: raysTurn 160s linear infinite;
+  will-change: rotate;
+}
+
+.scene[data-variant="panel"] .rays {
+  --rays-size: 760px;
+}
+
+@keyframes raysTurn {
+  to {
+    rotate: 1turn;
+  }
+}
+
+/* Four-point pixel sparkles that twinkle in steps, like particles. */
+.sparkle {
+  position: absolute;
+  width: var(--size, 8px);
+  height: var(--size, 8px);
+  fill: #ffffff;
+  filter: drop-shadow(0 0 4px rgba(208, 175, 255, 0.95));
+  opacity: 0;
+  animation: twinkle 3.6s steps(6, end) var(--delay, 0s) infinite;
+}
+
+.sparkleGold {
+  fill: var(--mc-gold-light);
+  filter: drop-shadow(0 0 4px rgba(255, 216, 61, 0.85));
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0;
+    scale: 0.4;
+  }
+
+  35%,
+  55% {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+/* --- The item ---------------------------------------------------------------------- */
+.art {
+  position: relative;
+  display: block;
+}
+
+.art[data-float] {
+  animation: float 5.5s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 -10px;
+  }
+}
+
+.image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: auto;
+  filter: drop-shadow(0 16px 18px rgba(0, 0, 0, 0.5));
+  user-select: none;
+}
+
+/* The pixel chest stand-in (no image on Tebex) stays crisp when scaled
+   up, and smaller than a real picture would be. */
+.image[data-pixel],
+.thumb[data-pixel] {
+  image-rendering: pixelated;
+}
+
+.image[data-pixel] {
+  inset: 18%;
+  width: 64%;
+  height: 64%;
+  opacity: 0.92;
+}
+
+.thumb {
+  display: block;
+  object-fit: contain;
+  image-rendering: auto;
+}
+
+/*
+ * Enchantment glint: two purple bands sweep across the item, clipped to the
+ * item's own shape by masking with the same image. The layer is screened
+ * over the item, so it only ever brightens it.
+ */
+.glint {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask: var(--art) center / contain no-repeat;
+  mask: var(--art) center / contain no-repeat;
+  mix-blend-mode: screen;
+  transition: opacity 220ms ease;
+}
+
+.glint::before,
+.glint::after {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  content: "";
+}
+
+.glint::before {
+  background-image: linear-gradient(
+    118deg,
+    transparent 0%,
+    transparent 41%,
+    rgba(168, 108, 255, 0.6) 46%,
+    rgba(255, 255, 255, 0.85) 50%,
+    rgba(168, 108, 255, 0.6) 54%,
+    transparent 59%,
+    transparent 100%
+  );
+  background-size: 300% 100%;
+  animation: glint 4.8s ease-in-out infinite;
+}
+
+.glint::after {
+  background-image: linear-gradient(
+    64deg,
+    transparent 0%,
+    transparent 40%,
+    rgba(140, 80, 255, 0.5) 50%,
+    transparent 60%,
+    transparent 100%
+  );
+  background-size: 260% 100%;
+  animation: glint 7.2s linear -2.4s infinite reverse;
+}
+
+@keyframes glint {
+  0% {
+    background-position: 100% 0;
+  }
+
+  55%,
+  100% {
+    background-position: 0% 0;
+  }
+}
+
+/* Hover glint: hidden and paused until its card is hovered or focused. */
+.glint[data-mode="hover"] {
+  opacity: 0;
+}
+
+.glint[data-mode="hover"]::before,
+.glint[data-mode="hover"]::after {
+  animation-play-state: paused;
+}
+
+:is([data-glint-trigger]:hover, [data-glint-trigger]:focus-within) .glint[data-mode="hover"] {
+  opacity: 1;
+}
+
+:is([data-glint-trigger]:hover, [data-glint-trigger]:focus-within) .glint[data-mode="hover"]::before,
+:is([data-glint-trigger]:hover, [data-glint-trigger]:focus-within) .glint[data-mode="hover"]::after {
+  animation-play-state: running;
+}
+
+/* --- Rune circle: a glowing ring the item floats over -------------------------------- */
+/* Centred on its top/left point. One transform (not translate + transform:
+   the CSS minifier drops `translate` when a rule also sets `transform`). */
+.circle {
+  position: absolute;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) perspective(700px) rotateX(74deg);
+  background: radial-gradient(
+    closest-side,
+    rgba(196, 150, 255, 0.5),
+    rgba(132, 54, 254, 0.2) 55%,
+    transparent 74%
+  );
+  box-shadow:
+    0 0 0 2px rgba(208, 175, 255, 0.6),
+    0 0 46px 8px rgba(132, 54, 254, 0.5);
+  pointer-events: none;
+}
+
+.circle::before,
+.circle::after {
+  position: absolute;
+  border-radius: 50%;
+  content: "";
+}
+
+/* Dashed inner ring, turning. */
+.circle::before {
+  inset: 10%;
+  border: 3px dashed rgba(228, 210, 255, 0.7);
+  animation: ringTurn 26s linear infinite;
+}
+
+.circle::after {
+  inset: 24%;
+  border: 2px solid rgba(208, 175, 255, 0.4);
+}
+
+@keyframes ringTurn {
+  to {
+    rotate: 1turn;
+  }
+}
+
+/* --- Enchanting glyphs drifting up -------------------------------------------------- */
+.glyphs {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.glyph {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  fill: #ead9ff;
+  filter: drop-shadow(0 0 3px rgba(176, 120, 255, 0.95));
+  opacity: 0;
+  animation: glyphRise var(--time, 6s) linear var(--delay, 0s) infinite;
+}
+
+@keyframes glyphRise {
+  0% {
+    opacity: 0;
+    translate: 0 26px;
+  }
+
+  12% {
+    opacity: 0.95;
+  }
+
+  72% {
+    opacity: 0.75;
+  }
+
+  100% {
+    opacity: 0;
+    translate: var(--drift, 0) -130px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene::before,
+  .rays,
+  .sparkle,
+  .art[data-float],
+  .glint::before,
+  .glint::after,
+  .circle::before,
+  .glyph {
+    animation: none;
+  }
+
+  .sparkle {
+    opacity: 0.8;
+  }
+
+  .glyph {
+    display: none;
+  }
+}

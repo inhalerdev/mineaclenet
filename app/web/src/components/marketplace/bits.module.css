@@ -1,0 +1,135 @@
+/*
+ * Marketplace tags, prices and the gold list check (bits.tsx). Same block
+ * recipe as the rest of the site; colors from app/tokens.css.
+ */
+
+/* --- Tags: Featured (gold), free trial (green), Sale (red) ---------------- */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px 7px;
+  background: var(--mc-gold);
+  box-shadow:
+    inset 0 2px 0 var(--mc-gold-light),
+    inset 0 -3px 0 var(--mc-gold-edge),
+    0 0 0 2px var(--mc-outline);
+  color: var(--mc-gold-text);
+  font-size: 11px;
+  font-style: normal;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.tag[data-tone="trial"] {
+  background: var(--mc-green);
+  box-shadow:
+    inset 0 2px 0 var(--mc-green-light),
+    inset 0 -3px 0 var(--mc-green-edge),
+    0 0 0 2px var(--mc-outline);
+  color: #ffffff;
+  text-shadow: 1px 1px 0 var(--mc-green-edge);
+}
+
+.tag[data-tone="sale"] {
+  background: var(--mc-red);
+  box-shadow:
+    inset 0 2px 0 var(--mc-red-light),
+    inset 0 -3px 0 var(--mc-red-edge),
+    0 0 0 2px var(--mc-outline);
+  color: #ffffff;
+  text-shadow: 1px 1px 0 var(--mc-red-edge);
+}
+
+.tagStar {
+  width: 9px;
+  height: 9px;
+  flex: 0 0 9px;
+  fill: currentColor;
+}
+
+/* --- Gold check in front of list items --------------------------------------- */
+.check {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  display: block;
+  background: var(--mc-gold);
+  box-shadow:
+    inset 0 2px 0 var(--mc-gold-light),
+    inset 0 -2px 0 var(--mc-gold-edge),
+    0 0 0 2px var(--mc-outline);
+}
+
+.check::after {
+  position: absolute;
+  top: 3px;
+  left: 5px;
+  width: 4px;
+  height: 7px;
+  border-right: 2px solid var(--mc-gold-text);
+  border-bottom: 2px solid var(--mc-gold-text);
+  content: "";
+  transform: rotate(45deg);
+}
+
+/* --- Price: [old] $4.99 / month ------------------------------------------------- */
+.price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  margin: 0;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.price strong {
+  font-size: 22px;
+  font-weight: 400;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.45);
+}
+
+.price s {
+  color: #8f8a9c;
+  font-size: 13px;
+}
+
+.price span {
+  color: #b9b0cc;
+  font-size: 13px;
+}
+
+.price[data-size="large"] strong {
+  font-size: 30px;
+}
+
+.price[data-size="hero"] strong {
+  font-size: 44px;
+  text-shadow:
+    3px 3px 0 var(--mc-purple-deep),
+    0 0 24px rgba(176, 120, 255, 0.4);
+}
+
+.price[data-size="hero"] span {
+  color: #d9ccf5;
+  font-size: 16px;
+}
+
+.price[data-size="hero"] s {
+  flex-basis: 100%;
+  color: #a99bc8;
+  font-size: 15px;
+}
+
+@media (max-width: 560px) {
+  .price strong {
+    font-size: 19px;
+  }
+
+  .price[data-size="hero"] strong {
+    font-size: 38px;
+  }
+}

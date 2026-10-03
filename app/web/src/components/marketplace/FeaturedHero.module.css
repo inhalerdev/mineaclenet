@@ -1,0 +1,349 @@
+/*
+ * Featured package hero (FeaturedHero.tsx). The scene, glint, rune circle
+ * and glyphs are Enchanted.module.css; --focus-x / --focus-y tell the scene
+ * where the item sits. Colors from app/tokens.css.
+ */
+.hero {
+  --focus-x: 74%;
+  --focus-y: 46%;
+  /* Stars around the item, faded out behind the text */
+  --stars-mask: linear-gradient(90deg, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.12) 46%, #000 62%);
+
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(300px, 0.88fr);
+  align-items: center;
+  gap: 24px 36px;
+  min-height: 460px;
+  padding: 44px 44px 44px 48px;
+  overflow: hidden;
+  border: 2px solid var(--mc-outline);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.07),
+    inset 0 -5px 0 rgba(0, 0, 0, 0.35),
+    0 24px 60px rgba(44, 14, 98, 0.45);
+  scroll-margin-top: 24px;
+}
+
+/* --- Text side ------------------------------------------------------------------- */
+.copy {
+  position: relative;
+  min-width: 0;
+  display: grid;
+  justify-items: start;
+  gap: 18px;
+}
+
+/* Everything rises in, one after another, when the page opens. */
+.copy > * {
+  animation: rise 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.copy > :nth-child(2) { animation-delay: 70ms; }
+.copy > :nth-child(3) { animation-delay: 140ms; }
+.copy > :nth-child(4) { animation-delay: 210ms; }
+.copy > :nth-child(5) { animation-delay: 280ms; }
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    translate: 0 14px;
+  }
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+}
+
+/* Name with a slow light sheen across it. */
+.title {
+  margin: 0;
+  background: linear-gradient(
+      100deg,
+      #ffffff 0%,
+      #ffffff 40%,
+      #e6d2ff 46%,
+      #ffffff 52%,
+      #ffffff 100%
+    )
+    0 0 / 260% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: #ffffff;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(4px 4px 0 var(--mc-purple-deep)) drop-shadow(0 0 26px rgba(176, 120, 255, 0.45));
+  font-size: clamp(46px, 5.4vw, 76px);
+  font-weight: 400;
+  line-height: 0.95;
+  animation:
+    rise 520ms cubic-bezier(0.2, 0.8, 0.2, 1) 70ms both,
+    sheen 7s ease-in-out 1s infinite;
+}
+
+@keyframes sheen {
+  0% {
+    background-position: 100% 0;
+  }
+
+  45%,
+  100% {
+    background-position: 0% 0;
+  }
+}
+
+.intro {
+  max-width: 56ch;
+  display: grid;
+  gap: 8px;
+}
+
+.intro p {
+  margin: 0;
+  color: #eee6ff;
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.intro strong {
+  color: #ffffff;
+}
+
+/* Perks: the first list in the description, in two even columns. */
+.perks {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 26px;
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.perks li {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+  color: #cdc0ea;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+/* Line the gold check up with the first line of text. */
+.perks li > i {
+  margin-top: 2px;
+}
+
+.perks strong {
+  color: #ffffff;
+}
+
+/* --- Price and buttons ------------------------------------------------------------ */
+.buy {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px 28px;
+  margin-top: 4px;
+  padding-top: 22px;
+  border-top: 2px solid rgba(255, 255, 255, 0.08);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 22px;
+}
+
+.hero .actions .get {
+  width: auto;
+  min-width: 240px;
+  height: 54px;
+  padding-inline: 28px;
+  font-size: 17px;
+}
+
+.hero .details {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: #dccdfb;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  text-transform: uppercase;
+  transition:
+    color 140ms ease,
+    gap 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Pixel chevron drawn from two borders. */
+.details b {
+  width: 7px;
+  height: 7px;
+  margin-top: 1px;
+  border-top: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  transform: rotate(45deg);
+}
+
+.hero .details:hover,
+.hero .details:focus-visible {
+  gap: 13px;
+  color: #ffffff;
+}
+
+/* --- Art side: the item floating over the rune circle ----------------------------- */
+.hero .stage {
+  position: relative;
+  height: 380px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+  animation: appear 900ms cubic-bezier(0.2, 0.8, 0.2, 1) 120ms both;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    scale: 0.86;
+    filter: brightness(2.2) saturate(0.4);
+  }
+}
+
+.hero .stage:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 6px;
+}
+
+.circle {
+  top: 86%;
+  left: 50%;
+  width: min(84%, 330px);
+}
+
+.art {
+  position: absolute;
+  inset: 8% 12% 24%;
+  transition: scale 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.hero .stage:hover .art {
+  scale: 1.04;
+}
+
+/* ==========================================================================
+ * Screen sizes
+ * ========================================================================== */
+@media (max-width: 1100px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 0.75fr);
+    padding: 36px 32px;
+  }
+
+  .perks {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Phones and small tablets: the item on top, the text under it. */
+@media (max-width: 760px) {
+  .hero {
+    --focus-x: 50%;
+    --focus-y: 20%;
+    --stars-mask: linear-gradient(180deg, #000 0%, #000 26%, rgba(0, 0, 0, 0.12) 40%);
+
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+    min-height: 0;
+    padding: 12px 20px 26px;
+  }
+
+  .hero .stage {
+    order: -1;
+    height: 250px;
+  }
+
+  .circle {
+    width: min(70%, 250px);
+  }
+
+  .art {
+    inset: 6% 16% 24%;
+  }
+
+  .copy {
+    gap: 16px;
+  }
+
+  .title {
+    font-size: clamp(40px, 11vw, 56px);
+  }
+
+  .intro p {
+    font-size: 15px;
+  }
+
+  /* One column of perks, the check lined up with each first line. */
+  .perks {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .perks li {
+    font-size: 14px;
+  }
+
+  .buy {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    padding-top: 18px;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .hero .actions .get {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .hero .details {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 380px) {
+  .hero {
+    padding-inline: 16px;
+  }
+
+  .hero .stage {
+    height: 220px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .copy > *,
+  .title,
+  .hero .stage {
+    animation: none;
+  }
+
+  .hero .stage:hover .art {
+    scale: none;
+  }
+}

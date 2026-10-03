@@ -1,5 +1,6 @@
 import { memoryCache } from "@/shared/server/memory-cache";
 import { UserFacingError } from "@/shared/server/user-error";
+import { parseRichText, type RichBlock, richSummary } from "./rich-text";
 
 /*
  * Tebex Headless API, server side only.
@@ -14,7 +15,9 @@ import { UserFacingError } from "@/shared/server/user-error";
  * never leaves this file: nothing here is sent to browsers.
  *
  * Checkout flow: the page lists categories and packages from Tebex (kept in
- * memory for a minute). Checkout creates a basket for the logged-in
+ * memory for a minute). Descriptions are read into plain blocks
+ * (rich-text.ts), so the page shows the text and its emphasis from Tebex in
+ * the site's own style. Checkout creates a basket for the logged-in
  * player's Minecraft name, adds the cart's packages and returns the basket
  * ident; the browser opens Tebex.js checkout with it (useTebexCheckout.ts).
  * Tebex's plugin on the game server then runs the packages' commands.
@@ -22,11 +25,15 @@ import { UserFacingError } from "@/shared/server/user-error";
 
 const API = "https://headless.tebex.io/api";
 
+export type BillingPeriod = { count: number; unit: string };
+
 export type MarketplacePackage = {
   id: number;
   name: string;
-  /** Plain text (Tebex descriptions are HTML; tags are stripped). */
-  description: string;
+  /** The Tebex description as blocks (rich-text.ts). */
+  details: RichBlock[];
+  /** Its opening line as plain text, for cards. */
+  summary: string;
   image: string | null;
   /** Price the buyer pays, e.g. 8.99. */
   price: number;
@@ -35,15 +42,20 @@ export type MarketplacePackage = {
   currency: string;
   /** Tebex "disable quantity": at most one per checkout. */
   single: boolean;
-  /** Tebex package type "subscription": added to the basket as one. */
+  /** Tebex package type "subscription": added to the basket as one, one at a time. */
   subscription: boolean;
+  /** How often a subscription renews (Tebex expiry_period), e.g. 1 month. */
+  period: BillingPeriod | null;
+  /** Free trial days on a subscription (Tebex trial); 0 for none. */
+  trialDays: number;
 };
 
 export type MarketplaceCategory = {
   id: number;
   name: string;
   slug: string;
-  description: string;
+  details: RichBlock[];
+  summary: string;
   image: string | null;
   packages: MarketplacePackage[];
 };
@@ -60,6 +72,8 @@ type TebexPackage = {
   order?: number;
   disable_quantity?: boolean;
   type?: "single" | "subscription" | "both" | null;
+  expiry_period?: { count?: number; unit?: string } | null;
+  trial?: { days?: number } | null;
 };
 
 type TebexCategory = {
@@ -92,25 +106,6 @@ function basicAuth() {
 
 function accountUrl(path: string) {
   return `${API}/accounts/${encodeURIComponent(publicToken())}${path}`;
-}
-
-/* Tebex HTML → readable plain text (no markup from the store reaches the
-   page). List items keep a "• " in front, so the item pop-up can show them
-   as a list again (PackageCard.tsx). */
-function plainText(html: string | null | undefined) {
-  return (html || "")
-    .replace(/<\s*li(\s[^>]*)?>/gi, "\n• ")
-    .replace(/<\s*(br|\/p|\/div|\/li|\/ul|\/ol)\s*\/?>/gi, "\n")
-    .replace(/<[^>]*>/g, "")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#0?39;/g, "'")
-    .replace(/[ \t]+/g, " ")
-    .replace(/\n\s*\n+/g, "\n")
-    .trim();
 }
 
 function slugOf(category: TebexCategory) {
@@ -152,31 +147,50 @@ async function loadCategories(): Promise<MarketplaceCategory[]> {
   );
 
   return (data || [])
-    // Dynamic (per-basket) and tiered (subscription) categories need a
-    // basket or login to list; this page sells one-off packages.
+    // Dynamic (per-basket) and tiered (subscription tier) categories need a
+    // basket or login to list; this page lists regular categories (their
+    // subscription packages included, like Mineacle+).
     .filter((category) => !category.dynamic && !category.tiered)
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-    .map((category) => ({
-      id: category.id,
-      name: category.name,
-      slug: slugOf(category),
-      description: plainText(category.description),
-      image: category.image_url || null,
-      packages: (category.packages || [])
-        .slice()
-        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-        .map((pkg) => ({
-          id: pkg.id,
-          name: pkg.name,
-          description: plainText(pkg.description),
-          image: pkg.image || null,
-          price: Number(pkg.total_price ?? pkg.base_price ?? 0),
-          basePrice: Number(pkg.base_price ?? pkg.total_price ?? 0),
-          currency: pkg.currency || "USD",
-          single: Boolean(pkg.disable_quantity),
-          subscription: pkg.type === "subscription",
-        })),
-    }))
+    .map((category) => {
+      const details = parseRichText(category.description);
+
+      return {
+        id: category.id,
+        name: category.name,
+        slug: slugOf(category),
+        details,
+        summary: richSummary(details),
+        image: category.image_url || null,
+        packages: (category.packages || [])
+          .slice()
+          .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+          .map((pkg) => {
+            const details = parseRichText(pkg.description);
+            const subscription = pkg.type === "subscription";
+            const periodCount = Math.floor(Number(pkg.expiry_period?.count ?? 0));
+            const periodUnit = String(pkg.expiry_period?.unit ?? "").trim().toLowerCase();
+
+            return {
+              id: pkg.id,
+              name: pkg.name,
+              details,
+              summary: richSummary(details),
+              image: pkg.image || null,
+              price: Number(pkg.total_price ?? pkg.base_price ?? 0),
+              basePrice: Number(pkg.base_price ?? pkg.total_price ?? 0),
+              currency: pkg.currency || "USD",
+              single: Boolean(pkg.disable_quantity),
+              subscription,
+              period:
+                subscription && periodCount > 0 && /^[a-z]+$/.test(periodUnit)
+                  ? { count: periodCount, unit: periodUnit }
+                  : null,
+              trialDays: subscription ? Math.max(0, Math.floor(Number(pkg.trial?.days ?? 0))) : 0,
+            };
+          }),
+      };
+    })
     .filter((category) => category.packages.length > 0);
 }
 
@@ -265,7 +279,9 @@ export async function createCheckout({
   });
 
   for (const line of lines) {
-    const single = listed.get(line.packageId)?.single;
+    const pkg = listed.get(line.packageId);
+    // "Disable quantity" packages and subscriptions: one at a time
+    const single = pkg?.single || pkg?.subscription;
 
     await tebexFetch(
       `${API}/baskets/${encodeURIComponent(basket.ident)}/packages`,
@@ -274,7 +290,7 @@ export async function createCheckout({
         body: JSON.stringify({
           package_id: String(line.packageId),
           quantity: single ? 1 : line.quantity,
-          ...(listed.get(line.packageId)?.subscription ? { type: "subscription" } : {}),
+          ...(pkg?.subscription ? { type: "subscription" } : {}),
           ...(basket.username_id
             ? { variable_data: { username_id: String(basket.username_id) } }
             : {}),

@@ -12,23 +12,27 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import block from "@/components/site/BlockButton.module.css";
-import { formatPrice } from "@/features/marketplace/format";
+import { priceText, trialText } from "@/features/marketplace/format";
 import type {
   MarketplaceCategory,
   MarketplacePackage,
 } from "@/features/marketplace/tebex";
 import { mineacleIcons } from "@/shared/icons/mineacle-icons";
+import { PriceTag, Tag } from "./bits";
 import { AddToCartButton } from "./Cart";
-import styles from "./MarketplacePage.module.css";
+import { EnchantedArt, EnchantedScene, Glyphs, MarketImage, RuneCircle } from "./Enchanted";
+import { RichBlocks } from "./RichText";
+import styles from "./ItemDetails.module.css";
 
 /*
  * The item details pop-up, one for the whole page: opened from an item card,
- * the featured banner or another item's "More from" row. Everything in it
- * comes from the Tebex listing (picture, name, description, prices).
+ * the featured hero or another item's "More from" row. It shows the Tebex
+ * listing in full: picture, name, price, the whole description.
  *
  * The open item is kept in the address as #item-<id>, so a link to it opens
  * it straight away (e.g. shared on Discord). Esc, the X or a click outside
- * closes it, and focus goes back to what opened it.
+ * closes it, and focus goes back to what opened it. On phones it's a sheet
+ * from the bottom with the picture in a fixed-height band.
  */
 
 type ItemDetailsValue = {
@@ -127,66 +131,6 @@ export function ItemDetailsProvider({
   );
 }
 
-/* Price as on Tebex: the sale price, with the old price struck through. */
-export function Price({ pkg, large = false }: { pkg: MarketplacePackage; large?: boolean }) {
-  const onSale = pkg.basePrice > pkg.price;
-
-  return (
-    <p className={`${styles.price} ${large ? styles.priceLarge : ""}`.trim()}>
-      {onSale ? <s>{formatPrice(pkg.basePrice, pkg.currency)}</s> : null}
-      <span>{formatPrice(pkg.price, pkg.currency)}</span>
-    </p>
-  );
-}
-
-/*
- * A Tebex description as blocks: paragraphs, and "• " lines (Tebex list
- * items, see tebex.ts) grouped into lists.
- */
-export function descriptionBlocks(text: string) {
-  const blocks: (string | string[])[] = [];
-
-  for (const line of text.split("\n").map((value) => value.trim()).filter(Boolean)) {
-    if (line.startsWith("• ")) {
-      const last = blocks[blocks.length - 1];
-
-      if (Array.isArray(last)) {
-        last.push(line.slice(2));
-      } else {
-        blocks.push([line.slice(2)]);
-      }
-    } else {
-      blocks.push(line);
-    }
-  }
-
-  return blocks;
-}
-
-function Description({ text }: { text: string }) {
-  const blocks = descriptionBlocks(text);
-
-  if (!blocks.length) {
-    return null;
-  }
-
-  return (
-    <div className={styles.detailText}>
-      {blocks.map((entry, index) =>
-        Array.isArray(entry) ? (
-          <ul key={index}>
-            {entry.map((item, itemIndex) => (
-              <li key={itemIndex}>{item}</li>
-            ))}
-          </ul>
-        ) : (
-          <p key={index}>{entry}</p>
-        ),
-      )}
-    </div>
-  );
-}
-
 const CloseContext = createContext<() => void>(() => {});
 
 /* Backdrop, Esc, scroll lock and focus, kept while switching items. */
@@ -208,10 +152,10 @@ function DetailsLayer({ onClose, children }: { onClose: () => void; children: Re
 
   // On <body>, so it covers the site header too (like the cart)
   return createPortal(
-    <div className={styles.detailLayer}>
+    <div className={styles.layer}>
       <button
         type="button"
-        className={styles.cartBackdrop}
+        className={styles.backdrop}
         onClick={onClose}
         aria-label="Close"
         tabIndex={-1}
@@ -235,6 +179,7 @@ function DetailsContent({
 }) {
   const dialogRef = useRef<HTMLElement>(null);
   const onSale = pkg.basePrice > pkg.price;
+  const trial = trialText(pkg.trialDays);
   const titleId = `item-${pkg.id}-title`;
   const more = category.packages.filter((other) => other.id !== pkg.id).slice(0, 3);
 
@@ -248,22 +193,36 @@ function DetailsContent({
     <section
       ref={dialogRef}
       tabIndex={-1}
-      className={`${styles.detail} ${featured ? styles.detailFeatured : ""}`.trim()}
+      className={styles.dialog}
+      data-featured={featured || undefined}
       role="dialog"
       aria-modal="true"
       aria-labelledby={titleId}
     >
       <CloseButton />
 
-      <div className={styles.detailMedia}>
-        <img src={pkg.image || mineacleIcons.crate} alt="" />
-        {onSale ? <span className={styles.sale}>Sale</span> : null}
-        {featured ? <span className={styles.featuredTag}>Featured</span> : null}
+      <div className={styles.media}>
+        <EnchantedScene variant="panel" />
+        <RuneCircle className={styles.circle} />
+        <EnchantedArt src={pkg.image} width={340} float eager className={styles.art} />
+        {featured ? <Glyphs count={6} /> : null}
       </div>
 
-      <div className={styles.detailBody}>
-        <h2 id={titleId}>{pkg.name}</h2>
-        {pkg.description ? <Description text={pkg.description} /> : null}
+      <div className={styles.panel}>
+      <div className={styles.body}>
+        <header className={styles.head}>
+          {featured || trial || onSale ? (
+            <div className={styles.tags}>
+              {featured ? <Tag tone="featured">Featured</Tag> : null}
+              {trial ? <Tag tone="trial">{trial}</Tag> : null}
+              {onSale ? <Tag tone="sale">Sale</Tag> : null}
+            </div>
+          ) : null}
+          <h2 id={titleId}>{pkg.name}</h2>
+          <PriceTag pkg={pkg} size="large" />
+        </header>
+
+        <RichBlocks blocks={pkg.details} />
 
         {more.length ? (
           <div className={styles.more}>
@@ -272,9 +231,9 @@ function DetailsContent({
               {more.map((other) => (
                 <li key={other.id}>
                   <button type="button" onClick={() => onOpen(other.id)}>
-                    <img src={other.image || mineacleIcons.crate} alt="" />
+                    <MarketImage src={other.image} width={64} eager className={styles.moreImage} />
                     <span>{other.name}</span>
-                    <small>{formatPrice(other.price, other.currency)}</small>
+                    <small>{priceText(other.price, other.currency)}</small>
                   </button>
                 </li>
               ))}
@@ -283,10 +242,10 @@ function DetailsContent({
         ) : null}
       </div>
 
-      <footer className={styles.detailFooter}>
-        <Price pkg={pkg} large />
+      <footer className={styles.footer}>
         <AddToCartButton pkg={pkg} tone={featured ? "gold" : "primary"} />
       </footer>
+      </div>
     </section>
   );
 }
@@ -297,7 +256,7 @@ function CloseButton() {
   return (
     <button
       type="button"
-      className={`${block.button} ${block.square} ${styles.detailClose}`}
+      className={`${block.button} ${block.square} ${styles.close}`}
       onClick={close}
       aria-label="Close"
     >
