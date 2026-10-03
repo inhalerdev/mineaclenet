@@ -53,7 +53,7 @@
 .categories .category {
   min-height: 42px;
   display: grid;
-  grid-template-columns: 22px minmax(0, 1fr) auto;
+  grid-template-columns: 22px minmax(0, 1fr) auto auto;
   align-items: center;
   gap: 10px;
   padding: 0 10px 4px;
@@ -82,6 +82,20 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* "Sale" when any item in the category is on sale. */
+.categorySale {
+  padding: 3px 4px 4px;
+  background: var(--mc-red);
+  box-shadow:
+    inset 0 2px 0 var(--mc-red-light),
+    inset 0 -2px 0 var(--mc-red-edge);
+  color: #ffffff;
+  font-size: 9px;
+  font-style: normal;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .category small {
@@ -441,6 +455,534 @@
   color: #ffffff;
   font-size: 11px;
   line-height: 1;
+  animation: countPop 260ms steps(4, end);
+}
+
+/* The red count pops when something is added. */
+@keyframes countPop {
+  0% {
+    transform: scale(0.6);
+  }
+
+  60% {
+    transform: scale(1.35);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* --- Featured package banner (FeaturedBanner.tsx) ---------------------------
+ * Deep purple with a gold frame, a slow glint sweeping across, a few
+ * twinkling pixel sparkles and the item floating over a glowing pedestal.
+ * -------------------------------------------------------------------------- */
+.featured {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
+  overflow: hidden;
+  padding: 30px 32px 30px 34px;
+  border: 2px solid var(--mc-outline);
+  background:
+    radial-gradient(circle at 78% 50%, rgba(176, 120, 255, 0.34), transparent 42%),
+    radial-gradient(circle at 0% 0%, rgba(242, 181, 30, 0.12), transparent 40%),
+    linear-gradient(135deg, #2a1550 0%, #1b0f33 48%, #120b1f 100%);
+  box-shadow:
+    inset 0 0 0 2px var(--mc-gold-edge),
+    inset 0 4px 0 var(--mc-gold),
+    inset 0 6px 0 rgba(255, 216, 61, 0.35),
+    inset 0 -6px 0 rgba(0, 0, 0, 0.45),
+    0 16px 40px rgba(66, 24, 140, 0.35);
+}
+
+/* A wide pale band sweeps across every 7 seconds. */
+.featuredGlint {
+  position: absolute;
+  z-index: -1;
+  top: -20%;
+  bottom: -20%;
+  left: -40%;
+  width: 22%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 236, 170, 0.09) 40%,
+    rgba(255, 236, 170, 0.16) 50%,
+    rgba(255, 236, 170, 0.09) 60%,
+    transparent
+  );
+  pointer-events: none;
+  transform: skewX(-18deg);
+  animation: featuredGlint 7s ease-in-out infinite;
+}
+
+@keyframes featuredGlint {
+  0% {
+    left: -40%;
+  }
+
+  35%,
+  100% {
+    left: 130%;
+  }
+}
+
+/* Twinkling pixel sparkles over the art side. */
+.sparkles {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+}
+
+.sparkles i {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: var(--mc-gold-light);
+  box-shadow: 0 0 10px rgba(255, 216, 61, 0.7);
+  opacity: 0;
+  animation: twinkle 3.2s steps(4, end) infinite;
+}
+
+.sparkles i:nth-child(1) { top: 14%; left: 62%; animation-delay: 0s; }
+.sparkles i:nth-child(2) { top: 72%; left: 66%; animation-delay: 0.6s; width: 4px; height: 4px; }
+.sparkles i:nth-child(3) { top: 22%; left: 92%; animation-delay: 1.2s; }
+.sparkles i:nth-child(4) { top: 82%; left: 90%; animation-delay: 1.9s; width: 4px; height: 4px; }
+.sparkles i:nth-child(5) { top: 48%; left: 57%; animation-delay: 2.4s; width: 4px; height: 4px; background: var(--mc-purple-hover); }
+.sparkles i:nth-child(6) { top: 8%; left: 80%; animation-delay: 1.5s; background: var(--mc-purple-hover); }
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.featuredText {
+  min-width: 0;
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+}
+
+.featuredKicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  color: #d9c8ff;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+/* Gold "Featured" chip (banner, card and pop-up). */
+.featuredTag {
+  padding: 4px 7px 6px;
+  background: var(--mc-gold);
+  box-shadow:
+    inset 0 2px 0 var(--mc-gold-light),
+    inset 0 -3px 0 var(--mc-gold-edge),
+    0 0 0 2px var(--mc-outline);
+  color: var(--mc-gold-text);
+  font-size: 11px;
+  font-style: normal;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.featuredKicker .sale {
+  position: static;
+}
+
+.featured h2 {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(30px, 4.2vw, 46px);
+  font-weight: 400;
+  line-height: 1.05;
+  text-shadow:
+    3px 3px 0 var(--mc-purple-deep),
+    0 0 26px rgba(176, 120, 255, 0.45);
+}
+
+.featuredIntro {
+  max-width: 54ch;
+  margin: 0;
+  color: #e6dcff;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* The first list in the description as a two-column perk grid. */
+.perks {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 18px;
+  margin: 4px 0 2px;
+  padding: 0;
+  list-style: none;
+}
+
+.perks li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: #ffffff;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* Gold block with a pixel check. */
+.perks i {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  margin-top: 1px;
+  background: var(--mc-gold);
+  box-shadow:
+    inset 0 2px 0 var(--mc-gold-light),
+    inset 0 -2px 0 var(--mc-gold-edge),
+    0 0 0 2px var(--mc-outline);
+}
+
+.perks i::after {
+  position: absolute;
+  top: 3px;
+  left: 5px;
+  width: 4px;
+  height: 7px;
+  border-right: 2px solid var(--mc-gold-text);
+  border-bottom: 2px solid var(--mc-gold-text);
+  content: "";
+  transform: rotate(45deg);
+}
+
+.featuredBuy {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 22px;
+  margin-top: 6px;
+  padding-top: 16px;
+  border-top: 2px solid rgba(255, 255, 255, 0.08);
+}
+
+.featuredBuy .price s {
+  color: #b9a8dd;
+}
+
+.featuredActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 18px;
+}
+
+.featuredActions .buyButton {
+  width: auto;
+  min-width: 210px;
+  height: 48px;
+  padding-inline: 22px;
+  font-size: 16px;
+}
+
+/* On gold, the cart icon goes dark like the text. */
+.detailFeatured .detailFooter .buttonIcon,
+.featuredActions .buttonIcon {
+  filter: brightness(0) opacity(0.85);
+}
+
+.featured .featuredMore {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #d9c8ff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  text-transform: uppercase;
+  transition:
+    color var(--motion),
+    gap 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.featuredMore b {
+  width: 7px;
+  height: 7px;
+  margin-top: 1px;
+  border-top: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  transform: rotate(45deg);
+}
+
+.featured .featuredMore:hover,
+.featured .featuredMore:focus-visible {
+  gap: 12px;
+  color: #ffffff;
+}
+
+/* Art: the item floats over a glowing pedestal. */
+.featured .featuredMedia {
+  position: relative;
+  min-height: 280px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+
+.pedestal {
+  position: absolute;
+  bottom: 12%;
+  left: 50%;
+  width: 62%;
+  height: 16%;
+  background: radial-gradient(ellipse at center, rgba(176, 120, 255, 0.55), transparent 70%);
+  transform: translateX(-50%);
+}
+
+.featuredMedia img {
+  position: relative;
+  width: min(100%, 300px);
+  max-height: 260px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 16px 20px rgba(0, 0, 0, 0.55));
+  animation: featuredFloat 4s ease-in-out infinite;
+}
+
+@keyframes featuredFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.featured .featuredMedia:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 4px;
+}
+
+/* --- Featured card in the grid: gold frame and tag ---------------------------- */
+.card.cardFeatured {
+  border-color: var(--mc-gold-edge);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(242, 181, 30, 0.1), transparent 55%),
+    #231d2c;
+  box-shadow:
+    inset 0 3px 0 var(--mc-gold),
+    inset 0 -4px 0 #181818,
+    0 0 0 2px var(--mc-outline),
+    0 8px 24px rgba(242, 181, 30, 0.12);
+}
+
+.card.cardFeatured:hover,
+.card.cardFeatured:focus-within {
+  border-color: var(--mc-gold-light);
+}
+
+.cardMedia .featuredTag {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+/* --- Pop-up: featured frame and "More from …" ---------------------------------- */
+.detail.detailFeatured {
+  box-shadow:
+    inset 0 2px 0 #2a2a2a,
+    inset 0 -5px 0 #141414,
+    0 0 0 2px var(--mc-gold),
+    0 24px 60px rgba(0, 0, 0, 0.6);
+}
+
+.detailMedia .featuredTag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+}
+
+.detailMedia .sale + .featuredTag {
+  top: 40px;
+}
+
+.more {
+  display: grid;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 2px solid #2a2a2a;
+}
+
+.more h3 {
+  margin: 0;
+  color: var(--mc-text-muted);
+  font-size: 12px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.more ul {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.more button {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding: 10px 8px 12px;
+  border: 0;
+  background: #232323;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-outline),
+    inset 0 2px 0 #2e2e2e,
+    inset 0 -4px 0 #171717;
+  color: var(--mc-text);
+  cursor: pointer;
+  text-align: center;
+  transition:
+    transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color var(--motion);
+}
+
+.more button:hover,
+.more button:focus-visible {
+  outline: 0;
+  background: #2b2b2b;
+  box-shadow:
+    inset 0 0 0 2px #ffffff,
+    inset 0 2px 0 #333333,
+    inset 0 -4px 0 #171717,
+    0 5px 0 rgba(0, 0, 0, 0.5);
+  transform: translateY(-3px);
+}
+
+.more button:active {
+  transform: translateY(2px);
+  transition-duration: 50ms;
+}
+
+.more img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.more span {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.more small {
+  color: var(--mc-purple-face);
+  font-size: 12px;
+}
+
+/* Phones: art on top, perks in one column. */
+@media (max-width: 760px) {
+  .featured {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+    padding: 20px 18px 22px;
+  }
+
+  .featured .featuredMedia {
+    grid-row: 1;
+    min-height: 170px;
+  }
+
+  .featuredMedia img {
+    max-height: 150px;
+  }
+
+  .perks {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .featuredActions,
+  .featuredActions .buyButton {
+    width: 100%;
+  }
+
+  .featuredActions {
+    justify-content: center;
+  }
+
+  .sparkles i:nth-child(n) {
+    top: auto;
+  }
+
+  .sparkles i:nth-child(1) { top: 6%; left: 18%; }
+  .sparkles i:nth-child(2) { top: 20%; left: 82%; }
+  .sparkles i:nth-child(3) { top: 4%; left: 70%; }
+  .sparkles i:nth-child(4) { top: 24%; left: 10%; }
+  .sparkles i:nth-child(5) { top: 14%; left: 40%; }
+  .sparkles i:nth-child(6) { top: 2%; left: 92%; }
+}
+
+@media (max-width: 480px) {
+  .more ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .more li:nth-child(3) {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .featuredGlint,
+  .sparkles i,
+  .featuredMedia img {
+    animation: none;
+  }
+
+  .more button:hover,
+  .more button:active {
+    transform: none;
+  }
+
+  .cartCount,
+  .cartBar {
+    animation: none;
+  }
 }
 
 /* --- Item details pop-up (PackageCard.tsx) --------------------------------- */
@@ -730,14 +1272,151 @@
   font-size: 13px;
 }
 
+/* Lines and the featured offer scroll together between header and footer. */
+.cartBody {
+  min-height: 0;
+  display: grid;
+  align-content: start;
+  overflow-y: auto;
+}
+
 .cartLines {
   display: grid;
   align-content: start;
   gap: 10px;
   margin: 0;
   padding: 16px 18px;
-  overflow-y: auto;
   list-style: none;
+}
+
+/* The featured package offered in the cart. */
+.cartOffer {
+  position: relative;
+  margin: 4px 18px 18px;
+  padding: 18px 12px 12px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(176, 120, 255, 0.25), transparent 60%),
+    #221a33;
+  box-shadow:
+    inset 0 0 0 2px var(--mc-gold-edge),
+    inset 0 3px 0 var(--mc-gold),
+    0 0 0 2px var(--mc-outline);
+}
+
+.cartOffer > .featuredTag {
+  position: absolute;
+  top: -9px;
+  left: 12px;
+}
+
+.cartOfferRow {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.cartOfferRow > img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.cartOfferRow > div {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.cartOfferRow strong {
+  overflow: hidden;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 400;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cartOfferRow span {
+  color: var(--mc-gold-light);
+  font-size: 13px;
+}
+
+.cartOfferRow s {
+  color: var(--mc-text-muted);
+  font-size: 11px;
+}
+
+.cartOfferAdd.cartOfferAdd {
+  height: 36px;
+  padding-inline: 16px;
+  font-size: 13px;
+}
+
+/* --- Phone cart bar ---------------------------------------------------------- */
+.cartBar {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  /* Keeps the end of the page (footer links) clear of the bar */
+  :global(body):has(.cartBar) {
+    padding-bottom: 80px;
+  }
+
+  .cartBar {
+    position: fixed;
+    z-index: 150;
+    right: 10px;
+    bottom: calc(10px + env(safe-area-inset-bottom));
+    left: 10px;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 24px;
+    padding: 10px 10px 10px 18px;
+    border: 2px solid var(--mc-outline);
+    background: #1c1c1c;
+    box-shadow:
+      inset 0 2px 0 #2a2a2a,
+      inset 0 -4px 0 #141414,
+      0 0 0 2px var(--mc-purple-deep),
+      0 10px 30px rgba(0, 0, 0, 0.6);
+    color: var(--mc-text);
+    font-family: "Mineacle Primary", monospace;
+    animation: cartBarIn 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .cartBar p {
+    min-width: 0;
+    display: grid;
+    gap: 2px;
+    margin: 0;
+  }
+
+  .cartBar p span {
+    color: var(--mc-text-muted);
+    font-size: 11px;
+    text-transform: uppercase;
+  }
+
+  .cartBar p strong {
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 400;
+  }
+
+  .cartBar button {
+    font: inherit;
+  }
+
+  @keyframes cartBarIn {
+    from {
+      transform: translateY(24px);
+      opacity: 0;
+    }
+  }
 }
 
 .cartLine {

@@ -7,6 +7,7 @@
  *   <button className={`${block.button} ${block.danger}`}>  red
  *   <a className={`${block.button} ${block.green}`}>         green
  *   <a className={`${block.button} ${block.blue}`}>          blue (Vote page)
+ *   <a className={`${block.button} ${block.gold}`}>          gold (featured)
  *
  * The site's one button recipe, the same as Play Now and Vote for Keys on
  * the homepage (and the gold Marketplace button in the header):
@@ -157,6 +158,16 @@
   --btn-light: var(--mc-green-light);
   --btn-edge: var(--mc-green-edge);
   --btn-text-shadow: 2px 2px 0 var(--mc-green-edge);
+}
+
+/* Gold with dark text, like the Marketplace button in the header. */
+.gold.gold {
+  --btn-face: var(--mc-gold);
+  --btn-hover: var(--mc-gold-hover);
+  --btn-light: var(--mc-gold-light);
+  --btn-edge: var(--mc-gold-edge);
+  --btn-text: var(--mc-gold-text);
+  --btn-text-shadow: none;
 }
 
 /* Vote Crate Key blue with dark text, like the Vote page's tag. */

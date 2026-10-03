@@ -23,9 +23,13 @@ import { useTebexCheckout } from "./useTebexCheckout";
  * Tebex basket. Limits match the server (api/marketplace/checkout):
  * 10 different items, 10 of each; Tebex "disable quantity" packages, 1.
  *
- *   <CartProvider packages={...} loggedIn>   around the page
+ *   <CartProvider packages={...} loggedIn featuredId>   around the page
  *   <AddToCartButton pkg={...} />            on each item card
  *   <CartButton />                           opens the cart panel
+ *
+ * The cart also offers the featured package (Mineacle+) when it isn't in
+ * the cart yet, and on phones a bar along the bottom shows the cart's
+ * count and total once something is in it.
  */
 
 const STORAGE_KEY = "mineacle-marketplace-cart";
@@ -38,6 +42,7 @@ type CartContextValue = {
   lines: Lines;
   packages: Map<number, MarketplacePackage>;
   loggedIn: boolean;
+  featuredId: number | null;
   count: number;
   open: boolean;
   setOpen(open: boolean): void;
@@ -74,10 +79,12 @@ function readStored(): Lines {
 export function CartProvider({
   packages: list,
   loggedIn,
+  featuredId = null,
   children,
 }: {
   packages: MarketplacePackage[];
   loggedIn: boolean;
+  featuredId?: number | null;
   children: ReactNode;
 }) {
   const packages = useMemo(() => new Map(list.map((pkg) => [pkg.id, pkg])), [list]);
@@ -150,16 +157,23 @@ export function CartProvider({
 
   return (
     <CartContext.Provider
-      value={{ lines, packages, loggedIn, count, open, setOpen, add, setQuantity, clear }}
+      value={{ lines, packages, loggedIn, featuredId, count, open, setOpen, add, setQuantity, clear }}
     >
       {children}
+      <CartBar />
       <CartPanel />
     </CartContext.Provider>
   );
 }
 
 /* "Add to cart" on an item card; turns into "In cart (2)" once added. */
-export function AddToCartButton({ pkg }: { pkg: MarketplacePackage }) {
+export function AddToCartButton({
+  pkg,
+  tone = "primary",
+}: {
+  pkg: MarketplacePackage;
+  tone?: "primary" | "gold";
+}) {
   const { lines, add, setOpen } = useCart();
   const inCart = lines[pkg.id] ?? 0;
   const full = inCart >= maxFor(pkg);
@@ -167,7 +181,7 @@ export function AddToCartButton({ pkg }: { pkg: MarketplacePackage }) {
   return (
     <button
       type="button"
-      className={`${block.button} ${block.primary} ${styles.buyButton}`}
+      className={`${block.button} ${block[tone]} ${styles.buyButton}`}
       onClick={() => (full ? setOpen(true) : add(pkg))}
       aria-label={full ? `${pkg.name} is in your cart, view cart` : `Add ${pkg.name} to cart`}
     >
@@ -191,13 +205,94 @@ export function CartButton() {
       <span className={styles.cartIcon}>
         <img src={mineacleIcons.cart} alt="" />
         {count ? (
-          <span className={styles.cartCount} aria-hidden="true">
+          // Keyed by the count so it pops each time something is added
+          <span key={count} className={styles.cartCount} aria-hidden="true">
             {count > 99 ? "99+" : count}
           </span>
         ) : null}
       </span>
       Cart
     </button>
+  );
+}
+
+/* The featured package, offered in the cart until it's in it. */
+function CartOffer({ featured }: { featured: MarketplacePackage | undefined }) {
+  const { lines, add } = useCart();
+
+  if (!featured || lines[featured.id]) {
+    return null;
+  }
+
+  const onSale = featured.basePrice > featured.price;
+
+  return (
+    <section className={styles.cartOffer} aria-label={`Add ${featured.name}`}>
+      <span className={styles.featuredTag}>Featured</span>
+      <div className={styles.cartOfferRow}>
+        <img src={featured.image || mineacleIcons.crate} alt="" />
+        <div>
+          <strong>{featured.name}</strong>
+          <span>
+            {onSale ? <s>{formatPrice(featured.basePrice, featured.currency)}</s> : null}{" "}
+            {formatPrice(featured.price, featured.currency)}
+          </span>
+        </div>
+        <button
+          type="button"
+          className={`${block.button} ${block.gold} ${styles.cartOfferAdd}`}
+          onClick={() => add(featured)}
+          aria-label={`Add ${featured.name} to cart`}
+        >
+          Add
+        </button>
+      </div>
+    </section>
+  );
+}
+
+/* Phones: a bar along the bottom with the cart's count and total. */
+function CartBar() {
+  const { lines, packages, count, open, setOpen } = useCart();
+
+  if (!count || open) {
+    return null;
+  }
+
+  let total = 0;
+  let currency = "USD";
+
+  for (const [id, quantity] of Object.entries(lines)) {
+    const pkg = packages.get(Number(id));
+
+    if (pkg) {
+      total += pkg.price * quantity;
+      currency = pkg.currency;
+    }
+  }
+
+  return (
+    <div className={styles.cartBar}>
+      <span className={styles.cartIcon}>
+        <img src={mineacleIcons.cart} alt="" />
+        <span key={count} className={styles.cartCount} aria-hidden="true">
+          {count > 99 ? "99+" : count}
+        </span>
+      </span>
+      <p>
+        <span>
+          {count} item{count === 1 ? "" : "s"}
+        </span>
+        <strong>{formatPrice(total, currency)}</strong>
+      </p>
+      <button
+        type="button"
+        className={`${block.button} ${block.green}`}
+        onClick={() => setOpen(true)}
+      >
+        View cart
+      </button>
+    </div>
   );
 }
 
@@ -223,7 +318,7 @@ function CartPanel() {
 }
 
 function CartPanelContent() {
-  const { lines, packages, loggedIn, setOpen, setQuantity, clear } = useCart();
+  const { lines, packages, loggedIn, featuredId, setOpen, setQuantity, clear } = useCart();
   const { checkout, busy, error } = useTebexCheckout(() => {
     try {
       window.localStorage.removeItem(STORAGE_KEY);
@@ -261,6 +356,7 @@ function CartPanelContent() {
           </button>
         </header>
 
+        <div className={styles.cartBody}>
         {items.length === 0 ? (
           <p className={styles.cartEmpty}>Your cart is empty. Add something from the marketplace.</p>
         ) : (
@@ -296,6 +392,9 @@ function CartPanelContent() {
             ))}
           </ul>
         )}
+
+        <CartOffer featured={featuredId !== null ? packages.get(featuredId) : undefined} />
+        </div>
 
         {items.length ? (
           <footer className={styles.cartFooter}>

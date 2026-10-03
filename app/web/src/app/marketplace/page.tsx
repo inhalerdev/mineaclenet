@@ -1,6 +1,9 @@
 import { MarketplacePage } from "@/components/marketplace/MarketplacePage";
 import { getCurrentViewer } from "@/features/auth/session";
-import { getMarketplaceCategories } from "@/features/marketplace/tebex";
+import {
+  featuredPackageId,
+  getMarketplaceCategories,
+} from "@/features/marketplace/tebex";
 import { getTopPlayers } from "@/features/players/top-players";
 
 export const dynamic = "force-dynamic";
@@ -32,6 +35,7 @@ export default async function Marketplace({
       viewer={viewer}
       topPlayers={topPlayers}
       categories={categories}
+      featuredId={featuredPackageId(categories)}
       activeSlug={single(params.category) ?? null}
       purchased={single(params.purchased) === "1"}
     />

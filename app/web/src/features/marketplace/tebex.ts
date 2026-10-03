@@ -35,6 +35,8 @@ export type MarketplacePackage = {
   currency: string;
   /** Tebex "disable quantity": at most one per checkout. */
   single: boolean;
+  /** Tebex package type "subscription": added to the basket as one. */
+  subscription: boolean;
 };
 
 export type MarketplaceCategory = {
@@ -57,6 +59,7 @@ type TebexPackage = {
   currency?: string;
   order?: number;
   disable_quantity?: boolean;
+  type?: "single" | "subscription" | "both" | null;
 };
 
 type TebexCategory = {
@@ -171,9 +174,28 @@ async function loadCategories(): Promise<MarketplaceCategory[]> {
           basePrice: Number(pkg.base_price ?? pkg.total_price ?? 0),
           currency: pkg.currency || "USD",
           single: Boolean(pkg.disable_quantity),
+          subscription: pkg.type === "subscription",
         })),
     }))
     .filter((category) => category.packages.length > 0);
+}
+
+/*
+ * The featured package (shown big at the top of the Marketplace and offered
+ * in the cart): TEBEX_FEATURED_PACKAGE (a package id or exact name) when
+ * set, otherwise the first package named like "Mineacle+" / "Mineacle Plus".
+ * Null when there's none; nothing about it is made up here, the page shows
+ * the package exactly as listed on Tebex.
+ */
+export function featuredPackageId(categories: MarketplaceCategory[]) {
+  const packages = categories.flatMap((category) => category.packages);
+  const wanted = (process.env.TEBEX_FEATURED_PACKAGE || "").trim().toLowerCase();
+
+  const match = wanted
+    ? packages.find((pkg) => String(pkg.id) === wanted || pkg.name.trim().toLowerCase() === wanted)
+    : packages.find((pkg) => /mineacle\s*(\+|plus\b)/i.test(pkg.name));
+
+  return match?.id ?? null;
 }
 
 /** Categories with their packages; a minute old at most. Empty if Tebex is unreachable. */
@@ -252,6 +274,7 @@ export async function createCheckout({
         body: JSON.stringify({
           package_id: String(line.packageId),
           quantity: single ? 1 : line.quantity,
+          ...(listed.get(line.packageId)?.subscription ? { type: "subscription" } : {}),
           ...(basket.username_id
             ? { variable_data: { username_id: String(basket.username_id) } }
             : {}),
