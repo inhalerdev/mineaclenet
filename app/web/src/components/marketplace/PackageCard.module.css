@@ -49,9 +49,9 @@
   padding: 0;
   border: 0;
   background:
-    radial-gradient(62% 58% at 50% 56%, rgba(132, 54, 254, 0.42), rgba(132, 54, 254, 0.1) 60%, transparent 78%),
-    radial-gradient(70% 18% at 50% 92%, rgba(176, 120, 255, 0.28), transparent 70%),
-    linear-gradient(180deg, #1e1535 0%, #130f1f 100%);
+    radial-gradient(60% 56% at 50% 56%, rgba(132, 54, 254, 0.2), rgba(132, 54, 254, 0.05) 62%, transparent 80%),
+    radial-gradient(64% 16% at 50% 92%, rgba(176, 120, 255, 0.12), transparent 70%),
+    linear-gradient(180deg, #1b1726 0%, #141219 100%);
   box-shadow: inset 0 -2px 0 var(--mc-outline);
   cursor: zoom-in;
 }
@@ -62,8 +62,8 @@
   z-index: -1;
   inset: 0;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
   background-size: 16px 16px;
   -webkit-mask-image: radial-gradient(70% 70% at 50% 45%, #000, transparent 75%);
   mask-image: radial-gradient(70% 70% at 50% 45%, #000, transparent 75%);

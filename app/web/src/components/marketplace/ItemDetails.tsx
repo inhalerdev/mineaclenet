@@ -205,7 +205,7 @@ function DetailsContent({
         <EnchantedScene variant="panel" />
         <RuneCircle className={styles.circle} />
         <EnchantedArt src={pkg.image} width={340} float eager className={styles.art} />
-        {featured ? <Glyphs count={6} /> : null}
+        <Glyphs />
       </div>
 
       <div className={styles.panel}>

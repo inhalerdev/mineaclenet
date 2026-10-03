@@ -26,8 +26,8 @@
   inset: 0;
   border: 0;
   background:
-    radial-gradient(circle at 50% 40%, rgba(46, 18, 96, 0.55), transparent 70%),
-    rgba(4, 3, 8, 0.72);
+    radial-gradient(circle at 50% 40%, rgba(46, 18, 96, 0.3), transparent 70%),
+    rgba(4, 3, 8, 0.75);
   cursor: pointer;
   animation: fade 200ms ease both;
 }
@@ -95,6 +95,10 @@
 
 /* --- The item ------------------------------------------------------------------- */
 .media {
+  /* Glyphs fly into the item (Enchanted.module.css) */
+  --glyph-y: 42%;
+  --spread: 0.95;
+
   position: relative;
   isolation: isolate;
   min-height: min(460px, var(--dialog-max));
@@ -105,7 +109,7 @@
 .circle {
   top: 74%;
   left: 50%;
-  width: min(80%, 280px);
+  width: min(72%, 240px);
 }
 
 .art {

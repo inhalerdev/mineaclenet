@@ -3,7 +3,6 @@
 import { type CSSProperties, useState } from "react";
 import { sizedImage } from "@/features/marketplace/images";
 import { mineacleIcons } from "@/shared/icons/mineacle-icons";
-import { PixelStar } from "./bits";
 import styles from "./Enchanted.module.css";
 
 /*
@@ -11,10 +10,10 @@ import styles from "./Enchanted.module.css";
  *
  *   EnchantedArt    a package image with the enchantment glint sweeping
  *                   across its own shape (a CSS mask of the same image)
- *   EnchantedScene  the backdrop: purple glow, slow light rays, pixel stars
- *                   and sparkles
- *   RuneCircle      a glowing rune ring the item floats over
- *   Glyphs          enchanting-table glyphs drifting up around the item
+ *   EnchantedScene  the backdrop: dark, with a soft purple glow at the item
+ *   RuneCircle      a faint rune ring the item floats over
+ *   Glyphs          enchanting-table glyphs drifting in from the sides into
+ *                   the item, like bookshelves feeding an enchanting table
  *
  * All decoration is aria-hidden and stops for prefers-reduced-motion.
  */
@@ -123,46 +122,9 @@ function cssUrl(url: string) {
 
 /* --- Backdrop ----------------------------------------------------------------- */
 
-type Sparkle = { x: number; y: number; size: number; delay: number; gold?: boolean };
-
-const SPARKLES: Record<"hero" | "panel", Sparkle[]> = {
-  hero: [
-    { x: 55, y: 16, size: 10, delay: 0 },
-    { x: 66, y: 76, size: 8, delay: 1.1, gold: true },
-    { x: 92, y: 22, size: 12, delay: 2.2 },
-    { x: 88, y: 70, size: 8, delay: 0.6 },
-    { x: 61, y: 42, size: 6, delay: 2.9, gold: true },
-    { x: 79, y: 10, size: 8, delay: 1.7 },
-    { x: 96, y: 52, size: 6, delay: 3.4, gold: true },
-    { x: 8, y: 14, size: 7, delay: 2.5 },
-    { x: 42, y: 88, size: 6, delay: 1.4 },
-  ],
-  panel: [
-    { x: 16, y: 18, size: 9, delay: 0 },
-    { x: 82, y: 26, size: 7, delay: 1.3, gold: true },
-    { x: 74, y: 78, size: 8, delay: 2.4 },
-    { x: 22, y: 72, size: 6, delay: 0.8, gold: true },
-  ],
-};
-
+/* A dark backdrop with a soft purple glow where the item sits. */
 export function EnchantedScene({ variant }: { variant: "hero" | "panel" }) {
-  return (
-    <span className={styles.scene} data-variant={variant} aria-hidden="true">
-      <span className={styles.rays} />
-      {SPARKLES[variant].map((sparkle, index) => (
-        <PixelStar
-          key={index}
-          className={`${styles.sparkle} ${sparkle.gold ? styles.sparkleGold : ""}`.trim()}
-          style={{
-            left: `${sparkle.x}%`,
-            top: `${sparkle.y}%`,
-            "--size": `${sparkle.size}px`,
-            "--delay": `${sparkle.delay}s`,
-          } as CSSProperties}
-        />
-      ))}
-    </span>
-  );
+  return <span className={styles.scene} data-variant={variant} aria-hidden="true" />;
 }
 
 /* --- Rune circle ---------------------------------------------------------------- */
@@ -192,34 +154,40 @@ const GLYPH_ART = [
     .join(""),
 );
 
-type Glyph = { x: number; y: number; delay: number; time: number; drift: number };
+/*
+ * Like the bookshelves round an enchanting table: glyphs drift in from both
+ * sides and fade into the item. Each starts at an offset (px) from the item
+ * and flies to it; --spread scales the offsets to the space available.
+ */
+type Glyph = { fromX: number; fromY: number; delay: number; time: number };
 
 const GLYPHS: Glyph[] = [
-  { x: 14, y: 80, delay: 0, time: 5.4, drift: -16 },
-  { x: 28, y: 88, delay: 1.6, time: 6.2, drift: 12 },
-  { x: 42, y: 82, delay: 3.1, time: 5.8, drift: -10 },
-  { x: 57, y: 90, delay: 0.8, time: 6.6, drift: 14 },
-  { x: 71, y: 84, delay: 2.4, time: 5.2, drift: -12 },
-  { x: 85, y: 78, delay: 4.0, time: 6.0, drift: 10 },
-  { x: 22, y: 70, delay: 4.6, time: 5.6, drift: 8 },
-  { x: 78, y: 68, delay: 5.3, time: 5.0, drift: -8 },
+  { fromX: -150, fromY: -30, delay: 0, time: 3.4 },
+  { fromX: 155, fromY: -55, delay: 0.4, time: 3.8 },
+  { fromX: -135, fromY: 45, delay: 0.9, time: 3.1 },
+  { fromX: 145, fromY: 35, delay: 1.3, time: 3.6 },
+  { fromX: -95, fromY: -85, delay: 1.8, time: 2.9 },
+  { fromX: 105, fromY: -90, delay: 2.2, time: 3.3 },
+  { fromX: -165, fromY: 5, delay: 2.7, time: 3.9 },
+  { fromX: 170, fromY: 15, delay: 3.1, time: 3.2 },
+  { fromX: -120, fromY: -60, delay: 3.6, time: 3.5 },
+  { fromX: 125, fromY: 65, delay: 4.0, time: 3.0 },
 ];
 
-export function Glyphs({ count = GLYPHS.length }: { count?: number }) {
+export function Glyphs({ className }: { className?: string }) {
   return (
-    <span className={styles.glyphs} aria-hidden="true">
-      {GLYPHS.slice(0, count).map((glyph, index) => (
+    <span className={`${styles.glyphs} ${className ?? ""}`.trim()} aria-hidden="true">
+      {GLYPHS.map((glyph, index) => (
         <svg
           key={index}
           className={styles.glyph}
           viewBox="0 0 5 5"
           shapeRendering="crispEdges"
           style={{
-            left: `${glyph.x}%`,
-            top: `${glyph.y}%`,
+            "--from-x": `${glyph.fromX}px`,
+            "--from-y": `${glyph.fromY}px`,
             "--delay": `${glyph.delay}s`,
             "--time": `${glyph.time}s`,
-            "--drift": `${glyph.drift}px`,
           } as CSSProperties}
         >
           <path d={GLYPH_ART[index % GLYPH_ART.length]} />

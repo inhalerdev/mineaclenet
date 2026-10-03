@@ -11,12 +11,13 @@ import { RichSpans } from "./RichText";
 import styles from "./FeaturedHero.module.css";
 
 /*
- * The featured package (featuredPackageId in tebex.ts) as the Marketplace's
- * hero: the item floating over a rune circle in an enchanted scene, its
- * Tebex name, the description's opening text, the first list in it as
- * perks with gold checks, the price (with a subscription's renewal and
- * Tebex free trial) and a gold button that adds it and opens the cart.
- * Everything shown is the Tebex listing.
+ * The featured package (featuredPackageId in tebex.ts) as a compact banner
+ * at the top of the Marketplace: the item over a rune ring with glyphs
+ * drifting into it (like an enchanting table's bookshelves), its Tebex name,
+ * the description's opening line, the first list in it as perks with gold
+ * checks, and the price (with a subscription's renewal and Tebex free trial)
+ * beside a gold button that adds it and opens the cart. Everything shown is
+ * the Tebex listing; "View details" opens all of it.
  */
 export function FeaturedHero({ pkg }: { pkg: MarketplacePackage }) {
   const { openItem } = useItemDetails();
@@ -27,6 +28,17 @@ export function FeaturedHero({ pkg }: { pkg: MarketplacePackage }) {
   return (
     <section id="featured" className={styles.hero} aria-labelledby="featured-title">
       <EnchantedScene variant="hero" />
+
+      <button
+        type="button"
+        className={styles.stage}
+        onClick={() => openItem(pkg.id)}
+        aria-label={`More about ${pkg.name}`}
+      >
+        <RuneCircle className={styles.circle} />
+        <EnchantedArt src={pkg.image} width={220} float eager className={styles.art} />
+        <Glyphs />
+      </button>
 
       <div className={styles.copy}>
         <div className={styles.tags}>
@@ -39,14 +51,10 @@ export function FeaturedHero({ pkg }: { pkg: MarketplacePackage }) {
           {pkg.name}
         </h2>
 
-        {intro.length ? (
-          <div className={styles.intro}>
-            {intro.map((block, index) => (
-              <p key={index}>
-                <RichSpans spans={block.spans} />
-              </p>
-            ))}
-          </div>
+        {intro[0] ? (
+          <p className={styles.intro}>
+            <RichSpans spans={intro[0].spans} />
+          </p>
         ) : null}
 
         {perks.length ? (
@@ -61,29 +69,16 @@ export function FeaturedHero({ pkg }: { pkg: MarketplacePackage }) {
             ))}
           </ul>
         ) : null}
-
-        <div className={styles.buy}>
-          <PriceTag pkg={pkg} size="hero" />
-          <div className={styles.actions}>
-            <GetButton pkg={pkg} className={styles.get} />
-            <button type="button" className={styles.details} onClick={() => openItem(pkg.id)}>
-              {more ? "All the details" : "View details"}
-              <b aria-hidden="true" />
-            </button>
-          </div>
-        </div>
       </div>
 
-      <button
-        type="button"
-        className={styles.stage}
-        onClick={() => openItem(pkg.id)}
-        aria-label={`More about ${pkg.name}`}
-      >
-        <RuneCircle className={styles.circle} />
-        <EnchantedArt src={pkg.image} width={420} float eager className={styles.art} />
-        <Glyphs />
-      </button>
+      <div className={styles.buy}>
+        <PriceTag pkg={pkg} size="large" />
+        <GetButton pkg={pkg} className={styles.get} />
+        <button type="button" className={styles.details} onClick={() => openItem(pkg.id)}>
+          {more || intro.length > 1 ? "All the details" : "View details"}
+          <b aria-hidden="true" />
+        </button>
+      </div>
     </section>
   );
 }

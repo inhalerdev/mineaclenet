@@ -106,30 +106,9 @@
   font-size: 30px;
 }
 
-.price[data-size="hero"] strong {
-  font-size: 44px;
-  text-shadow:
-    3px 3px 0 var(--mc-purple-deep),
-    0 0 24px rgba(176, 120, 255, 0.4);
-}
-
-.price[data-size="hero"] span {
-  color: #d9ccf5;
-  font-size: 16px;
-}
-
-.price[data-size="hero"] s {
-  flex-basis: 100%;
-  color: #a99bc8;
-  font-size: 15px;
-}
-
 @media (max-width: 560px) {
   .price strong {
     font-size: 19px;
   }
 
-  .price[data-size="hero"] strong {
-    font-size: 38px;
-  }
 }

@@ -51,7 +51,7 @@ export function PriceTag({
   size = "card",
 }: {
   pkg: MarketplacePackage;
-  size?: "card" | "large" | "hero";
+  size?: "card" | "large";
 }) {
   const onSale = pkg.basePrice > pkg.price;
   const period = periodText(pkg.period);
