@@ -190,11 +190,15 @@
   border-color: var(--mc-purple-face);
 }
 
-.cardMedia {
+.card .cardMedia {
   position: relative;
+  width: 100%;
   aspect-ratio: 4 / 3;
   display: grid;
   place-items: center;
+  padding: 0;
+  border: 0;
+  cursor: zoom-in;
   background:
     radial-gradient(circle at 50% 45%, rgba(176, 120, 255, 0.18), transparent 65%),
     #1a1a1a;
@@ -206,6 +210,78 @@
   height: 62%;
   object-fit: contain;
   image-rendering: pixelated;
+  transition: transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* The picture grows a little on hover: it opens the details. */
+.card .cardMedia:hover img,
+.card .cardMedia:focus-visible img {
+  transform: scale(1.06);
+}
+
+.card .cardMedia:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: -2px;
+}
+
+/* Name: opens the details too. */
+.card .cardName {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.card .cardName:hover,
+.card .cardName:focus-visible {
+  color: #ffffff;
+  text-decoration: underline 2px;
+  text-underline-offset: 4px;
+}
+
+/* Short blurb on the card: three lines at most; the rest is in the details. */
+.cardBlurb {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+.card .moreInfo {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 2px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--mc-purple-face);
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  text-transform: uppercase;
+  transition: color var(--motion), gap 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Pixel chevron drawn from two borders. */
+.moreInfo b {
+  width: 6px;
+  height: 6px;
+  margin-top: 1px;
+  border-top: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  transform: rotate(45deg);
+}
+
+.card .moreInfo:hover,
+.card .moreInfo:focus-visible {
+  gap: 11px;
+  color: #ffffff;
 }
 
 .sale {
@@ -254,8 +330,9 @@
 
 .price {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 8px;
+  gap: 6px 8px;
   margin: 0;
   color: #ffffff;
   font-size: 20px;
@@ -366,10 +443,264 @@
   line-height: 1;
 }
 
+/* --- Item details pop-up (PackageCard.tsx) --------------------------------- */
+.detailLayer {
+  position: fixed;
+  z-index: 200;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  /* Lives on <body>, outside the page frame: bring the site font along */
+  font-family: "Mineacle Primary", monospace;
+}
+
+.detailLayer button {
+  font: inherit;
+}
+
+.detail {
+  position: relative;
+  width: min(760px, 100%);
+  max-height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "media body"
+    "media footer";
+  overflow: hidden;
+  border: 2px solid var(--mc-outline);
+  background: #1c1c1c;
+  box-shadow:
+    inset 0 2px 0 #2a2a2a,
+    inset 0 -5px 0 #141414,
+    0 0 0 2px var(--mc-purple-deep),
+    0 24px 60px rgba(0, 0, 0, 0.6);
+  color: var(--mc-text);
+  animation: detailIn 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes detailIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+}
+
+.detail .detailClose {
+  --btn-size: 34px;
+
+  position: absolute;
+  z-index: 2;
+  top: 12px;
+  right: 12px;
+}
+
+.detailClose img {
+  width: 12px;
+  height: 12px;
+}
+
+.detailMedia {
+  position: relative;
+  grid-area: media;
+  min-height: 260px;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(176, 120, 255, 0.24), transparent 65%),
+    #151515;
+  box-shadow: inset -2px 0 0 var(--mc-outline);
+}
+
+.detailMedia img {
+  width: 72%;
+  max-height: 72%;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.detailBody {
+  grid-area: body;
+  min-height: 0;
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: 22px 64px 18px 24px;
+  overflow-y: auto;
+}
+
+.detailBody h2 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.15;
+  text-shadow: 2px 2px 0 #000000;
+}
+
+.detailText {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  color: #d6d6d6;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.detailText p,
+.detailText ul {
+  margin: 0;
+}
+
+.detailText ul {
+  display: grid;
+  gap: 5px;
+  padding: 0;
+  list-style: none;
+}
+
+/* Square pixel bullets, like the legal pages. */
+.detailText li {
+  position: relative;
+  padding-left: 16px;
+}
+
+.detailText li::before {
+  position: absolute;
+  top: 0.55em;
+  left: 1px;
+  width: 6px;
+  height: 6px;
+  background: var(--mc-purple-face);
+  content: "";
+}
+
+.detailFacts {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 12px 0 0;
+  border-top: 2px solid #2a2a2a;
+  color: var(--mc-text-muted);
+  font-size: 12px;
+  line-height: 1.4;
+  list-style: none;
+}
+
+/* Square pixel bullets. */
+.detailFacts li {
+  position: relative;
+  padding-left: 14px;
+}
+
+.detailFacts li::before {
+  position: absolute;
+  top: 0.45em;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  background: var(--mc-purple-face);
+  content: "";
+}
+
+.detailFooter {
+  grid-area: footer;
+  display: grid;
+  gap: 12px;
+  padding: 16px 24px 22px;
+  border-top: 2px solid var(--mc-outline);
+  background: #191919;
+}
+
+.priceLarge span {
+  font-size: 26px;
+}
+
+/* "Save $1.00" next to a sale price. */
+.save {
+  padding: 3px 5px 4px;
+  background: var(--mc-green);
+  box-shadow:
+    inset 0 2px 0 var(--mc-green-light),
+    inset 0 -2px 0 var(--mc-green-edge),
+    0 0 0 2px var(--mc-outline);
+  color: #ffffff;
+  font-size: 10px;
+  font-style: normal;
+  line-height: 1;
+  text-transform: uppercase;
+  align-self: center;
+}
+
+/* Phones: picture on top, then the text, with the price and button pinned
+   to the bottom. */
+@media (max-width: 640px) {
+  .detailLayer {
+    place-items: end stretch;
+    padding: 0;
+  }
+
+  .detail {
+    width: 100%;
+    max-height: 92dvh;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "media"
+      "body"
+      "footer";
+    border-bottom: 0;
+    animation-name: detailUp;
+  }
+
+  @keyframes detailUp {
+    from {
+      transform: translateY(40px);
+    }
+  }
+
+  .detailMedia {
+    min-height: 0;
+    height: 190px;
+    box-shadow: inset 0 -2px 0 var(--mc-outline);
+  }
+
+  .detailMedia img {
+    width: auto;
+    height: 72%;
+  }
+
+  .detailBody {
+    padding: 18px 18px 14px;
+  }
+
+  .detailBody h2 {
+    font-size: 21px;
+  }
+
+  .detailFooter {
+    padding: 14px 18px calc(18px + env(safe-area-inset-bottom));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .detail {
+    animation: none;
+  }
+
+  .card .cardMedia:hover img,
+  .card .cardMedia:focus-visible img {
+    transform: none;
+  }
+}
+
 /* --- Cart panel (slides over the page from the right) ---------------------- */
 .cartLayer {
   position: fixed;
-  z-index: 200;
+  /* Above an open item pop-up ("In cart" there opens the cart) */
+  z-index: 210;
   inset: 0;
   display: flex;
   justify-content: flex-end;

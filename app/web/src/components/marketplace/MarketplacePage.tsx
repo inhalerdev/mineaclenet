@@ -4,20 +4,18 @@ import { FramedPage } from "@/components/site/FramedPage";
 import { PageIntro, StatTile } from "@/components/site/PageIntro";
 import type { HomeLeaderboardPlayer } from "@/components/site/SiteHeader";
 import type { Viewer } from "@/features/auth/types";
-import type {
-  MarketplaceCategory,
-  MarketplacePackage,
-} from "@/features/marketplace/tebex";
-import { formatPrice } from "@/features/marketplace/format";
+import type { MarketplaceCategory } from "@/features/marketplace/tebex";
 import { mineacleIcons } from "@/shared/icons/mineacle-icons";
-import { AddToCartButton, CartButton, CartProvider } from "./Cart";
+import { CartButton, CartProvider } from "./Cart";
 import styles from "./MarketplacePage.module.css";
+import { PackageCard } from "./PackageCard";
 
 /*
  * Marketplace (/marketplace): categories in a panel on the left, the chosen
  * category's items on the right. Items and prices come from Tebex
  * (features/marketplace/tebex.ts). Items go into the cart (Cart.tsx), which
- * checks out as one Tebex basket over the page. Categories are links (?category=slug), so each one has
+ * checks out as one Tebex basket over the page. Each card opens a details
+ * pop-up with the full description (PackageCard.tsx). Categories are links (?category=slug), so each one has
  * its own address and works without JavaScript. On phones the panel
  * becomes a row of tabs above the items.
  */
@@ -131,31 +129,5 @@ export function MarketplacePage({
       </div>
       </CartProvider>
     </FramedPage>
-  );
-}
-
-function PackageCard({ pkg }: { pkg: MarketplacePackage }) {
-  const onSale = pkg.basePrice > pkg.price;
-
-  return (
-    <li className={styles.card}>
-      <div className={styles.cardMedia}>
-        <img src={pkg.image || mineacleIcons.crate} alt="" loading="lazy" />
-        {onSale ? <span className={styles.sale}>Sale</span> : null}
-      </div>
-
-      <div className={styles.cardText}>
-        <h3>{pkg.name}</h3>
-        {pkg.description ? <p>{pkg.description}</p> : null}
-      </div>
-
-      <div className={styles.cardFooter}>
-        <p className={styles.price}>
-          {onSale ? <s>{formatPrice(pkg.basePrice, pkg.currency)}</s> : null}
-          <span>{formatPrice(pkg.price, pkg.currency)}</span>
-        </p>
-        <AddToCartButton pkg={pkg} />
-      </div>
-    </li>
   );
 }

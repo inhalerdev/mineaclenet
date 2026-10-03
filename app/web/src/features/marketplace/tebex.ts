@@ -91,10 +91,13 @@ function accountUrl(path: string) {
   return `${API}/accounts/${encodeURIComponent(publicToken())}${path}`;
 }
 
-/* Tebex HTML → readable plain text (no markup from the store reaches the page). */
+/* Tebex HTML → readable plain text (no markup from the store reaches the
+   page). List items keep a "• " in front, so the item pop-up can show them
+   as a list again (PackageCard.tsx). */
 function plainText(html: string | null | undefined) {
   return (html || "")
-    .replace(/<\s*(br|\/p|\/div|\/li)\s*\/?>/gi, "\n")
+    .replace(/<\s*li(\s[^>]*)?>/gi, "\n• ")
+    .replace(/<\s*(br|\/p|\/div|\/li|\/ul|\/ol)\s*\/?>/gi, "\n")
     .replace(/<[^>]*>/g, "")
     .replace(/&nbsp;/g, " ")
     .replace(/&amp;/g, "&")
