@@ -12,7 +12,8 @@ import styles from "./MarketplacePage.module.css";
 /*
  * One Marketplace item: a card in the grid with a short description, and a
  * details pop-up (bigger picture, the full description, price and Add to
- * cart) opened from the picture, the name or "More info".
+ * cart) opened from the picture, the name or "More info". Everything shown
+ * comes from the Tebex listing; nothing is added here.
  *
  * The open item is kept in the address as #item-<id>, so a link to it opens
  * it straight away (e.g. shared on Discord). Esc, the X or a click outside
@@ -86,11 +87,6 @@ function Price({ pkg, large = false }: { pkg: MarketplacePackage; large?: boolea
     <p className={`${styles.price} ${large ? styles.priceLarge : ""}`.trim()}>
       {onSale ? <s>{formatPrice(pkg.basePrice, pkg.currency)}</s> : null}
       <span>{formatPrice(pkg.price, pkg.currency)}</span>
-      {onSale ? (
-        <em className={styles.save}>
-          Save {formatPrice(pkg.basePrice - pkg.price, pkg.currency)}
-        </em>
-      ) : null}
     </p>
   );
 }
@@ -113,10 +109,6 @@ function Description({ text }: { text: string }) {
     } else {
       blocks.push(line);
     }
-  }
-
-  if (!blocks.length) {
-    return <p className={styles.detailText}>No description yet.</p>;
   }
 
   return (
@@ -190,11 +182,7 @@ function PackageDetails({ pkg, onClose }: { pkg: MarketplacePackage; onClose: ()
 
         <div className={styles.detailBody}>
           <h2 id={titleId}>{pkg.name}</h2>
-          <Description text={pkg.description} />
-          <ul className={styles.detailFacts}>
-            <li>Delivered in-game to the Minecraft account linked to your login</li>
-            <li>{pkg.single ? "One per order" : "Up to 10 per order"}</li>
-          </ul>
+          {pkg.description ? <Description text={pkg.description} /> : null}
         </div>
 
         <footer className={styles.detailFooter}>
